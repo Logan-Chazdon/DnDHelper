@@ -18,7 +18,7 @@ data class Race (
     val abilityBonuses: List<AbilityBonus>,
     val alignment: String,
     val age : String,
-    val size: SizeClass,
+    val size: String,
     val sizeDesc: String,
     val startingProficiencies: List<Proficiency>,
     val languages: List<Language>,

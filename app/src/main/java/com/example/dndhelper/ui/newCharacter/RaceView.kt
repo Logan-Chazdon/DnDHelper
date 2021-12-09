@@ -48,7 +48,7 @@ fun RaceView(
                     {
                         Text(text = race.name, fontSize = 24.sp)
                         Spacer(Modifier.fillMaxWidth(0.1f))
-                        Text(text = race.size.name, fontSize = 18.sp)
+                        Text(text = race.size, fontSize = 18.sp)
                     }
                     Column(
                         modifier = Modifier.padding(start = 20.dp)

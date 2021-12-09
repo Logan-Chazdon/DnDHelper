@@ -128,17 +128,7 @@ class WebserviceDnD() : Webservice {
                 val languages = extractLanguages(raceJsonObject)
                 val traits = extractTraits(raceJsonObject)
                 val subraces = mutableListOf<Subrace>()
-                val size = when(raceJsonObject.getString("size")) {
-                    "Tiny" -> SizeClass.Tiny()
-                    "Small" -> SizeClass.Small()
-                    "Medium" -> SizeClass.Medium()
-                    "Large" -> SizeClass.Large()
-                    "Huge" -> SizeClass.Huge()
-                    "Gargantuan" -> SizeClass.Gargantuan()
-                    else -> {
-                        throw IllegalStateException("Illegal Size Class API Data")
-                    }
-                }
+                val size = raceJsonObject.getString("size")
 
 
                 val subRacesJsonObject = raceJsonObject.getJSONArray("subraces")
@@ -199,16 +189,16 @@ class WebserviceDnD() : Webservice {
         val abilityBonusesJsonObject = jsonObject.getJSONArray("ability_bonuses")
         for(j in 0 until abilityBonusesJsonObject.length()) {
             val abilityBonusJson = abilityBonusesJsonObject.getJSONObject(j)
-            val ability: Ability = when(abilityBonusJson
+            val ability: String = when(abilityBonusJson
                 .getJSONObject("ability_score")
                 .getString("name")
             ) {
-                "STR" -> Ability.Strength()
-                "DEX" -> Ability.Dexterity()
-                "CON" -> Ability.Constitution()
-                "INT" -> Ability.Intelligence()
-                "WIS" -> Ability.Wisdom()
-                "CHA" -> Ability.Charisma()
+                "STR" -> "Strength"
+                "DEX" -> "Dexterity"
+                "CON" -> "Constitution"
+                "INT" -> "Intelligence"
+                "WIS" -> "Wisdom"
+                "CHA" -> "Charisma"
                 else -> {
                     throw IllegalStateException("Illegal AbilityScore API Data")
                 }

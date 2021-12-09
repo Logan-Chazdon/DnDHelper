@@ -105,23 +105,6 @@ class Converters {
     }
 
     //Races
-
-    @TypeConverter
-    fun storedStringToAbility(data: String?): Ability? {
-        val gson = Gson()
-        if (data == null) {
-            return null
-        }
-        val listType: Type = object : TypeToken<Ability>() {}.type
-        return gson.fromJson(data, listType)
-    }
-
-    @TypeConverter
-    fun abilityToStoredString(myObjects: Ability): String? {
-        val gson = Gson()
-        return gson.toJson(myObjects)
-    }
-
     @TypeConverter
     fun storedStringToAbilityBonus(data: String?): List<AbilityBonus>? {
         val gson = Gson()
@@ -187,19 +170,4 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
-    @TypeConverter
-    fun storedStringToSize(data: String?): SizeClass? {
-        val gson = Gson()
-        if (data == null) {
-            return null
-        }
-        val listType: Type = object : TypeToken<SizeClass>() {}.type
-        return gson.fromJson(data, listType)
-    }
-
-    @TypeConverter
-    fun sizeToStoredString(myObjects: SizeClass): String? {
-        val gson = Gson()
-        return gson.toJson(myObjects)
-    }
 }

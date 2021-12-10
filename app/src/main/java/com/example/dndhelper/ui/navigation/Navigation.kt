@@ -50,7 +50,8 @@ fun Navigation(navController: NavHostController) {
             RaceView(viewModel, navController = navController)
         }
         composable("newCharacterView/statsView") {
-            StatsView()
+            val viewModel = hiltViewModel<NewCharacterViewModel>()
+            StatsView(viewModel)
         }
     }
 }

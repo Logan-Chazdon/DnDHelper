@@ -84,7 +84,7 @@ fun ConfirmClassView(viewModel: NewCharacterViewModel,classIndex: Int) {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .background(Color.Gray)
+                .background(Color.LightGray)
                 .verticalScroll(state = scrollState, enabled = true),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

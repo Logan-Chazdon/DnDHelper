@@ -1,6 +1,7 @@
 package com.example.dndhelper.ui.newCharacter
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,13 +33,16 @@ fun RaceView(
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        races.value?.forEach { race ->
+        races.value?.forEachIndexed { i, race ->
             Card(
                 backgroundColor = Color.White,
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth(0.95f)
-                    .padding(start = 10.dp),
+                    .padding(start = 10.dp)
+                    .clickable {
+                               navController.navigate("newCharacterView/ConfirmRaceView/$i")
+                    },
                 elevation = 10.dp
             ) {
                 Column() {

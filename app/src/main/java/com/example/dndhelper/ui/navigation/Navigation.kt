@@ -42,8 +42,13 @@ fun Navigation(navController: NavHostController) {
         composable("newCharacterView/ConfirmBackGroundView") {
             ConfirmBackgroundView()
         }
-        composable("newCharacterView/ConfirmRaceView") {
-            ConfirmRaceView()
+        composable("newCharacterView/ConfirmRaceView/{raceIndex}") {backStackEntry ->
+            backStackEntry.arguments?.getString("raceIndex")?.toInt()?.let {
+                ConfirmRaceView(
+                    viewModel = hiltViewModel<NewCharacterViewModel>(),
+                    raceIndex = it
+                )
+            }
         }
         composable("newCharacterView/RaceView") {
             val viewModel = hiltViewModel<NewCharacterViewModel>()

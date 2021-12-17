@@ -133,7 +133,7 @@ fun ConfirmClassView(viewModel: NewCharacterViewModel,classIndex: Int) {
                                         modifier = Modifier.fillMaxWidth()
                                             .clickable(onClick = { expanded = true }).background(
                                             Color.White
-                                        )
+                                        ).padding(start = 5.dp)
                                     )
 
                                     DropdownMenu(

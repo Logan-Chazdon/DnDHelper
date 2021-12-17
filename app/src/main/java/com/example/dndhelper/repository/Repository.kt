@@ -32,7 +32,7 @@ class Repository @Inject constructor(
                 dao?.insertClasses(it)
             }
         }
-        (webservice as WebserviceDnD).getClasses(_classes)
+        (webservice as WebserviceDnD).getLocalClasses(_classes)
 
         //races
         GlobalScope.launch {

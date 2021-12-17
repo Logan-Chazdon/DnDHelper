@@ -1,5 +1,9 @@
 package com.example.dndhelper.repository.webServices
 
+import android.content.Context
+import android.content.res.AssetManager
+import android.content.res.Resources
+import android.provider.Settings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.AppModule
@@ -10,7 +14,12 @@ import org.json.JSONObject
 import java.net.URL
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
+import java.io.File
 import java.lang.IllegalStateException
+import android.os.Environment
+import com.example.dndhelper.R
+import java.io.FileInputStream
+import java.io.InputStream
 
 
 @Component(modules = [AppModule::class])
@@ -18,8 +27,58 @@ interface Webservice {
 
 }
 
-class WebserviceDnD() : Webservice {
+class WebserviceDnD(val context: Context) : Webservice {
     private val baseUrl = "https://www.dnd5eapi.co"
+
+
+    fun getLocalClasses(_classes: MutableLiveData<List<Class>>){
+        val dataAsString = context.resources.openRawResource(R.raw.classes).bufferedReader().readText()
+
+        val classes = mutableListOf<Class>()
+        GlobalScope.launch {
+            val rootJson = JSONObject(dataAsString)
+            val classesJson = rootJson.getJSONArray("classes")
+            for(classIndex in 0 until classesJson.length()) {
+                val classJson = classesJson.getJSONObject(classIndex)
+                val name = classJson.getString("name")
+                val hitDie = classJson.getInt("hit_die")
+                val subClasses = mutableListOf<Subclass>()
+                val levelPath = extractFeatures(classJson.getJSONArray("features"))
+                classes.add(
+                    Class(
+                        name = name,
+                        hitDie = hitDie,
+                        subClasses = subClasses,
+                        levelPath = levelPath
+                    )
+                )
+            }
+            _classes.postValue(classes)
+        }
+    }
+
+    private fun extractFeatures(featuresJson: JSONArray) : MutableList<Feature> {
+        val features = mutableListOf<Feature>()
+        for(featureIndex in 0 until featuresJson.length()) {
+            val featureJson = featuresJson.getJSONObject(featureIndex)
+            val numOfChoices = featureJson.getInt("choose")
+            val options = if(numOfChoices == 0) {
+                null
+            } else {
+                extractFeatures(featureJson.getJSONArray("from"))
+            }
+            features.add(
+                Feature(
+                    name = featureJson.getString("name"),
+                    description = featureJson.getString("desc"),
+                    level = featureJson.getInt("level"),
+                    choiceNum = numOfChoices,
+                    options = options
+                )
+            )
+        }
+        return features
+    }
 
     fun getClasses(_classes : MutableLiveData<List<Class>>): LiveData<List<Class>> {
         GlobalScope.launch {
@@ -56,7 +115,7 @@ class WebserviceDnD() : Webservice {
                         var numOfChoices: Int = 0
                         var features = mutableListOf<Feature>()
                         val json_objectdetail: JSONObject = jsonarrayInfo.getJSONObject(i)
-                        val featureName = json_objectdetail.getString("name")
+                        var featureName = json_objectdetail.getString("name")
                         val url = "https://www.dnd5eapi.co" + json_objectdetail.get("url")
                         val featureResult = URL(url).readText()
                         val featureDesc = JSONObject(featureResult).getString("desc")
@@ -87,7 +146,15 @@ class WebserviceDnD() : Webservice {
                                 features.add(i, Feature(name, description, j, 0,null))
                             }
                         } catch (e: Exception) {
-
+                            //The api treats ability score improvements as non choices so this is required.
+                            if(featureName == "Ability Score Improvement") {
+                                featureName = "Feat or Ability Score Improvement"
+                                numOfChoices = 1
+                                features.add(Feature("Feat", "Gain a feat", j, 1,null))//TODO replace null with all feats
+                                features.add(Feature("Ability Score Improvement",
+                                    "Increase one ability by two or increase two abilities by one.",
+                                    j, 0,null))
+                             }
                         }
                         val feature = Feature(
                             name = featureName,

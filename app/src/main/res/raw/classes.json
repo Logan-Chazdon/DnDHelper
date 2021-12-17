@@ -1,0 +1,54 @@
+{
+  "classes": [
+    {
+      "name": "Artificer",
+      "hit_die": 10,
+      "proficiency_choices": [
+        {
+          "name": "Acrobatics"
+        }
+      ],
+      "features": [
+        {
+          "name": "Magical Tinkering",
+          "desc": "desc of the thingy",
+          "level": 1,
+          "choose" : 1,
+          "from" : [
+            {
+              "name": "Magical Tinkering",
+              "desc": "desc of the thingy",
+              "level": 1,
+              "choose" : 0
+            }
+          ]
+        }
+      ],
+      "equipment": [
+        {
+          "name": "any two simple weapons",
+          "choose": 2,
+          "options_index": "simple_weapons"
+        }
+      ],
+      "subclasses": [
+        {
+          "name": "Alchemist",
+          "features": [
+            {
+              "name": "Magical Tinkering",
+              "desc": "desc of the thingy"
+            }
+          ],
+          "spells": [
+            {
+              "level": 3,
+              "name": "The Spells Name",
+              "index": "the_spells_name"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

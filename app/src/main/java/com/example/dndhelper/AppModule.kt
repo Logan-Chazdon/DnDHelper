@@ -42,8 +42,8 @@ object RepositoryModule{
 
     @Provides
     @ViewModelScoped
-    fun providerWebservice(): Webservice {
-        return WebserviceDnD()
+    fun providerWebservice(@ApplicationContext appContext: Context): Webservice {
+        return WebserviceDnD(appContext)
     }
 
 

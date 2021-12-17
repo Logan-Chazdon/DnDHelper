@@ -43,7 +43,7 @@ class Repository @Inject constructor(
                 dao?.insertRaces(it)
             }
         }
-        (webservice as WebserviceDnD).getRaces(_races)
+        (webservice as WebserviceDnD).getLocalRaces(_races)
 
     }
 

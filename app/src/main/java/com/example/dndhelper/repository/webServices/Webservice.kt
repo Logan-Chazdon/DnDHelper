@@ -20,6 +20,7 @@ import android.os.Environment
 import com.example.dndhelper.R
 import java.io.FileInputStream
 import java.io.InputStream
+import java.util.*
 
 
 @Component(modules = [AppModule::class])
@@ -30,6 +31,91 @@ interface Webservice {
 class WebserviceDnD(val context: Context) : Webservice {
     private val baseUrl = "https://www.dnd5eapi.co"
 
+
+    fun getLocalRaces(_races: MutableLiveData<List<Race>>) {
+        val dataAsString = context.resources.openRawResource(R.raw.races).bufferedReader().readText()
+        val races = mutableListOf<Race>()
+        GlobalScope.launch {
+            val rootJson = JSONObject(dataAsString)
+            val racesJson = rootJson.getJSONArray("races")
+            for(raceIndex in 0 until racesJson.length()) {
+                val raceJson = racesJson.getJSONObject(raceIndex)
+                val name = raceJson.getString("name")
+                val groundSpeed = raceJson.getInt("ground_speed")
+                val abilityBonuses = extractLocalAbilityBonuses(raceJson.getJSONArray("ability_bonuses"))
+                val alignment = raceJson.getString("alignment")
+                val age = raceJson.getString("age")
+                val size = raceJson.getString("size")
+                val sizeDesc = raceJson.getString("size_desc")
+                val startingProficiencies = extractProficiencies(raceJson.getJSONArray("proficiencies"))
+                val languages = extractLangs(raceJson.getJSONArray("languages"))
+                val languageDesc = raceJson.getString("language_desc")
+                val traits = extractFeatures(raceJson.getJSONArray("features"))
+                val subraces = mutableListOf<Subrace>() //TODO
+
+
+                races.add(
+                    Race(
+                        name = name,
+                        groundSpeed = groundSpeed,
+                        abilityBonuses = abilityBonuses,
+                        alignment = alignment,
+                        age = age,
+                        size = size,
+                        sizeDesc = sizeDesc,
+                        startingProficiencies = startingProficiencies,
+                        languages = languages,
+                        languageDesc = languageDesc,
+                        traits = traits,
+                        subraces = subraces.toList()
+                    )
+                )
+            }
+            _races.postValue(races)
+        }
+    }
+
+    private fun extractLangs(languagesJson : JSONArray) : List<Language> {
+        val langs = mutableListOf<Language>()
+        for(langIndex in 0 until languagesJson.length()) {
+            val langJson = languagesJson.getJSONObject(langIndex)
+            langs.add(
+                Language(
+                    name = langJson.getString("name")
+                )
+            )
+        }
+        return langs
+    }
+
+
+    private fun extractProficiencies(proficienciesJson: JSONArray) : List<Proficiency> {
+        val proficiencies = mutableListOf<Proficiency>()
+        for(profIndex in 0 until proficienciesJson.length()) {
+            val profJson = proficienciesJson.getJSONObject(profIndex)
+            proficiencies.add(
+                Proficiency(
+                    name = profJson.getString("name")
+                )
+            )
+        }
+
+        return proficiencies
+    }
+
+    private fun extractLocalAbilityBonuses(abilityBonusesJson: JSONArray) : List<AbilityBonus> {
+        val abilityBonuses = mutableListOf<AbilityBonus>()
+        for(abilityBonusIndex in 0 until abilityBonusesJson.length()) {
+            val abilityBonusJson = abilityBonusesJson.getJSONObject(abilityBonusIndex)
+            abilityBonuses.add(
+                AbilityBonus(
+                    ability = abilityBonusJson.getString("name"),
+                    bonus = abilityBonusJson.getInt("bonus")
+                )
+            )
+        }
+        return abilityBonuses
+    }
 
     fun getLocalClasses(_classes: MutableLiveData<List<Class>>){
         val dataAsString = context.resources.openRawResource(R.raw.classes).bufferedReader().readText()

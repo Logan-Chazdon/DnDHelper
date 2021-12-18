@@ -12,12 +12,13 @@ import com.example.dndhelper.repository.model.Converters
 data class Character(
     @ColumnInfo(name="name")
     var name: String,
-
+    var race: Race? = null
+){
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name="id")
-    var id: Int
+    var id: Int = 0
 
-    ){
+
 
 }

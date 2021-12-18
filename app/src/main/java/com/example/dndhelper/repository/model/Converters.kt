@@ -170,4 +170,20 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToRace(data: String?): Race? {
+        val gson = Gson()
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<Race?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun raceToStoredString(myObjects: Race?): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
 }

@@ -14,6 +14,10 @@ import com.example.dndhelper.repository.dataClasses.Race
 import com.example.dndhelper.repository.webServices.WebserviceDnD
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import android.os.AsyncTask
+
+
+
 
 class Repository @Inject constructor(
     private var webservice: Webservice?,
@@ -58,4 +62,12 @@ class Repository @Inject constructor(
     fun getAllCharacters() : LiveData<List<Character>>? {
         return dao?.getAllCharacters()
     }
+
+    suspend fun insertCharacter(character: Character) {
+        GlobalScope.launch {
+            dao?.insertCharacter(character)
+        }
+    }
+
+
 }

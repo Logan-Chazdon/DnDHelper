@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
@@ -19,8 +20,10 @@ import androidx.compose.ui.unit.sp
 fun ConfirmRaceView(viewModel: NewCharacterViewModel, raceIndex: Int) {
     val races = viewModel.races.observeAsState()
     val scrollState = rememberScrollState(0)
+    val character = viewModel.character.observeAsState()
     Column(
-        Modifier.padding(start = 10.dp)
+        Modifier
+            .padding(start = 10.dp)
             .verticalScroll(scrollState)
     ) {
         Row(
@@ -36,6 +39,16 @@ fun ConfirmRaceView(viewModel: NewCharacterViewModel, raceIndex: Int) {
                     text = it.size,
                     fontSize = 16.sp
                 )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Button(onClick = {
+                        character.value?.race = races.value?.get(raceIndex)
+                    }) {
+                        Text(text = "Set as race", fontSize = 18.sp)
+                    }
+                }
             }
         }
 

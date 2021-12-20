@@ -33,17 +33,16 @@ fun Navigation(navController: NavHostController) {
 
 
 
-        navigation(startDestination = "newCharacterView/ClassView", route = "newCharacterView") {
             composable("newCharacterView/BackgroundView/{characterId}") { backStackEntry ->
                 backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
                     BackgroundView(characterId = characterId)
                 }
             }
             composable("newCharacterView/ClassView/{characterId}") { backStackEntry ->
-                backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
-                    val viewModel = hiltViewModel<NewCharacterClassViewModel>()
-                    ClassView(viewModel, navController = navController, characterId = characterId)
-                }
+                val characterId= backStackEntry.arguments?.getInt("characterId") ?: -1
+                val viewModel = hiltViewModel<NewCharacterClassViewModel>()
+                ClassView(viewModel, navController = navController, characterId = characterId)
+
             }
             composable("newCharacterView/ClassView/ConfirmClassView/{classIndex}/{characterId}") { backStackEntry ->
                 backStackEntry.arguments?.getString("classIndex")?.toInt()?.let { classIndex ->
@@ -87,5 +86,4 @@ fun Navigation(navController: NavHostController) {
                 }
             }
         }
-    }
 }

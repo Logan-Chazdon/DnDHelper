@@ -52,35 +52,38 @@ fun RootView() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
 
             when (val route = navBackStackEntry?.destination?.route?.split("/")?.get(0)) {
-                "newCharacterView" -> BottomNavigationBar(
-                    //TODO add custom icons
-                    items = listOf(
-                        NavItem(
-                            name = "Class",
-                            route =  "$route/ClassView",
-                            icon = Icons.Default.Home
+                "newCharacterView" -> {
+                    val id : Int = navBackStackEntry?.arguments?.getInt("classIndex") ?: -1
+                    BottomNavigationBar(
+                        //TODO add custom icons
+                        items = listOf(
+                            NavItem(
+                                name = "Class",
+                                route = "$route/ClassView/$id",
+                                icon = Icons.Default.Home
+                            ),
+                            NavItem(
+                                name = "Race",
+                                route = "$route/RaceView/$id",
+                                icon = Icons.Default.Home
+                            ),
+                            NavItem(
+                                name = "Background",
+                                route = "$route/BackgroundView/$id",
+                                icon = Icons.Default.Home
+                            ),
+                            NavItem(
+                                name = "Stats",
+                                route = "$route/StatsView/$id",
+                                icon = Icons.Default.Home
+                            )
                         ),
-                        NavItem(
-                            name = "Race",
-                            route =  "$route/RaceView",
-                            icon = Icons.Default.Home
-                        ),
-                        NavItem(
-                            name = "Background",
-                            route =  "$route/BackgroundView",
-                            icon = Icons.Default.Home
-                        ),
-                        NavItem(
-                            name = "Stats",
-                            route =  "$route/StatsView",
-                            icon = Icons.Default.Home
-                        )
-                    ),
-                    navController = navController,
-                    onItemClick = {
-                        navController.navigate(it.route)
-                    }
-                )
+                        navController = navController,
+                        onItemClick = {
+                            navController.navigate(it.route)
+                        }
+                    )
+                }
             }
         }
     ) {

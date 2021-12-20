@@ -22,12 +22,10 @@ public class NewCharacterRaceViewModel @Inject constructor(
 ):  AndroidViewModel(application) {
     lateinit var races : LiveData<List<Race>>
     var id = -1
-
     init {
         viewModelScope.launch {
             races = repository.getRaces()
         }
-
     }
 }
 

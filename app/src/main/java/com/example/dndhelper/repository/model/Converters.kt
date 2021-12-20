@@ -1,5 +1,6 @@
 package com.example.dndhelper.repository.model
 
+import androidx.lifecycle.MutableLiveData
 import androidx.room.TypeConverter
 import com.example.dndhelper.repository.dataClasses.*
 import com.google.gson.Gson
@@ -9,7 +10,7 @@ import java.util.*
 
 class Converters {
     @TypeConverter
-    fun storedStringToClass(data: String?): MutableList<Class> {
+    fun storedStringToClasses(data: String?): MutableList<Class> {
         val gson = Gson()
         if (data == null) {
             return mutableListOf()
@@ -19,10 +20,27 @@ class Converters {
     }
 
     @TypeConverter
+    fun classesToStoredString(myObjects: Class): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToClass(data: String?): Class {
+        val gson = Gson()
+        if (data == null) {
+            return Class(name = "My Character")
+        }
+        val listType: Type = object : TypeToken<Class>() {}.getType()
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
     fun classToStoredString(myObjects: MutableList<Class>): String? {
         val gson = Gson()
         return gson.toJson(myObjects)
     }
+
 
     @TypeConverter
     fun storedStringToSubClass(data: String?): MutableList<Subclass> {

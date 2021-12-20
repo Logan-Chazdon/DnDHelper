@@ -29,7 +29,6 @@ fun RaceView(
 
     Column(
         Modifier
-            .background(Color.LightGray)
             .verticalScroll(state = scrollState, enabled = true)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

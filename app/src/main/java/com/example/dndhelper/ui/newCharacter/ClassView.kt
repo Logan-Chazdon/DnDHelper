@@ -32,7 +32,6 @@ fun ClassView(
         modifier = Modifier
             .fillMaxHeight(0.95f)
             .fillMaxWidth()
-            .background(Color.LightGray)
             .verticalScroll(state = scrollState, enabled = true),
         horizontalAlignment = Alignment.CenterHorizontally,
 

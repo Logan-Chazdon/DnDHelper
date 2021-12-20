@@ -79,5 +79,14 @@ class Repository @Inject constructor(
         return dao?.findCharacterById(id)
     }
 
+    //Inserts a new character into the database and returns its ID
+    fun createDefaultCharacter() : Int {
+        val newCharacter = Character(name = "My Character")
+        GlobalScope.launch {
+            dao?.insertCharacter(newCharacter)
+        }
+        return newCharacter.id
+    }
+
 
 }

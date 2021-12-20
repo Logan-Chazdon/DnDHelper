@@ -44,7 +44,9 @@ fun ConfirmRaceView(viewModel: NewCharacterViewModel, raceIndex: Int) {
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(onClick = {
-                        character.value?.race = races.value?.get(raceIndex)
+                        val newCharacter = character.value
+                        newCharacter?.race = races.value?.get(raceIndex)
+                        viewModel.character.postValue(newCharacter)
                     }) {
                         Text(text = "Set as race", fontSize = 18.sp)
                     }

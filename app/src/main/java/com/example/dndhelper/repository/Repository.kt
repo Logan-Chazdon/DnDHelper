@@ -69,5 +69,11 @@ class Repository @Inject constructor(
         }
     }
 
+    fun deleteCharacterById(id: Int) {
+        GlobalScope.launch {
+            dao?.deleteCharacter(id)
+        }
+    }
+
 
 }

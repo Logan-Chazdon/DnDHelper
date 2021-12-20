@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.dndhelper.ui.character.AllCharactersView
 import com.example.dndhelper.ui.character.AllCharactersViewModel
+import com.example.dndhelper.ui.character.CharacterMainView
 import com.example.dndhelper.ui.newCharacter.*
 
 
@@ -19,7 +20,14 @@ fun Navigation(navController: NavHostController) {
 
         composable("allCharactersView") {
             val viewModel = hiltViewModel<AllCharactersViewModel>()
-            AllCharactersView(viewModel)
+            AllCharactersView(viewModel, navController)
+        }
+
+
+        composable("allCharactersView/CharacterMainView/{characterIndex}") { backStackEntry ->
+            backStackEntry.arguments?.getString("characterIndex")?.toInt()?.let {
+                CharacterMainView(it)
+            }
         }
 
 

@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 public class AllCharactersViewModel @Inject constructor(
   //  savedStateHandle: SavedStateHandle,
-    repository: Repository, application: Application
+   val repository: Repository, application: Application
 ): AndroidViewModel(application) {
     //val userId: String = savedStateHandle["uid"] ?:
     //throw IllegalArgumentException("missing user id")
@@ -28,5 +28,9 @@ public class AllCharactersViewModel @Inject constructor(
 
     fun getAllCharacters() : LiveData<List<Character>>? {
         return _allCharacters
+    }
+
+    fun deleteCharacterById(id: Int) {
+        repository.deleteCharacterById(id)
     }
 }

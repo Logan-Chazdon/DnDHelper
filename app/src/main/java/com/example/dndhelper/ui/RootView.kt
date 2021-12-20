@@ -32,11 +32,13 @@ fun RootView() {
                         NavItem(
                             name = "My Characters",
                             route = "allCharactersView",
+                            baseRoute = "allCharactersView",
                             icon = Icons.Default.Person
                         ),
                         NavItem(
                             name = "New Character",
                             route = "newCharacterView/ClassView/-1",
+                            baseRoute = "newCharacterView/ClassView",
                             icon = Icons.Default.Add
                         )
                 ),
@@ -60,21 +62,25 @@ fun RootView() {
                             NavItem(
                                 name = "Class",
                                 route = "$route/ClassView/$id",
+                                baseRoute = "$route/ClassView",
                                 icon = Icons.Default.Home
                             ),
                             NavItem(
                                 name = "Race",
                                 route = "$route/RaceView/$id",
+                                baseRoute = "$route/RaceView",
                                 icon = Icons.Default.Home
                             ),
                             NavItem(
                                 name = "Background",
                                 route = "$route/BackgroundView/$id",
+                                baseRoute = "$route/BackgroundView",
                                 icon = Icons.Default.Home
                             ),
                             NavItem(
                                 name = "Stats",
                                 route = "$route/StatsView/$id",
+                                baseRoute = "$route/StatsView",
                                 icon = Icons.Default.Home
                             )
                         ),

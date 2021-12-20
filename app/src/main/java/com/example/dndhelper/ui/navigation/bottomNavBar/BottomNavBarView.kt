@@ -28,7 +28,7 @@ fun BottomNavigationBar(
         elevation = 5.dp
     ) {
         items.forEach { item ->
-            val selected = item.route == backStackEntry.value?.destination?.route
+            val selected = backStackEntry.value?.destination?.route?.contains(item.baseRoute) ?: false
             BottomNavigationItem(
                 selected = selected,
                 onClick = { onItemClick(item)},

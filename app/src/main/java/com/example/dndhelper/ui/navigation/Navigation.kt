@@ -79,7 +79,7 @@ fun Navigation(navController: NavHostController) {
                     RaceView(viewModel, navController = navController, characterId = characterId)
                 }
             }
-            composable("newCharacterView/statsView/{characterId}") { backStackEntry ->
+            composable("newCharacterView/StatsView/{characterId}") { backStackEntry ->
                 backStackEntry.arguments?.getString("characterId")?.toInt()?.let {characterId ->
                     val viewModel = hiltViewModel<NewCharacterStatsViewModel>()
                     StatsView(viewModel, characterId)

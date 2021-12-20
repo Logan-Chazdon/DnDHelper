@@ -45,7 +45,7 @@ fun ClassView(
                     .height(100.dp)
                     .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
                     .clickable {
-                        navController.navigate("newCharacterView/ClassView/ConfirmClassView/$i")
+                        navController.navigate("newCharacterView/ClassView/ConfirmClassView/$characterId/$i")
                     }
             )
             {

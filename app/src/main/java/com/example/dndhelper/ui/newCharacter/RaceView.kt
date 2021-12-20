@@ -42,7 +42,7 @@ fun RaceView(
                     .fillMaxWidth(0.95f)
                     .padding(start = 10.dp)
                     .clickable {
-                               navController.navigate("newCharacterView/ConfirmRaceView/$i")
+                               navController.navigate("newCharacterView/ConfirmRaceView/$characterId/$i")
                     },
                 elevation = 10.dp
             ) {

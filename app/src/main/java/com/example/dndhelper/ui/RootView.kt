@@ -36,7 +36,7 @@ fun RootView() {
                         ),
                         NavItem(
                             name = "New Character",
-                            route = "newCharacterView/ClassView",
+                            route = "newCharacterView/ClassView/-1",
                             icon = Icons.Default.Add
                         )
                 ),

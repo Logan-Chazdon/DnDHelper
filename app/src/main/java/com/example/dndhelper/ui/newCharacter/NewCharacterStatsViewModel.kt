@@ -1,11 +1,7 @@
 package com.example.dndhelper.ui.newCharacter
-
 import android.app.Application
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.Class
 import com.example.dndhelper.repository.dataClasses.Race
@@ -16,31 +12,24 @@ import java.util.*
 import javax.inject.Inject
 import com.example.dndhelper.ui.newCharacter.utils.indexOf
 import com.example.dndhelper.repository.dataClasses.Character
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 
 @HiltViewModel
-public class NewCharacterViewModel @Inject constructor(
-    //  savedStateHandle: SavedStateHandle,
-    repository: Repository, application: Application
-): AndroidViewModel(application) {
-    lateinit var classes : LiveData<List<Class>>
-    lateinit var races : LiveData<List<Race>>
+public class NewCharacterStatsViewModel @Inject constructor(
+    private val repository: Repository,
+    application: Application,
+): AndroidViewModel(application)
+
+{
     var currentStateGenTypeIndex : MutableLiveData<Int> = MutableLiveData(0)
     var currentStats = MutableLiveData(listOf<Int>())
     var selectedStatIndexes = MutableLiveData(listOf<Int>(-1, -1, -1, -1, -1, -1))
     var currentStatsOptions = MutableLiveData(listOf<Int>())
     var pointsRemaining = MutableLiveData(27)
-    val character = MutableLiveData(
-        Character(
-            name = "My Character"
-        )
-    )
-
+    var id = -1
 
     init {
-        viewModelScope.launch {
-            classes = repository.getClasses()
-            races = repository.getRaces()
-        }
 
         currentStateGenTypeIndex.observeForever {
             val newStats = mutableListOf<Int>()
@@ -80,12 +69,6 @@ public class NewCharacterViewModel @Inject constructor(
             }
         }
 
-        //Insert the character into the database whenever we change it.
-        character.observeForever {
-            viewModelScope.launch {
-                repository.insertCharacter(it)
-            }
-        }
     }
 
     private fun generateCurrentStatOptions(indexes: List<Int>, newStats: List<Int>) {

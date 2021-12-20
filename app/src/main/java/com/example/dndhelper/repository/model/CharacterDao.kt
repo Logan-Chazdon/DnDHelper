@@ -16,7 +16,7 @@ interface DatabaseDao {
     fun insertCharacter(character: Character)
 
     @Query("SELECT * FROM characters WHERE id = :id")
-    fun findCharacterById(id: Int): LiveData<Character?>
+    fun findCharacterById(id: Int): Character?
 
     @Query("DELETE FROM characters WHERE id = :id")
     fun deleteCharacter(id: Int)

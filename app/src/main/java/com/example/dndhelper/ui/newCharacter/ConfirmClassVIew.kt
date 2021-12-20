@@ -7,21 +7,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.lang.Exception
 
 @Composable
-fun ConfirmClassView(viewModel: NewCharacterViewModel,classIndex: Int) {
+fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, characterId: Int) {
     val classes = viewModel.classes.observeAsState()
+    viewModel.id = characterId
     Column(
         modifier = Modifier
             .fillMaxSize()

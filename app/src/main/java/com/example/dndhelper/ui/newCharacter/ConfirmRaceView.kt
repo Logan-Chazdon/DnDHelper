@@ -1,7 +1,6 @@
 package com.example.dndhelper.ui.newCharacter
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,10 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ConfirmRaceView(viewModel: NewCharacterViewModel, raceIndex: Int) {
+fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, raceIndex: Int, characterId: Int) {
     val races = viewModel.races.observeAsState()
     val scrollState = rememberScrollState(0)
-    val character = viewModel.character.observeAsState()
+    viewModel.id = characterId
     Column(
         Modifier
             .padding(start = 10.dp)
@@ -44,9 +43,7 @@ fun ConfirmRaceView(viewModel: NewCharacterViewModel, raceIndex: Int) {
                     horizontalArrangement = Arrangement.End
                 ) {
                     Button(onClick = {
-                        val newCharacter = character.value
-                        newCharacter?.race = races.value?.get(raceIndex)
-                        viewModel.character.postValue(newCharacter)
+                        //Change the race
                     }) {
                         Text(text = "Set as race", fontSize = 18.sp)
                     }

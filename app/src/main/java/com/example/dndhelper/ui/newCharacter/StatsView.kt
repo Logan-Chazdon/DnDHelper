@@ -12,15 +12,16 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun StatsView(
-    viewModel: NewCharacterViewModel
+    viewModel: NewCharacterStatsViewModel,
+    characterId: Int
 ) {
+    viewModel.id = characterId
     Column {
         var statGenDropdownExpanded by remember { mutableStateOf(false) }
         val selectedIndexStatGen = viewModel.currentStateGenTypeIndex.observeAsState()

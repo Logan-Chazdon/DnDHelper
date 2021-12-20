@@ -3,6 +3,6 @@ package com.example.dndhelper.ui.newCharacter
 import androidx.compose.runtime.Composable
 
 @Composable
-fun ConfirmBackgroundView() {
+fun ConfirmBackgroundView(characterId: Int) {
     //TODO
 }

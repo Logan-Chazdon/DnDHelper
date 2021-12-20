@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,9 +19,11 @@ import androidx.navigation.NavController
 
 @Composable
 fun RaceView(
-    viewModel: NewCharacterViewModel,
-    navController: NavController
+    viewModel: NewCharacterRaceViewModel,
+    navController: NavController,
+    characterId: Int
 ) {
+    viewModel.id = characterId
     val races = viewModel.races.observeAsState()
     val scrollState = rememberScrollState()
 

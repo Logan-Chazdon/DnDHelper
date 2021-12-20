@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,12 +21,13 @@ import androidx.navigation.NavController
 
 @Composable
 fun ClassView(
-    viewModel: NewCharacterViewModel,
-    navController: NavController
+    viewModel: NewCharacterClassViewModel,
+    navController: NavController,
+    characterId: Int
 ) {
     val classes by viewModel.classes.observeAsState()
     val scrollState = rememberScrollState()
-
+    viewModel.id = characterId
     Column(
         modifier = Modifier
             .fillMaxHeight(0.95f)

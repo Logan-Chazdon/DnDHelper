@@ -75,5 +75,9 @@ class Repository @Inject constructor(
         }
     }
 
+    fun getCharacterById(id: Int) : Character? {
+        return dao?.findCharacterById(id)
+    }
+
 
 }

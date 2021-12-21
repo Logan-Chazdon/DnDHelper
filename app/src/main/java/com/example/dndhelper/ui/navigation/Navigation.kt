@@ -67,6 +67,7 @@ fun Navigation(navController: NavHostController) {
                         val viewModel = hiltViewModel<NewCharacterRaceViewModel>()
                         ConfirmRaceView(
                             viewModel = viewModel,
+                            navController = navController,
                             raceIndex = raceIndex,
                             characterId = characterId
                         )

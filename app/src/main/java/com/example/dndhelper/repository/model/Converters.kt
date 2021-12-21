@@ -204,4 +204,20 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToStringIntMap(data: String?): MutableMap<String, Int> {
+        val gson = Gson()
+        if (data == null) {
+            return mutableMapOf()
+        }
+        val listType: Type = object : TypeToken<MutableMap<String, Int>?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun stringIntMapToStoredString(myObjects: MutableMap<String, Int>?): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
 }

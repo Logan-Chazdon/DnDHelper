@@ -20,4 +20,5 @@ data class Character(
     @ColumnInfo(name="id")
     var id: Int = 0
 
+    var baseStats = mutableMapOf<String, Int>()
 }

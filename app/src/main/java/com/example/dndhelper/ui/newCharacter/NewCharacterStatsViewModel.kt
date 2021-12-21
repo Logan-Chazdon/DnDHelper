@@ -14,6 +14,7 @@ import com.example.dndhelper.ui.newCharacter.utils.indexOf
 import com.example.dndhelper.repository.dataClasses.Character
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.GlobalScope
 
 @HiltViewModel
 public class NewCharacterStatsViewModel @Inject constructor(
@@ -28,6 +29,26 @@ public class NewCharacterStatsViewModel @Inject constructor(
     var currentStatsOptions = MutableLiveData(listOf<Int>())
     var pointsRemaining = MutableLiveData(27)
     var id = -1
+
+    private suspend fun updateStats() {
+        if(id == -1)
+            id = repository.createDefaultCharacter()!!
+        val character = repository.getCharacterById(id)
+        character!!.baseStats = generateStatMap()
+        repository.insertCharacter(character)
+    }
+
+    private fun generateStatMap() : MutableMap<String, Int> {
+        val statMap = mutableMapOf<String, Int>()
+        val statNames =  listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")
+        selectedStatIndexes.value?.forEachIndexed { i, it ->
+            if(it != -1) {
+                statMap[statNames[i]] = currentStats.value?.get(it)!!
+            }
+        }
+        return statMap
+    }
+
 
     init {
 
@@ -66,6 +87,9 @@ public class NewCharacterStatsViewModel @Inject constructor(
                 generateCurrentStatOptions(selectedStatIndexes.value!!,
                     it1
                 )
+            }
+            GlobalScope.launch {
+                updateStats()
             }
         }
 

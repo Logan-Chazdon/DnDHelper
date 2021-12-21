@@ -95,5 +95,27 @@ dependencies {
     //ViewModels
     implementation 'androidx.activity:activity-ktx:1.4.0'
 
+    //AndroidJUnitRunner and JUnit Rules
+    implementation 'androidx.test:runner:1.4.0'
+    implementation 'androidx.test:rules:1.4.0'
+
+    //Espresso dependencies
+    implementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'androidx.test.espresso:espresso-intents:3.4.0'
+
+    //Core library
+    implementation 'androidx.test:core:1.4.0'
+
+    //AndroidJUnitRunner and JUnit Rules
+    implementation 'androidx.test:runner:1.4.0'
+    implementation 'androidx.test:rules:1.4.0'
+
+    //Espresso dependencies
+    implementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'androidx.test.espresso:espresso-intents:3.4.0'
+
+    //
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
 
 }

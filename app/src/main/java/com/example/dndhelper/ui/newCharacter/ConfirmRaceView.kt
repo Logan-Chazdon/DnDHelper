@@ -1,5 +1,7 @@
 package com.example.dndhelper.ui.newCharacter
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,14 +16,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import androidx.core.app.ActivityCompat.recreate
+
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
+
+
+
+
 
 @Composable
-fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, raceIndex: Int, characterId: Int) {
+fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, navController: NavController, raceIndex: Int, characterId: Int) {
     val races = viewModel.races.observeAsState()
     val scrollState = rememberScrollState(0)
     viewModel.id = characterId
+    val mainLooper = Looper.getMainLooper()
     Column(
         Modifier
             .padding(start = 10.dp)
@@ -46,9 +59,14 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, raceIndex: Int, charac
                 ) {
                     Button(onClick = {
                         //Change the race
-                        GlobalScope.launch {
+                        GlobalScope.launch{
                             viewModel.setRace(it)
+                            //Navigate to the next step
+                            Handler(mainLooper).post {
+                                navController.navigate("newCharacterView/BackgroundView/${viewModel.id}")
+                            }
                         }
+
                     }) {
                         Text(text = "Set as race", fontSize = 18.sp)
                     }
@@ -105,3 +123,4 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, raceIndex: Int, charac
 
     }
 }
+

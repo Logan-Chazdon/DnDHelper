@@ -26,6 +26,7 @@ class Repository @Inject constructor(
 ) {
     private val _classes : MutableLiveData<List<Class>> = MutableLiveData<List<Class>>()
     private val _races : MutableLiveData<List<Race>> = MutableLiveData<List<Race>>()
+    private val _characters : LiveData<List<Character>>? = dao?.getAllCharacters()
     init {
         //classes
         GlobalScope.launch {
@@ -63,10 +64,8 @@ class Repository @Inject constructor(
         return dao?.getAllCharacters()
     }
 
-    suspend fun insertCharacter(character: Character) {
-        GlobalScope.launch {
-            dao?.insertCharacter(character)
-        }
+    fun insertCharacter(character: Character) {
+        dao?.insertCharacter(character)
     }
 
     fun deleteCharacterById(id: Int) {
@@ -75,17 +74,14 @@ class Repository @Inject constructor(
         }
     }
 
-    fun getCharacterById(id: Int) : Character? {
+    suspend fun getCharacterById(id: Int) : Character? {
         return dao?.findCharacterById(id)
     }
 
     //Inserts a new character into the database and returns its ID
-    fun createDefaultCharacter() : Int {
+    fun createDefaultCharacter() : Int? {
         val newCharacter = Character(name = "My Character")
-        GlobalScope.launch {
-            dao?.insertCharacter(newCharacter)
-        }
-        return newCharacter.id
+        return dao?.insertCharacter(newCharacter)?.toInt()
     }
 
 

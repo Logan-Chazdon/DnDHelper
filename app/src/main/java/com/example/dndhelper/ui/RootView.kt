@@ -52,10 +52,9 @@ fun RootView() {
         },
         bottomBar = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-
             when (val route = navBackStackEntry?.destination?.route?.split("/")?.get(0)) {
                 "newCharacterView" -> {
-                    val id : Int = navBackStackEntry?.arguments?.getInt("classIndex") ?: -1
+                    val id : Int = navBackStackEntry?.arguments?.getString("characterId")?.toInt() ?: -1
                     BottomNavigationBar(
                         //TODO add custom icons
                         items = listOf(

@@ -1,5 +1,6 @@
 package com.example.dndhelper.repository.dataClasses
 
+import androidx.annotation.IntegerRes
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -18,7 +19,5 @@ data class Character(
     @NonNull
     @ColumnInfo(name="id")
     var id: Int = 0
-
-
 
 }

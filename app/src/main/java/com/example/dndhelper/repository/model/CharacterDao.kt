@@ -13,10 +13,10 @@ import com.example.dndhelper.repository.dataClasses.Race
 interface DatabaseDao {
     //Character Table
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCharacter(character: Character)
+    fun insertCharacter(character: Character) : Long
 
     @Query("SELECT * FROM characters WHERE id = :id")
-    fun findCharacterById(id: Int): Character?
+    suspend fun findCharacterById(id: Int): Character?
 
     @Query("DELETE FROM characters WHERE id = :id")
     fun deleteCharacter(id: Int)

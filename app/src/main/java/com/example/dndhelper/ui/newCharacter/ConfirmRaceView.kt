@@ -14,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, raceIndex: Int, characterId: Int) {
@@ -44,6 +46,9 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, raceIndex: Int, charac
                 ) {
                     Button(onClick = {
                         //Change the race
+                        GlobalScope.launch {
+                            viewModel.setRace(it)
+                        }
                     }) {
                         Text(text = "Set as race", fontSize = 18.sp)
                     }

@@ -3,6 +3,6 @@ package com.example.dndhelper.ui.character
 import androidx.compose.runtime.Composable
 
 @Composable
-fun AbilitiesView() {
+fun AbilitiesView(i: Int) {
 
 }

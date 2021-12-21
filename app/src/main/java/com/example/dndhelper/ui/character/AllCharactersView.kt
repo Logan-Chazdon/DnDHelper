@@ -98,7 +98,7 @@ fun AllCharactersView(
                     .fillMaxWidth(0.95f)
                     .padding(start = 10.dp)
                     .clickable {
-                        navController.navigate("allCharactersView/CharacterMainView/$i")
+                        navController.navigate("characterView/MainView/$i")
                     },
                 elevation = 10.dp
             ) {

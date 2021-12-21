@@ -6,10 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
-import com.example.dndhelper.ui.character.AllCharactersView
-import com.example.dndhelper.ui.character.AllCharactersViewModel
-import com.example.dndhelper.ui.character.CharacterMainView
+import com.example.dndhelper.ui.character.*
 import com.example.dndhelper.ui.newCharacter.*
 
 
@@ -25,15 +22,35 @@ fun Navigation(navController: NavHostController) {
         }
 
 
-        composable("allCharactersView/CharacterMainView/{characterId}") { backStackEntry ->
+        composable("characterView/MainView/{characterId}") { backStackEntry ->
             backStackEntry.arguments?.getString("characterId")?.toInt()?.let {
                 CharacterMainView(it)
             }
         }
 
+        composable("characterView/AbilitiesView/{characterId}") { backStackEntry ->
+            backStackEntry.arguments?.getString("characterId")?.toInt()?.let {
+                AbilitiesView(it)
+            }
+        }
+
+        composable("characterView/CombatView/{characterId}") { backStackEntry ->
+            backStackEntry.arguments?.getString("characterId")?.toInt()?.let {
+                CombatView(it)
+            }
+        }
+
+        composable("characterView/ItemsView/{characterId}") { backStackEntry ->
+            backStackEntry.arguments?.getString("characterId")?.toInt()?.let {
+                ItemsView(it)
+            }
+        }
 
 
-            composable("newCharacterView/BackgroundView/{characterId}") { backStackEntry ->
+
+
+
+        composable("newCharacterView/BackgroundView/{characterId}") { backStackEntry ->
                 backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
                     BackgroundView(characterId = characterId)
                 }

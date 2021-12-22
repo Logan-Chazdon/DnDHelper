@@ -35,7 +35,8 @@ public class NewCharacterStatsViewModel @Inject constructor(
             id = repository.createDefaultCharacter()!!
         val character = repository.getCharacterById(id)
         character!!.baseStats = generateStatMap()
-        repository.insertCharacter(character)
+        if(character.baseStats.isNotEmpty())
+            repository.insertCharacter(character)
     }
 
     private fun generateStatMap() : MutableMap<String, Int> {

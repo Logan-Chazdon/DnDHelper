@@ -51,7 +51,7 @@ fun BackgroundView(
                         Text(text = it.desc, fontSize = 16.sp, modifier = Modifier.padding(start = 30.dp))
 
                         it.features.forEach { feature ->
-                            Text(text = feature.name, fontSize = 18.sp, modifier = Modifier.padding(start = 30.dp))
+                            Text(text = feature.name, fontSize = 18.sp, modifier = Modifier.padding(start = 20.dp))
                             Text(text = feature.description, fontSize = 14.sp, modifier = Modifier.padding(start = 30.dp))
                         }
 

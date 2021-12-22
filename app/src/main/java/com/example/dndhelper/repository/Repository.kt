@@ -15,8 +15,7 @@ import com.example.dndhelper.repository.webServices.WebserviceDnD
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import android.os.AsyncTask
-
-
+import com.example.dndhelper.repository.dataClasses.Background
 
 
 class Repository @Inject constructor(
@@ -26,8 +25,12 @@ class Repository @Inject constructor(
 ) {
     private val _classes : MutableLiveData<List<Class>> = MutableLiveData<List<Class>>()
     private val _races : MutableLiveData<List<Race>> = MutableLiveData<List<Race>>()
+    private val _backgrounds = MutableLiveData<List<Background>>()
     private val _characters : LiveData<List<Character>>? = dao?.getAllCharacters()
     init {
+        //backgrounds
+        (webservice as WebserviceDnD).getLocalBackgrounds(_backgrounds)
+
         //classes
         GlobalScope.launch {
             _classes.postValue(dao?.getAllClasses())
@@ -50,6 +53,10 @@ class Repository @Inject constructor(
         }
         (webservice as WebserviceDnD).getLocalRaces(_races)
 
+    }
+
+    fun getBackgrounds() : LiveData<List<Background>> {
+        return _backgrounds
     }
 
     fun getRaces(): LiveData<List<Race>> {

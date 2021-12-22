@@ -18,6 +18,7 @@ import java.io.File
 import java.lang.IllegalStateException
 import android.os.Environment
 import com.example.dndhelper.R
+import org.json.JSONException
 import java.io.FileInputStream
 import java.io.InputStream
 import java.util.*
@@ -31,6 +32,49 @@ interface Webservice {
 class WebserviceDnD(val context: Context) : Webservice {
     private val baseUrl = "https://www.dnd5eapi.co"
 
+    fun getLocalBackgrounds(_backgrounds : MutableLiveData<List<Background>>) {
+        val dataAsString = context.resources.openRawResource(R.raw.backgrounds).bufferedReader().readText()
+        val backgrounds = mutableListOf<Background>()
+
+        GlobalScope.launch {
+            val rootJson = JSONObject(dataAsString)
+            val backgroundsJson = rootJson.getJSONArray("backgrounds")
+            for(backgroundIndex in 0 until backgroundsJson.length()) {
+                val backgroundJson = backgroundsJson.getJSONObject(backgroundIndex)
+                val name = backgroundJson.getString("name")
+                val desc = backgroundJson.getString("desc")
+                val proficiencies = extractProficiencies(backgroundJson.getJSONArray("proficiencies"))
+                val features = extractFeatures(backgroundJson.getJSONArray("features"))
+                val languages = extractLangs(backgroundJson.getJSONArray("languages"))
+                val equipment = mutableListOf<ItemChoice>()
+                val itemChoicesJson = backgroundJson.getJSONArray("equipment")
+                for(equipmentIndex in 0 until itemChoicesJson.length()) {
+                    val itemChoiceJson = itemChoicesJson.getJSONObject(equipmentIndex)
+                    val choose = itemChoiceJson.getInt("choose")
+                    val fromJson = itemChoiceJson.getJSONArray("from")
+                    val from = mutableListOf<Item>()
+                    for(itemIndex in 0 until fromJson.length()) {
+                        val itemJson = fromJson.getJSONObject(itemIndex)
+                        from.add(Item(name = itemJson.getString("name")))
+                    }
+                    equipment.add(ItemChoice(choose = choose, from))
+                }
+
+                backgrounds.add(
+                    Background(
+                        name = name,
+                        desc = desc,
+                        proficiencies = proficiencies,
+                        features = features,
+                        languages = languages,
+                        equipment = equipment,
+                    )
+                )
+
+            }
+            _backgrounds.postValue(backgrounds)
+        }
+    }
 
     fun getLocalRaces(_races: MutableLiveData<List<Race>>) {
         val dataAsString = context.resources.openRawResource(R.raw.races).bufferedReader().readText()
@@ -147,7 +191,17 @@ class WebserviceDnD(val context: Context) : Webservice {
         val features = mutableListOf<Feature>()
         for(featureIndex in 0 until featuresJson.length()) {
             val featureJson = featuresJson.getJSONObject(featureIndex)
-            val numOfChoices = featureJson.getInt("choose")
+            var numOfChoices = 0
+            var level = 0
+
+            try {
+                level = featureJson.getInt("level")
+            } catch (e : JSONException) {}
+
+            try {
+               numOfChoices = featureJson.getInt("choose")
+            } catch ( e : JSONException) {}
+
             val options = if(numOfChoices == 0) {
                 null
             } else {
@@ -157,7 +211,7 @@ class WebserviceDnD(val context: Context) : Webservice {
                 Feature(
                     name = featureJson.getString("name"),
                     description = featureJson.getString("desc"),
-                    level = featureJson.getInt("level"),
+                    level = level,
                     choiceNum = numOfChoices,
                     options = options
                 )

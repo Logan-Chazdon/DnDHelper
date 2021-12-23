@@ -45,19 +45,29 @@ class WebserviceDnD(val context: Context) : Webservice {
                 val desc = backgroundJson.getString("desc")
                 val proficiencies = extractProficiencies(backgroundJson.getJSONArray("proficiencies"))
                 val features = extractFeatures(backgroundJson.getJSONArray("features"))
-                val languages = extractLangs(backgroundJson.getJSONArray("languages"))
+                var languages = listOf<Language>()
+                try {
+                    languages = extractLangs(backgroundJson.getJSONArray("languages"))
+                } catch (e: JSONException) {}
+
                 val equipment = mutableListOf<ItemChoice>()
                 val itemChoicesJson = backgroundJson.getJSONArray("equipment")
+
                 for(equipmentIndex in 0 until itemChoicesJson.length()) {
                     val itemChoiceJson = itemChoicesJson.getJSONObject(equipmentIndex)
                     val choose = itemChoiceJson.getInt("choose")
-                    val fromJson = itemChoiceJson.getJSONArray("from")
-                    val from = mutableListOf<Item>()
-                    for(itemIndex in 0 until fromJson.length()) {
-                        val itemJson = fromJson.getJSONObject(itemIndex)
-                        from.add(Item(name = itemJson.getString("name")))
+                    if(choose != 0) {
+                        val fromJson = itemChoiceJson.getJSONArray("from")
+                        val from = mutableListOf<Item>()
+                        for (itemIndex in 0 until fromJson.length()) {
+                            val itemJson = fromJson.getJSONObject(itemIndex)
+                            from.add(Item(name = itemJson.getString("name")))
+                        }
+                        equipment.add(ItemChoice(choose = choose, from))
+                    } else {
+                        val item = Item(itemChoiceJson.getString("name"))
+                        equipment.add(ItemChoice(0, listOf(item)))
                     }
-                    equipment.add(ItemChoice(choose = choose, from))
                 }
 
                 backgrounds.add(

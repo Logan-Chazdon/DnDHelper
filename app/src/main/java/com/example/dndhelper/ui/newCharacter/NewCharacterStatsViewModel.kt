@@ -138,8 +138,7 @@ public class NewCharacterStatsViewModel @Inject constructor(
     }
 
 
-    fun selectedStatByIndex(index: Int, element: Int, id: Int) {
-        this.id = id
+    fun selectedStatByIndex(index: Int, element: Int) {
         if(currentStateGenTypeIndex.value == 1 || currentStateGenTypeIndex.value == 2){
             val newIndexes = selectedStatIndexes.value?.toMutableList()
 

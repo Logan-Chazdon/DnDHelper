@@ -53,6 +53,104 @@
 
       ]
 
+    },
+    {
+      "name" : "Dragonborn",
+      "ability_bonuses" : [
+        {
+          "name" : "Strength",
+          "bonus" : 2
+        },
+        {
+          "name" : "Charisma",
+          "bonus" : 1
+        }
+      ],
+
+      "age" : "Young dragonborn grow quickly. They walk hours after hatching, attain the size and development of a 10-year-old human child by the age of 3, and reach adulthood by 15. They live to be around 80.",
+      "alignment": "Most aarakocra are good and rarely choose sides when it comes to law and chaos. Tribal leaders and warriors might be lawful, while explorers and adventurers might tend toward chaotic",
+      "size" : "Medium",
+      "size_desc" : "Dragonborn are taller and heavier than humans, standing well over 6 feet tall and averaging almost 250 pounds. Your size is Medium.",
+      "ground_speed" :  30,
+      "languages" : [
+        {
+          "name" : "Common"
+        },
+        {
+          "name" : "Draconic"
+        }
+
+      ],
+
+      "language_desc" : "You can speak, read, and write Common and Draconic. Draconic is thought to be one of the oldest languages and is often used in the study of magic. The language sounds harsh to most other creatures and includes numerous hard consonants and sibilants.",
+
+      "features" : [
+        {
+          "name" : "Draconic Ancestry",
+          "desc" : "You have draconic ancestry. Choose one type of dragon from the Draconic Ancestry table. Your breath weapon and damage resistance are determined by the dragon type, as shown in the table.",
+          "level" : 0,
+          "choose" : 1,
+          "from" : [
+            {
+              "name" : "Black",
+              "desc" : "You deal acid damage in 5 by 30 ft. line (Dex. save)"
+            },
+            {
+              "name" : "Blue",
+              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+            },
+            {
+              "name" : "Brass",
+              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+            },
+            {
+              "name" : "Bronze",
+              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+            },
+            {
+              "name" : "Copper",
+              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+            },
+             {
+              "name" : "Bronze",
+              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+            },
+             {
+              "name" : "Gold",
+              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
+            },
+             {
+              "name" : "Green",
+              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
+            },
+             {
+              "name" : "Red",
+              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
+            },
+             {
+              "name" : "Silver",
+              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
+            },
+              {
+              "name" : "White",
+              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
+            }
+          ]
+        }
+      ],
+
+      "proficiencies" : [
+
+      ],
+
+      "subraces" : [
+        {
+          "name": "Chromatic Dragonborn TODO"
+
+        }
+
+      ]
+
     }
 
   ]

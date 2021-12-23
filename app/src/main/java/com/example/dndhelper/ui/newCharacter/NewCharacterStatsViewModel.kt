@@ -89,9 +89,6 @@ public class NewCharacterStatsViewModel @Inject constructor(
                     it1
                 )
             }
-            GlobalScope.launch {
-                updateStats()
-            }
         }
 
     }
@@ -141,7 +138,8 @@ public class NewCharacterStatsViewModel @Inject constructor(
     }
 
 
-    fun selectedStatByIndex(index: Int, element: Int) {
+    fun selectedStatByIndex(index: Int, element: Int, id: Int) {
+        this.id = id
         if(currentStateGenTypeIndex.value == 1 || currentStateGenTypeIndex.value == 2){
             val newIndexes = selectedStatIndexes.value?.toMutableList()
 
@@ -159,6 +157,9 @@ public class NewCharacterStatsViewModel @Inject constructor(
             newIndexes?.set(index, num)
 
             selectedStatIndexes.postValue(newIndexes)
+        }
+        GlobalScope.launch {
+            updateStats()
         }
     }
 

@@ -107,7 +107,7 @@ fun ConfirmBackgroundView(
 
                 Spacer(Modifier.height(10.dp))
 
-                if(background.proficiencies.isNotEmpty()) {
+                if(background.proficiencies.isNotEmpty() || background.toolProficiencies.isNotEmpty()) {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         backgroundColor = Color.White,
@@ -115,12 +115,15 @@ fun ConfirmBackgroundView(
                         shape = RoundedCornerShape(10.dp)
                     ) {
 
+                        var proficiencies = ""
+                        background.proficiencies.forEach {
+                            proficiencies += it.name + " "
+                        }
+                        background.toolProficiencies.forEach {
+                            proficiencies += it.name + " "
+                        }
                         Row(modifier = Modifier.padding(5.dp)) {
-                            Text(text = "Proficiencies: ")
-
-                            background.proficiencies.forEach {
-                                Text(text = it.name + " ")
-                            }
+                            Text(text = "Proficiencies: $proficiencies")
                         }
                     }
                 }

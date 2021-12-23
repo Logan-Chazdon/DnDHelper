@@ -35,7 +35,11 @@ class WebserviceDnD(val context: Context) : Webservice {
                 val name = backgroundJson.getString("name")
                 val desc = backgroundJson.getString("desc")
                 val proficiencies = extractProficiencies(backgroundJson.getJSONArray("proficiencies"))
-                val toolProficiencies = extractToolProficiencies(backgroundJson.getJSONArray("tool_proficiencies"))
+                var toolProficiencies = listOf<ToolProficiency>()
+                try {
+                    toolProficiencies = extractToolProficiencies(backgroundJson.getJSONArray("tool_proficiencies"))
+                } catch(e: JSONException) {}
+
                 val features = extractFeatures(backgroundJson.getJSONArray("features"))
                 var languages = listOf<Language>()
                 try {

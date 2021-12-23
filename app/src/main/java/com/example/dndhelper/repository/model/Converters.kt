@@ -220,4 +220,20 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToBackground(data: String?): Background? {
+        val gson = Gson()
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<Background?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun backgroundToStoredString(myObjects: Background?): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
 }

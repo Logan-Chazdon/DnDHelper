@@ -21,4 +21,6 @@ data class Character(
     var id: Int = 0
 
     var baseStats = mutableMapOf<String, Int>()
+
+    var background: Background? = null
 }

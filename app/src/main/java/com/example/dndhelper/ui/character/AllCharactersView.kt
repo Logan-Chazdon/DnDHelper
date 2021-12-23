@@ -103,8 +103,10 @@ fun AllCharactersView(
                 elevation = 10.dp
             ) {
                 Column() {
-                    Row() {
+                    Row(verticalAlignment = Alignment.Bottom) {
                         Text(text = it.name, fontSize = 24.sp)
+                        Spacer(Modifier.width(5.dp))
+                        it.background?.let { it1 -> Text(text = it1.name, fontSize = 14.sp) }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End

@@ -1,9 +1,6 @@
 package com.example.dndhelper.repository.webServices
 
 import android.content.Context
-import android.content.res.AssetManager
-import android.content.res.Resources
-import android.provider.Settings
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.AppModule
@@ -12,16 +9,10 @@ import dagger.Component
 import org.json.JSONArray
 import org.json.JSONObject
 import java.net.URL
-import com.google.gson.JsonObject
 import kotlinx.coroutines.*
-import java.io.File
 import java.lang.IllegalStateException
-import android.os.Environment
 import com.example.dndhelper.R
 import org.json.JSONException
-import java.io.FileInputStream
-import java.io.InputStream
-import java.util.*
 
 
 @Component(modules = [AppModule::class])
@@ -50,12 +41,14 @@ class WebserviceDnD(val context: Context) : Webservice {
                     languages = extractLangs(backgroundJson.getJSONArray("languages"))
                 } catch (e: JSONException) {}
 
-                val equipment = mutableListOf<ItemChoice>()
+                val equipmentChoices = mutableListOf<ItemChoice>()
+                val equipment = mutableListOf<Item>()
                 val itemChoicesJson = backgroundJson.getJSONArray("equipment")
 
                 for(equipmentIndex in 0 until itemChoicesJson.length()) {
                     val itemChoiceJson = itemChoicesJson.getJSONObject(equipmentIndex)
                     val choose = itemChoiceJson.getInt("choose")
+                    val itemName = itemChoiceJson.getString("name")
                     if(choose != 0) {
                         val fromJson = itemChoiceJson.getJSONArray("from")
                         val from = mutableListOf<Item>()
@@ -63,10 +56,10 @@ class WebserviceDnD(val context: Context) : Webservice {
                             val itemJson = fromJson.getJSONObject(itemIndex)
                             from.add(Item(name = itemJson.getString("name")))
                         }
-                        equipment.add(ItemChoice(choose = choose, from))
+                        equipmentChoices.add(ItemChoice(name = itemName, choose = choose, from = from))
                     } else {
                         val item = Item(itemChoiceJson.getString("name"))
-                        equipment.add(ItemChoice(0, listOf(item)))
+                        equipment.add(item)
                     }
                 }
 
@@ -78,6 +71,7 @@ class WebserviceDnD(val context: Context) : Webservice {
                         features = features,
                         languages = languages,
                         equipment = equipment,
+                        equipmentChoices = equipmentChoices,
                     )
                 )
 

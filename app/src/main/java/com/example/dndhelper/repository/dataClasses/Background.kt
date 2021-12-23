@@ -6,5 +6,6 @@ data class Background (
         val proficiencies : List<Proficiency>,
         val features : List<Feature>,
         val languages : List<Language>,
-        val equipment: List<ItemChoice>
+        val equipment : List<Item>,
+        val equipmentChoices: List<ItemChoice>
 )

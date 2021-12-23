@@ -35,6 +35,7 @@ class WebserviceDnD(val context: Context) : Webservice {
                 val name = backgroundJson.getString("name")
                 val desc = backgroundJson.getString("desc")
                 val proficiencies = extractProficiencies(backgroundJson.getJSONArray("proficiencies"))
+                val toolProficiencies = extractToolProficiencies(backgroundJson.getJSONArray("tool_proficiencies"))
                 val features = extractFeatures(backgroundJson.getJSONArray("features"))
                 var languages = listOf<Language>()
                 try {
@@ -68,6 +69,7 @@ class WebserviceDnD(val context: Context) : Webservice {
                         name = name,
                         desc = desc,
                         proficiencies = proficiencies,
+                        toolProficiencies = toolProficiencies,
                         features = features,
                         languages = languages,
                         equipment = equipment,
@@ -78,6 +80,20 @@ class WebserviceDnD(val context: Context) : Webservice {
             }
             _backgrounds.postValue(backgrounds)
         }
+    }
+
+    private fun extractToolProficiencies(proficienciesJson: JSONArray): List<ToolProficiency> {
+        val proficiencies = mutableListOf<ToolProficiency>()
+        for(profIndex in 0 until proficienciesJson.length()) {
+            val profJson = proficienciesJson.getJSONObject(profIndex)
+            proficiencies.add(
+                ToolProficiency(
+                    name = profJson.getString("name")
+                )
+            )
+        }
+
+        return proficiencies
     }
 
     fun getLocalRaces(_races: MutableLiveData<List<Race>>) {

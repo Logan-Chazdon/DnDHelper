@@ -2,6 +2,7 @@ package com.example.dndhelper.ui.character
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndhelper.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -28,9 +29,9 @@ public class CharacterMainViewModel @Inject constructor(
 
     }
 
-    suspend fun setName(it: String) {
-        character?.value!!.name = it
-        repository.insertCharacter(character!!.value!!)
+     fun setName(it: String) {
+         character?.value!!.name = it
+         repository.insertCharacter(character!!.value!!)
     }
 
 }

@@ -5,15 +5,14 @@ import android.os.Looper
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -74,53 +73,91 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, navController: NavCont
             }
         }
 
+        races.value?.get(raceIndex)?.let { Text(text = it.sizeDesc, Modifier.padding(start = 5.dp, top = 5.dp)) }
+        races.value?.get(raceIndex)?.let { Text(text = it.alignment, Modifier.padding(start = 5.dp, top = 5.dp)) }
+        races.value?.get(raceIndex)?.let { Text(text = "Speed: ${it.groundSpeed}", Modifier.padding(start = 5.dp, top = 5.dp)) }
 
 
-        if(races.value?.get(raceIndex)?.subraces?.isNotEmpty() == true) {
-            var subraceIndex = remember {
-                0
-            }
-            var expanded by remember { mutableStateOf(false) }
-            val subrace = races.value!![raceIndex].subraces[subraceIndex]
-            Text(text = subrace.name, fontSize = 20.sp, modifier = Modifier.clickable { expanded = true })
-            Spacer(Modifier.height(2.dp))
-            Text(text = subrace.desc, modifier = Modifier.padding(start = 10.dp))
-
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = Color.White,
+            elevation = 5.dp,
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(5.dp)
             ) {
-                races.value?.get(raceIndex)?.subraces!!.forEachIndexed { index, item ->
-                    DropdownMenuItem(onClick = {
-                        subraceIndex = index
-                        expanded = false
-                    }) {
-                        Text(text = item.name)
+                if (races.value?.get(raceIndex)?.subraces?.isNotEmpty() == true) {
+                    var subraceIndex = remember {
+                        0
+                    }
+                    var expanded by remember { mutableStateOf(false) }
+                    val subrace = races.value!![raceIndex].subraces[subraceIndex]
+                    Text(
+                        text = subrace.name,
+                        fontSize = 20.sp,
+                        modifier = Modifier.clickable { expanded = true })
+                    Spacer(Modifier.height(2.dp))
+                    Text(text = subrace.desc, modifier = Modifier.padding(start = 10.dp))
+
+
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        races.value?.get(raceIndex)?.subraces!!.forEachIndexed { index, item ->
+                            DropdownMenuItem(onClick = {
+                                subraceIndex = index
+                                expanded = false
+                            }) {
+                                Text(text = item.name)
+                            }
+
+                        }
                     }
 
+                    subrace.racialTraits.forEach {
+                        Text(text = it.name, fontSize = 18.sp)
+                        Spacer(Modifier.height(2.dp))
+                        Text(text = it.description, modifier = Modifier.padding(start = 10.dp))
+                    }
+                }
+
+                races.value?.get(raceIndex)?.traits?.forEach { trait ->
+                    Text(text = trait.name, fontSize = 18.sp)
+                    Spacer(Modifier.height(2.dp))
+                    Text(text = trait.description, modifier = Modifier.padding(start = 10.dp))
                 }
             }
+        }
 
+        Spacer(Modifier.height(10.dp))
 
-            subrace.racialTraits.forEach {
-                Text(text = it.name, fontSize = 18.sp)
-                Spacer(Modifier.height(2.dp))
-                Text(text = it.description, modifier = Modifier.padding(start = 10.dp))
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = Color.White,
+            elevation = 5.dp,
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Box(Modifier.padding(5.dp)) {
+                races.value?.get(raceIndex)?.languageDesc?.let { Text(text = it) }
             }
-
         }
 
+        Spacer(Modifier.height(10.dp))
 
-        races.value?.get(raceIndex)?.traits?.forEach { trait ->
-            Text(text = trait.name, fontSize = 18.sp)
-            Spacer(Modifier.height(2.dp))
-            Text(text = trait.description, modifier = Modifier.padding(start = 10.dp))
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = Color.White,
+            elevation = 5.dp,
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            Row(Modifier.padding(5.dp)) {
+                races.value?.get(raceIndex)?.abilityBonuses?.forEach {
+                    Text(text = "${it.ability} +${it.bonus}  ")
+                }
+            }
         }
-
-
-
-
     }
 }
 

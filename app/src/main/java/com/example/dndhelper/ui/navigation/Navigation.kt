@@ -47,6 +47,10 @@ fun Navigation(navController: NavHostController) {
             }
         }
 
+        composable("characterView/StatsView/{characterId}") {
+            StatsView(hiltViewModel())
+        }
+
 
 
 

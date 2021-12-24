@@ -107,6 +107,12 @@ fun RootView() {
                                 icon = Icons.Default.Home
                             ),
                             NavItem(
+                                name = "Stats",
+                                route = "$route/StatsView/$id",
+                                baseRoute = "$route/StatsView",
+                                icon = Icons.Default.Home
+                            ),
+                            NavItem(
                                 name = "Combat",
                                 route = "$route/CombatView/$id",
                                 baseRoute = "$route/CombatView",

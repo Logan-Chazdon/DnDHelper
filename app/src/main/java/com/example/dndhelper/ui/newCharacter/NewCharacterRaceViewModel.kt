@@ -34,7 +34,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
      suspend fun setRace(newRace: Race) {
             if (id == -1)
                 id = repository.createDefaultCharacter() ?: -1
-            val character = repository.getCharacterById(id)?.value
+            val character = repository.getCharacterById(id)
             character!!.race = newRace
             repository.insertCharacter(character)
     }

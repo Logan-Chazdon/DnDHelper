@@ -36,7 +36,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
     suspend fun setBackGround(newBackground : Background) {
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
-        val character = repository.getCharacterById(id)?.value
+        val character = repository.getCharacterById(id)
         character!!.background = newBackground
         repository.insertCharacter(character)
     }

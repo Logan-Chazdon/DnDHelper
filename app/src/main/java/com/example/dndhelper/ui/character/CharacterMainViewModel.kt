@@ -18,7 +18,7 @@ public class CharacterMainViewModel @Inject constructor(
 
 
 
-    var character : LiveData<Character>? = null
+    var character : Character? = null
 
     init {
         val id = savedStateHandle.get<String>("characterId")!!.toInt()
@@ -30,8 +30,8 @@ public class CharacterMainViewModel @Inject constructor(
     }
 
      fun setName(it: String) {
-         character?.value!!.name = it
-         repository.insertCharacter(character!!.value!!)
+         character?.name = it
+         repository.insertCharacter(character!!)
     }
 
 }

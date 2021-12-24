@@ -16,7 +16,7 @@ interface DatabaseDao {
     fun insertCharacter(character: Character) : Long
 
     @Query("SELECT * FROM characters WHERE id = :id")
-    suspend fun findCharacterById(id: Int): Character?
+    fun findCharacterById(id: Int): LiveData<Character>?
 
     @Query("DELETE FROM characters WHERE id = :id")
     fun deleteCharacter(id: Int)

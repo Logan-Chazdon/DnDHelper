@@ -33,7 +33,7 @@ public class NewCharacterStatsViewModel @Inject constructor(
     private suspend fun updateStats() {
         if(id == -1)
             id = repository.createDefaultCharacter()!!
-        val character = repository.getCharacterById(id)
+        val character = repository.getCharacterById(id)?.value
         character!!.baseStats = generateStatMap()
         if(character.baseStats.isNotEmpty())
             repository.insertCharacter(character)

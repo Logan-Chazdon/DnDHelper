@@ -1,5 +1,6 @@
 package com.example.dndhelper.repository.model
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.TypeConverter
 import com.example.dndhelper.repository.dataClasses.*
@@ -236,4 +237,19 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToLiveCharacter(data: String?): LiveData<Character?>? {
+        val gson = Gson()
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<LiveData<Character?>?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun liveCharacterToStoredString(myObjects: LiveData<Character?>?): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
 }

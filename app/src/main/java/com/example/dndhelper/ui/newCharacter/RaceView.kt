@@ -45,7 +45,7 @@ fun RaceView(
                     },
                 elevation = 10.dp
             ) {
-                Column() {
+                Column(Modifier.padding(start =5.dp)) {
                     Row(
                         verticalAlignment = Alignment.Bottom
                     )

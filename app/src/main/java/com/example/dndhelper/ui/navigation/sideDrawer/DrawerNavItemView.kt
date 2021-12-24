@@ -30,7 +30,7 @@ fun DrawerNavigationItem(
     scaffoldState: ScaffoldState,
     scope: CoroutineScope,
 ) {
-    val selected = item.route == backStackEntry.value?.destination?.route?.split("/")?.get(0) ?: ""
+    val selected = item.baseRoute.split("/")?.get(0) == backStackEntry.value?.destination?.route?.split("/")?.get(0) ?: ""
     Row(
         modifier = Modifier
             .clickable {

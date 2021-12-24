@@ -1,0 +1,20 @@
+{
+  "languages" : [
+      {
+        "name" : "Common1",
+        "index" : "common"
+      },
+      {
+        "name" : "Common2",
+        "index" : "common"
+      },
+      {
+        "name" : "Common3",
+        "index" : "common"
+      },
+      {
+        "name" : "Common4",
+        "index" : "common"
+      }
+  ]
+}

@@ -8,14 +8,11 @@ import com.example.dndhelper.repository.model.DatabaseDao
 import com.example.dndhelper.repository.model.RoomDataBase
 import com.example.dndhelper.repository.webServices.Webservice
 import javax.inject.Inject
-import com.example.dndhelper.repository.dataClasses.Character
-import com.example.dndhelper.repository.dataClasses.Class
-import com.example.dndhelper.repository.dataClasses.Race
 import com.example.dndhelper.repository.webServices.WebserviceDnD
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import android.os.AsyncTask
-import com.example.dndhelper.repository.dataClasses.Background
+import com.example.dndhelper.repository.dataClasses.*
 
 
 class Repository @Inject constructor(
@@ -27,9 +24,14 @@ class Repository @Inject constructor(
     private val _races : MutableLiveData<List<Race>> = MutableLiveData<List<Race>>()
     private val _backgrounds = MutableLiveData<List<Background>>()
     private val _characters : LiveData<List<Character>>? = dao?.getAllCharacters()
+    private val _languages = MutableLiveData<List<Language>>()
+
     init {
         //backgrounds
         (webservice as WebserviceDnD).getLocalBackgrounds(_backgrounds)
+
+        //languages
+        (webservice as WebserviceDnD).getLocalLanguages(_languages)
 
         //classes
         GlobalScope.launch {
@@ -53,6 +55,18 @@ class Repository @Inject constructor(
         }
         (webservice as WebserviceDnD).getLocalRaces(_races)
 
+    }
+
+    fun getLanguages() : LiveData<List<Language>> {
+        return _languages
+    }
+
+    fun getLanguagesByIndex(index: String): MutableLiveData<List<Language>>? {
+        if(index == "all_languages")
+        {
+            return _languages
+        }
+        return null
     }
 
     fun getBackgrounds() : LiveData<List<Background>> {

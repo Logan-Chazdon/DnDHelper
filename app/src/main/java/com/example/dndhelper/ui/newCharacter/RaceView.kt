@@ -62,7 +62,7 @@ fun RaceView(
                         Row()
                         {
                             for (language in race.languages) {
-                                Text(text = language.name, modifier = Modifier.padding(start = 5.dp))
+                                Text(text = language.name.toString(), modifier = Modifier.padding(start = 5.dp))
                                 Spacer(modifier = Modifier.width(10.dp))
                             }
                         }

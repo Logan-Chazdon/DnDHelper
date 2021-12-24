@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.dndhelper.repository.dataClasses.LanguageChoice
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -130,6 +131,69 @@ fun ConfirmBackgroundView(
 
                 Spacer(Modifier.height(10.dp))
 
+                if(background.languageChoices.isNotEmpty()) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        backgroundColor = Color.White,
+                        elevation = 5.dp,
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        background.languageChoices.forEach { choice ->
+                            var expanded by remember { mutableStateOf(false) }
+                            var selectedFirstIndex by remember { mutableStateOf(0) }
+                            var selectedSecondIndex by remember { mutableStateOf(0) }
+                            val from = viewModel.getLanguageChoice(choice)
+
+                            Column()
+                            {
+                                Text(
+                                    text = choice.name,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.padding(start = 5.dp)
+                                )
+
+
+                                Text(
+                                    from[selectedFirstIndex].name.toString(),
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.fillMaxWidth()
+                                        .clickable(onClick = { expanded = true }).background(
+                                            Color.White
+                                        ).padding(start = 15.dp)
+                                )
+
+                                Text(
+                                    from[selectedSecondIndex].name.toString(),
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.fillMaxWidth()
+                                        .clickable(onClick = { expanded = true }).background(
+                                            Color.White
+                                        ).padding(start = 15.dp)
+                                )
+                            }
+
+
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                from.forEachIndexed { index, item ->
+                                    DropdownMenuItem(onClick = {
+                                        selectedFirstIndex = selectedSecondIndex
+                                        selectedSecondIndex = index
+                                        expanded = false
+                                    }) {
+                                        Text(text = item.name.toString())
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+                Spacer(Modifier.height(10.dp))
+
                 background.features.forEach {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
@@ -149,6 +213,7 @@ fun ConfirmBackgroundView(
                 Spacer(Modifier.height(10.dp))
 
             }
+
         }
     }
 }

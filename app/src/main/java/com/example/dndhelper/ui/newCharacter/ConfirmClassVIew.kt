@@ -121,7 +121,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                             backgroundColor = color
                         ) {
                             var expanded by remember { mutableStateOf(false) }
-                            var selectedLastIndex by remember { mutableStateOf(0) }
+                            var selectedLastIndex by remember { mutableStateOf(0) } //TODO change how we do this to for a more scaleable solution. maybe a for loop i < choose
                             var selectedFirstIndex by remember { mutableStateOf(0) }
                             Column() {
                                 Text(text = choice.name, fontSize = 18.sp)
@@ -141,7 +141,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                                     ) {
                                         choice.options.forEachIndexed { index, item ->
                                             DropdownMenuItem(onClick = {
-                                                selectedFirstIndex = selectedLastIndex  //TODO add a pop up that shows the description and allows you to add or deny the feature
+                                                selectedFirstIndex = selectedLastIndex
                                                 selectedLastIndex = index
                                                 expanded = false
                                             }) {

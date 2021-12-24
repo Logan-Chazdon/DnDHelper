@@ -78,7 +78,7 @@ fun BackgroundView(
                                 )
                                 it.languages.forEach { lang ->
                                     Text(
-                                        lang.name
+                                        lang.name.toString()
                                     )
                                 }
                             }

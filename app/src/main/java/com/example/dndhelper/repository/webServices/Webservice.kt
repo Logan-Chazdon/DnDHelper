@@ -23,6 +23,26 @@ interface Webservice {
 class WebserviceDnD(val context: Context) : Webservice {
     private val baseUrl = "https://www.dnd5eapi.co"
 
+    fun getLocalLanguages(_languages : MutableLiveData<List<Language>>) {
+        val dataAsString = context.resources.openRawResource(R.raw.languages).bufferedReader().readText()
+        val languages = mutableListOf<Language>()
+
+        GlobalScope.launch {
+            val rootJson = JSONObject(dataAsString)
+            val languagesJson = rootJson.getJSONArray("languages")
+
+            for(languageIndex in 0 until languagesJson.length()) {
+                val languageJson = languagesJson.getJSONObject(languageIndex)
+                languages.add(
+                    Language(languageJson.getString("name"))
+                )
+            }
+
+            _languages.postValue(languages)
+        }
+    }
+
+
     fun getLocalBackgrounds(_backgrounds : MutableLiveData<List<Background>>) {
         val dataAsString = context.resources.openRawResource(R.raw.backgrounds).bufferedReader().readText()
         val backgrounds = mutableListOf<Background>()
@@ -41,10 +61,54 @@ class WebserviceDnD(val context: Context) : Webservice {
                 } catch(e: JSONException) {}
 
                 val features = extractFeatures(backgroundJson.getJSONArray("features"))
-                var languages = listOf<Language>()
+                val languages = mutableListOf<Language>()
+                val languageChoices = mutableListOf<LanguageChoice>()
                 try {
-                    languages = extractLangs(backgroundJson.getJSONArray("languages"))
+                   val languagesJson = backgroundJson.getJSONArray("languages")
+
+                    for(langIndex in 0 until languagesJson.length()) {
+                        val langJson = languagesJson.getJSONObject(langIndex)
+                        var choose = 0
+                        try {
+                            choose = langJson.getInt("choose")
+                        } catch (e : JSONException) { }
+
+                        if(choose == 0) {
+                            languages.add(Language(langJson.getString("name")))
+                        } else {
+                            val from = mutableListOf<Language>()
+                            var index : String? = null
+                            var langName : String? = null
+                            val languageChoicesJson = langJson.getJSONArray("from")
+                            for(langChoiceIndex in 0 until languageChoicesJson.length()) {
+                                val choiceJson = languageChoicesJson.getJSONObject(langChoiceIndex)
+
+                                try {
+                                    index = choiceJson.getString("index")
+                                } catch (e: JSONException) { }
+
+                                try {
+                                    langName = choiceJson.getString("name")
+                                } catch (e: JSONException) { }
+
+                                from.add(
+                                    Language(
+                                        name = langName,
+                                        index = index
+                                    )
+                                )
+                            }
+                            languageChoices.add(
+                                LanguageChoice(
+                                    name = langJson.getString("name"),
+                                    choose = choose,
+                                    from = from
+                                )
+                            )
+                        }
+                    }
                 } catch (e: JSONException) {}
+
 
                 val equipmentChoices = mutableListOf<ItemChoice>()
                 val equipment = mutableListOf<Item>()
@@ -76,6 +140,7 @@ class WebserviceDnD(val context: Context) : Webservice {
                         toolProficiencies = toolProficiencies,
                         features = features,
                         languages = languages,
+                        languageChoices = languageChoices,
                         equipment = equipment,
                         equipmentChoices = equipmentChoices,
                     )

@@ -23,4 +23,9 @@ data class Character(
     var baseStats = mutableMapOf<String, Int>()
 
     var background: Background? = null
+
+    var backpack : List<Item> = listOf()
+
+    //0 -> copper 4-> Platinum
+    var currency = listOf<Int>()
 }

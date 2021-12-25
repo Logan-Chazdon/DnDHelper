@@ -1,5 +1,6 @@
 package com.example.dndhelper.ui.navigation
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -10,6 +11,7 @@ import com.example.dndhelper.ui.character.*
 import com.example.dndhelper.ui.newCharacter.*
 
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -41,10 +43,8 @@ fun Navigation(navController: NavHostController) {
             }
         }
 
-        composable("characterView/ItemsView/{characterId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("characterId")?.toInt()?.let {
-                ItemsView(it)
-            }
+        composable("characterView/ItemsView/{characterId}") {
+            ItemsView(hiltViewModel())
         }
 
         composable("characterView/StatsView/{characterId}") {

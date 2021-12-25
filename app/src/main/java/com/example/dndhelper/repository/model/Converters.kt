@@ -252,4 +252,36 @@ class Converters {
         val gson = Gson()
         return gson.toJson(myObjects)
     }
+
+    @TypeConverter
+    fun storedStringToListOfItem(data: String?): List<Item?>? {
+        val gson = Gson()
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<List<Item?>?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun listOfItemToStoredString(myObjects: List<Item?>?): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToListOfInt(data: String?): List<Int?>? {
+        val gson = Gson()
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<List<Int?>?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun listOfIntToStoredString(myObjects: List<Int?>?): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
 }

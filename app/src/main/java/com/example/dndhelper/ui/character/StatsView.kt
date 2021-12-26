@@ -56,9 +56,7 @@ fun StatsView(viewModel: StatsViewModel) {
 
 
         Row(
-            modifier = Modifier
-                .mediaQuery(Dimensions.Height lessThan 400.dp, Modifier.fillMaxHeight(0.45f).padding(start = 10.dp))
-                .mediaQuery(Dimensions.Height greaterThan 400.dp, Modifier.fillMaxHeight(0.25f).padding(start = 16.dp))
+            modifier = Modifier.height(85.dp).padding(start = 10.dp)
         ) {
             //Inspiration
             Card(

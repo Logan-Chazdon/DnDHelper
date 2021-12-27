@@ -23,6 +23,92 @@ interface Webservice {
 class WebserviceDnD(val context: Context) : Webservice {
     private val baseUrl = "https://www.dnd5eapi.co"
 
+
+    private fun extractComponents(componentsJson : JSONArray): List<String> {
+        val components = mutableListOf<String>()
+        for(index in 0 until componentsJson.length()) {
+            val componentJson = componentsJson.getJSONObject(index)
+            components.add(
+                componentJson.getString("name")
+            )
+        }
+        return components
+    }
+
+    private fun extractItemComponents(componentsJson : JSONArray): List<Item> {
+        val components = mutableListOf<Item>()
+        for(index in 0 until componentsJson.length()) {
+            val componentJson = componentsJson.getJSONObject(index)
+            components.add(
+                Item(
+                    name = componentJson.getString("name")
+                )
+            )
+        }
+        return components
+    }
+
+    private fun extractClasses(classesJson : JSONArray) : List<String> {
+        val classes = mutableListOf<String>()
+        for(index in 0 until classesJson.length()) {
+            val classJson = classesJson.getJSONObject(index)
+            classes.add(
+                classJson.getString("name")
+            )
+        }
+        return classes
+    }
+
+
+    fun getLocalSpells(_spells : MutableLiveData<List<Spell>>) {
+        val dataAsString = context.resources.openRawResource(R.raw.spells).bufferedReader().readText()
+        val spells = mutableListOf<Spell>()
+
+        GlobalScope.launch {
+            val rootJson = JSONObject(dataAsString)
+            val spellsJson = rootJson.getJSONArray("spells")
+
+            for(spellIndex in 0 until spellsJson.length()) {
+                val spellJson = spellsJson.getJSONObject(spellIndex)
+                val name = spellJson.getString("name")
+                val level = spellJson.getInt("level")
+                val components =
+                    extractComponents(spellJson.getJSONArray("components"))
+                val itemComponents =
+                    extractItemComponents(spellJson.getJSONArray("item_components"))
+                val school = spellJson.getString("school")
+                val desc = spellJson.getString("desc")
+                val range = spellJson.getInt("range")
+                val area = spellJson.getString("area")
+                val castingTime = spellJson.getString("casting_time")
+                val duration = spellJson.getString("duration")
+                val classes = extractClasses(spellJson.getJSONArray("classes"))
+                val damage = spellJson.getString("damage")
+
+
+                spells.add(
+                    Spell(
+                        name = name,
+                        level = level,
+                        components = components,
+                        itemComponents = itemComponents,
+                        school = school,
+                        desc = desc,
+                        range = range,
+                        area = area,
+                        castingTime = castingTime,
+                        duration = duration,
+                        classes = classes,
+                        damage = damage
+                    )
+                )
+
+            }
+            _spells.postValue(spells)
+        }
+    }
+
+
     fun getLocalLanguages(_languages : MutableLiveData<List<Language>>) {
         val dataAsString = context.resources.openRawResource(R.raw.languages).bufferedReader().readText()
         val languages = mutableListOf<Language>()

@@ -1,0 +1,36 @@
+{
+  "spells" : [
+    {
+      "name": "Eldritch blast",
+      "level" : 0,
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        }
+      ],
+
+      "item_components" : [
+
+      ],
+
+      "school" : "Necro",
+      "desc" : "nyeeeh",
+      "range" : 60,
+      "area" : "Single Target",
+      "casting_time" : "1 Action",
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        {
+          "name" : "Warlock",
+          "index": "warlock"
+        }
+      ],
+
+      "damage" : "Put the description of the damage here"
+    }
+
+  ]
+}

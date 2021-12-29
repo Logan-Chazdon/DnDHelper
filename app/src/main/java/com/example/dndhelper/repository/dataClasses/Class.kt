@@ -12,10 +12,11 @@ import com.example.dndhelper.repository.model.Converters
 class Class(
     @PrimaryKey(autoGenerate = false)
     @NonNull
-    @ColumnInfo(name="name")
+    @ColumnInfo(name = "name")
     var name: String,
     var hitDie: Int = 8,
     var subClasses: List<Subclass> = emptyList(),
-    var levelPath: MutableList<Feature> = mutableListOf<Feature>()
-
+    var levelPath: MutableList<Feature> = mutableListOf<Feature>(),
+    var proficiencyChoices: List<ProficiencyChoice> = emptyList(),
+    var proficiencies: List<Proficiency> = emptyList()
 )

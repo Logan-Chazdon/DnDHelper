@@ -314,7 +314,10 @@ class WebserviceDnD(val context: Context) : Webservice {
             val profJson = proficienciesJson.getJSONObject(profIndex)
             proficiencies.add(
                 Proficiency(
-                    name = profJson.getString("name")
+                    name = try {profJson.getString("name")}
+                    catch(e : JSONException) {null},
+                    index = try {profJson.getString("index")}
+                    catch(e : JSONException) {null}
                 )
             )
         }
@@ -336,6 +339,25 @@ class WebserviceDnD(val context: Context) : Webservice {
         return abilityBonuses
     }
 
+    private fun extractProficienciesChoices(
+        json: JSONArray,
+        choices: MutableList<ProficiencyChoice>
+    ) {
+        for(index in 0 until json.length()) {
+            val profJson = json.getJSONObject(index)
+            choices.add(
+                ProficiencyChoice(
+                    name = profJson.getString("name"),
+                    desc = "", //TODO
+                    choose = profJson.getInt("choose"),
+                    from =
+                    extractProficiencies(profJson.getJSONArray("from"))
+                )
+            )
+        }
+    }
+
+
     fun getLocalClasses(_classes: MutableLiveData<List<Class>>){
         val dataAsString = context.resources.openRawResource(R.raw.classes).bufferedReader().readText()
 
@@ -349,12 +371,26 @@ class WebserviceDnD(val context: Context) : Webservice {
                 val hitDie = classJson.getInt("hit_die")
                 val subClasses = mutableListOf<Subclass>()
                 val levelPath = extractFeatures(classJson.getJSONArray("features"))
+                val proficiencyChoices = mutableListOf<ProficiencyChoice>()
+                val proficiencies = mutableListOf<Proficiency>()
+
+
+                try {
+                extractProficienciesChoices(
+                    classJson.getJSONArray("proficiency_choices"),
+                    proficiencyChoices
+                ) } catch (e: JSONException) {}
+
+
+
                 classes.add(
                     Class(
                         name = name,
                         hitDie = hitDie,
                         subClasses = subClasses,
-                        levelPath = levelPath
+                        levelPath = levelPath,
+                        proficiencyChoices = proficiencyChoices,
+                        proficiencies = proficiencies
                     )
                 )
             }
@@ -408,7 +444,7 @@ class WebserviceDnD(val context: Context) : Webservice {
             {
                 val jsonObject = jsonArrayOfURls.getJSONObject(i)
                 classURLS.add(i, jsonObject.getString("url"))
-                classes.add(Class(jsonObject.getString("name")))
+            //    classes.add(Class(jsonObject.getString("name")))
 
             }
 

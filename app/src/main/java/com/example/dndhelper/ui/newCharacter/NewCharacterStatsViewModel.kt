@@ -179,7 +179,7 @@ public class NewCharacterStatsViewModel @Inject constructor(
         val rolls = mutableListOf<Int>()
         for(i in 0..3)
         {
-            rolls.add(i, random.nextInt(6))
+            rolls.add(i, random.nextInt(6) + 1)
         }
 
         var lowestIndex = 0

@@ -72,7 +72,10 @@ fun ClassView(
               {
                   Icon(
                       painter = classIcons[i],
-                      contentDescription = "${item.name} Icon"
+                      contentDescription = "${item.name} Icon",
+                      modifier = Modifier.padding(
+                          all = 10.dp
+                      )
                   )
                   Text(
                       item.name,

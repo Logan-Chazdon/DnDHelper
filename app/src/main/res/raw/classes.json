@@ -5,25 +5,31 @@
       "hit_die": 8,
       "proficiency_choices": [
         {
-          "name": "Arcana"
-        },
-        {
-          "name": "History"
-        },
-        {
-          "name": "Investigation"
-        },
-        {
-          "name": "Medicine"
-        },
-        {
-          "name": "Nature"
-        },
-        {
-          "name": "Perception"
-        },
-        {
-          "name": "Sleight of Hand"
+          "name" : "Choose two from Arcana, History, Investigation, Medicine, Nature, Perception, Sleight of Hand",
+          "choose" : 2,
+          "from" : [
+            {
+              "name": "Arcana"
+            },
+            {
+              "name": "History"
+            },
+            {
+              "name": "Investigation"
+            },
+            {
+              "name": "Medicine"
+            },
+            {
+              "name": "Nature"
+            },
+            {
+              "name": "Perception"
+            },
+            {
+              "name": "Sleight of Hand"
+            }
+          ]
         }
       ],
       "features": [
@@ -448,6 +454,7 @@
       "hit_die": 12,
       "proficiency_choices": [
         {
+          "name" : "Choose two from Animal Handling, Athletics, Intimidation, Nature, Perception, and Survival",
          "choose": 2,
          "from": [
             {
@@ -609,7 +616,7 @@
           ]
         }
       ],
-       "Proficiencies": [
+       "proficiencies": [
         {
           "name": "Armor: Light armor"
         },
@@ -787,7 +794,7 @@
           ]
         }
       ],
-       "Proficiencies": [
+       "proficiencies": [
         {
           "name": "Armor: Light armor, medium armor, shields"
         },

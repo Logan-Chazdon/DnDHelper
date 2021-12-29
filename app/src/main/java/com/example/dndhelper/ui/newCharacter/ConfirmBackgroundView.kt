@@ -2,12 +2,9 @@ package com.example.dndhelper.ui.newCharacter
 
 import android.os.Handler
 import android.os.Looper
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,6 +17,7 @@ import androidx.navigation.NavHostController
 import com.example.dndhelper.repository.dataClasses.LanguageChoice
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 @Composable
 fun ConfirmBackgroundView(
@@ -33,12 +31,16 @@ fun ConfirmBackgroundView(
     val scrollState = rememberScrollState(0)
     val mainLooper = Looper.getMainLooper()
     viewModel.id = characterId
+    viewModel.backgroundIndex = backgroundIndex
     if (background != null) {
         Row(
             horizontalArrangement = Arrangement.Center
         ) {
             Column(
-                modifier = Modifier.fillMaxWidth(0.95f).padding(start = 10.dp).verticalScroll(scrollState)
+                modifier = Modifier
+                    .fillMaxWidth(0.95f)
+                    .padding(start = 10.dp)
+                    .verticalScroll(scrollState)
             ) {
                 Row() {
                     Text(text = background.name, fontSize = 24.sp)
@@ -83,10 +85,13 @@ fun ConfirmBackgroundView(
                             Text(
                                 choice.from[selectedIndex].name,
                                 fontSize = 14.sp,
-                                modifier = Modifier.fillMaxWidth()
-                                    .clickable(onClick = { expanded = true }).background(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable(onClick = { expanded = true })
+                                    .background(
                                         Color.White
-                                    ).padding(start = 15.dp)
+                                    )
+                                    .padding(start = 15.dp)
                             )
                         }
 
@@ -140,50 +145,43 @@ fun ConfirmBackgroundView(
                     ) {
                         background.languageChoices.forEach { choice ->
                             var expanded by remember { mutableStateOf(false) }
-                            var selectedFirstIndex by remember { mutableStateOf(0) }
-                            var selectedSecondIndex by remember { mutableStateOf(0) }
                             val from = viewModel.getLanguageChoice(choice)
 
-                            Column()
-                            {
+                            Column {
                                 Text(
                                     text = choice.name,
                                     fontSize = 16.sp,
                                     modifier = Modifier.padding(start = 5.dp)
                                 )
 
+                                viewModel.selectedNames.value = choice.name
 
+                                //TODO fix this. It isnt updating on change.
+                                val text = viewModel.selectedNames.observeAsState()
                                 Text(
-                                    from[selectedFirstIndex].name.toString(),
-                                    fontSize = 14.sp,
-                                    modifier = Modifier.fillMaxWidth()
-                                        .clickable(onClick = { expanded = true }).background(
-                                            Color.White
-                                        ).padding(start = 15.dp)
+                                    text = text.value!!,
+                                    modifier = Modifier
+                                        .clickable { expanded = true }
+                                        .padding(start = 15.dp)
                                 )
 
-                                Text(
-                                    from[selectedSecondIndex].name.toString(),
-                                    fontSize = 14.sp,
-                                    modifier = Modifier.fillMaxWidth()
-                                        .clickable(onClick = { expanded = true }).background(
-                                            Color.White
-                                        ).padding(start = 15.dp)
-                                )
-                            }
+                                //This ensures the list is long enough to avoid an exception
+                                viewModel.setLanguageChoiceLength(from.size)
 
-
-                            DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false }
-                            ) {
-                                from.forEachIndexed { index, item ->
-                                    DropdownMenuItem(onClick = {
-                                        selectedFirstIndex = selectedSecondIndex
-                                        selectedSecondIndex = index
-                                        expanded = false
-                                    }) {
-                                        Text(text = item.name.toString())
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    from.forEachIndexed { index, item ->
+                                        DropdownMenuItem(onClick = {
+                                            viewModel.changeSelection(index, choice.choose)
+                                        }) {
+                                            Checkbox(
+                                                checked = viewModel.selectedList[index],
+                                                onCheckedChange = null
+                                            )
+                                            Text(text = item.name.toString())
+                                        }
                                     }
                                 }
                             }

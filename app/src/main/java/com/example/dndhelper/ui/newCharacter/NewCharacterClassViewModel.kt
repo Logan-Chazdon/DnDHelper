@@ -2,7 +2,9 @@ package com.example.dndhelper.ui.newCharacter
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.referentialEqualityPolicy
+import androidx.compose.runtime.remember
 import androidx.hilt.work.HiltWorker
 import androidx.lifecycle.*
 import com.example.dndhelper.repository.Repository
@@ -26,7 +28,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 ): AndroidViewModel(application){
     lateinit var classes : LiveData<List<Class>>
     var id = -1
-
+    var isBaseClass =  mutableStateOf(true)
 
 
     init {

@@ -82,11 +82,10 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            val checked = remember{ mutableStateOf(true) } //TODO when we implement the classes make this rely on the viewModel
             Text(text = "Use as base class", fontSize = 20.sp)
             Checkbox(
-                checked = checked.value,
-                onCheckedChange = { checked.value = it }
+                checked = viewModel.isBaseClass.value,
+                onCheckedChange = { viewModel.isBaseClass.value = it }
             )
         }
 

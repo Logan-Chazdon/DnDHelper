@@ -348,7 +348,6 @@ class WebserviceDnD(val context: Context) : Webservice {
             choices.add(
                 ProficiencyChoice(
                     name = profJson.getString("name"),
-                    desc = "", //TODO
                     choose = profJson.getInt("choose"),
                     from =
                     extractProficiencies(profJson.getJSONArray("from"))

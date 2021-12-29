@@ -98,7 +98,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .background(Color.LightGray)
                 .verticalScroll(state = scrollState, enabled = true),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -116,7 +115,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                             elevation = 5.dp,
                             modifier = Modifier
                                 .fillMaxWidth(0.95f)
-                                .height(100.dp)
                                 .background(color = color, shape = RoundedCornerShape(10.dp)),
                             backgroundColor = color
                         ) {
@@ -125,6 +123,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                             var selectedFirstIndex by remember { mutableStateOf(0) }
                             Column() {
                                 Text(text = choice.name, fontSize = 18.sp)
+                                Text(text = choice.description, fontSize = 12.sp, modifier = Modifier.padding(start = 5.dp))
+
 
                                 if (choice.choiceNum != 0) {
                                     Text(

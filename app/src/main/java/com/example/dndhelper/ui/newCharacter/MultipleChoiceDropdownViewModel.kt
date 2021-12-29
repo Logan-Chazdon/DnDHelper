@@ -50,10 +50,6 @@ class MultipleChoiceDropdownViewModel() : ViewModel() {
             }
         }
         _selectedNames.value = (newNames)
-
-        //If they haven't selected anything change the name to choiceName
-       // if(_selectedNames.value == "")
-       //     _selectedNames.value = choiceName
     }
 
 

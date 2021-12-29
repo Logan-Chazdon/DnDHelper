@@ -284,4 +284,23 @@ class Converters {
         val gson = Gson()
         return gson.toJson(myObjects)
     }
+
+
+    @TypeConverter
+    fun storedStringToListProficiencyChoices(data: String?): List<ProficiencyChoice?>? {
+        val gson = Gson()
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<List<ProficiencyChoice?>?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun listOfProficiencyChoicesToStoredString(myObjects: List<ProficiencyChoice?>?): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
+
 }

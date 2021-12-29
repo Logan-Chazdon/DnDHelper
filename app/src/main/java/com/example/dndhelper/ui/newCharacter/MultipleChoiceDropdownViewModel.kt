@@ -52,5 +52,16 @@ class MultipleChoiceDropdownViewModel() : ViewModel() {
         _selectedNames.value = (newNames)
     }
 
+    //This allows the owner of the view to pass in a list of choices and get back only what is selected.
+    fun getSelected(from : List<Any>) : List<Any>{
+        val returnList = mutableListOf<Any>()
+        for(i in from.indices) {
+            if(selectedList[i]) {
+                returnList.add(from[i])
+            }
+        }
+        return returnList
+    }
+
 
 }

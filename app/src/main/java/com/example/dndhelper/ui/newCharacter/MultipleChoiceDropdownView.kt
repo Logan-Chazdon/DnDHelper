@@ -18,7 +18,7 @@ fun MultipleChoiceDropdownView(viewModel : MultipleChoiceDropdownViewModel) {
     //TODO fix this. It isn't updating on change.
     val text  = viewModel.selectedNames.observeAsState()
     Text(
-        text = "Hello, ${text.value}",
+        text = "${text.value}",
         modifier = Modifier
             .clickable { expanded = true }
             .padding(start = 15.dp)

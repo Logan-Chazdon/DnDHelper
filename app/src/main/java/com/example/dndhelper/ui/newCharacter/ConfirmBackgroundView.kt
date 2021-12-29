@@ -13,6 +13,8 @@ import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.dndhelper.repository.dataClasses.LanguageChoice
 import kotlinx.coroutines.GlobalScope
@@ -144,7 +146,6 @@ fun ConfirmBackgroundView(
                         shape = RoundedCornerShape(10.dp)
                     ) {
                         background.languageChoices.forEach { choice ->
-                            var expanded by remember { mutableStateOf(false) }
                             val from = viewModel.getLanguageChoice(choice)
 
                             Column {
@@ -154,36 +155,24 @@ fun ConfirmBackgroundView(
                                     modifier = Modifier.padding(start = 5.dp)
                                 )
 
-                                viewModel.selectedNames.value = choice.name
+                                //Get the viewModel for the drop down.
+                                val multipleChoiceViewModel: MultipleChoiceDropdownViewModel
+                                    = viewModel()
+                                //Tell the viewModel how many choices we want from the user.
+                                multipleChoiceViewModel.maxSelections = choice.choose
 
-                                //TODO fix this. It isnt updating on change.
-                                val text = viewModel.selectedNames.observeAsState()
-                                Text(
-                                    text = text.value!!,
-                                    modifier = Modifier
-                                        .clickable { expanded = true }
-                                        .padding(start = 15.dp)
-                                )
-
-                                //This ensures the list is long enough to avoid an exception
-                                viewModel.setLanguageChoiceLength(from.size)
-
-                                DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    from.forEachIndexed { index, item ->
-                                        DropdownMenuItem(onClick = {
-                                            viewModel.changeSelection(index, choice.choose)
-                                        }) {
-                                            Checkbox(
-                                                checked = viewModel.selectedList[index],
-                                                onCheckedChange = null
-                                            )
-                                            Text(text = item.name.toString())
-                                        }
-                                    }
+                                //Tell the viewModel what the user can choose from.
+                                val names = mutableListOf<String>()
+                                for(item in from) {
+                                    item.name?.let { names.add(it) }
                                 }
+                                multipleChoiceViewModel.names = names
+
+                                //Tell the viewModel what we want the name of the choice to be.
+                                multipleChoiceViewModel.choiceName = choice.name
+
+                                //Create the view.
+                                MultipleChoiceDropdownView(viewModel = multipleChoiceViewModel)
                             }
                         }
                     }

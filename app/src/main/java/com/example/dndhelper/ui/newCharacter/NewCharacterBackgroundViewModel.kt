@@ -27,10 +27,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
     lateinit var backgrounds : LiveData<List<Background>>
     var backgroundIndex : Int = -1
     var id = -1
-    val selectedList =  mutableStateListOf<Boolean>()
-    val selectedNames by lazy {
-        MutableLiveData<String>("")
-    }
+
 
     init {
         viewModelScope.launch {
@@ -39,23 +36,6 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
 
     }
 
-    fun changeSelection(index:Int, maxSelections: Int) {
-        val selections = selectedList.count { Boolean -> Boolean }
-        if(selections >= maxSelections && !selectedList[index]) {
-            selectedList[selectedList.indexOf(true)] = false
-        }
-        selectedList[index] = !selectedList[index]
-
-        //Update the name to only show the selected options.
-        selectedNames.value = ""
-        for(i in backgrounds.value?.get(backgroundIndex)?.languageChoices?.get(0)?.from?.indices!!) {
-            if(selectedList[i]) {
-                selectedNames.value +=
-                    backgrounds.value?.get(backgroundIndex)?.languageChoices?.get(0)?.from!![i].name
-            }
-        }
-
-    }
 
     fun getLanguagesByIndex(index: String) : LiveData<List<Language>> {
         return repository.getLanguages()
@@ -87,13 +67,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
         return langs
     }
 
-    fun setLanguageChoiceLength(len : Int) {
-        for(i in 0 until len) {
-            if(i >= selectedList.size) {
-                selectedList.add(i, false)
-            }
-        }
-    }
+
 
 }
 

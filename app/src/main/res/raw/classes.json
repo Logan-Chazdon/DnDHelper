@@ -167,7 +167,7 @@
           "name": "Wand of Secrets",
           "requires_attunement": 0,
           "level": 2
-        },  
+        }, 
         {
           "name": "Sending Stones",
           "requires_attunement": 0,
@@ -387,7 +387,13 @@
           "name": "Ring of the Ram",
           "requires_attunement": 1,
           "level": 14
+        },
+         {
+          "name": "",
+          "requires_attunement": 1,
+          "level": 14
         }
+
 
           ]
         },
@@ -434,6 +440,502 @@
               "index": "the_spells_name"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Barbarian",
+      "hit_die": 12,
+      "proficiency_choices": [
+        {
+         "choose": 2,
+         "from": [
+            {
+              "name": " Animal Handling"
+            },
+            {
+              "name": " Athletics"
+            },
+            {
+              "name": " Intimidation"
+            },
+            {
+              "name": " Nature"
+            },
+            {
+              "name": "Perception"
+            },
+            {
+              "name": "Survival"
+            }
+        ]
+       }
+      ],
+       "proficiencies": [
+        {
+          "name": "Armor: Light armor, medium armor, shields"
+        },
+        {
+          "name": "Weapons: Simple weapons, martial weapons"
+        },
+        {
+          "name": "Intimidation"
+        },
+        {
+          "name": "Saving Throws: Strength, Constitution"
+        }
+
+      ],
+       "equipment": [
+         {
+           "name": "any two simple weapons",
+           "choose": 1,
+           "from": [
+             {
+               "options_index": "martial_melee_weapons"
+             },
+             {
+               "name": "a greataxe"
+             }
+           ]
+         },
+         {
+          "name": "any two simple weapons",
+          "choose": 1,
+          "from" : [
+            {
+                "options_index": "simple_weapon"
+            },
+            {
+                "name" : "two handaxes"
+            },
+            {
+              "name" : "An explorer’s pack and four javelins",
+              "desc" : "TODO"
+            }
+          ]
+          
+        }
+      ],
+      "features": [
+        {
+          "name": "Rage",
+          "desc": "While you are not wearing any armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.",
+          "level": 1
+        },
+           {
+          "name": "Unarmored Defense",
+          "desc": "In battle, you fight with primal ferocity. On your turn, you can enter a rage as a bonus action. While raging, you gain the following benefits if you aren’t wearing heavy armor: You have advantage on Strength checks and Strength saving throws. When you make a melee weapon attack using Strength, you gain a bonus to the damage roll that increases as you gain levels as a barbarian, as shown in the Rage Damage column of the Barbarian table. You have resistance to bludgeoning, piercing, and slashing damage. If you are able to cast spells, you can’t cast them or concentrate on them while raging. Your rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven’t attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn as a bonus action. Once you have raged the number of times shown for your barbarian level in the Rages column of the Barbarian table, you must finish a long rest before you can rage again.",
+          "level": 1
+        },
+          {
+          "name": "Reckless Attack",
+          "desc": "Starting at 2nd level, you can throw aside all concern for defense to attack with fierce desperation. When you make your first attack on your turn, you can decide to attack recklessly. Doing so gives you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.",
+          "level": 2
+        },
+         {
+          "name": "Danger Sense",
+          "desc": "At 2nd level, you gain an uncanny sense of when things nearby aren’t as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws against effects that you can see, such as traps and spells. To gain this benefit, you can’t be blinded, deafened, or incapacitated.",
+          "level": 2
+        },
+         {
+          "name": "Primal Path",
+          "desc": "At 3rd level, you choose a path that shapes the nature of your rage. The Path of the Berserker is detailed at the end of the class description, and additional primal paths are available in other sources. Your choice grants you features at 3rd level and again at 6th, 10th, and 14th levels.",
+          "level": 3
+        },
+        {
+          "name": "Extra Attack",
+          "desc": "Beginning at 5th level, you can attack twice, instead of once, whenever you take the Attack action on your turn.",
+          "level": 5
+        },
+         {
+          "name": "Fast Movement",
+          "desc": "Starting at 5th level, your speed increases by 10 feet while you aren’t wearing heavy armor.",
+          "level": 5
+        },
+        {
+          "name": "Feral Instinct",
+          "desc": "By 7th level, your instincts are so honed that you have advantage on initiative rolls. Additionally, if you are surprised at the beginning of combat and aren’t incapacitated, you can act normally on your first turn, but only if you enter your rage before doing anything else on that turn.",
+          "level": 7
+        },
+         {
+          "name": "Brutal Critical",
+          "desc": "Beginning at 9th level, you can roll one additional weapon damage die when determining the extra damage for a critical hit with a melee attack. This increases to two additional dice at 13th level and three additional dice at 17th level.",
+          "level": 9
+        },
+        {
+          "name": "Relentless Rage",
+          "desc": "Starting at 11th level, your rage can keep you fighting despite grievous wounds. If you drop to 0 hit points while you’re raging and don’t die outright, you can make a DC 10 Constitution saving throw. If you succeed, you drop to 1 hit point instead. Each time you use this feature after the first, the DC increases by 5. When you finish a short or long rest, the DC resets to 10.",
+          "level": 11
+        },
+         {
+          "name": "Brutal Critical",
+          "desc": "At 13th level, you can roll two additional weapon damage dice when determining the extra damage for a critical hit with a melee attack. This increases to three additional dice at 17th level.",
+          "level": 13
+        },
+         {
+          "name": "Persistent Rage",
+          "desc": "Beginning at 15th level, your rage is so fierce that it ends early only if you fall unconscious or if you choose to end it.",
+          "level": 15
+        },
+        {
+          "name": "Brutal Critical",
+          "desc": "At 17th level, you can roll three additional weapon damage dice when determining the extra damage for a critical hit with a melee attack.",
+          "level": 17
+        },
+        {
+          "name": "Indomitable Might",
+          "desc": "Beginning at 18th level, if your total for a Strength check is less than your Strength score, you can use that score in place of the total.",
+          "level": 18
+        },
+        {
+          "name": "Primal Champion",
+          "desc": "At 20th level, you embody the power of the wilds. Your Strength and Constitution scores increase by 4. Your maximum for those scores is now 24.",
+          "level": 20
+        }
+      ]
+    },
+ {
+      "name": "Bard",
+      "hit_die": 8,
+      "proficiency_choices": [
+        {
+          "name": "Choose any three",
+          "choose": 3,
+          "from" :[
+            {
+              "index": "skill_proficiencies"
+            }
+          ]
+        }
+      ],
+       "Proficiencies": [
+        {
+          "name": "Armor: Light armor"
+        },
+        {
+          "name": "Weapons: Simple weapons, hand crossbows, longswords, rapiers, shortswords"
+        },
+        {
+          "name": "Tools: Three musical instruments of your choice",
+          "choose": 3,
+          "from":[
+            {
+              "index":"musical_instruments"
+            }
+          ]
+        },
+        {
+          "name": "Saving Throws: Dexterity, Charisma"
+        },
+        {
+          "name": "Saving Throws: Strength, Constitution"
+        },
+        {
+          "name": "Survival"
+        }
+      ],
+       "equipment": [
+        {
+          "name": "(a) a diplomat’s pack or (b) an entertainer’s pack",
+          "choose": 1,
+          "from" : [
+            {
+                "name": "diplomat’s pack"
+             },
+             {
+              "name": "entertainer’s pack"
+             }
+            ]
+         },
+
+         {
+          "name": "(a) a rapier, (b) a longsword, or (c) any simple weapon",
+          "choose": 1,
+          "from" : [
+              {
+                  "options_index": "simple_weapon"
+              },
+              {
+                  "name" : "longsword"
+              },
+               {
+                  "name" : "rapier"
+              }
+            ]
+         },
+
+         {
+          "name": "(a) a lute or (b) any other musical instrument",
+          "choose": 1,
+
+          "from" : [
+              {
+                  "options_index": "musical_instrument"
+              },
+              {
+                  "name" : "lute"
+              }
+            ]
+         },
+         {
+          "name": "Leather armor and a dagger"
+         }
+      ],
+      "features": [
+        {
+          "name": "Bardic Inspiration",
+          "desc": "You can inspire others through stirring words or music. To do so, you use a bonus action on your turn to choose one creature other than yourself within 60 feet of you who can hear you. That creature gains one Bardic Inspiration die, a d6. Once within the next 10 minutes, the creature can roll the die and add the number rolled to one ability check, attack roll, or saving throw it makes. The creature can wait until after it rolls the d20 before deciding to use the Bardic Inspiration die, but must decide before the DM says whether the roll succeeds or fails. Once the Bardic Inspiration die is rolled, it is lost. A creature can have only one Bardic Inspiration die at a time. You can use this feature a number of times equal to your Charisma modifier (a minimum of once). You regain any expended uses when you finish a long rest. Your Bardic Inspiration die changes when you reach certain levels in this class. The die becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level.",
+          "level": 1
+        },
+           {
+          "name": "Jack of All Trades",
+          "desc": "Beginning at 2nd level, you can use soothing music or oration to help revitalize your wounded allies during a short rest. If you or any friendly creatures who can hear your performance regain hit points at the end of the short rest by spending one or more Hit Dice, each of those creatures regains an extra 1d6 hit points. The extra hit points increase when you reach certain levels in this class: to 1d8 at 9th level, to 1d10 at 13th level, and to 1d12 at 17th level.",
+          "level": 2
+        },
+          {
+          "name": "Song of Rest",
+          "desc": "Starting at 2nd level, you can throw aside all concern for defense to attack with fierce desperation. When you make your first attack on your turn, you can decide to attack recklessly. Doing so gives you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.",
+          "level": 2
+        },
+         {
+          "name": "Danger Sense",
+          "desc": "At 2nd level, you gain an uncanny sense of when things nearby aren’t as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws against effects that you can see, such as traps and spells. To gain this benefit, you can’t be blinded, deafened, or incapacitated.",
+          "level": 2
+        },
+         {
+          "name": "Bard College",
+          "desc": "At 3rd level, you delve into the advanced techniques of a bard college of your choice: the College of Lore detailed at the end of the class description or another from the Player's Handbook or other sources. Your choice grants you features at 3rd level and again at 6th and 14th level.",
+          "level": 3,
+          "choose": 1,
+          "from":[
+            {
+              "index": "bardic_colleges"
+            }
+          ]
+        },
+        {
+          "name": "Expertise",
+          "desc": "At 3rd level, choose two of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
+          "level": 3
+        },
+         {
+          "name": "Font of Inspiration",
+          "desc": "Beginning when you reach 5th level, you regain all of your expended uses of Bardic Inspiration when you finish a short or long rest.",
+          "level": 5
+        },
+        {
+          "name": "Countercharm",
+          "desc": "At 6th level, you gain the ability to use musical notes or words of power to disrupt mind-influencing effects. As an action, you can start a performance that lasts until the end of your next turn. During that time, you and any friendly creatures within 30 feet of you have advantage on saving throws against being frightened or charmed. A creature must be able to hear you to gain this benefit. The performance ends early if you are incapacitated or silenced or if you voluntarily end it (no action required).",
+          "level": 6
+        },
+         {
+          "name": "Expertise",
+          "desc": "At 10th level, choose two more of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
+          "level": 10
+        },
+         {
+          "name": "Magical Secrets",
+          "desc": "By 10th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 14th level and again at 18th level.",
+          "level": 10
+        },
+         {
+          "name": "Magical Secrets",
+          "desc": "At 14th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 18th level.",
+          "level": 14
+        },
+        {
+          "name": "Magical Secrets",
+          "desc": "At 18th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table.",
+          "level": 18
+        },
+        {
+          "name": "Superior Inspiration",
+          "desc": "At 20th level, when you roll initiative and have no uses of Bardic Inspiration left, you regain one use.",
+          "level": 20
+        }
+      ]
+    },
+    {
+      "name": "Cleric",
+      "hit_die": 8,
+      "proficiency_choices": [
+        {
+          "name": "Choose two from History, Insight, Medicine, Persuasion, and Religion",
+          "choose": 2,
+          "from" :[
+            {
+              "name": "History"
+            },
+             {
+              "name": "Insight"
+            },
+             {
+              "name": "Medicine"
+            },
+             {
+              "name": "Persuasion"
+            },
+             {
+              "name": "Religion"
+            }
+
+          ]
+        }
+      ],
+       "Proficiencies": [
+        {
+          "name": "Armor: Light armor, medium armor, shields"
+        },
+        {
+          "name": "Weapons: Simple weapons"
+        },
+        {
+          "name": "Tools: None"
+        },
+        {
+          "name": "Saving Throws: Wisdom, Charisma"
+        }
+
+      ],
+       "equipment": [
+         {
+           "name": "(a) a mace or (b) a warhammer (if proficient)",
+           "choose": 1,
+           "from": [
+             {
+               "name": "mace"
+             },
+             {
+               "name": "warhammer TODO"
+             }
+           ]
+         },
+         {
+           "name": "(a) scale mail, (b) leather armor, or (c) chain mail (if proficient)",
+           "choose": 1,
+           "from": [
+             {
+               "name": "chain mail"
+             },
+             {
+               "name": "scale mail"
+             },
+             {
+               "name": "leather armor"
+             }
+           ]
+         },
+         {
+            "name": "(a) a light crossbow and 20 bolts or (b) any simple weapon",
+            "choose": 1,
+            "from" : [
+                {
+                    "index": "simple_weapons"
+                },
+                {
+                    "name" : "light crossbow"
+                }
+              ]
+            },
+            {
+              "name": "(a) a priest’s pack or (b) an explorer’s pack",
+              "choose": 1,
+              "from" : [
+                  {
+                    "index": "priest’s pack"
+                  },
+                  {
+                    "name" : "explorer’s pack"
+                  }
+              ]
+            },
+            {
+              "name": "(a) a priest’s pack or (b) an explorer’s pack",
+              "choose": 1,
+              "from" : [
+                {
+                  "index": "priest’s pack"
+                },
+                {
+                  "name" : "TODO"
+                }
+              ]
+            }
+      ],
+
+
+      "features": [
+        {
+          "name": "Bardic Inspiration",
+          "desc": "You can inspire others through stirring words or music. To do so, you use a bonus action on your turn to choose one creature other than yourself within 60 feet of you who can hear you. That creature gains one Bardic Inspiration die, a d6. Once within the next 10 minutes, the creature can roll the die and add the number rolled to one ability check, attack roll, or saving throw it makes. The creature can wait until after it rolls the d20 before deciding to use the Bardic Inspiration die, but must decide before the DM says whether the roll succeeds or fails. Once the Bardic Inspiration die is rolled, it is lost. A creature can have only one Bardic Inspiration die at a time. You can use this feature a number of times equal to your Charisma modifier (a minimum of once). You regain any expended uses when you finish a long rest. Your Bardic Inspiration die changes when you reach certain levels in this class. The die becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level.",
+          "level": 1
+        },
+           {
+          "name": "Jack of All Trades",
+          "desc": "Beginning at 2nd level, you can use soothing music or oration to help revitalize your wounded allies during a short rest. If you or any friendly creatures who can hear your performance regain hit points at the end of the short rest by spending one or more Hit Dice, each of those creatures regains an extra 1d6 hit points. The extra hit points increase when you reach certain levels in this class: to 1d8 at 9th level, to 1d10 at 13th level, and to 1d12 at 17th level.",
+          "level": 2
+        },
+          {
+          "name": "Song of Rest",
+          "desc": "Starting at 2nd level, you can throw aside all concern for defense to attack with fierce desperation. When you make your first attack on your turn, you can decide to attack recklessly. Doing so gives you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.",
+          "level": 2
+        },
+         {
+          "name": "Danger Sense",
+          "desc": "At 2nd level, you gain an uncanny sense of when things nearby aren’t as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws against effects that you can see, such as traps and spells. To gain this benefit, you can’t be blinded, deafened, or incapacitated.",
+          "level": 2
+        },
+         {
+          "name": "Bard College",
+          "desc": "At 3rd level, you delve into the advanced techniques of a bard college of your choice: the College of Lore detailed at the end of the class description or another from the Player's Handbook or other sources. Your choice grants you features at 3rd level and again at 6th and 14th level.",
+          "level": 3,
+          "choose": 1,
+          "from":[
+            {
+              "index": "bardic_colleges"
+            }
+          ]
+        },
+        {
+          "name": "Expertise",
+          "desc": "At 3rd level, choose two of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
+          "level": 3
+        },
+         {
+          "name": "Font of Inspiration",
+          "desc": "Beginning when you reach 5th level, you regain all of your expended uses of Bardic Inspiration when you finish a short or long rest.",
+          "level": 5
+        },
+        {
+          "name": "Countercharm",
+          "desc": "At 6th level, you gain the ability to use musical notes or words of power to disrupt mind-influencing effects. As an action, you can start a performance that lasts until the end of your next turn. During that time, you and any friendly creatures within 30 feet of you have advantage on saving throws against being frightened or charmed. A creature must be able to hear you to gain this benefit. The performance ends early if you are incapacitated or silenced or if you voluntarily end it (no action required).",
+          "level": 6
+        },
+         {
+          "name": "Expertise",
+          "desc": "At 10th level, choose two more of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
+          "level": 10
+        },
+         {
+          "name": "Magical Secrets",
+          "desc": "By 10th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 14th level and again at 18th level.",
+          "level": 10
+        },
+         {
+          "name": "Magical Secrets",
+          "desc": "At 14th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 18th level.",
+          "level": 14
+        },
+        {
+          "name": "Magical Secrets",
+          "desc": "At 18th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table.",
+          "level": 18
+        },
+        {
+          "name": "Superior Inspiration",
+          "desc": "At 20th level, when you roll initiative and have no uses of Bardic Inspiration left, you regain one use.",
+          "level": 20
         }
       ]
     }

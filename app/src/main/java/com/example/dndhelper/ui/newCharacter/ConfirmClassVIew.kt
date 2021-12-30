@@ -138,6 +138,41 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
+
+                val equipmentChoices = viewModel.classes.observeAsState().value?.get(classIndex)?.equipmentChoices
+                equipmentChoices?.forEach { choice ->
+                    Card(
+                        elevation = 5.dp,
+                        modifier = Modifier
+                            .fillMaxWidth(0.95f)
+                            .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                        backgroundColor = Color.White
+                    ) {
+                        Column() {
+                            Text(text = choice.name, fontSize = 18.sp)
+
+                            //Get the viewModel for the drop down.
+                            val multipleChoiceViewModel: MultipleChoiceDropdownViewModel =
+                                viewModel()
+                            //Tell the viewModel how many choices we want from the user.
+                            multipleChoiceViewModel.maxSelections = choice.choose
+
+                            //Tell the viewModel what the user can choose from.
+                            val names = mutableListOf<String>()
+                            for (item in choice.from) {
+                                item.name?.let { names.add(it) }
+                            }
+                            multipleChoiceViewModel.names = names
+
+                            //Tell the viewModel what we want the name of the choice to be.
+                            multipleChoiceViewModel.choiceName = choice.name
+
+                            //Create the view.
+                            MultipleChoiceDropdownView(viewModel = multipleChoiceViewModel)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
             }
 
 

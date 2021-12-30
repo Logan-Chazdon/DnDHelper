@@ -85,7 +85,7 @@ fun ConfirmBackgroundView(
                             )
 
                             Text(
-                                choice.from[selectedIndex].name,
+                                choice.from[selectedIndex].name!!,
                                 fontSize = 14.sp,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -106,7 +106,7 @@ fun ConfirmBackgroundView(
                                     selectedIndex = index
                                     expanded = false
                                 }) {
-                                    Text(text = item.name)
+                                    Text(text = item.name!!)
                                 }
                             }
                         }

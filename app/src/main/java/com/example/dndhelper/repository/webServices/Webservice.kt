@@ -410,13 +410,13 @@ class WebserviceDnD(val context: Context) : Webservice {
         itemChoices: MutableList<ItemChoice>,
         items: MutableList<Item>
     ) {
-        for(index in 0 until jsonArray.length()) {
-            val json = jsonArray.getJSONObject(index)
+        for(i in 0 until jsonArray.length()) {
+            val json = jsonArray.getJSONObject(i)
             var choose = 0
             try {
                 choose = json.getInt("choose")
-            } catch (e: JSONException) {
-            }
+            } catch (e: JSONException) { }
+
             if (choose == 0) {
                 items.add(
                     Item(
@@ -424,11 +424,36 @@ class WebserviceDnD(val context: Context) : Webservice {
                     )
                 )
             } else {
+
+                val from = mutableListOf<Item>()
+                val fromJson = json.getJSONArray("from")
+
+                for(fromIndex in 0 until fromJson.length()) {
+                    val itemJson = fromJson.getJSONObject(fromIndex)
+                    var name : String? = null
+                    var index : String? = null
+
+                    try {
+                        name = itemJson.getString("name")
+                    } catch (e: JSONException) {}
+
+                    try {
+                        index = itemJson.getString("index")
+                    } catch (e: JSONException) {}
+
+                    from.add(
+                        Item(
+                            name = name,
+                            index = index
+                        )
+                    )
+                }
+
                 itemChoices.add(
                     ItemChoice(
                         name = json.getString("name"),
                         choose = choose,
-                        from = emptyList()
+                        from = from
                     )
                 )
             }

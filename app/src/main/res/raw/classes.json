@@ -83,7 +83,11 @@
         {
           "name": "any two simple weapons",
           "choose": 2,
-          "options_index": "simple_weapons"
+          "from" : [
+            {
+              "index" : "simple_weapons"
+            }
+          ]
         }
       ],
       "infusions": [
@@ -499,7 +503,7 @@
            "choose": 1,
            "from": [
              {
-               "options_index": "martial_melee_weapons"
+               "index": "martial_melee_weapons"
              },
              {
                "name": "a greataxe"
@@ -511,7 +515,7 @@
           "choose": 1,
           "from" : [
             {
-                "options_index": "simple_weapon"
+                "index": "simple_weapon"
             },
             {
                 "name" : "two handaxes"
@@ -842,7 +846,7 @@
             "choose": 1,
             "from" : [
                 {
-                    "name": "simple_weapons"
+                    "index": "simple_weapons"
                 },
                 {
                     "name" : "light crossbow"

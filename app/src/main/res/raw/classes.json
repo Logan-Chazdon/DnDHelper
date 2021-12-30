@@ -611,7 +611,7 @@
       "hit_die": 8,
       "proficiency_choices": [
         {
-          "name": "Choose any three",
+          "name": "Choose any three skill proficiencies.",
           "choose": 3,
           "from" :[
             {

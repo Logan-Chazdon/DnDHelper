@@ -9,15 +9,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.lang.Exception
+import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 
 @Composable
 fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, characterId: Int) {
@@ -116,24 +117,23 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                         Column() {
                             Text(text = choice.name, fontSize = 18.sp)
 
-                            //Get the viewModel for the drop down.
-                            val multipleChoiceViewModel: MultipleChoiceDropdownViewModel =
-                                viewModel()
-                            //Tell the viewModel how many choices we want from the user.
-                            multipleChoiceViewModel.maxSelections = choice.choose
 
-                            //Tell the viewModel what the user can choose from.
+
+                            //Tell the state bundle what the user can choose from.
                             val names = mutableListOf<String>()
                             for (item in choice.from) {
                                 item.name?.let { names.add(it) }
                             }
-                            multipleChoiceViewModel.names = names
 
-                            //Tell the viewModel what we want the name of the choice to be.
-                            multipleChoiceViewModel.choiceName = choice.name
+                            val multipleChoiceState = viewModel.dropDownStates.getDropDownState(
+                                key = choice.name,
+                                maxSelections = choice.choose,
+                                names = names,
+                                choiceName = choice.name
+                            )
 
                             //Create the view.
-                            MultipleChoiceDropdownView(viewModel = multipleChoiceViewModel)
+                            MultipleChoiceDropdownView(state = multipleChoiceState)
                         }
                     }
                     Spacer(modifier = Modifier.height(10.dp))
@@ -151,24 +151,21 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                         Column() {
                             Text(text = choice.name, fontSize = 18.sp)
 
-                            //Get the viewModel for the drop down.
-                            val multipleChoiceViewModel: MultipleChoiceDropdownViewModel =
-                                viewModel()
-                            //Tell the viewModel how many choices we want from the user.
-                            multipleChoiceViewModel.maxSelections = choice.choose
-
-                            //Tell the viewModel what the user can choose from.
+                            //Tell the state bundle what the user can choose from.
                             val names = mutableListOf<String>()
                             for (item in choice.from) {
                                 item.name?.let { names.add(it) }
                             }
-                            multipleChoiceViewModel.names = names
 
-                            //Tell the viewModel what we want the name of the choice to be.
-                            multipleChoiceViewModel.choiceName = choice.name
+                            val multipleChoiceState = viewModel.dropDownStates.getDropDownState(
+                                key = choice.name,
+                                maxSelections = choice.choose,
+                                names = names,
+                                choiceName = choice.name
+                            )
 
                             //Create the view.
-                            MultipleChoiceDropdownView(viewModel = multipleChoiceViewModel)
+                            MultipleChoiceDropdownView(state = multipleChoiceState)
                         }
                     }
                     Spacer(modifier = Modifier.height(10.dp))
@@ -244,3 +241,4 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
         }
     }
 }
+

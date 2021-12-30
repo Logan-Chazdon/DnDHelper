@@ -9,17 +9,14 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.dndhelper.repository.dataClasses.LanguageChoice
+import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 @Composable
 fun ConfirmBackgroundView(
@@ -146,8 +143,6 @@ fun ConfirmBackgroundView(
                         shape = RoundedCornerShape(10.dp)
                     ) {
                         background.languageChoices.forEach { choice ->
-                            val from = viewModel.getLanguageChoice(choice)
-
                             Column {
                                 Text(
                                     text = choice.name,
@@ -155,24 +150,21 @@ fun ConfirmBackgroundView(
                                     modifier = Modifier.padding(start = 5.dp)
                                 )
 
-                                //Get the viewModel for the drop down.
-                                val multipleChoiceViewModel: MultipleChoiceDropdownViewModel
-                                    = viewModel()
-                                //Tell the viewModel how many choices we want from the user.
-                                multipleChoiceViewModel.maxSelections = choice.choose
-
-                                //Tell the viewModel what the user can choose from.
+                                //Tell the state bundle what the user can choose from.
                                 val names = mutableListOf<String>()
-                                for(item in from) {
+                                for (item in choice.from) {
                                     item.name?.let { names.add(it) }
                                 }
-                                multipleChoiceViewModel.names = names
 
-                                //Tell the viewModel what we want the name of the choice to be.
-                                multipleChoiceViewModel.choiceName = choice.name
+                                val multipleChoiceState = viewModel.dropDownStates.getDropDownState(
+                                    key = choice.name,
+                                    maxSelections = choice.choose,
+                                    names = names,
+                                    choiceName = choice.name
+                                )
 
                                 //Create the view.
-                                MultipleChoiceDropdownView(viewModel = multipleChoiceViewModel)
+                                MultipleChoiceDropdownView(state = multipleChoiceState)
                             }
                         }
                     }

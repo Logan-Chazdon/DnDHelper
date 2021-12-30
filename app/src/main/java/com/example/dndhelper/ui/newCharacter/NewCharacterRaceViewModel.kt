@@ -1,6 +1,7 @@
 package com.example.dndhelper.ui.newCharacter
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.*
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.Character

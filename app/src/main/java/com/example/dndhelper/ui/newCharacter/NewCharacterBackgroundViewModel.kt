@@ -2,6 +2,7 @@ package com.example.dndhelper.ui.newCharacter
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
@@ -27,7 +28,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
     lateinit var backgrounds : LiveData<List<Background>>
     var backgroundIndex : Int = -1
     var id = -1
-
+    var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
 
     init {
         viewModelScope.launch {

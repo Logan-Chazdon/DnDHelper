@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MultipleChoiceDropdownView(viewModel : MultipleChoiceDropdownViewModel) {
+fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
     var expanded by remember { mutableStateOf(false) }
 
     //TODO fix this. It isn't updating on change.
-    val text  = viewModel.selectedNames.observeAsState()
+    val text  = state.selectedNames.observeAsState()
     Text(
         text = "${text.value}",
         modifier = Modifier
@@ -29,12 +29,12 @@ fun MultipleChoiceDropdownView(viewModel : MultipleChoiceDropdownViewModel) {
         expanded = expanded,
         onDismissRequest = { expanded = false }
     ) {
-        viewModel.names.forEachIndexed { index, item ->
+        state.names.forEachIndexed { index, item ->
             DropdownMenuItem(onClick = {
-                viewModel.changeSelection(index)
+                state.changeSelection(index)
             }) {
                 Checkbox(
-                    checked = viewModel.selectedList[index],
+                    checked = state.selectedList[index],
                     onCheckedChange = null
                 )
                 Text(text = item)

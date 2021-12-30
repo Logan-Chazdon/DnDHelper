@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 
-//This viewModel is used on the MultipleChoiceDropdownView UI Component.
-//We're using a viewModel here to make it easier to add more than one of this UI component without code duplication.
-class MultipleChoiceDropdownViewModel() : ViewModel() {
+class MultipleChoiceDropdownState()  {
     val selectedList =  mutableStateListOf<Boolean>()
     private val _selectedNames = MutableLiveData("")
     val selectedNames: LiveData<String> = _selectedNames
@@ -62,6 +60,4 @@ class MultipleChoiceDropdownViewModel() : ViewModel() {
         }
         return returnList
     }
-
-
 }

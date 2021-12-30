@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.lang.Exception
 
 @Composable
@@ -100,6 +102,50 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                 .verticalScroll(state = scrollState, enabled = true),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            if(viewModel.isBaseClass.value) {
+                val proficiencyChoices = viewModel.classes.observeAsState().value?.get(classIndex)?.proficiencyChoices
+                proficiencyChoices?.forEach { choice ->
+                    Card(
+                        elevation = 5.dp,
+                        modifier = Modifier
+                            .fillMaxWidth(0.95f)
+                            .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                        backgroundColor = Color.White
+                    ) {
+                        Column() {
+                            Text(text = choice.name, fontSize = 18.sp)
+
+                            //Get the viewModel for the drop down.
+                            val multipleChoiceViewModel: MultipleChoiceDropdownViewModel =
+                                viewModel()
+                            //Tell the viewModel how many choices we want from the user.
+                            multipleChoiceViewModel.maxSelections = choice.choose
+
+                            //Tell the viewModel what the user can choose from.
+                            val names = mutableListOf<String>()
+                            for (item in choice.from) {
+                                item.name?.let { names.add(it) }
+                            }
+                            multipleChoiceViewModel.names = names
+
+                            //Tell the viewModel what we want the name of the choice to be.
+                            multipleChoiceViewModel.choiceName = choice.name
+
+                            //Create the view.
+                            MultipleChoiceDropdownView(viewModel = multipleChoiceViewModel)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+            }
+
+
+
+
+
+
+
             val levelPath = viewModel.classes.observeAsState().value?.get(classIndex)?.levelPath
             if (levelPath != null) {
                 for(choice in levelPath) {
@@ -128,10 +174,13 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
                                 if (choice.choiceNum != 0) {
                                     Text(
                                         choice.options!![selectedLastIndex].name,
-                                        modifier = Modifier.fillMaxWidth()
-                                            .clickable(onClick = { expanded = true }).background(
-                                            Color.White
-                                        ).padding(start = 5.dp)
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable(onClick = { expanded = true })
+                                            .background(
+                                                Color.White
+                                            )
+                                            .padding(start = 5.dp)
                                     )
 
                                     DropdownMenu(

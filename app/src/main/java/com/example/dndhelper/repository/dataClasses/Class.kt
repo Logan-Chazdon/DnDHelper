@@ -18,5 +18,7 @@ class Class(
     var subClasses: List<Subclass> = emptyList(),
     var levelPath: MutableList<Feature> = mutableListOf<Feature>(),
     var proficiencyChoices: List<ProficiencyChoice> = emptyList(),
-    var proficiencies: List<Proficiency> = emptyList()
+    var proficiencies: List<Proficiency> = emptyList(),
+    var equipmentChoices: List<ItemChoice> = emptyList(),
+    var equipment: List<Item> = emptyList()
 )

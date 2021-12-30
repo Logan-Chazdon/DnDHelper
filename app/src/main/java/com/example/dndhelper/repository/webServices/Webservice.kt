@@ -372,7 +372,13 @@ class WebserviceDnD(val context: Context) : Webservice {
                 val levelPath = extractFeatures(classJson.getJSONArray("features"))
                 val proficiencyChoices = mutableListOf<ProficiencyChoice>()
                 val proficiencies = mutableListOf<Proficiency>()
-
+                val equipmentChoices: MutableList<ItemChoice> = mutableListOf()
+                val equipment: MutableList<Item> = mutableListOf()
+                    extractEquipmentChoices(
+                        classJson.getJSONArray("equipment"),
+                        equipmentChoices,
+                        equipment
+                    )
 
                 try {
                 extractProficienciesChoices(
@@ -389,11 +395,43 @@ class WebserviceDnD(val context: Context) : Webservice {
                         subClasses = subClasses,
                         levelPath = levelPath,
                         proficiencyChoices = proficiencyChoices,
-                        proficiencies = proficiencies
+                        proficiencies = proficiencies,
+                        equipmentChoices = equipmentChoices,
+                        equipment = equipment
                     )
                 )
             }
             _classes.postValue(classes)
+        }
+    }
+
+    private fun extractEquipmentChoices(
+        jsonArray: JSONArray,
+        itemChoices: MutableList<ItemChoice>,
+        items: MutableList<Item>
+    ) {
+        for(index in 0 until jsonArray.length()) {
+            val json = jsonArray.getJSONObject(index)
+            var choose = 0
+            try {
+                choose = json.getInt("choose")
+            } catch (e: JSONException) {
+            }
+            if (choose == 0) {
+                items.add(
+                    Item(
+                        name = json.getString("name")
+                    )
+                )
+            } else {
+                itemChoices.add(
+                    ItemChoice(
+                        name = json.getString("name"),
+                        choose = choose,
+                        from = emptyList()
+                    )
+                )
+            }
         }
     }
 

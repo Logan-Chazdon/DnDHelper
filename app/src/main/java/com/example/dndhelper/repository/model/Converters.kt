@@ -302,5 +302,21 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToItemChoicesList(data: String?): List<ItemChoice> {
+        val gson = Gson()
+        if (data == null) {
+            return emptyList()
+        }
+        val listType: Type = object : TypeToken<List<ItemChoice>>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun itemChoicesListChoicesToStoredString(myObjects: List<ItemChoice>): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
 
 }

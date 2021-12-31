@@ -1,23 +1,21 @@
 package com.example.dndhelper.repository.dataClasses
 
-class Armor(
-    name : String? = null,
-    index: String? = null,
-    desc: String? = null,
-    itemRarity : String? = null,
-    cost : List<Currency>? = null,
-    weight : Int? = null,
+import com.google.gson.annotations.JsonAdapter
+import com.google.gson.annotations.SerializedName
+
+data class Armor(
+    override val name : String? = null,
+    override val index: String? = null,
+    override val desc: String? = null,
+    override val itemRarity : String? = null,
+    override val cost : List<Currency>? = null,
+    override val weight : Int? = null,
     val baseAc : Int,
     val dexCap: Int,
     val stealth: String
-) : Item(
-    name = name,
-    index = index,
-    desc = desc,
-    itemRarity = itemRarity,
-    cost = cost,
-    weight = weight
-) {
+) : ItemInterface {
+    override val type = "Armor"
+
     fun getAC(dexMod: Int) : Int{
         return baseAc + dexMod(dexMod)
     }
@@ -40,3 +38,5 @@ class Armor(
     }
 
 }
+
+

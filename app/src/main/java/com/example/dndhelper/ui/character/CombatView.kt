@@ -52,8 +52,9 @@ fun CombatView(viewModel: CombatViewModel) {
                             "",
                             Modifier.size(75.dp)
                         )
+                        val ac = viewModel.character?.equiptArmor?.getAC(viewModel.character?.getStat("Dex")!!)
                         Text(
-                            text = "20",
+                            text = "$ac",
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
                     }

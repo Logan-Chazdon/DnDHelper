@@ -27,14 +27,14 @@ class WebserviceDnD(val context: Context) : Webservice {
 
 
 
-    fun getItems(_items: MutableLiveData<List<Item>>) {
+    fun getItems(_items: MutableLiveData<List<ItemInterface>>) {
         GlobalScope.launch {
             _items.postValue(generateItems())
         }
     }
 
-    private fun generateItems(): List<Item> {
-        val items = mutableListOf<Item>()
+    private fun generateItems(): List<ItemInterface> {
+        val items = mutableListOf<ItemInterface>()
 
         //Add all the martial weapons to the list
         items.addAll(generateWeapons(
@@ -135,7 +135,8 @@ class WebserviceDnD(val context: Context) : Webservice {
                 cost.add(
                     Currency(
                         name = pair.key,
-                        amount = jsonObject.getInt(pair.value)
+                        amount = jsonObject.getInt(pair.value),
+                        weight = 0 //TODO
                     )
                 )
             } catch (e: JSONException) { }

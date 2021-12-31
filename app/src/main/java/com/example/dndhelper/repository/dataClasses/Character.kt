@@ -32,4 +32,12 @@ data class Character(
     var currency = listOf<Int>()
 
     var equiptArmor = Armor.none
+
+    fun getStats(): MutableMap<String, Int> {
+        return baseStats  //TODO add bonuses and such
+    }
+
+    fun getStat(name: String): Int? {
+        return baseStats[name] //TODO add bonuses and such
+    }
 }

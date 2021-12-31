@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.room.TypeConverter
 import com.example.dndhelper.repository.dataClasses.*
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 import java.util.*
+import com.example.dndhelper.repository.dataClasses.Currency
 
 class Converters {
     @TypeConverter
@@ -302,6 +304,7 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+
     @TypeConverter
     fun storedStringToItemChoicesList(data: String?): List<ItemChoice> {
         val gson = Gson()
@@ -314,6 +317,42 @@ class Converters {
 
     @TypeConverter
     fun itemChoicesListChoicesToStoredString(myObjects: List<ItemChoice>): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToArmor(data: String?): Armor? {
+        val gson = Gson()
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<Armor>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun armorToStoredString(myObjects: Armor): String? {
+        val gson = Gson()
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToItems(data: String?): List<ItemInterface> {
+        val deserializer = ItemDeserializer("type")
+        deserializer.registerItemType("Item", Item::class.java)
+        deserializer.registerItemType("Weapon", Weapon::class.java)
+        deserializer.registerItemType("Armor", Armor::class.java)
+        deserializer.registerItemType("Currency", Currency::class.java)
+        val gson = GsonBuilder()
+            .registerTypeAdapter(ItemInterface::class.java, deserializer)
+            .create()
+
+        return gson.fromJson<List<ItemInterface>>(data, object : TypeToken<List<ItemInterface>>() {}.type)
+    }
+
+    @TypeConverter
+    fun itemsToStoredString(myObjects: List<ItemInterface>): String? {
         val gson = Gson()
         return gson.toJson(myObjects)
     }

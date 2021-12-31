@@ -1,10 +1,14 @@
 package com.example.dndhelper.repository.dataClasses
 
-open class Item (
-    val name : String? = null,
-    val index: String? = null,
-    val desc: String? = null,
-    val itemRarity : String? = null,
-    val cost : List<Currency>? = null,
-    val weight : Int? = 0
-)
+
+
+data class Item (
+    override val name : String? = null,
+    override val index: String? = null,
+    override val desc: String? = null,
+    override val itemRarity : String? = null,
+    override val cost : List<Currency>? = null,
+    override val weight : Int? = 0
+) : ItemInterface{
+    override val type = "Item"
+}

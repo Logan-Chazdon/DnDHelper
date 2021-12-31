@@ -12,7 +12,10 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.dndhelper.R
 import com.example.dndhelper.repository.dataClasses.Spell
 
 @ExperimentalFoundationApi
@@ -45,7 +48,7 @@ fun CombatView(i: Int) {
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Default.AccountCircle,
+                            painter = painterResource(R.drawable.ic_armour_class),
                             "",
                             Modifier.size(75.dp)
                         )

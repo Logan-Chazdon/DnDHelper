@@ -73,6 +73,7 @@ fun Navigation(navController: NavHostController) {
                         val viewModel = hiltViewModel<NewCharacterClassViewModel>()
                         ConfirmClassView(
                             viewModel = viewModel,
+                            navController = navController,
                             classIndex = classIndex,
                             characterId = characterId
                         )

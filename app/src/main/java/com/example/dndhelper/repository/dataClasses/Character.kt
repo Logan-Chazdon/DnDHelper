@@ -30,4 +30,6 @@ data class Character(
 
     //0 -> copper 4-> Platinum
     var currency = listOf<Int>()
+
+    var equiptArmor = Armor.none
 }

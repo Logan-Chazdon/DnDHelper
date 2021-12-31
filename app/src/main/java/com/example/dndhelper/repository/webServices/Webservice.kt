@@ -24,6 +24,31 @@ class WebserviceDnD(val context: Context) : Webservice {
     private val baseUrl = "https://www.dnd5eapi.co"
 
 
+
+    fun getSkills(_abilitiesToSkills: MutableLiveData<Map<String, List<String>>>) {
+        val dataAsString = context.resources.openRawResource(R.raw.skills).bufferedReader().readText()
+        val abilitiesToSkills  = mutableMapOf<String, List<String>>()
+        GlobalScope.launch {
+            val rootJson = JSONObject(dataAsString)
+            val abilitiesJson = rootJson.getJSONArray("baseStats")
+            for(abilityIndex in 0 until abilitiesJson.length()) {
+                val statJson = abilitiesJson.getJSONObject(abilityIndex)
+                val name = statJson.getString("name")
+                val skills = mutableListOf<String>()
+                val skillsJson = statJson.getJSONArray("skills")
+
+                for(skillIndex in 0 until skillsJson.length()) {
+                    val skillJson = skillsJson.getJSONObject(skillIndex)
+                    skills.add(
+                        skillJson.getString("name")
+                    )
+                }
+                abilitiesToSkills[name] = skills
+            }
+            _abilitiesToSkills.postValue(abilitiesToSkills)
+        }
+    }
+
     private fun extractComponents(componentsJson : JSONArray): List<String> {
         val components = mutableListOf<String>()
         for(index in 0 until componentsJson.length()) {

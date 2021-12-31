@@ -25,6 +25,8 @@ class Repository @Inject constructor(
     private val _backgrounds = MutableLiveData<List<Background>>()
     private val _characters : LiveData<List<Character>>? = dao?.getAllCharacters()
     private val _languages = MutableLiveData<List<Language>>()
+    private val _skills : MutableLiveData<Map<String, List<String>>> =
+        MutableLiveData()
 
     init {
         //backgrounds
@@ -32,6 +34,9 @@ class Repository @Inject constructor(
 
         //languages
         (webservice as WebserviceDnD).getLocalLanguages(_languages)
+
+        //Skills
+        (webservice as WebserviceDnD).getSkills(_skills)
 
         //classes
         GlobalScope.launch {
@@ -59,6 +64,14 @@ class Repository @Inject constructor(
 
     fun getLanguages() : LiveData<List<Language>> {
         return _languages
+    }
+
+    fun getSkillsByIndex(index: String):
+            MutableLiveData<Map<String, List<String>>>? {
+        if(index == "skill_proficiencies"){
+            return _skills
+        }
+        return null
     }
 
     fun getLanguagesByIndex(index: String): MutableLiveData<List<Language>>? {

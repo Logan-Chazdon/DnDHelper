@@ -23,6 +23,127 @@ interface Webservice {
 class WebserviceDnD(val context: Context) : Webservice {
     private val baseUrl = "https://www.dnd5eapi.co"
 
+
+
+
+
+    fun getItems(_items: MutableLiveData<List<Item>>) {
+        GlobalScope.launch {
+            _items.postValue(generateItems())
+        }
+    }
+
+    private fun generateItems(): List<Item> {
+        val items = mutableListOf<Item>()
+
+        //Add all the martial weapons to the list
+        items.addAll(generateWeapons(
+            context.resources.openRawResource(R.raw.martial_weapons).bufferedReader().readText()
+        ))
+
+        //Add all the simple weapons to the list
+        items.addAll(generateWeapons(
+            context.resources.openRawResource(R.raw.simple_weapons).bufferedReader().readText()
+        ))
+
+        //Add all the armors to the list
+        items.addAll(generateArmor())
+
+        return items
+    }
+
+    private fun generateArmor(): List<Armor> {
+        val dataAsString = context.resources.openRawResource(R.raw.armor).bufferedReader().readText()
+        val armor = mutableListOf<Armor>()
+
+        val armorsJson = JSONObject(dataAsString).getJSONArray("armor")
+        for(index in 0 until armorsJson.length()) {
+            val armorJson = armorsJson.getJSONObject(index)
+            val acJson = armorJson.getJSONObject("ac")
+            val cost = extractCost(armorJson.getJSONObject("cost"))
+            armor.add(
+                Armor(
+                    name = armorJson.getString("name"),
+                    desc = armorJson.getString("desc"),
+                    itemRarity = armorJson.getString("item_rarity"),
+                    cost = cost,
+                    weight = armorJson.getInt("weight"),
+                    baseAc = acJson.getInt("base"),
+                    dexCap = acJson.getInt("dex_cap"),
+                    stealth = armorJson.getString("stealth")
+                )
+            )
+        }
+
+        return armor
+    }
+
+    private fun generateWeapons(dataAsString: String) : List<Weapon> {
+        val weapons = mutableListOf<Weapon>()
+        val weaponsJson = JSONObject(dataAsString).getJSONArray("weapons")
+        //TODO add support for magic items and attunment.
+        for(weaponIndex in 0 until weaponsJson.length()) {
+            val weaponJson = weaponsJson.getJSONObject(weaponIndex)
+
+
+            val cost = extractCost(weaponJson.getJSONObject("cost"))
+            val properties = extractProperties(weaponJson.getJSONArray("properties"))
+            weapons.add(
+                Weapon(
+                    name = weaponJson.getString("name"),
+                    desc = weaponJson.getString("desc"),
+                    itemRarity = weaponJson.getString("item_rarity"),
+                    cost = cost,
+                    damage = weaponJson.getString("damage"),
+                    damageType = weaponJson.getString("damage_type"),
+                    range = weaponJson.getString("range"),
+                    properties = properties
+                )
+            )
+        }
+
+
+        return weapons
+    }
+
+    private fun extractProperties(jsonArray: JSONArray): List<Property> {
+        val properties = mutableListOf<Property>()
+        for(index in 0 until jsonArray.length()) {
+            val propertyJson = jsonArray.getJSONObject(index)
+            properties.add(
+                Property(
+                    name = propertyJson.getString("name"),
+                    desc = propertyJson.getString("desc")
+                )
+            )
+        }
+        return properties
+    }
+
+    private fun extractCost(jsonObject: JSONObject): List<Currency> {
+        val cost = mutableListOf<Currency>()
+        val types = mapOf(
+            "Platinum pieces" to "pp",
+            "Gold pieces" to "gp",
+            "Electrum  pieces" to "ep",
+            "Silver pieces" to "sp",
+            "Copper pieces" to "cp",
+        )
+
+        for(pair in types.entries) {
+            try {
+                cost.add(
+                    Currency(
+                        name = pair.key,
+                        amount = jsonObject.getInt(pair.value)
+                    )
+                )
+            } catch (e: JSONException) { }
+        }
+        return cost
+    }
+
+
     private fun generateSkills(): MutableMap<String, List<String>> {
         val dataAsString = context.resources.openRawResource(R.raw.skills).bufferedReader().readText()
         val abilitiesToSkills  = mutableMapOf<String, List<String>>()

@@ -1,0 +1,32 @@
+{
+  "weapons" : [
+    {
+      "name": "short sword",
+      "desc" : "short sword",
+      "damage": "1d6",
+      "range": "5 ft",
+      "damage_type": "Piercing",
+      "item_rarity": "Standard",
+
+      "cost": {
+        "pp": 0,
+        "gp": 10,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Finesse",
+          "desc": "Finesse Desc"
+        },
+        {
+          "name": "Light",
+          "desc": "Light Desc"
+        }
+      ]
+
+    }
+  ]
+}

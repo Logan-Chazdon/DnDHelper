@@ -1,0 +1,25 @@
+{
+  "armor" : [
+    {
+      "name" : "Leather",
+      "desc" : "Leather",
+      "cost": {
+        "pp": 0,
+        "gp": 10,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 10,
+      "item_rarity": "Standard",
+      "stealth" : "-",
+
+      "ac" : {
+        "base" : 11,
+        "dex_cap" : 2
+      }
+
+    }
+  ]
+}

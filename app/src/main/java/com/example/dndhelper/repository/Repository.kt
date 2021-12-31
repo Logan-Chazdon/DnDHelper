@@ -1,17 +1,13 @@
 package com.example.dndhelper.repository
 
-import android.app.Application
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.repository.model.DatabaseDao
-import com.example.dndhelper.repository.model.RoomDataBase
 import com.example.dndhelper.repository.webServices.Webservice
 import javax.inject.Inject
 import com.example.dndhelper.repository.webServices.WebserviceDnD
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import android.os.AsyncTask
 import com.example.dndhelper.repository.dataClasses.*
 
 
@@ -27,8 +23,12 @@ class Repository @Inject constructor(
     private val _languages = MutableLiveData<List<Language>>()
     private val _skills : MutableLiveData<Map<String, List<String>>> =
         MutableLiveData()
+    private val _items: MutableLiveData<List<Item>> = MutableLiveData()
 
     init {
+        //Items
+        (webservice as WebserviceDnD).getItems(_items)
+
         //backgrounds
         (webservice as WebserviceDnD).getLocalBackgrounds(_backgrounds)
 

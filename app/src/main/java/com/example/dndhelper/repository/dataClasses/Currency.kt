@@ -1,5 +1,6 @@
 package com.example.dndhelper.repository.dataClasses
 
-data class Currency(
+class Currency(
+    name: String,
     val amount: Int
-) : Item()
+) : Item(name = name)

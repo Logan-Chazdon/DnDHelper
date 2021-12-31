@@ -33,7 +33,7 @@ class WebserviceDnD(val context: Context) : Webservice {
             val abilitiesJson = rootJson.getJSONArray("baseStats")
             for(abilityIndex in 0 until abilitiesJson.length()) {
                 val statJson = abilitiesJson.getJSONObject(abilityIndex)
-                val name = statJson.getString("name")
+                val baseStat = statJson.getString("baseStat")
                 val skills = mutableListOf<String>()
                 val skillsJson = statJson.getJSONArray("skills")
 
@@ -43,7 +43,7 @@ class WebserviceDnD(val context: Context) : Webservice {
                         skillJson.getString("name")
                     )
                 }
-                abilitiesToSkills[name] = skills
+                abilitiesToSkills[baseStat] = skills
             }
             _abilitiesToSkills.postValue(abilitiesToSkills)
         }

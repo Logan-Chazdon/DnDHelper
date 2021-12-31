@@ -324,18 +324,20 @@ class WebserviceDnD(val context: Context) : Webservice {
                                     if(index == "all_languages") { //If we add more language indexes this may need to be moved into a function
                                         from.addAll(generateLanguages())
                                     }
-                                } catch (e: JSONException) { }
+                                } catch (e: JSONException) {
 
-                                try {
-                                    langName = choiceJson.getString("name")
-                                } catch (e: JSONException) { }
+                                    try {
+                                        langName = choiceJson.getString("name")
+                                    } catch (e: JSONException) {
+                                    }
 
-                                from.add(
-                                    Language(
-                                        name = langName,
-                                        index = index
+                                    from.add(
+                                        Language(
+                                            name = langName,
+                                            index = index
+                                        )
                                     )
-                                )
+                                }
                             }
                             languageChoices.add(
                                 LanguageChoice(

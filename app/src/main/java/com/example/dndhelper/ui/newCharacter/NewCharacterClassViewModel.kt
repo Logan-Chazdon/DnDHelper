@@ -54,7 +54,9 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
 
         newClass.levelPath.filter { it.level <= level }.forEach {
-            it.chosen = it.options?.let { it1 -> dropDownStates[it.name]?.getSelected(it1) } as List<Feature>
+            if(it.choiceNum != 0 && it.options?.isNullOrEmpty() == false) {
+                it.chosen = dropDownStates[it.name]?.getSelected(it.options) as List<Feature>
+            }
         }
 
 

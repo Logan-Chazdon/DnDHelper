@@ -23,29 +23,31 @@ interface Webservice {
 class WebserviceDnD(val context: Context) : Webservice {
     private val baseUrl = "https://www.dnd5eapi.co"
 
-
-
-    fun getSkills(_abilitiesToSkills: MutableLiveData<Map<String, List<String>>>) {
+    private fun generateSkills(): MutableMap<String, List<String>> {
         val dataAsString = context.resources.openRawResource(R.raw.skills).bufferedReader().readText()
         val abilitiesToSkills  = mutableMapOf<String, List<String>>()
-        GlobalScope.launch {
-            val rootJson = JSONObject(dataAsString)
-            val abilitiesJson = rootJson.getJSONArray("baseStats")
-            for(abilityIndex in 0 until abilitiesJson.length()) {
-                val statJson = abilitiesJson.getJSONObject(abilityIndex)
-                val baseStat = statJson.getString("baseStat")
-                val skills = mutableListOf<String>()
-                val skillsJson = statJson.getJSONArray("skills")
+        val rootJson = JSONObject(dataAsString)
+        val abilitiesJson = rootJson.getJSONArray("baseStats")
+        for(abilityIndex in 0 until abilitiesJson.length()) {
+            val statJson = abilitiesJson.getJSONObject(abilityIndex)
+            val baseStat = statJson.getString("baseStat")
+            val skills = mutableListOf<String>()
+            val skillsJson = statJson.getJSONArray("skills")
 
-                for(skillIndex in 0 until skillsJson.length()) {
-                    val skillJson = skillsJson.getJSONObject(skillIndex)
-                    skills.add(
-                        skillJson.getString("name")
-                    )
-                }
-                abilitiesToSkills[baseStat] = skills
+            for(skillIndex in 0 until skillsJson.length()) {
+                val skillJson = skillsJson.getJSONObject(skillIndex)
+                skills.add(
+                    skillJson.getString("name")
+                )
             }
-            _abilitiesToSkills.postValue(abilitiesToSkills)
+            abilitiesToSkills[baseStat] = skills
+        }
+        return abilitiesToSkills
+    }
+
+    fun getSkills(_abilitiesToSkills: MutableLiveData<Map<String, List<String>>>) {
+        GlobalScope.launch {
+            _abilitiesToSkills.postValue(generateSkills())
         }
     }
 
@@ -133,23 +135,25 @@ class WebserviceDnD(val context: Context) : Webservice {
         }
     }
 
-
-    fun getLocalLanguages(_languages : MutableLiveData<List<Language>>) {
+    private fun generateLanguages(): MutableList<Language> {
         val dataAsString = context.resources.openRawResource(R.raw.languages).bufferedReader().readText()
         val languages = mutableListOf<Language>()
 
+        val rootJson = JSONObject(dataAsString)
+        val languagesJson = rootJson.getJSONArray("languages")
+
+        for(languageIndex in 0 until languagesJson.length()) {
+            val languageJson = languagesJson.getJSONObject(languageIndex)
+            languages.add(
+                Language(languageJson.getString("name"))
+            )
+        }
+        return languages
+    }
+
+    fun getLocalLanguages(_languages : MutableLiveData<List<Language>>) {
         GlobalScope.launch {
-            val rootJson = JSONObject(dataAsString)
-            val languagesJson = rootJson.getJSONArray("languages")
-
-            for(languageIndex in 0 until languagesJson.length()) {
-                val languageJson = languagesJson.getJSONObject(languageIndex)
-                languages.add(
-                    Language(languageJson.getString("name"))
-                )
-            }
-
-            _languages.postValue(languages)
+            _languages.postValue(generateLanguages())
         }
     }
 
@@ -196,6 +200,9 @@ class WebserviceDnD(val context: Context) : Webservice {
 
                                 try {
                                     index = choiceJson.getString("index")
+                                    if(index == "all_languages") { //If we add more language indexes this may need to be moved into a function
+                                        from.addAll(generateLanguages())
+                                    }
                                 } catch (e: JSONException) { }
 
                                 try {
@@ -337,16 +344,31 @@ class WebserviceDnD(val context: Context) : Webservice {
         val proficiencies = mutableListOf<Proficiency>()
         for(profIndex in 0 until proficienciesJson.length()) {
             val profJson = proficienciesJson.getJSONObject(profIndex)
-            proficiencies.add(
-                Proficiency(
-                    name = try {profJson.getString("name")}
-                    catch(e : JSONException) {null},
-                    index = try {profJson.getString("index")}
-                    catch(e : JSONException) {null}
+            var index: String? = null
+            try {
+                index = profJson.getString("index")
+                if(index == "skill_proficiencies") {
+                    generateSkills().values.forEach {
+                        it.forEach{ item ->
+                            proficiencies.add(
+                                Proficiency(
+                                    name = item
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+            catch(e : JSONException) {
+                proficiencies.add(
+                    Proficiency(
+                        name = try {profJson.getString("name")}
+                        catch(e : JSONException) {null},
+                        index = index
+                    )
                 )
-            )
+            }
         }
-
         return proficiencies
     }
 

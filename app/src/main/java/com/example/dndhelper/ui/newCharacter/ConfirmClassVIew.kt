@@ -63,7 +63,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         classes.value?.get(classIndex)?.let { viewModel.addClassLevels(it, levels.value.text.toInt()) }
                         //Navigate to the next step
                         Handler(mainLooper).post {
-                            navController.navigate("newCharacterView/StatsView/${viewModel.id}")
+                            navController.navigate("newCharacterView/RaceView/${viewModel.id}")
                         }
                     }
                 },

@@ -1,0 +1,15 @@
+{
+  "baseStats" : [
+    {
+      "baseStat" : "Strength",
+      "skills" : [
+          {
+            "name" : "Athletics"
+          }
+      ]
+    }
+
+
+
+  ]
+}

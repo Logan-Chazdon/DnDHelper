@@ -6,7 +6,7 @@ class Armor(
     desc: String? = null,
     itemRarity : String? = null,
     cost : List<Currency>? = null,
-    weight : Int,
+    weight : Int? = null,
     val baseAc : Int,
     val dexCap: Int,
     val stealth: String
@@ -29,4 +29,14 @@ class Armor(
             dexCap
         }
     }
+
+    companion object {
+        val none = Armor(
+            name = "none",
+            baseAc = 10,
+            dexCap = 5,
+            stealth = "-"
+        )
+    }
+
 }

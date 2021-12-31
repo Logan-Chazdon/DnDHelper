@@ -53,7 +53,8 @@ fun CombatView(i: Int) {
                             Modifier.size(75.dp)
                         )
                         Text(
-                            text = "20"
+                            text = "20",
+                            modifier = Modifier.padding(bottom = 5.dp)
                         )
                     }
                 }

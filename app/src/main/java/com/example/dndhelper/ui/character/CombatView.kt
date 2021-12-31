@@ -20,7 +20,7 @@ import com.example.dndhelper.repository.dataClasses.Spell
 
 @ExperimentalFoundationApi
 @Composable
-fun CombatView(i: Int) {
+fun CombatView(viewModel: CombatViewModel) {
     Column(
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally

@@ -21,4 +21,7 @@ class Class(
     var proficiencies: List<Proficiency> = emptyList(),
     var equipmentChoices: List<ItemChoice> = emptyList(),
     var equipment: List<Item> = emptyList()
-)
+) {
+    var isBaseClass: Boolean = false
+    var level: Int = 1
+}

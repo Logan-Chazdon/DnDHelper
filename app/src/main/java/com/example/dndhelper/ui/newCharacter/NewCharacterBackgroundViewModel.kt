@@ -1,23 +1,18 @@
 package com.example.dndhelper.ui.newCharacter
 
 import android.app.Application
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.Background
-import com.example.dndhelper.repository.dataClasses.Class
+import com.example.dndhelper.repository.dataClasses.Item
 import com.example.dndhelper.repository.dataClasses.Language
 import com.example.dndhelper.repository.dataClasses.LanguageChoice
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.max
 
 
 @HiltViewModel
@@ -35,6 +30,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
            backgrounds = repository.getBackgrounds()
         }
 
+
     }
 
 
@@ -46,6 +42,12 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
         val character = repository.getCharacterById(id)
+        newBackground.languageChoices.forEach {
+            it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Language>
+        }
+        newBackground.equipmentChoices.forEach {
+            it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Item>
+        }
         character!!.background = newBackground
         repository.insertCharacter(character)
     }

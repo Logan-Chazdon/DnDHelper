@@ -7,5 +7,5 @@ data class Feature(
     val choiceNum: Int = 0,
     val options: MutableList<Feature>?
 ) {
-
+    var chosen : List<Feature>? = null
 }

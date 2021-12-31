@@ -1,5 +1,7 @@
 package com.example.dndhelper.ui.newCharacter
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,13 +22,21 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import java.lang.Exception
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, characterId: Int) {
+fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavController, classIndex: Int, characterId: Int) {
     val classes = viewModel.classes.observeAsState()
     viewModel.id = characterId
+    val mainLooper = Looper.getMainLooper()
+
+    val levels = remember {
+        mutableStateOf(TextFieldValue("1"))
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,15 +58,17 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, classIndex: Int, cha
             //Add Class Button
             Button(
                 onClick = {
-                    //TODO add the class levels
+                    GlobalScope.launch{
+                        classes.value?.get(classIndex)?.let { viewModel.addClassLevels(it, levels.value.text.toInt()) }
+                        //Navigate to the next step
+                        Handler(mainLooper).post {
+                            navController.navigate("newCharacterView/StatsView/${viewModel.id}")
+                        }
+                    }
                 },
             ) {
                 Text(text = "Add class")
             }
-        }
-
-        val levels = remember {
-            mutableStateOf(TextFieldValue("1"))
         }
 
         Row(

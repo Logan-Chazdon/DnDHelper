@@ -22,6 +22,8 @@ data class Character(
 
     var baseStats = mutableMapOf<String, Int>()
 
+    var classes = mutableListOf<Class>()
+
     var background: Background? = null
 
     var backpack : List<Item> = listOf()

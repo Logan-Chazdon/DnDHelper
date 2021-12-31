@@ -6,5 +6,5 @@ open class Item (
     val desc: String? = null,
     val itemRarity : String? = null,
     val cost : List<Currency>? = null,
-    val weight : Int = 0
+    val weight : Int? = 0
 )

@@ -70,9 +70,6 @@ fun ConfirmBackgroundView(
                         elevation = 5.dp,
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        var expanded by remember { mutableStateOf(false) }
-                        var selectedIndex by remember { mutableStateOf(0) }
-
                         Column()
                         {
                             Text(
@@ -81,31 +78,21 @@ fun ConfirmBackgroundView(
                                 modifier = Modifier.padding(start = 5.dp)
                             )
 
-                            Text(
-                                choice.from[selectedIndex].name!!,
-                                fontSize = 14.sp,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable(onClick = { expanded = true })
-                                    .background(
-                                        Color.White
-                                    )
-                                    .padding(start = 15.dp)
-                            )
-                        }
-
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            choice.from.forEachIndexed { index, item ->
-                                DropdownMenuItem(onClick = {
-                                    selectedIndex = index
-                                    expanded = false
-                                }) {
-                                    Text(text = item.name!!)
-                                }
+                            //Tell the state bundle what the user can choose from.
+                            val names = mutableListOf<String>()
+                            for (item in choice.from) {
+                                item.name?.let { names.add(it) }
                             }
+
+                            val multipleChoiceState = viewModel.dropDownStates.getDropDownState(
+                                key = choice.name,
+                                maxSelections = choice.choose,
+                                names = names,
+                                choiceName = choice.name
+                            )
+
+                            //Create the view.
+                            MultipleChoiceDropdownView(state = multipleChoiceState)
                         }
                     }
                 }

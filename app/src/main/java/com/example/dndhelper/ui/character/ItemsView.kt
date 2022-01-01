@@ -1,15 +1,13 @@
 package com.example.dndhelper.ui.character
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,11 +24,14 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewModelScope
+import com.example.dndhelper.repository.dataClasses.Armor
 import com.example.dndhelper.repository.dataClasses.ItemInterface
+import com.example.dndhelper.repository.dataClasses.Weapon
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.math.exp
 
+@ExperimentalFoundationApi
 @Composable
 fun ItemsView(viewModel : ItemViewModel) {
 
@@ -69,11 +70,40 @@ fun ItemsView(viewModel : ItemViewModel) {
                             Card(
                                 elevation = 5.dp,
                                 shape = RoundedCornerShape(5.dp),
-                                modifier = Modifier.fillMaxWidth(0.95f)
+                                modifier = Modifier
+                                    .fillMaxWidth(0.95f)
+                                    .padding(top = 2.dp)
                             ) {
                                 val item = items[i]
-                                item.name?.let { name -> Text(text = name) }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .padding(2.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    //Display item name
+                                    item.name?.let { string -> Text(text = string) }
 
+                                    //If the item is armor or a weapon display its stats
+                                    when(item.type) {
+                                        "Armor" -> {
+                                            Text(text = (item as Armor).acDesc)
+                                            Button(
+                                                onClick = {
+                                                    GlobalScope.launch {
+                                                        viewModel.equip(item)
+                                                    }
+                                                }
+                                            ) {
+                                                //TODO maybe add a feature to stop the user from equiping an already equiped item.
+                                                Text(text = "Equip")
+                                            }
+                                        }
+                                        "Weapon" -> {
+                                            Text(text = (item as Weapon).damageDesc)
+                                        }
+                                    }
+
+                                }
 
                             }
                         }

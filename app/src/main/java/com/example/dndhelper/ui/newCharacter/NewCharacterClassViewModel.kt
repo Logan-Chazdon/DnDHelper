@@ -60,7 +60,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
 
 
-        character!!.classes.add(newClass)
+        character!!.addClass(newClass)
         repository.insertCharacter(character)
     }
 

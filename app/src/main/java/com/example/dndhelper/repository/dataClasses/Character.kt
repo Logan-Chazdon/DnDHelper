@@ -42,6 +42,10 @@ data class Character(
         return baseStats[name] //TODO add bonuses and such
     }
 
+    fun getStatMod(name: String): Int {
+        return (getStat(name)!! - 10) / 2
+    }
+
 
 
     //TODO we might be over removing currency without adding any back in conversions

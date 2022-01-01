@@ -8,10 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.dataClasses.Character
-import com.example.dndhelper.repository.dataClasses.Currency
-import com.example.dndhelper.repository.dataClasses.Item
-import com.example.dndhelper.repository.dataClasses.ItemInterface
+import com.example.dndhelper.repository.dataClasses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -71,6 +68,11 @@ public class ItemViewModel @Inject constructor(
         character?.value?.let{
             repository.insertCharacter(it)
         }
+    }
+
+    suspend fun equip(armor: Armor) {
+        character?.value?.equiptArmor = armor
+        repository.insertCharacter(character?.value!!)
     }
 
 }

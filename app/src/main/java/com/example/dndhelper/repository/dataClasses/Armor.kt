@@ -28,6 +28,15 @@ data class Armor(
         }
     }
 
+    val acDesc: String
+    get() {
+        return when {
+            dexCap == 0 -> "$baseAc"
+            dexCap < 5 -> "$baseAc+Dex mod(max $dexCap)"
+            else -> "$baseAc+Dex mod"
+        }
+    }
+
     companion object {
         val none = Armor(
             name = "none",

@@ -14,4 +14,9 @@ data class Weapon(
     val properties : List<Property>? = null,
 ) : ItemInterface {
     override val type = "Weapon"
+
+    val damageDesc: String
+    get() {
+        return "$damage $damageType"
+    }
 }

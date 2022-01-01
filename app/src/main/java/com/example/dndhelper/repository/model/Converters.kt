@@ -272,20 +272,22 @@ class Converters {
     }
 
     @TypeConverter
-    fun storedStringToListOfInt(data: String?): List<Int?>? {
+    fun storedStringToListOfCurrency(data: String?): List<Currency> {
         val gson = Gson()
         if (data == null) {
-            return null
+            return emptyList()
         }
-        val listType: Type = object : TypeToken<List<Int?>?>() {}.type
+        val listType: Type = object : TypeToken<List<Currency>>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun listOfIntToStoredString(myObjects: List<Int?>?): String? {
+    fun listOfCurrencyToStoredString(myObjects: List<Currency>): String? {
         val gson = Gson()
         return gson.toJson(myObjects)
     }
+
+
 
 
     @TypeConverter

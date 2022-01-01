@@ -125,7 +125,7 @@ class WebserviceDnD(val context: Context) : Webservice {
         val types = mapOf(
             "Platinum pieces" to "pp",
             "Gold pieces" to "gp",
-            "Electrum  pieces" to "ep",
+            "Electrum pieces" to "ep",
             "Silver pieces" to "sp",
             "Copper pieces" to "cp",
         )

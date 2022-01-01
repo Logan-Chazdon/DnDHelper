@@ -23,11 +23,11 @@ class Repository @Inject constructor(
     private val _languages = MutableLiveData<List<Language>>()
     private val _skills : MutableLiveData<Map<String, List<String>>> =
         MutableLiveData()
-   // private val _items: MutableLiveData<List<ItemInterface>> = MutableLiveData()
+    private val _items: MutableLiveData<List<ItemInterface>> = MutableLiveData()
 
     init {
         //Items
-   //     (webservice as WebserviceDnD).getItems(_items)
+        (webservice as WebserviceDnD).getItems(_items)
 
         //backgrounds
         (webservice as WebserviceDnD).getLocalBackgrounds(_backgrounds)
@@ -112,10 +112,18 @@ class Repository @Inject constructor(
         return dao?.findCharacterById(id)
     }
 
+    suspend fun getLiveCharacterById(id: Int) : LiveData<Character>? {
+        return dao?.findLiveCharacterById(id)
+    }
+
     //Inserts a new character into the database and returns its ID
     fun createDefaultCharacter() : Int? {
         val newCharacter = Character(name = "My Character")
         return dao?.insertCharacter(newCharacter)?.toInt()
+    }
+
+    fun getAllItems(): LiveData<List<ItemInterface>> {
+        return _items
     }
 
 

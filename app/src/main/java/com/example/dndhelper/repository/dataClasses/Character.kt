@@ -25,7 +25,25 @@ data class Character(
 
     var classes = mutableListOf<Class>()
 
+    fun addClass(newClass: Class) {
+        if(newClass.isBaseClass) {
+            backpack.addAll(newClass.equipment)
+            newClass.equipmentChoices.forEach {
+                it.chosen?.let { items -> backpack.addAll(items) }
+            }
+        }
+        classes.add(newClass)
+    }
+
+
     var background: Background? = null
+    set(newBackGround) {
+        field = newBackGround
+        field?.equipment?.let { backpack.addAll(it) } //TODO make this add currency to currency instead of items.
+        field?.equipmentChoices?.forEach {
+            it.chosen?.let { chosen -> backpack.addAll(chosen) }
+        }
+    }
 
     var backpack : MutableList<ItemInterface> = mutableListOf()
 

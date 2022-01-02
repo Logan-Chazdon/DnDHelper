@@ -8,6 +8,6 @@ data class Background (
         val features : List<Feature>,
         val languages : List<Language>,
         val languageChoices : List<LanguageChoice>,
-        val equipment : List<Item>,
+        val equipment : List<ItemInterface>,
         val equipmentChoices: List<ItemChoice>
 )

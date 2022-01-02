@@ -24,10 +24,14 @@ class ItemDeserializer(private val itemTypeElementName: String) :
         typeOfT: Type?,
         context: JsonDeserializationContext?
     ): ItemInterface? {
-        val itemObject = json.asJsonObject
-        val itemTypeElement = itemObject[itemTypeElementName]
-        val itemType: Class<out ItemInterface?>? = itemTypeRegistry[itemTypeElement.asString]
-        return gson.fromJson(itemObject, itemType)
+        try {
+            val itemObject = json.asJsonObject
+            val itemTypeElement = itemObject[itemTypeElementName]
+            val itemType: Class<out ItemInterface?>? = itemTypeRegistry[itemTypeElement.asString]
+            return gson.fromJson(itemObject, itemType)
+        } catch ( e: Exception) {
+            return  null
+        }
     }
 
     init {

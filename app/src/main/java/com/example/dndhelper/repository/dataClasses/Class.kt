@@ -20,7 +20,7 @@ class Class(
     var proficiencyChoices: List<ProficiencyChoice> = emptyList(),
     var proficiencies: List<Proficiency> = emptyList(),
     var equipmentChoices: List<ItemChoice> = emptyList(),
-    var equipment: List<Item> = emptyList()
+    var equipment: List<ItemInterface> = emptyList()
 ) {
     var isBaseClass: Boolean = false
     var level: Int = 1

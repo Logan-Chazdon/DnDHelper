@@ -12,42 +12,37 @@ import java.util.*
 import com.example.dndhelper.repository.dataClasses.Currency
 
 class Converters {
+    var gson = Gson()
+    init {
+        val deserializer = ItemDeserializer("type")
+        deserializer.registerItemType("Item", Item::class.java)
+        deserializer.registerItemType("Weapon", Weapon::class.java)
+        deserializer.registerItemType("Armor", Armor::class.java)
+        deserializer.registerItemType("Currency", Currency::class.java)
+        gson = GsonBuilder()
+            .registerTypeAdapter(ItemInterface::class.java, deserializer)
+            .create()
+
+    }
+
     @TypeConverter
     fun storedStringToClasses(data: String?): MutableList<Class> {
-        val gson = Gson()
-        if (data == null) {
+        if (data == null || data.isBlank()) {
             return mutableListOf()
         }
         val listType: Type = object : TypeToken<MutableList<Class>>() {}.getType()
         return gson.fromJson(data, listType)
     }
 
-    @TypeConverter
-    fun classesToStoredString(myObjects: Class): String? {
-        val gson = Gson()
-        return gson.toJson(myObjects)
-    }
-
-    @TypeConverter
-    fun storedStringToClass(data: String?): Class {
-        val gson = Gson()
-        if (data == null) {
-            return Class(name = "My Character")
-        }
-        val listType: Type = object : TypeToken<Class>() {}.getType()
-        return gson.fromJson(data, listType)
-    }
 
     @TypeConverter
     fun classToStoredString(myObjects: MutableList<Class>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
 
     @TypeConverter
     fun storedStringToSubClass(data: String?): MutableList<Subclass> {
-        val gson = Gson()
         if (data == null) {
             return mutableListOf()
         }
@@ -57,45 +52,13 @@ class Converters {
 
     @TypeConverter
     fun subClassToStoredString(myObjects: MutableList<Subclass>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
-    @TypeConverter
-    fun storedStringToClassLevelMapChoices(data: String?): MutableMap<Int, String> {
-        val gson = Gson()
-        if (data == null) {
-            return mutableMapOf()
-        }
-        val listType: Type = object : TypeToken< MutableMap<Int, String>>() {}.getType()
-        return gson.fromJson(data, listType)
-    }
 
-    @TypeConverter
-    fun classLevelMapChoicesToStoredString(myObjects: MutableMap<Int, String>): String? {
-        val gson = Gson()
-        return gson.toJson(myObjects)
-    }
-
-    @TypeConverter
-    fun storedStringToClassLevelTable(data: String?): Array<Array<String>> {
-        val gson = Gson()
-        if (data == null) {
-            return arrayOf()
-        }
-        val listType: Type = object : TypeToken< Array<Array<String>>>() {}.getType()
-        return gson.fromJson(data, listType)
-    }
-
-    @TypeConverter
-    fun classLevelTableToStoredString(myObjects: Array<Array<String>>): String? {
-        val gson = Gson()
-        return gson.toJson(myObjects)
-    }
 
     @TypeConverter
     fun storedStringToLevelPath(data: String?): MutableList<Feature> {
-        val gson = Gson()
         if (data == null) {
             return mutableListOf()
         }
@@ -105,30 +68,13 @@ class Converters {
 
     @TypeConverter
     fun levelPathToStoredString(myObjects: MutableList<Feature>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
-    @TypeConverter
-    fun storedStringToFeature(data: String?): Feature? {
-        val gson = Gson()
-        if (data == null) {
-            return null
-        }
-        val listType: Type = object : TypeToken<Feature>() {}.type
-        return gson.fromJson(data, listType)
-    }
-
-    @TypeConverter
-    fun featureToStoredString(myObjects: Feature): String? {
-        val gson = Gson()
-        return gson.toJson(myObjects)
-    }
 
     //Races
     @TypeConverter
     fun storedStringToAbilityBonus(data: String?): List<AbilityBonus>? {
-        val gson = Gson()
         if (data == null) {
             return listOf()
         }
@@ -138,14 +84,12 @@ class Converters {
 
     @TypeConverter
     fun abilityBonusToStoredString(myObjects: List<AbilityBonus>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
 
     @TypeConverter
     fun storedStringToProficiency(data: String?): List<Proficiency>? {
-        val gson = Gson()
         if (data == null) {
             return null
         }
@@ -155,13 +99,11 @@ class Converters {
 
     @TypeConverter
     fun proficiencyToStoredString(myObjects: List<Proficiency>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
     @TypeConverter
     fun storedStringToLanguage(data: String?): List<Language>? {
-        val gson = Gson()
         if (data == null) {
             return null
         }
@@ -171,13 +113,11 @@ class Converters {
 
     @TypeConverter
     fun languageToStoredString(myObjects: List<Language>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
     @TypeConverter
     fun storedStringToSubrace(data: String?): List<Subrace>? {
-        val gson = Gson()
         if (data == null) {
             return null
         }
@@ -187,13 +127,11 @@ class Converters {
 
     @TypeConverter
     fun subraceToStoredString(myObjects: List<Subrace>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
     @TypeConverter
     fun storedStringToRace(data: String?): Race? {
-        val gson = Gson()
         if (data == null) {
             return null
         }
@@ -203,13 +141,11 @@ class Converters {
 
     @TypeConverter
     fun raceToStoredString(myObjects: Race?): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
     @TypeConverter
     fun storedStringToStringIntMap(data: String?): MutableMap<String, Int> {
-        val gson = Gson()
         if (data == null) {
             return mutableMapOf()
         }
@@ -219,13 +155,11 @@ class Converters {
 
     @TypeConverter
     fun stringIntMapToStoredString(myObjects: MutableMap<String, Int>?): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
     @TypeConverter
     fun storedStringToBackground(data: String?): Background? {
-        val gson = Gson()
         if (data == null) {
             return null
         }
@@ -235,29 +169,12 @@ class Converters {
 
     @TypeConverter
     fun backgroundToStoredString(myObjects: Background?): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
-    @TypeConverter
-    fun storedStringToLiveCharacter(data: String?): LiveData<Character?>? {
-        val gson = Gson()
-        if (data == null) {
-            return null
-        }
-        val listType: Type = object : TypeToken<LiveData<Character?>?>() {}.type
-        return gson.fromJson(data, listType)
-    }
-
-    @TypeConverter
-    fun liveCharacterToStoredString(myObjects: LiveData<Character?>?): String? {
-        val gson = Gson()
-        return gson.toJson(myObjects)
-    }
 
     @TypeConverter
     fun storedStringToListOfItem(data: String?): List<Item> {
-        val gson = Gson()
         if (data == null) {
             return emptyList()
         }
@@ -267,13 +184,11 @@ class Converters {
 
     @TypeConverter
     fun listOfItemToStoredString(myObjects: List<Item>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
     @TypeConverter
     fun storedStringToListOfCurrency(data: String?): List<Currency> {
-        val gson = Gson()
         if (data == null) {
             return emptyList()
         }
@@ -283,7 +198,6 @@ class Converters {
 
     @TypeConverter
     fun listOfCurrencyToStoredString(myObjects: List<Currency>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
@@ -292,7 +206,6 @@ class Converters {
 
     @TypeConverter
     fun storedStringToListProficiencyChoices(data: String?): List<ProficiencyChoice?>? {
-        val gson = Gson()
         if (data == null) {
             return null
         }
@@ -302,14 +215,12 @@ class Converters {
 
     @TypeConverter
     fun listOfProficiencyChoicesToStoredString(myObjects: List<ProficiencyChoice?>?): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
 
     @TypeConverter
     fun storedStringToItemChoicesList(data: String?): List<ItemChoice> {
-        val gson = Gson()
         if (data == null) {
             return emptyList()
         }
@@ -319,13 +230,11 @@ class Converters {
 
     @TypeConverter
     fun itemChoicesListChoicesToStoredString(myObjects: List<ItemChoice>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
     @TypeConverter
     fun storedStringToArmor(data: String?): Armor? {
-        val gson = Gson()
         if (data == null) {
             return null
         }
@@ -335,27 +244,16 @@ class Converters {
 
     @TypeConverter
     fun armorToStoredString(myObjects: Armor): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 
     @TypeConverter
     fun storedStringToItems(data: String?): List<ItemInterface> {
-        val deserializer = ItemDeserializer("type")
-        deserializer.registerItemType("Item", Item::class.java)
-        deserializer.registerItemType("Weapon", Weapon::class.java)
-        deserializer.registerItemType("Armor", Armor::class.java)
-        deserializer.registerItemType("Currency", Currency::class.java)
-        val gson = GsonBuilder()
-            .registerTypeAdapter(ItemInterface::class.java, deserializer)
-            .create()
-
-        return gson.fromJson<List<ItemInterface>>(data, object : TypeToken<List<ItemInterface>>() {}.type)
+        return gson.fromJson(data, object : TypeToken<List<ItemInterface>>() {}.type)
     }
 
     @TypeConverter
     fun itemsToStoredString(myObjects: List<ItemInterface>): String? {
-        val gson = Gson()
         return gson.toJson(myObjects)
     }
 

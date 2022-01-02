@@ -353,7 +353,7 @@ class WebserviceDnD(val context: Context) : Webservice {
 
 
                 val equipmentChoices = mutableListOf<ItemChoice>()
-                val equipment = mutableListOf<Item>()
+                val equipment = mutableListOf<ItemInterface>()
                 val itemChoicesJson = backgroundJson.getJSONArray("equipment")
 
                 for(equipmentIndex in 0 until itemChoicesJson.length()) {
@@ -369,8 +369,20 @@ class WebserviceDnD(val context: Context) : Webservice {
                         }
                         equipmentChoices.add(ItemChoice(name = itemName, choose = choose, from = from))
                     } else {
-                        val item = Item(itemChoiceJson.getString("name"))
-                        equipment.add(item)
+                        try {
+                            val index = itemChoiceJson.getString("index")
+                            if(index == "gold") {
+                                equipment.add(
+                                    Currency(
+                                        name = "Gold pieces",
+                                        amount = itemChoiceJson.getInt("value")
+                                    )
+                                )
+                            }
+                        } catch (e : JSONException) {
+                            val item = Item(itemChoiceJson.getString("name"))
+                            equipment.add(item)
+                        }
                     }
                 }
 

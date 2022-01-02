@@ -27,7 +27,12 @@ data class Character(
 
     fun addClass(newClass: Class) {
         if(newClass.isBaseClass) {
-            backpack.addAll(newClass.equipment)
+            newClass.equipment.let { items ->
+                for (itemInterface in items) {
+                    addItem(itemInterface)
+                }
+            }
+
             newClass.equipmentChoices.forEach {
                 it.chosen?.let { items -> backpack.addAll(items) }
             }
@@ -35,13 +40,48 @@ data class Character(
         classes.add(newClass)
     }
 
+    private fun addItem(itemInterface: ItemInterface?) {
+        if(itemInterface != null) {
+            when (itemInterface.type) {
+                "Currency" -> {
+                    itemInterface as Currency
+                    currency.forEachIndexed { i, it ->
+                        if (it.abbreviatedName == itemInterface.abbreviatedName) {
+                            currency[i].amount += itemInterface.amount
+                        }
+                    }
+                }
+                "Weapon" -> {
+                    itemInterface as Weapon
+                    backpack.add(itemInterface)
+                }
+                "Armor" -> {
+                    itemInterface as Armor
+                    backpack.add(itemInterface)
+                }
+                "Item" -> {
+                    itemInterface as Item
+                    backpack.add(itemInterface)
+                }
+            }
+        }
+    }
+
 
     var background: Background? = null
     set(newBackGround) {
         field = newBackGround
-        field?.equipment?.let { backpack.addAll(it) } //TODO make this add currency to currency instead of items.
+        field?.equipment?.let { items ->
+            for (itemInterface in items) {
+                addItem(itemInterface)
+            }
+        }
         field?.equipmentChoices?.forEach {
-            it.chosen?.let { chosen -> backpack.addAll(chosen) }
+            it.chosen?.let { chosen ->
+                for (item in chosen) {
+                    addItem(item)
+                }
+            }
         }
     }
 

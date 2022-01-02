@@ -1,26 +1,23 @@
 package com.example.dndhelper.repository.model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.TypeConverter
 import com.example.dndhelper.repository.dataClasses.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import java.util.*
 import com.example.dndhelper.repository.dataClasses.Currency
 
 class Converters {
     var gson = Gson()
     init {
-        val deserializer = ItemDeserializer("type")
-        deserializer.registerItemType("Item", Item::class.java)
-        deserializer.registerItemType("Weapon", Weapon::class.java)
-        deserializer.registerItemType("Armor", Armor::class.java)
-        deserializer.registerItemType("Currency", Currency::class.java)
+        val converter = ItemConverter("type")
+        converter.registerItemType("Item", Item::class.java)
+        converter.registerItemType("Weapon", Weapon::class.java)
+        converter.registerItemType("Armor", Armor::class.java)
+        converter.registerItemType("Currency", Currency::class.java)
         gson = GsonBuilder()
-            .registerTypeAdapter(ItemInterface::class.java, deserializer)
+            .registerTypeAdapter(ItemInterface::class.java, converter)
             .create()
 
     }

@@ -174,6 +174,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                 item.name?.let { names.add(it) }
                             }
 
+
                             val multipleChoiceState = viewModel.dropDownStates.getDropDownState(
                                 key = choice.name,
                                 maxSelections = choice.choose,

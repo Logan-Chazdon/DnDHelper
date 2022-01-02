@@ -1,0 +1,248 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "backgrounds": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "desc": {
+              "type": "string"
+            },
+            "proficiencies": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ]
+                }
+              ]
+            },
+            "features": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "desc": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "desc"
+                  ]
+                }
+              ]
+            },
+            "languages": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "choose": {
+                      "type": "integer"
+                    },
+                    "from": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "index": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "index"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "choose",
+                    "from"
+                  ]
+                }
+              ]
+            },
+            "equipment": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "choose": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "choose"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "choose": {
+                      "type": "integer"
+                    },
+                    "from": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "choose",
+                    "from"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "choose": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "choose"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "choose": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "choose"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "choose": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "choose"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "index": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "integer"
+                    },
+                    "choose": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "index",
+                    "value",
+                    "choose"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "desc",
+            "proficiencies",
+            "features",
+            "languages",
+            "equipment"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "backgrounds"
+  ]
+}

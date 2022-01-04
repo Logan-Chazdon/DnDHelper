@@ -3,41 +3,30 @@ package com.example.dndhelper.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.repository.model.DatabaseDao
-import com.example.dndhelper.repository.webServices.Webservice
+import com.example.dndhelper.repository.webServices.LocalDataSource
 import javax.inject.Inject
-import com.example.dndhelper.repository.webServices.WebserviceDnD
+import com.example.dndhelper.repository.webServices.LocalDataSourceImpl
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.example.dndhelper.repository.dataClasses.*
 
 
 class Repository @Inject constructor(
-    private var webservice: Webservice?,
+    private var LocalDataSource: LocalDataSource?,
     private val dao: DatabaseDao?,
 
-) {
-    private val _classes : MutableLiveData<List<Class>> = MutableLiveData<List<Class>>()
-    private val _races : MutableLiveData<List<Race>> = MutableLiveData<List<Race>>()
-    private val _backgrounds = MutableLiveData<List<Background>>()
+    ) {
+    private val _classes : MutableLiveData<List<Class>> = (LocalDataSource as LocalDataSourceImpl)._classes
+    private val _races : MutableLiveData<List<Race>> =  (LocalDataSource as LocalDataSourceImpl)._races
+    private val _backgrounds =  (LocalDataSource as LocalDataSourceImpl)._backgrounds
     private val _characters : LiveData<List<Character>>? = dao?.getAllCharacters()
-    private val _languages = MutableLiveData<List<Language>>()
+    private val _languages =  (LocalDataSource as LocalDataSourceImpl)._languages
     private val _skills : MutableLiveData<Map<String, List<String>>> =
-        MutableLiveData()
-    private val _items: MutableLiveData<List<ItemInterface>> = MutableLiveData()
+        (LocalDataSource as LocalDataSourceImpl)._abilitiesToSkills
+    private val _items: MutableLiveData<List<ItemInterface>> =  (LocalDataSource as LocalDataSourceImpl)._items
 
     init {
-        //Items
-        (webservice as WebserviceDnD).getItems(_items)
-
-        //backgrounds
-        (webservice as WebserviceDnD).getLocalBackgrounds(_backgrounds)
-
-        //languages
-        (webservice as WebserviceDnD).getLocalLanguages(_languages)
-
-        //Skills
-        (webservice as WebserviceDnD).getSkills(_skills)
-
+ /*
         //classes
         GlobalScope.launch {
             _classes.postValue(dao?.getAllClasses())
@@ -47,7 +36,7 @@ class Repository @Inject constructor(
                 dao?.insertClasses(it)
             }
         }
-        (webservice as WebserviceDnD).getLocalClasses(_classes)
+        (webservice as WebserviceDnD).generateClasses(_classes)
 
         //races
         GlobalScope.launch {
@@ -58,8 +47,8 @@ class Repository @Inject constructor(
                 dao?.insertRaces(it)
             }
         }
-        (webservice as WebserviceDnD).getLocalRaces(_races)
-
+        (webservice as WebserviceDnD).generateRaces(_races)
+*/
     }
 
     fun getLanguages() : LiveData<List<Language>> {

@@ -1,13 +1,13 @@
 package com.example.dndhelper
 
-import android.app.Application
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.model.DatabaseDao
 import com.example.dndhelper.repository.model.RoomDataBase
-import com.example.dndhelper.repository.webServices.Webservice
-import com.example.dndhelper.repository.webServices.WebserviceDnD
+import com.example.dndhelper.repository.webServices.LocalDataSource
+import com.example.dndhelper.repository.webServices.LocalDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,10 +40,11 @@ object RepositoryModule{
         return db.databaseDao()
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     @Provides
     @ViewModelScoped
-    fun providerWebservice(@ApplicationContext appContext: Context): Webservice {
-        return WebserviceDnD(appContext)
+    fun providerWebservice(@ApplicationContext appContext: Context): LocalDataSource {
+        return LocalDataSourceImpl(appContext)
     }
 
 

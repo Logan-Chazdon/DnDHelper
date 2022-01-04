@@ -2,29 +2,69 @@ package com.example.dndhelper.repository.webServices
 
 import android.content.Context
 import android.os.Build
-import androidx.lifecycle.LiveData
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.AppModule
 import com.example.dndhelper.repository.dataClasses.*
 import dagger.Component
 import org.json.JSONArray
 import org.json.JSONObject
-import java.net.URL
-import kotlinx.coroutines.*
-import java.lang.IllegalStateException
 import com.example.dndhelper.R
 import org.json.JSONException
 
 
-@Component(modules = [AppModule::class])
-interface Webservice {
 
+@Component(modules = [AppModule::class])
+interface LocalDataSource {
+    //val _items: MutableLiveData<List<ItemInterface>>
+    //val _abilitiesToSkills: MutableLiveData<Map<String, List<String>>>
+    //val _spells : MutableLiveData<List<Spell>>
+    //val _languages : MutableLiveData<List<Language>>
+    //val _backgrounds : MutableLiveData<List<Background>>
+    //val _races: MutableLiveData<List<Race>>
+    //val _classes: MutableLiveData<List<Class>>
 }
 
-class WebserviceDnD(val context: Context) : Webservice {
-    fun getItems(_items: MutableLiveData<List<ItemInterface>>) {
-        GlobalScope.launch {
-            _items.postValue(generateItems())
+@Suppress("PropertyName")
+@RequiresApi(Build.VERSION_CODES.P)
+class LocalDataSourceImpl(val context: Context) : LocalDataSource {
+     val _items: MutableLiveData<List<ItemInterface>> =
+        MutableLiveData()
+     val _abilitiesToSkills: MutableLiveData<Map<String, List<String>>> =
+        MutableLiveData()
+     val _spells : MutableLiveData<List<Spell>> =
+        MutableLiveData()
+     val _languages : MutableLiveData<List<Language>>  =
+        MutableLiveData()
+     val _backgrounds : MutableLiveData<List<Background>> =
+        MutableLiveData()
+     val _races: MutableLiveData<List<Race>> =
+        MutableLiveData()
+     val _classes: MutableLiveData<List<Class>> =
+        MutableLiveData()
+
+    init {
+        context.mainExecutor.execute {
+            //Items
+            generateItems()
+
+            //Abilities
+            generateSkills()
+
+            //Spells
+            generateSpells()
+
+            //Languages
+            generateLanguages()
+
+            //Backgrounds
+            generateBackgrounds()
+
+            //Races
+            generateRaces()
+
+            //Classes
+            generateClasses()
         }
     }
 
@@ -162,11 +202,7 @@ class WebserviceDnD(val context: Context) : Webservice {
         return abilitiesToSkills
     }
 
-    fun getSkills(_abilitiesToSkills: MutableLiveData<Map<String, List<String>>>) {
-        GlobalScope.launch {
-            _abilitiesToSkills.postValue(generateSkills())
-        }
-    }
+
 
     private fun extractComponents(componentsJson : JSONArray): List<String> {
         val components = mutableListOf<String>()
@@ -204,100 +240,92 @@ class WebserviceDnD(val context: Context) : Webservice {
     }
 
 
-    fun getLocalSpells(_spells : MutableLiveData<List<Spell>>) {
+    fun generateSpells() {
         val dataAsString = context.resources.openRawResource(R.raw.spells).bufferedReader().readText()
         val spells = mutableListOf<Spell>()
 
-        GlobalScope.launch {
-            val rootJson = JSONObject(dataAsString)
-            val spellsJson = rootJson.getJSONArray("spells")
-
-            for(spellIndex in 0 until spellsJson.length()) {
-                val spellJson = spellsJson.getJSONObject(spellIndex)
-                val name = spellJson.getString("name")
-                val level = spellJson.getInt("level")
-                val components =
-                    extractComponents(spellJson.getJSONArray("components"))
-                val itemComponents =
-                    extractItemComponents(spellJson.getJSONArray("item_components"))
-                val school = spellJson.getString("school")
-                val desc = spellJson.getString("desc")
-                val range = spellJson.getInt("range")
-                val area = spellJson.getString("area")
-                val castingTime = spellJson.getString("casting_time")
-                val duration = spellJson.getString("duration")
-                val classes = extractClasses(spellJson.getJSONArray("classes"))
-                val damage = spellJson.getString("damage")
-
-
-                spells.add(
-                    Spell(
-                        name = name,
-                        level = level,
-                        components = components,
-                        itemComponents = itemComponents,
-                        school = school,
-                        desc = desc,
-                        range = range,
-                        area = area,
-                        castingTime = castingTime,
-                        duration = duration,
-                        classes = classes,
-                        damage = damage
-                    )
-                )
-
-            }
-            _spells.postValue(spells)
-        }
-    }
-
-    private fun generateLanguages(): MutableList<Language> {
-        val dataAsString = context.resources.openRawResource(R.raw.languages).bufferedReader().readText()
-        val languages = mutableListOf<Language>()
-
         val rootJson = JSONObject(dataAsString)
-        val languagesJson = rootJson.getJSONArray("languages")
+        val spellsJson = rootJson.getJSONArray("spells")
 
-        for(languageIndex in 0 until languagesJson.length()) {
-            val languageJson = languagesJson.getJSONObject(languageIndex)
-            languages.add(
-                Language(languageJson.getString("name"))
+        for(spellIndex in 0 until spellsJson.length()) {
+            val spellJson = spellsJson.getJSONObject(spellIndex)
+            val name = spellJson.getString("name")
+            val level = spellJson.getInt("level")
+            val components =
+                extractComponents(spellJson.getJSONArray("components"))
+            val itemComponents =
+                extractItemComponents(spellJson.getJSONArray("item_components"))
+            val school = spellJson.getString("school")
+            val desc = spellJson.getString("desc")
+            val range = spellJson.getInt("range")
+            val area = spellJson.getString("area")
+            val castingTime = spellJson.getString("casting_time")
+            val duration = spellJson.getString("duration")
+            val classes = extractClasses(spellJson.getJSONArray("classes"))
+            val damage = spellJson.getString("damage")
+
+
+            spells.add(
+                Spell(
+                    name = name,
+                    level = level,
+                    components = components,
+                    itemComponents = itemComponents,
+                    school = school,
+                    desc = desc,
+                    range = range,
+                    area = area,
+                    castingTime = castingTime,
+                    duration = duration,
+                    classes = classes,
+                    damage = damage
+                )
             )
         }
-        return languages
+        _spells.value = spells
     }
 
-    fun getLocalLanguages(_languages : MutableLiveData<List<Language>>) {
-        GlobalScope.launch {
-            _languages.postValue(generateLanguages())
+    private fun generateLanguages(){
+            val dataAsString =
+                context.resources.openRawResource(R.raw.languages).bufferedReader().readText()
+            val languages = mutableListOf<Language>()
+
+            val rootJson = JSONObject(dataAsString)
+            val languagesJson = rootJson.getJSONArray("languages")
+
+            for (languageIndex in 0 until languagesJson.length()) {
+                val languageJson = languagesJson.getJSONObject(languageIndex)
+                languages.add(
+                    Language(languageJson.getString("name"))
+                )
+            _languages.value = languages
         }
     }
 
 
-    fun getLocalBackgrounds(_backgrounds : MutableLiveData<List<Background>>) {
+
+
+    private fun generateBackgrounds() {
         val dataAsString = context.resources.openRawResource(R.raw.backgrounds).bufferedReader().readText()
         val backgrounds = mutableListOf<Background>()
 
-        GlobalScope.launch {
-            val rootJson = JSONObject(dataAsString)
-            val backgroundsJson = rootJson.getJSONArray("backgrounds")
-            for(backgroundIndex in 0 until backgroundsJson.length()) {
-                val backgroundJson = backgroundsJson.getJSONObject(backgroundIndex)
-                val name = backgroundJson.getString("name")
-                val desc = backgroundJson.getString("desc")
-                val proficiencies = extractProficiencies(backgroundJson.getJSONArray("proficiencies"))
-                var toolProficiencies = listOf<ToolProficiency>()
-                try {
-                    toolProficiencies = extractToolProficiencies(backgroundJson.getJSONArray("tool_proficiencies"))
-                } catch(e: JSONException) {}
 
-                val features = extractFeatures(backgroundJson.getJSONArray("features"))
-                val languages = mutableListOf<Language>()
-                val languageChoices = mutableListOf<LanguageChoice>()
-                try {
-                   val languagesJson = backgroundJson.getJSONArray("languages")
-
+        val rootJson = JSONObject(dataAsString)
+        val backgroundsJson = rootJson.getJSONArray("backgrounds")
+        for(backgroundIndex in 0 until backgroundsJson.length()) {
+            val backgroundJson = backgroundsJson.getJSONObject(backgroundIndex)
+            val name = backgroundJson.getString("name")
+            val desc = backgroundJson.getString("desc")
+            val proficiencies = extractProficiencies(backgroundJson.getJSONArray("proficiencies"))
+            var toolProficiencies = listOf<ToolProficiency>()
+            try {
+                toolProficiencies = extractToolProficiencies(backgroundJson.getJSONArray("tool_proficiencies"))
+            } catch(e: JSONException) {}
+            val features = extractFeatures(backgroundJson.getJSONArray("features"))
+            val languages = mutableListOf<Language>()
+            val languageChoices = mutableListOf<LanguageChoice>()
+            try {
+                val languagesJson = backgroundJson.getJSONArray("languages")
                     for(langIndex in 0 until languagesJson.length()) {
                         val langJson = languagesJson.getJSONObject(langIndex)
                         var choose = 0
@@ -318,7 +346,7 @@ class WebserviceDnD(val context: Context) : Webservice {
                                 try {
                                     index = choiceJson.getString("index")
                                     if(index == "all_languages") { //If we add more language indexes this may need to be moved into a function
-                                        from.addAll(generateLanguages())
+                                        _languages.value?.let { from.addAll(it) }
                                     }
                                 } catch (e: JSONException) {
 
@@ -347,57 +375,54 @@ class WebserviceDnD(val context: Context) : Webservice {
                 } catch (e: JSONException) {}
 
 
-                val equipmentChoices = mutableListOf<ItemChoice>()
-                val equipment = mutableListOf<ItemInterface>()
-                val itemChoicesJson = backgroundJson.getJSONArray("equipment")
+            val equipmentChoices = mutableListOf<ItemChoice>()
+            val equipment = mutableListOf<ItemInterface>()
+            val itemChoicesJson = backgroundJson.getJSONArray("equipment")
 
-                for(equipmentIndex in 0 until itemChoicesJson.length()) {
-                    val itemChoiceJson = itemChoicesJson.getJSONObject(equipmentIndex)
-                    val choose = itemChoiceJson.getInt("choose")
-                    val itemName = itemChoiceJson.getString("name")
-                    if(choose != 0) {
-                        val fromJson = itemChoiceJson.getJSONArray("from")
-                        val from = mutableListOf<Item>()
-                        for (itemIndex in 0 until fromJson.length()) {
-                            val itemJson = fromJson.getJSONObject(itemIndex)
-                            from.add(Item(name = itemJson.getString("name")))
-                        }
-                        equipmentChoices.add(ItemChoice(name = itemName, choose = choose, from = from))
-                    } else {
-                        try {
-                            val index = itemChoiceJson.getString("index")
-                            if(index == "gold") {
-                                equipment.add(
-                                    Currency(
-                                        name = "Gold pieces",
-                                        amount = itemChoiceJson.getInt("value")
-                                    )
+            for(equipmentIndex in 0 until itemChoicesJson.length()) {
+                val itemChoiceJson = itemChoicesJson.getJSONObject(equipmentIndex)
+                val choose = itemChoiceJson.getInt("choose")
+                val itemName = itemChoiceJson.getString("name")
+                if(choose != 0) {
+                    val fromJson = itemChoiceJson.getJSONArray("from")
+                    val from = mutableListOf<Item>()
+                    for (itemIndex in 0 until fromJson.length()) {
+                        val itemJson = fromJson.getJSONObject(itemIndex)
+                        from.add(Item(name = itemJson.getString("name")))
+                    }
+                    equipmentChoices.add(ItemChoice(name = itemName, choose = choose, from = from))
+                } else {
+                    try {
+                        val index = itemChoiceJson.getString("index")
+                        if(index == "gold") {
+                            equipment.add(
+                                Currency(
+                                    name = "Gold pieces",
+                                    amount = itemChoiceJson.getInt("value")
                                 )
-                            }
-                        } catch (e : JSONException) {
-                            val item = Item(itemChoiceJson.getString("name"))
-                            equipment.add(item)
+                            )
                         }
+                    } catch (e : JSONException) {
+                        val item = Item(itemChoiceJson.getString("name"))
+                        equipment.add(item)
                     }
                 }
-
-                backgrounds.add(
-                    Background(
-                        name = name,
-                        desc = desc,
-                        proficiencies = proficiencies,
-                        toolProficiencies = toolProficiencies,
-                        features = features,
-                        languages = languages,
-                        languageChoices = languageChoices,
-                        equipment = equipment,
-                        equipmentChoices = equipmentChoices,
-                    )
-                )
-
             }
-            _backgrounds.postValue(backgrounds)
+            backgrounds.add(
+                Background(
+                    name = name,
+                    desc = desc,
+                    proficiencies = proficiencies,
+                    toolProficiencies = toolProficiencies,
+                    features = features,
+                    languages = languages,
+                    languageChoices = languageChoices,
+                    equipment = equipment,
+                    equipmentChoices = equipmentChoices,
+                )
+            )
         }
+        _backgrounds.value = backgrounds
     }
 
     private fun extractToolProficiencies(proficienciesJson: JSONArray): List<ToolProficiency> {
@@ -414,47 +439,45 @@ class WebserviceDnD(val context: Context) : Webservice {
         return proficiencies
     }
 
-    fun getLocalRaces(_races: MutableLiveData<List<Race>>) {
+    fun generateRaces() {
         val dataAsString = context.resources.openRawResource(R.raw.races).bufferedReader().readText()
         val races = mutableListOf<Race>()
-        GlobalScope.launch {
-            val rootJson = JSONObject(dataAsString)
-            val racesJson = rootJson.getJSONArray("races")
-            for(raceIndex in 0 until racesJson.length()) {
-                val raceJson = racesJson.getJSONObject(raceIndex)
-                val name = raceJson.getString("name")
-                val groundSpeed = raceJson.getInt("ground_speed")
-                val abilityBonuses = extractLocalAbilityBonuses(raceJson.getJSONArray("ability_bonuses"))
-                val alignment = raceJson.getString("alignment")
-                val age = raceJson.getString("age")
-                val size = raceJson.getString("size")
-                val sizeDesc = raceJson.getString("size_desc")
-                val startingProficiencies = extractProficiencies(raceJson.getJSONArray("proficiencies"))
-                val languages = extractLangs(raceJson.getJSONArray("languages"))
-                val languageDesc = raceJson.getString("language_desc")
-                val traits = extractFeatures(raceJson.getJSONArray("features"))
-                val subraces = mutableListOf<Subrace>() //TODO
+        val rootJson = JSONObject(dataAsString)
+        val racesJson = rootJson.getJSONArray("races")
+        for(raceIndex in 0 until racesJson.length()) {
+            val raceJson = racesJson.getJSONObject(raceIndex)
+            val name = raceJson.getString("name")
+            val groundSpeed = raceJson.getInt("ground_speed")
+            val abilityBonuses = extractLocalAbilityBonuses(raceJson.getJSONArray("ability_bonuses"))
+            val alignment = raceJson.getString("alignment")
+            val age = raceJson.getString("age")
+            val size = raceJson.getString("size")
+            val sizeDesc = raceJson.getString("size_desc")
+            val startingProficiencies = extractProficiencies(raceJson.getJSONArray("proficiencies"))
+            val languages = extractLangs(raceJson.getJSONArray("languages"))
+            val languageDesc = raceJson.getString("language_desc")
+            val traits = extractFeatures(raceJson.getJSONArray("features"))
+            val subraces = mutableListOf<Subrace>() //TODO
 
 
-                races.add(
-                    Race(
-                        name = name,
-                        groundSpeed = groundSpeed,
-                        abilityBonuses = abilityBonuses,
-                        alignment = alignment,
-                        age = age,
-                        size = size,
-                        sizeDesc = sizeDesc,
-                        startingProficiencies = startingProficiencies,
-                        languages = languages,
-                        languageDesc = languageDesc,
-                        traits = traits,
-                        subraces = subraces.toList()
-                    )
+            races.add(
+                Race(
+                    name = name,
+                    groundSpeed = groundSpeed,
+                    abilityBonuses = abilityBonuses,
+                    alignment = alignment,
+                    age = age,
+                    size = size,
+                    sizeDesc = sizeDesc,
+                    startingProficiencies = startingProficiencies,
+                    languages = languages,
+                    languageDesc = languageDesc,
+                    traits = traits,
+                    subraces = subraces.toList()
                 )
-            }
-            _races.postValue(races)
+            )
         }
+        _races.value = races
     }
 
     private fun extractLangs(languagesJson : JSONArray) : List<Language> {
@@ -535,52 +558,49 @@ class WebserviceDnD(val context: Context) : Webservice {
     }
 
 
-    fun getLocalClasses(_classes: MutableLiveData<List<Class>>){
+    fun generateClasses(){
         val dataAsString = context.resources.openRawResource(R.raw.classes).bufferedReader().readText()
 
         val classes = mutableListOf<Class>()
-        GlobalScope.launch {
-            val rootJson = JSONObject(dataAsString)
-            val classesJson = rootJson.getJSONArray("classes")
-            for(classIndex in 0 until classesJson.length()) {
-                val classJson = classesJson.getJSONObject(classIndex)
-                val name = classJson.getString("name")
-                val hitDie = classJson.getInt("hit_die")
-                val subClasses = mutableListOf<Subclass>()
-                val levelPath = extractFeatures(classJson.getJSONArray("features"))
-                val proficiencyChoices = mutableListOf<ProficiencyChoice>()
-                val proficiencies = mutableListOf<Proficiency>()
-                val equipmentChoices: MutableList<ItemChoice> = mutableListOf()
-                val equipment: MutableList<Item> = mutableListOf()
-                    extractEquipmentChoices(
-                        classJson.getJSONArray("equipment"),
-                        equipmentChoices,
-                        equipment
-                    )
-
-                try {
+        val rootJson = JSONObject(dataAsString)
+        val classesJson = rootJson.getJSONArray("classes")
+        for(classIndex in 0 until classesJson.length()) {
+            val classJson = classesJson.getJSONObject(classIndex)
+            val name = classJson.getString("name")
+            val hitDie = classJson.getInt("hit_die")
+            val subClasses = mutableListOf<Subclass>()
+            val levelPath = extractFeatures(classJson.getJSONArray("features"))
+            val proficiencyChoices = mutableListOf<ProficiencyChoice>()
+            val proficiencies = mutableListOf<Proficiency>()
+            val equipmentChoices: MutableList<ItemChoice> = mutableListOf()
+            val equipment: MutableList<Item> = mutableListOf()
+            extractEquipmentChoices(
+                classJson.getJSONArray("equipment"),
+                equipmentChoices,
+                equipment
+            )
+            try {
                 extractProficienciesChoices(
                     classJson.getJSONArray("proficiency_choices"),
                     proficiencyChoices
-                ) } catch (e: JSONException) {}
-
-
-
-                classes.add(
-                    Class(
-                        name = name,
-                        hitDie = hitDie,
-                        subClasses = subClasses,
-                        levelPath = levelPath,
-                        proficiencyChoices = proficiencyChoices,
-                        proficiencies = proficiencies,
-                        equipmentChoices = equipmentChoices,
-                        equipment = equipment
-                    )
                 )
-            }
-            _classes.postValue(classes)
+            } catch (e: JSONException) {}
+
+
+             classes.add(
+                 Class(
+                     name = name,
+                     hitDie = hitDie,
+                     subClasses = subClasses,
+                     levelPath = levelPath,
+                     proficiencyChoices = proficiencyChoices,
+                     proficiencies = proficiencies,
+                     equipmentChoices = equipmentChoices,
+                     equipment = equipment
+                 )
+             )
         }
+        _classes.value = classes
     }
 
     private fun extractEquipmentChoices(

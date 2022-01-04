@@ -3,6 +3,7 @@ package com.example.dndhelper.repository.webServices
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.AppModule
 import com.example.dndhelper.repository.dataClasses.*
@@ -28,8 +29,14 @@ interface LocalDataSource {
 @Suppress("PropertyName")
 @RequiresApi(Build.VERSION_CODES.P)
 class LocalDataSourceImpl(val context: Context) : LocalDataSource {
-     val _items: MutableLiveData<List<ItemInterface>> =
+     val _martialWeapons : MutableLiveData<List<Weapon>> =
         MutableLiveData()
+     val _simpleWeapons : MutableLiveData<List<Weapon>> =
+        MutableLiveData()
+     val _armors: MutableLiveData<List<Armor>> =
+        MutableLiveData()
+     val _items: MediatorLiveData<List<ItemInterface>> =
+        MediatorLiveData()
      val _abilitiesToSkills: MutableLiveData<Map<String, List<String>>> =
         MutableLiveData()
      val _spells : MutableLiveData<List<Spell>> =
@@ -68,23 +75,31 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         }
     }
 
-    private fun generateItems(): List<ItemInterface> {
-        val items = mutableListOf<ItemInterface>()
+    private fun generateItems() {
+        //Anonymous function to pass to add source.
+        val addData = fun(value: List<ItemInterface>){
+            if(_items.value == null) {
+                _items.setValue(value)
+            } else {
+                _items.setValue(_items.value?.plus(value))
+            }
+        }
 
-        //Add all the martial weapons to the list
-        items.addAll(generateWeapons(
+        //Add all the martial weapons to items and then generate martial weapons.
+        _items.addSource(_martialWeapons) {value -> addData(value) }
+        _martialWeapons.value = generateWeapons(
             context.resources.openRawResource(R.raw.martial_weapons).bufferedReader().readText()
-        ))
+        )
 
-        //Add all the simple weapons to the list
-        items.addAll(generateWeapons(
+        //Add all the simple weapons to items and then generate simple weapons.
+        _items.addSource(_simpleWeapons) {value -> addData(value) }
+        _simpleWeapons.value = generateWeapons(
             context.resources.openRawResource(R.raw.simple_weapons).bufferedReader().readText()
-        ))
+        )
 
-        //Add all the armors to the list
-        items.addAll(generateArmor())
-
-        return items
+        //Add all the armors to items and then generate armors.
+        _items.addSource(_armors) {value -> addData(value) }
+        _armors.value = generateArmor()
     }
 
     private fun generateArmor(): List<Armor> {

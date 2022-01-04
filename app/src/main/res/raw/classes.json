@@ -666,7 +666,7 @@
           "from" : [
               {
                 "name" : "Any simple weapon",
-                  "options_index": "simple_weapon"
+                "index": "simple_weapons"
               },
               {
                   "name" : "longsword"

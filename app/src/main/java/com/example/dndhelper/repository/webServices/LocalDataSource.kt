@@ -638,7 +638,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 )
             } else {
 
-                val from = mutableListOf<Item>()
+                val from = mutableListOf<ItemInterface>()
                 val fromJson = json.getJSONArray("from")
 
                 for(fromIndex in 0 until fromJson.length()) {
@@ -652,14 +652,26 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
                     try {
                         index = itemJson.getString("index")
-                    } catch (e: JSONException) {}
 
-                    from.add(
-                        Item(
-                            name = name,
-                            index = index
+                        //TODO extract this to a function
+                        when(index) {
+                            "simple_weapons" -> {
+                                _simpleWeapons.value?.let { from.addAll(it) }
+                            }
+                            "martial_weapons" -> {
+                                _martialWeapons.value?.let { from.addAll(it) }
+                            }
+                        }
+
+                    } catch (e: JSONException) {
+                        from.add(
+                            Item(
+                                name = name,
+                            )
                         )
-                    )
+                    }
+
+
                 }
 
                 itemChoices.add(

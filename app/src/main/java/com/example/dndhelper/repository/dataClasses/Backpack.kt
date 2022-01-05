@@ -18,6 +18,20 @@ class Backpack {
             return result
         }
 
+    fun deleteItemAtIndex(itemToDeleteIndex: Int) {
+        when {
+            itemToDeleteIndex < backgroundItems.size -> {
+                backgroundItems.removeAt(itemToDeleteIndex)
+            }
+            itemToDeleteIndex < classItems.size + backgroundItems.size -> {
+                classItems.removeAt(itemToDeleteIndex - backgroundItems.size)
+            }
+            else -> {
+                addedItems.removeAt(itemToDeleteIndex - backgroundItems.size - classItems.size)
+            }
+        }
+    }
+
 
     var classCurrency = Currency.getEmptyCurrencyMap()
     var backgroundCurrency = Currency.getEmptyCurrencyMap()

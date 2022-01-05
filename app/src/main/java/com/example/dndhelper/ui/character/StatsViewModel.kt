@@ -20,20 +20,24 @@ public class StatsViewModel @Inject constructor(
 
 
 
-    var character : Character? = null
+    var character : LiveData<Character>? = null
 
     init {
         val id = savedStateHandle.get<String>("characterId")!!.toInt()
 
         viewModelScope.launch {
-            character = repository.getCharacterById(id)
+            character = repository.getLiveCharacterById(id)
         }
 
     }
 
     fun setName(it: String) {
-        character?.name = it
-        repository.insertCharacter(character!!)
+        character?.value!!.name = it
+        repository.insertCharacter(character!!.value!!)
     }
 
+    fun toggleInspiration() {
+        character?.value!!.inspiration = !character?.value!!.inspiration
+        repository.insertCharacter(character!!.value!!)
+    }
 }

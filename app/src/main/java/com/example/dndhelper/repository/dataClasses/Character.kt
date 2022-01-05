@@ -67,7 +67,7 @@ data class Character(
 
     var backpack = Backpack()
 
-
+    var inspiration = false
 
 
     var equiptArmor = Armor.none

@@ -2,6 +2,7 @@ package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -11,7 +12,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +26,11 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @Composable
 fun StatsView(viewModel: StatsViewModel) {
-    val character = viewModel.character
+    val character = viewModel.character?.observeAsState()
 
-    Column() {
+    Column {
         //Stats
-        val stats = character?.baseStats
+        val stats = character?.value?.baseStats
         val statNames =
             listOf("Strength", "Dexterity", "Constitution", "Wisdom", "Intelligence", "Charisma")
         val statNamesAbr = listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")
@@ -56,7 +57,9 @@ fun StatsView(viewModel: StatsViewModel) {
 
 
         Row(
-            modifier = Modifier.height(85.dp).padding(start = 10.dp)
+            modifier = Modifier
+                .height(85.dp)
+                .padding(start = 10.dp)
         ) {
             //Inspiration
             Card(
@@ -64,15 +67,28 @@ fun StatsView(viewModel: StatsViewModel) {
                     .fillMaxHeight()
                     .background(
                         color = Color.White
-                    ),
+                    )
+                    .clickable  {
+                        GlobalScope.launch {
+                            viewModel.toggleInspiration()
+                        }
+                    },
                 elevation = 10.dp,
                 shape = RoundedCornerShape(10.dp),
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    var inspired by remember { mutableStateOf(character?.value?.inspiration ?: true) }
+                    viewModel.character?.observeForever {
+                        inspired = it.inspiration
+                    }
                     Text("Inspiration", Modifier.padding(5.dp))
-                    Checkbox(checked = true, onCheckedChange = { }, Modifier.size(30.dp))
+                    Checkbox(
+                        checked = inspired,
+                        onCheckedChange = null,
+                        Modifier.size(30.dp)
+                    )
                 }
             }
 

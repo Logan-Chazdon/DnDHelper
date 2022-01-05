@@ -1,6 +1,7 @@
 package com.example.dndhelper.repository.dataClasses
 
 import androidx.compose.runtime.Composable
+import kotlin.math.ceil
 
 
 data class Currency(
@@ -41,7 +42,10 @@ data class Currency(
 
 
     public fun subtractInCopper(copper: Int) : Int {
-            amount -= copper / currencyValues[abbreviatedName]!!
+            amount -= ceil(copper.toDouble() / currencyValues[abbreviatedName]!!).toInt()
+            if(copper == 0) {
+                return 0
+            }
             return copper % currencyValues[abbreviatedName]!!
     }
 

@@ -115,7 +115,8 @@ class Backpack {
                 }
                 else { //If the value is greater than what we need to pay. The simply remove the amount remaining.
                     //Add back any change
-                    addedCurrency["cp"]!!.amount += removeCurrencyInCopper(key = i, amount = totalToBeRemovedInCopper - totalRemovedInCopper)
+                    val change = removeCurrencyInCopper(key = i, amount = totalToBeRemovedInCopper - totalRemovedInCopper)
+                    addedCurrency["cp"]!!.amount += change
                     return true
                 }
             }

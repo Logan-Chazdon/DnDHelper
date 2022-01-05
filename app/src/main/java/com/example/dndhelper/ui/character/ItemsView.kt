@@ -284,7 +284,9 @@ fun ItemsView(viewModel : ItemViewModel) {
                 confirmButton = {
                     Button(
                         onClick = {
-                            viewModel.character?.value?.backpack?.deleteItemAtIndex(itemToDeleteIndex)
+                            GlobalScope.launch {
+                                viewModel.deleteItemAt(itemToDeleteIndex)
+                            }
                             confirmDeleteExpanded = false
                         }) {
                         Text("Delete Item")

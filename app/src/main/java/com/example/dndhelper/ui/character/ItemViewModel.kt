@@ -73,4 +73,9 @@ public class ItemViewModel @Inject constructor(
         repository.insertCharacter(character?.value!!)
     }
 
+    suspend fun deleteItemAt(itemToDeleteIndex: Int) {
+        character?.value?.backpack?.deleteItemAtIndex(itemToDeleteIndex)
+        repository.insertCharacter(character?.value!!)
+    }
+
 }

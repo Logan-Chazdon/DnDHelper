@@ -39,8 +39,10 @@ data class Currency(
         return 0
     }
 
-    public fun subtractInCopper(copper: Int) {
-        amount -= copper / currencyValues[abbreviatedName]!!
+
+    public fun subtractInCopper(copper: Int) : Int {
+            amount -= copper / currencyValues[abbreviatedName]!!
+            return copper % currencyValues[abbreviatedName]!!
     }
 
     companion object {

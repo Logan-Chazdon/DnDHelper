@@ -34,7 +34,7 @@ fun ItemsView(viewModel : ItemViewModel) {
     Scaffold(
         floatingActionButton =  {
             FloatingActionButton(onClick = {
-                expanded = true
+                expanded = !expanded
             }) {
                 Icon(Icons.Default.Add, "Add Item")
             }

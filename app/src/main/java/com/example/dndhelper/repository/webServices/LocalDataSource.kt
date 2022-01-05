@@ -170,8 +170,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         return properties
     }
 
-    private fun extractCost(jsonObject: JSONObject): List<Currency> {
-        val cost = mutableListOf<Currency>()
+    private fun extractCost(jsonObject: JSONObject): MutableMap<String, Currency> {
+        val cost = mutableMapOf<String, Currency>()
         val types = mapOf(
             "Platinum pieces" to "pp",
             "Gold pieces" to "gp",
@@ -182,7 +182,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
         for(pair in types.entries) {
             try {
-                cost.add(
+                cost[pair.value] = (
                     Currency(
                         name = pair.key,
                         amount = jsonObject.getInt(pair.value),

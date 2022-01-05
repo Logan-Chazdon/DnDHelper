@@ -65,8 +65,8 @@ fun ItemsView(viewModel : ItemViewModel) {
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     state = lazyState
                 ) {
-                    viewModel.character?.value?.backpack?.let { items ->
-                        items(items.size) { i ->
+                    viewModel.character?.value?.backpack?.allItems.let { items ->
+                        items(items?.size ?: 0) { i ->
                             Card(
                                 elevation = 5.dp,
                                 shape = RoundedCornerShape(5.dp),
@@ -74,7 +74,7 @@ fun ItemsView(viewModel : ItemViewModel) {
                                     .fillMaxWidth(0.95f)
                                     .padding(top = 2.dp)
                             ) {
-                                val item = items[i]
+                                val item = items!![i]
                                 Row(
                                     modifier = Modifier.fillMaxWidth()
                                         .padding(2.dp),
@@ -122,9 +122,9 @@ fun ItemsView(viewModel : ItemViewModel) {
                 Modifier.absoluteOffset(y = (-20).dp, x = 8.dp)
             ) {
                 val character = viewModel.character?.observeAsState()
-                val currencies = character?.value?.currency
+                val currencies = character?.value?.backpack?.allCurrency
 
-                currencies?.forEachIndexed { i, it ->
+                currencies?.forEach { (i, it) ->
                     Card(
                         shape = RoundedCornerShape(20.dp),
                         modifier = Modifier
@@ -135,7 +135,7 @@ fun ItemsView(viewModel : ItemViewModel) {
                         //TODO this text system is a little bit iffy. Look for a better system later.
                         val text = remember { mutableStateOf(it.amount.toString()) }
                         viewModel.character!!.observeForever() { item ->
-                            text.value = item.currency[i].amount.toString()
+                            text.value = item.backpack.allCurrency[i]?.amount.toString()
                         }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -150,7 +150,11 @@ fun ItemsView(viewModel : ItemViewModel) {
                                     text.value = string
                                     if(string.isNotEmpty())
                                         GlobalScope.launch {
-                                            viewModel.addCurrency(it.name, string.toInt())
+                                            viewModel.addCurrency(it.abbreviatedName, string.toInt())
+                                        }
+                                    else
+                                        GlobalScope.launch {
+                                            viewModel.addCurrency(it.abbreviatedName, 0)
                                         }
                                 }
                             )

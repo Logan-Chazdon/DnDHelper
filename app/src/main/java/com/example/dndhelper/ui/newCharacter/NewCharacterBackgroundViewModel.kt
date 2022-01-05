@@ -48,7 +48,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
         newBackground.equipmentChoices.forEach {
             it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Item>
         }
-        character!!.background = newBackground
+        character!!.setNewBackground(newBackground)
         repository.insertCharacter(character)
     }
 

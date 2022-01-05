@@ -26,69 +26,49 @@ data class Character(
     var classes = mutableListOf<Class>()
 
     fun addClass(newClass: Class) {
+        backpack.classCurrency = Currency.getEmptyCurrencyMap()
+        backpack.classItems = mutableListOf()
         if(newClass.isBaseClass) {
             newClass.equipment.let { items ->
                 for (itemInterface in items) {
-                    addItem(itemInterface)
+                    backpack.addClassItems(listOf(itemInterface))
                 }
             }
 
             newClass.equipmentChoices.forEach {
-                it.chosen?.let { items -> backpack.addAll(items) }
+                it.chosen?.let { items -> backpack.classItems.addAll(items) }
             }
         }
         classes.add(newClass)
     }
 
-    private fun addItem(itemInterface: ItemInterface?) {
-        if(itemInterface != null) {
-            when (itemInterface.type) {
-                "Currency" -> {
-                    itemInterface as Currency
-                    currency.forEachIndexed { i, it ->
-                        if (it.abbreviatedName == itemInterface.abbreviatedName) {
-                            currency[i].amount += itemInterface.amount
-                        }
-                    }
-                }
-                "Weapon" -> {
-                    itemInterface as Weapon
-                    backpack.add(itemInterface)
-                }
-                "Armor" -> {
-                    itemInterface as Armor
-                    backpack.add(itemInterface)
-                }
-                "Item" -> {
-                    itemInterface as Item
-                    backpack.add(itemInterface)
-                }
-            }
-        }
-    }
 
 
-    var background: Background? = null
-    set(newBackGround) {
-        field = newBackGround
-        field?.equipment?.let { items ->
-            for (itemInterface in items) {
-                addItem(itemInterface)
-            }
+    fun setNewBackground(newBackGround: Background) {
+        background = newBackGround
+        backpack.backgroundCurrency = Currency.getEmptyCurrencyMap()
+        backpack.backgroundItems = mutableListOf<ItemInterface>()
+        background?.equipment?.let { items ->
+            backpack.addBackgroundItems(items)
         }
-        field?.equipmentChoices?.forEach {
+        background?.equipmentChoices?.forEach {
             it.chosen?.let { chosen ->
                 for (item in chosen) {
-                    addItem(item)
+                    if(it.chosen != null) {
+                        backpack.addBackgroundItems(it.chosen!!)
+                    }
                 }
             }
         }
     }
 
-    var backpack : MutableList<ItemInterface> = mutableListOf()
+    var background: Background? = null
 
 
-    var currency = Currency.getEmptyCurrencyList()
+    var backpack = Backpack()
+
+
+
 
     var equiptArmor = Armor.none
 
@@ -104,30 +84,4 @@ data class Character(
         return (getStat(name)!! - 10) / 2
     }
 
-
-
-    //TODO we might be over removing currency without adding any back in conversions
-    //Return true if the character has enough money and then subtract  the value
-    //If they do not simply return false
-    fun subtractCurrency(cost: List<Currency>): Boolean {
-        if(cost.getValueInCopper() <= currency.getValueInCopper()) {
-            val totalToBeRemovedInCopper = cost.getValueInCopper()
-            var totalRemovedInCopper = 0
-            //Loop over the list backwards so that we don't just remove plat
-            for(i in currency.indices.reversed()) {
-                //If the value is less than what we need to pay remove all
-                //and add the amount to the total removed
-                if(currency[i].getValueInCopper < totalToBeRemovedInCopper - totalRemovedInCopper) {
-                    totalRemovedInCopper += currency[i].getValueInCopper
-                    currency[i].amount = 0
-                }
-                else { //If the value is greater than what we need to pay. The simply remove the amount remaining.
-                    currency[i].subtractInCopper(totalToBeRemovedInCopper - totalRemovedInCopper)
-                    return true
-                }
-            }
-            return true
-        }
-        return false
-    }
 }

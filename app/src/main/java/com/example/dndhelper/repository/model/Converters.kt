@@ -37,6 +37,20 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToBackpack(data: String?): Backpack? {
+        if (data == null ) {
+            return null
+        }
+        val listType: Type = object : TypeToken<Backpack?>() {}.getType()
+        return gson.fromJson(data, listType)
+    }
+
+
+    @TypeConverter
+    fun backpackToStoredString(myObjects: Backpack?): String? {
+        return gson.toJson(myObjects)
+    }
 
     @TypeConverter
     fun storedStringToSubClass(data: String?): MutableList<Subclass> {
@@ -185,16 +199,16 @@ class Converters {
     }
 
     @TypeConverter
-    fun storedStringToListOfCurrency(data: String?): List<Currency> {
+    fun storedStringToMapOfCurrency(data: String?): Map<String, Currency> {
         if (data == null) {
-            return emptyList()
+            return emptyMap()
         }
-        val listType: Type = object : TypeToken<List<Currency>>() {}.type
+        val listType: Type = object : TypeToken<Map<String, Currency>>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun listOfCurrencyToStoredString(myObjects: List<Currency>): String? {
+    fun mapOfCurrencyToStoredString(myObjects: Map<String, Currency>): String? {
         return gson.toJson(myObjects)
     }
 

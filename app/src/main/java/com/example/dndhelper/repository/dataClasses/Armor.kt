@@ -8,7 +8,7 @@ data class Armor(
     override val index: String? = null,
     override val desc: String? = null,
     override val itemRarity : String? = null,
-    override val cost : List<Currency>? = null,
+    override val cost : Map<String, Currency>? = null,
     override val weight : Int? = null,
     val baseAc : Int,
     val dexCap: Int,

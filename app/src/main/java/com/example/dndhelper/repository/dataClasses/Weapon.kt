@@ -7,7 +7,7 @@ data class Weapon(
     override val desc: String? = null,
     override val itemRarity : String? = null,
     override val weight: Int? = 0,
-    override val cost : List<Currency>? = null,
+    override val cost : Map<String, Currency>? = null,
     val damage : String,
     val damageType: String,
     val range: String,

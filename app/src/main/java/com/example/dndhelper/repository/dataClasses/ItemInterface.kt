@@ -6,6 +6,6 @@ interface ItemInterface {
     val index: String?
     val desc: String?
     val itemRarity : String?
-    val cost : List<Currency>?
+    val cost : Map<String, Currency>?
     val weight : Int?
 }

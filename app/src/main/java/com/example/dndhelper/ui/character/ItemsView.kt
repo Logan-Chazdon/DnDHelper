@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,27 +14,22 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
-import androidx.core.text.isDigitsOnly
-import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.dataClasses.Armor
-import com.example.dndhelper.repository.dataClasses.ItemInterface
 import com.example.dndhelper.repository.dataClasses.Weapon
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlin.math.exp
 
 @ExperimentalFoundationApi
 @Composable
 fun ItemsView(viewModel : ItemViewModel) {
 
     var expanded by remember{ mutableStateOf(false)}
+    var confirmDeleteExpanded by remember{ mutableStateOf(false)}
+    var itemToDeleteIndex by remember { mutableStateOf(0) }
+
 
     Scaffold(
         floatingActionButton =  {
@@ -73,10 +67,22 @@ fun ItemsView(viewModel : ItemViewModel) {
                                 modifier = Modifier
                                     .fillMaxWidth(0.95f)
                                     .padding(top = 2.dp)
+                                    .combinedClickable(
+                                        onClick = {
+                                            //Do nothing
+                                            //In the future maybe make this take the user to a detail screen.
+                                        },
+                                        onLongClick = {
+                                            //Ask the user if they want to delete the item
+                                            confirmDeleteExpanded = true
+                                            itemToDeleteIndex = i
+                                        }
+                                    )
                             ) {
                                 val item = items!![i]
                                 Row(
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier
+                                        .fillMaxWidth()
                                         .padding(2.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
@@ -84,7 +90,7 @@ fun ItemsView(viewModel : ItemViewModel) {
                                     item.name?.let { string -> Text(text = string) }
 
                                     //If the item is armor or a weapon display its stats
-                                    when(item.type) {
+                                    when (item.type) {
                                         "Armor" -> {
                                             Text(text = (item as Armor).acDesc)
                                             Button(
@@ -148,9 +154,12 @@ fun ItemsView(viewModel : ItemViewModel) {
                                 singleLine = true,
                                 onValueChange = { string ->
                                     text.value = string
-                                    if(string.isNotEmpty())
+                                    if (string.isNotEmpty())
                                         GlobalScope.launch {
-                                            viewModel.addCurrency(it.abbreviatedName, string.toInt())
+                                            viewModel.addCurrency(
+                                                it.abbreviatedName,
+                                                string.toInt()
+                                            )
                                         }
                                     else
                                         GlobalScope.launch {
@@ -169,7 +178,7 @@ fun ItemsView(viewModel : ItemViewModel) {
 
 
 
-        if(expanded) {
+        if (expanded) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -190,7 +199,7 @@ fun ItemsView(viewModel : ItemViewModel) {
                                 .verticalScroll(scrollState)
                         ) {
                             allItems?.value?.forEachIndexed { i, item ->
-                                val color = if(selected == i) {
+                                val color = if (selected == i) {
                                     MaterialTheme.colors.primary
                                 } else {
                                     Color.White
@@ -237,7 +246,11 @@ fun ItemsView(viewModel : ItemViewModel) {
                                 Spacer(Modifier.width(10.dp))
 
                                 Button(
-                                    enabled = if(enabled) { allItems?.value?.get(selected)?.cost != null} else { false },
+                                    enabled = if (enabled) {
+                                        allItems?.value?.get(selected)?.cost != null
+                                    } else {
+                                        false
+                                    },
                                     onClick = {
                                         GlobalScope.launch {
                                             viewModel.buyItem(selected)
@@ -256,5 +269,35 @@ fun ItemsView(viewModel : ItemViewModel) {
             }
         }
 
+        if (confirmDeleteExpanded) {
+            AlertDialog(
+                onDismissRequest = { confirmDeleteExpanded = false },
+                title = {
+                    Text(text = "Delete Item?")
+                },
+                text = {
+                    Text(
+                        "Would you like to delete " +
+                            "${viewModel.character?.value?.backpack?.allItems!![itemToDeleteIndex].name}"
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            viewModel.character?.value?.backpack?.deleteItemAtIndex(itemToDeleteIndex)
+                            confirmDeleteExpanded = false
+                        }) {
+                        Text("Delete Item")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            confirmDeleteExpanded = false
+                        }) {
+                        Text("Cancel")
+                    }
+            })
+        }
     }
 }

@@ -74,7 +74,6 @@ fun StatsView(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            var i = -1
             for (row in 0 until rows) {
                 Column(
                     modifier =  Modifier
@@ -89,9 +88,8 @@ fun StatsView(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val selectedIndexes = viewModel.selectedStatIndexes.observeAsState()
-
                     for (column in 0 until columns) {
-                        i += 1
+
                         var statChoiceExpanded by remember { mutableStateOf(false) }
                         Card(
                             shape = RoundedCornerShape(10.dp),
@@ -108,7 +106,7 @@ fun StatsView(
                                         .fillMaxWidth(0.15f)
                                 ) {
                                     Text(
-                                        text = "${statNames[i]}: ",
+                                        text = "${statNames[(column * rows) + row]}: ",
                                         fontSize = 20.sp
                                     )
                                 }
@@ -123,7 +121,7 @@ fun StatsView(
                                 ) {
                                     Text(
                                         text = try {
-                                            stats.value?.get(selectedIndexes.value!![i])
+                                            stats.value?.get(selectedIndexes.value!![(column * rows) + row])
                                                 .toString()
                                         } catch (e: IndexOutOfBoundsException) {
                                             "0"
@@ -141,7 +139,7 @@ fun StatsView(
                                     onDismissRequest = { statChoiceExpanded = false }) {
                                     statsOptions.value?.forEachIndexed { index, item ->
                                         DropdownMenuItem(onClick = {
-                                            viewModel.selectedStatByIndex(i, index)
+                                            viewModel.selectedStatByIndex((column * rows) + row, index)
                                             statChoiceExpanded = false
                                         }) {
                                             Text(text = item.toString(), fontSize = 20.sp)

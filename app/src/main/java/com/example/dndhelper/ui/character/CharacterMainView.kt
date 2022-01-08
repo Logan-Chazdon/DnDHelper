@@ -11,10 +11,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CharacterMainView(characterIndex: Int, viewModel: CharacterMainViewModel) {
-
+    val character = viewModel.character?.observeAsState()
     Column() {
-
-
+        TextField(value = character?.value?.name ?: "", onValueChange = {  viewModel.setName(it) })
 
     }
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndhelper.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import com.example.dndhelper.repository.dataClasses.Character
 
@@ -18,20 +18,20 @@ public class CharacterMainViewModel @Inject constructor(
 
 
 
-    var character : Character? = null
+    var character : LiveData<Character>? = null
 
     init {
         val id = savedStateHandle.get<String>("characterId")!!.toInt()
 
         viewModelScope.launch {
-            character = repository.getCharacterById(id)
+            character = repository.getLiveCharacterById(id)
         }
 
     }
 
      fun setName(it: String) {
-         character?.name = it
-         repository.insertCharacter(character!!)
+         character?.value!!.name = it
+         repository.insertCharacter(character!!.value!!)
     }
 
 }

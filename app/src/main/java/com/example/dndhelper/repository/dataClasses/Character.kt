@@ -25,6 +25,15 @@ data class Character(
 
     var classes = mutableListOf<Class>()
 
+    val totalClassLevels: Int
+    get() {
+        var result = 0
+        for(item in classes) {
+            result = item.level
+        }
+        return result
+    }
+
     fun addClass(newClass: Class) {
         backpack.classCurrency = Currency.getEmptyCurrencyMap()
         backpack.classItems = mutableListOf()

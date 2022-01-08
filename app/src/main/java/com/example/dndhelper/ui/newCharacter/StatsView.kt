@@ -13,8 +13,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.dndhelper.ui.utils.*
 
 @Composable
 fun StatsView(
@@ -58,70 +60,99 @@ fun StatsView(
         val statNames = listOf(
             "Str", "Dex", "Con", "Int", "Wis", "Cha"
         )
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
+
+        var columns = 6
+        var rows = 1
+        MediaQuery(Dimensions.Width greaterThan  600.dp) {
+            columns = 3
+            rows = 2
+        }
+        val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            val selectedIndexes = viewModel.selectedStatIndexes.observeAsState()
-
-            for(i in 0..5) {
-                var statChoiceExpanded  by remember { mutableStateOf(false) }
-                Card(
-                    shape = RoundedCornerShape(10.dp),
-                    elevation = 5.dp,
-                    modifier = Modifier.fillMaxWidth(0.9f)
+            var i = -1
+            for (row in 0 until rows) {
+                Column(
+                    modifier =  Modifier
+                        .mediaQuery(
+                            Dimensions.Width greaterThan 600.dp,
+                             Modifier.width(screenWidth.times(0.48f))
+                          )
+                        .mediaQuery(
+                            Dimensions.Width lessThan 600.dp,
+                            Modifier.fillMaxWidth(0.9f)
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
+                    val selectedIndexes = viewModel.selectedStatIndexes.observeAsState()
 
-                    ) {
-
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 23.dp, bottom = 23.dp, start = 15.dp)
-                                .fillMaxWidth(0.15f)
+                    for (column in 0 until columns) {
+                        i += 1
+                        var statChoiceExpanded by remember { mutableStateOf(false) }
+                        Card(
+                            shape = RoundedCornerShape(10.dp),
+                            elevation = 5.dp,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                text = "${statNames[i]}: ",
-                                fontSize = 20.sp
-                            )
-                        }
+                            Row(
 
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    shape = RoundedCornerShape(10.dp),
-                                    color = Color.White)
-                                .clickable(onClick = { statChoiceExpanded = true })
-                        ) {
-                            Text(
-                                text = try {
-                                    stats.value?.get(selectedIndexes.value!![i]).toString()
-                                } catch (e: IndexOutOfBoundsException) {
-                                    "0"
-                                },
-                                modifier = Modifier
-                                    .padding(23.dp),
-                                fontSize = 20.sp
-                            )
-                        }
+                            ) {
+
+                                Box(
+                                    modifier = Modifier
+                                        .padding(top = 23.dp, bottom = 23.dp, start = 15.dp)
+                                        .fillMaxWidth(0.15f)
+                                ) {
+                                    Text(
+                                        text = "${statNames[i]}: ",
+                                        fontSize = 20.sp
+                                    )
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            shape = RoundedCornerShape(10.dp),
+                                            color = Color.White
+                                        )
+                                        .clickable(onClick = { statChoiceExpanded = true })
+                                ) {
+                                    Text(
+                                        text = try {
+                                            stats.value?.get(selectedIndexes.value!![i])
+                                                .toString()
+                                        } catch (e: IndexOutOfBoundsException) {
+                                            "0"
+                                        },
+                                        modifier = Modifier
+                                            .padding(23.dp),
+                                        fontSize = 20.sp
+                                    )
+                                }
 
 
 
-                        DropdownMenu(
-                            expanded = statChoiceExpanded,
-                            onDismissRequest = { statChoiceExpanded = false }) {
-                            statsOptions.value?.forEachIndexed { index, item ->
-                                DropdownMenuItem(onClick = {
-                                    viewModel.selectedStatByIndex(i, index)
-                                    statChoiceExpanded = false
-                                }) {
-                                    Text(text = item.toString(), fontSize = 20.sp)
+                                DropdownMenu(
+                                    expanded = statChoiceExpanded,
+                                    onDismissRequest = { statChoiceExpanded = false }) {
+                                    statsOptions.value?.forEachIndexed { index, item ->
+                                        DropdownMenuItem(onClick = {
+                                            viewModel.selectedStatByIndex(i, index)
+                                            statChoiceExpanded = false
+                                        }) {
+                                            Text(text = item.toString(), fontSize = 20.sp)
+                                        }
+                                    }
                                 }
                             }
                         }
+                        Spacer(Modifier.height(10.dp))
                     }
                 }
-                Spacer(Modifier.height(10.dp))
             }
         }
 

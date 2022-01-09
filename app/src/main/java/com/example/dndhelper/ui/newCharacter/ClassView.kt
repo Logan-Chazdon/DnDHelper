@@ -50,7 +50,7 @@ fun ClassView(
 
     Column(
         modifier = Modifier
-            .fillMaxHeight(0.95f)
+            .fillMaxHeight()
             .fillMaxWidth()
             .verticalScroll(state = scrollState, enabled = true),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,12 +83,7 @@ fun ClassView(
                   )
               }
             }
-            if(i != classes!!.size - 1)
-            {
-                Spacer(
-                    modifier = Modifier.height(10.dp)
-                )
-            }
+
         }
     }
 }

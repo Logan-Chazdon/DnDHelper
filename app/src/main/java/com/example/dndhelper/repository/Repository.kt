@@ -3,9 +3,9 @@ package com.example.dndhelper.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.repository.model.DatabaseDao
-import com.example.dndhelper.repository.webServices.LocalDataSource
+import com.example.dndhelper.repository.localDataSources.LocalDataSource
 import javax.inject.Inject
-import com.example.dndhelper.repository.webServices.LocalDataSourceImpl
+import com.example.dndhelper.repository.localDataSources.LocalDataSourceImpl
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.example.dndhelper.repository.dataClasses.*

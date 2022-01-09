@@ -6,8 +6,8 @@ import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.example.dndhelper.repository.model.DatabaseDao
 import com.example.dndhelper.repository.model.RoomDataBase
-import com.example.dndhelper.repository.webServices.LocalDataSource
-import com.example.dndhelper.repository.webServices.LocalDataSourceImpl
+import com.example.dndhelper.repository.localDataSources.LocalDataSource
+import com.example.dndhelper.repository.localDataSources.LocalDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

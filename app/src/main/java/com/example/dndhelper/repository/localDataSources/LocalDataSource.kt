@@ -43,6 +43,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         MutableLiveData()
      val _languages : MutableLiveData<List<Language>>  =
         MutableLiveData()
+     val _feats: MutableLiveData<List<Feat>> =
+        MutableLiveData()
      val _backgrounds : MutableLiveData<List<Background>> =
         MutableLiveData()
      val _races: MutableLiveData<List<Race>> =
@@ -64,6 +66,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Languages
             generateLanguages()
 
+            //Feats
+            generateFeats()
+
             //Backgrounds
             generateBackgrounds()
 
@@ -73,6 +78,89 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Classes
             generateClasses()
         }
+    }
+
+    private fun generateFeats() {
+        val dataAsString = context.resources.openRawResource(R.raw.feats).bufferedReader().readText()
+        val feats = mutableListOf<Feat>()
+        val featsJson = JSONObject(dataAsString).getJSONArray("feats")
+        for(featIndex in 0 until featsJson.length()) {
+            val featJson = featsJson.getJSONObject(featIndex)
+            val name = featJson.getString("name")
+            val desc = featJson.getString("desc")
+            val prerequisite = featJson.getString("prerequisite")
+            var abilityBonusChoice : AbilityBonusChoice? = null
+            val abilityBonus= null
+            val features = extractFeatures(featJson.getJSONArray("features"))
+            val spellChoices = mutableListOf<SpellChoice>()
+            val spells = mutableListOf<Spell>()
+
+            //TODO Ability bonuses
+
+            //Ability bonus choice
+            try {
+                val abilityBonusChoiceJson = featJson.getJSONObject("ability_bonus_choice")
+                val from = mutableListOf<AbilityBonus>()
+                val fromJson = abilityBonusChoiceJson.getJSONArray("from")
+                for(fromIndex in 0 until fromJson.length()) {
+                    val abilityJson = fromJson.getJSONObject(fromIndex)
+                    from.add(
+                        AbilityBonus(
+                            ability = abilityJson.getString("name"),
+                            bonus = abilityJson.getInt("amount")
+                        )
+                    )
+                }
+                abilityBonusChoice = AbilityBonusChoice(
+                    choose = abilityBonusChoiceJson.getInt("choose"),
+                    from = from
+                )
+            } catch( e: JSONException ) {}
+
+            //Spells
+            val spellsJson = featJson.getJSONArray("spells")
+            for(spellIndex in 0 until spellsJson.length()) {
+                val spellJson = spellsJson.getJSONObject(spellIndex)
+                val index = spellJson.getString("index")
+                //from.addAll( TODO
+                  //getSpellsByIndex(index)
+                //)
+            }
+
+            //Spell Choices
+            val spellChoicesJson = featJson.getJSONArray("spell_choices")
+            for(spellChoiceIndex in 0 until spellChoicesJson.length()) {
+                val spellChoiceJson = spellChoicesJson.getJSONObject(spellChoiceIndex)
+                val choose = spellChoiceJson.getInt("choose")
+                val from = mutableListOf<Spell>()
+                try {
+                    val index = spellChoiceJson.getString("index")
+                    //from.addAll( TODO
+                        //getSpellsByIndex(index)
+                    //)
+                } catch (e: JSONException) { }
+                spellChoices.add(
+                    SpellChoice(
+                        choose = choose,
+                        from = from
+                    )
+                )
+            }
+
+            feats.add(
+                Feat(
+                    name = name,
+                    desc = desc,
+                    prerequisite = prerequisite,
+                    abilityBonus = abilityBonus,
+                    abilityBonusChoice = abilityBonusChoice,
+                    features = features,
+                    spellChoices = spellChoices,
+                    spells = spells
+                )
+            )
+        }
+        _feats.value = feats
     }
 
     private fun generateItems() {

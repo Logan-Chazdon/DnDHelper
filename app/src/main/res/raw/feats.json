@@ -1,0 +1,54 @@
+{
+  "feats" : [
+    {
+      "name" : "Aberrant Dragonmark",
+      "desc" : "nyeh",
+      "prerequisite" : "No other dragonmark",
+
+      "ability_bonus" : {
+
+      },
+
+      "ability_bonus_choice" : {
+          "choose": 1,
+          "from": [
+            {
+              "name": "Charisma",
+              "amount" : 1
+            }
+          ]
+      },
+
+      "features"  : [
+
+      ],
+
+      "spells" : [
+
+      ],
+
+      "spell_choices" : [
+        {
+          "choose" : 1,
+          "from": [
+            {
+              "index" : "sorcerer_cantrips"
+            }
+          ]
+        },
+        {
+          "choose": 1,
+          "from": [
+            {
+              "index": "sorcerer_spells_level_one"
+            }
+          ]
+        }
+      ]
+    }
+
+
+
+
+  ]
+}

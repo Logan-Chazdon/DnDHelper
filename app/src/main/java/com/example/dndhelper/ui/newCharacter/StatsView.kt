@@ -63,7 +63,7 @@ fun StatsView(
 
         var columns = 6
         var rows = 1
-        MediaQuery(Dimensions.Width greaterThan  600.dp) {
+        MediaQuery(Dimensions.Height lessThan 500.dp) {
             columns = 3
             rows = 2
         }
@@ -78,11 +78,11 @@ fun StatsView(
                 Column(
                     modifier =  Modifier
                         .mediaQuery(
-                            Dimensions.Width greaterThan 600.dp,
+                            Dimensions.Height lessThan 500.dp,
                              Modifier.width(screenWidth.times(0.48f))
                           )
                         .mediaQuery(
-                            Dimensions.Width lessThan 600.dp,
+                            Dimensions.Height greaterThan 500.dp,
                             Modifier.fillMaxWidth(0.9f)
                         ),
                     horizontalAlignment = Alignment.CenterHorizontally

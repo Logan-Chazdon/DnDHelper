@@ -81,6 +81,8 @@ data class Character(
 
     var equiptArmor = Armor.none
 
+    var feats = mutableListOf<Feat>()
+
     fun getStats(): MutableMap<String, Int> {
         return baseStats  //TODO add bonuses and such
     }

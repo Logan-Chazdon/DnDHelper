@@ -15,7 +15,7 @@ import com.example.dndhelper.ui.newCharacter.*
 @ExperimentalMaterialApi
 @Composable
 fun Navigation(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "allCharactersView"){
+    NavHost(navController = navController, startDestination = "allCharactersView") {
 
 
         composable("allCharactersView") {
@@ -54,66 +54,75 @@ fun Navigation(navController: NavHostController) {
 
 
         composable("newCharacterView/BackgroundView/{characterId}") { backStackEntry ->
-                backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
-                    val viewModel = hiltViewModel<NewCharacterBackgroundViewModel>()
-                    BackgroundView(characterId = characterId, navController = navController ,viewModel = viewModel)
-                }
+            backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
+                val viewModel = hiltViewModel<NewCharacterBackgroundViewModel>()
+                BackgroundView(
+                    characterId = characterId,
+                    navController = navController,
+                    viewModel = viewModel
+                )
             }
-            composable("newCharacterView/ClassView/{characterId}") { backStackEntry ->
-                val characterId= backStackEntry.arguments?.getString("characterId")?.toInt() ?: -1
-                val viewModel = hiltViewModel<NewCharacterClassViewModel>()
-                ClassView(viewModel, navController = navController, characterId = characterId)
+        }
+        composable("newCharacterView/ClassView/{characterId}") { backStackEntry ->
+            val characterId = backStackEntry.arguments?.getString("characterId")?.toInt() ?: -1
+            val viewModel = hiltViewModel<NewCharacterClassViewModel>()
+            ClassView(viewModel, navController = navController, characterId = characterId)
 
-            }
-            composable("newCharacterView/ClassView/ConfirmClassView/{classIndex}/{characterId}") { backStackEntry ->
-                backStackEntry.arguments?.getString("classIndex")?.toInt()?.let { classIndex ->
-                    backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
-                        val viewModel = hiltViewModel<NewCharacterClassViewModel>()
-                        ConfirmClassView(
-                            viewModel = viewModel,
-                            navController = navController,
-                            classIndex = classIndex,
-                            characterId = characterId
-                        )
-                    }
-                }
-            }
-            composable("newCharacterView/BackgroundView/ConfirmBackGroundView/{backgroundIndex}/{characterId}") { backStackEntry ->
+        }
+        composable("newCharacterView/ClassView/ConfirmClassView/{classIndex}/{characterId}") { backStackEntry ->
+            backStackEntry.arguments?.getString("classIndex")?.toInt()?.let { classIndex ->
                 backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
-                    val backgroundIndex = backStackEntry.arguments?.getString("backgroundIndex")?.toInt()
-                    val viewModel = hiltViewModel<NewCharacterBackgroundViewModel>()
-                    ConfirmBackgroundView(
-                        characterId = characterId,
-                        navController = navController,
+                    val viewModel = hiltViewModel<NewCharacterClassViewModel>()
+                    ConfirmClassView(
                         viewModel = viewModel,
-                        backgroundIndex = backgroundIndex ?: 0
+                        navController = navController,
+                        classIndex = classIndex,
+                        characterId = characterId
                     )
                 }
             }
-            composable("newCharacterView/ConfirmRaceView/{raceIndex}/{characterId}") { backStackEntry ->
-                backStackEntry.arguments?.getString("raceIndex")?.toInt()?.let { raceIndex ->
-                    backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
-                        val viewModel = hiltViewModel<NewCharacterRaceViewModel>()
-                        ConfirmRaceView(
-                            viewModel = viewModel,
-                            navController = navController,
-                            raceIndex = raceIndex,
-                            characterId = characterId
-                        )
-                    }
-                }
+        }
+        composable("newCharacterView/BackgroundView/ConfirmBackGroundView/{backgroundIndex}/{characterId}") { backStackEntry ->
+            backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
+                val backgroundIndex =
+                    backStackEntry.arguments?.getString("backgroundIndex")?.toInt()
+                val viewModel = hiltViewModel<NewCharacterBackgroundViewModel>()
+                ConfirmBackgroundView(
+                    characterId = characterId,
+                    navController = navController,
+                    viewModel = viewModel,
+                    backgroundIndex = backgroundIndex ?: 0
+                )
             }
-            composable("newCharacterView/RaceView/{characterId}") { backStackEntry ->
-                backStackEntry.arguments?.getString("characterId")?.toInt().let { characterId ->
+        }
+        composable("newCharacterView/ConfirmRaceView/{raceIndex}/{characterId}") { backStackEntry ->
+            backStackEntry.arguments?.getString("raceIndex")?.toInt()?.let { raceIndex ->
+                backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
                     val viewModel = hiltViewModel<NewCharacterRaceViewModel>()
-                    RaceView(viewModel, navController = navController, characterId = characterId ?: -1)
-                }
-            }
-            composable("newCharacterView/StatsView/{characterId}") { backStackEntry ->
-                backStackEntry.arguments?.getString("characterId")?.toInt()?.let {characterId ->
-                    val viewModel = hiltViewModel<NewCharacterStatsViewModel>()
-                    StatsView(viewModel, characterId)
+                    ConfirmRaceView(
+                        viewModel = viewModel,
+                        navController = navController,
+                        raceIndex = raceIndex,
+                        characterId = characterId
+                    )
                 }
             }
         }
+        composable("newCharacterView/RaceView/{characterId}") { backStackEntry ->
+            backStackEntry.arguments?.getString("characterId")?.toInt().let { characterId ->
+                val viewModel = hiltViewModel<NewCharacterRaceViewModel>()
+                RaceView(viewModel, navController = navController, characterId = characterId ?: -1)
+            }
+        }
+        composable("newCharacterView/StatsView/{characterId}") { backStackEntry ->
+            backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
+                val viewModel = hiltViewModel<NewCharacterStatsViewModel>()
+                StatsView(viewModel, characterId)
+            }
+        }
+
+        composable("newCharacterView/FeatOrAbsView/{characterId}") {
+            FeatOrAbsView(hiltViewModel())
+        }
+    }
 }

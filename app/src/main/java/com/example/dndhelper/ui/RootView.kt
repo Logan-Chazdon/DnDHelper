@@ -87,7 +87,13 @@ fun RootView() {
                                 route = "$route/StatsView/$id",
                                 baseRoute = "$route/StatsView",
                                 icon = Icons.Default.Home
-                            )
+                            ),
+                            NavItem(
+                                name = "Feat or ABS",
+                                route = "$route/FeatOrAbsView/$id",
+                                baseRoute = "$route/FeatOrAbsView",
+                                icon = Icons.Default.Home
+                            ),
                         ),
                         navController = navController,
                         onItemClick = {

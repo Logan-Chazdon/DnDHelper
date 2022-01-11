@@ -24,6 +24,7 @@ class Repository @Inject constructor(
     private val _skills : MutableLiveData<Map<String, List<String>>> =
         (LocalDataSource as LocalDataSourceImpl)._abilitiesToSkills
     private val _items: MutableLiveData<List<ItemInterface>> =  (LocalDataSource as LocalDataSourceImpl)._items
+    private val _feats: MutableLiveData<List<Feat>> =  (LocalDataSource as LocalDataSourceImpl)._feats
 
     init {
  /*
@@ -77,6 +78,10 @@ class Repository @Inject constructor(
 
     fun getRaces(): LiveData<List<Race>> {
         return _races
+    }
+
+    fun getFeats(): LiveData<List<Feat>> {
+        return _feats
     }
 
     fun getClasses(): LiveData<List<Class>> {

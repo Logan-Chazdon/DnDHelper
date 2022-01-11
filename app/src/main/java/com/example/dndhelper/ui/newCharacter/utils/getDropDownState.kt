@@ -28,6 +28,41 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownState>.getDropDownState (
     return state
 }
 
+fun SnapshotStateList<MultipleChoiceDropdownState>.getDropDownState (
+    key: Int,
+    maxSelections : Int,
+    names : MutableList<String>,
+    choiceName: String
+) : MultipleChoiceDropdownState {
+    if(key > this.size) {
+        for(i in 0..key) {
+            if(this.elementAtOrNull(i) == null) {
+                this.add(
+                    i,
+                     generateDefault(
+                        maxSelections,
+                        names,
+                        choiceName
+                     )
+                )
+            }
+        }
+    }
+
+    val state : MultipleChoiceDropdownState
+    if(this.elementAtOrNull(key) != null) {
+        state = this[key]
+    } else {
+        state = generateDefault(
+            maxSelections,
+            names,
+            choiceName
+        )
+        this.add(key, state)
+    }
+    return state
+}
+
 private fun generateDefault(
     maxSelections : Int,
     names : MutableList<String>,

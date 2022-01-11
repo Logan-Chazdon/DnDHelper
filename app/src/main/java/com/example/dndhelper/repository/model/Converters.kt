@@ -268,5 +268,14 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToFeats(data: String?): List<Feat> {
+        return gson.fromJson(data, object : TypeToken<List<Feat>>() {}.type)
+    }
+
+    @TypeConverter
+    fun featsToStoredString(myObjects: List<Feat>): String? {
+        return gson.toJson(myObjects)
+    }
 
 }

@@ -4,13 +4,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.dndhelper.ui.newCharacter.MultipleChoiceDropdownState
+import kotlin.math.max
 
 
 fun SnapshotStateMap<String, MultipleChoiceDropdownState>.getDropDownState (
     key: String,
     maxSelections : Int,
     names : MutableList<String>,
-    choiceName: String
+    choiceName: String,
+    maxOfSameSelection: Int = 1
 ) : MultipleChoiceDropdownState {
 
     val state : MultipleChoiceDropdownState =  if(this.containsKey(key)) {
@@ -19,7 +21,8 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownState>.getDropDownState (
         generateDefault(
             maxSelections,
             names,
-            choiceName
+            choiceName,
+            maxOfSameSelection
         )
     }
 
@@ -32,7 +35,8 @@ fun SnapshotStateList<MultipleChoiceDropdownState>.getDropDownState (
     key: Int,
     maxSelections : Int,
     names : MutableList<String>,
-    choiceName: String
+    choiceName: String,
+    maxOfSameSelection: Int = 1
 ) : MultipleChoiceDropdownState {
     if(key > this.size) {
         for(i in 0..key) {
@@ -42,7 +46,8 @@ fun SnapshotStateList<MultipleChoiceDropdownState>.getDropDownState (
                      generateDefault(
                         maxSelections,
                         names,
-                        choiceName
+                        choiceName,
+                        maxOfSameSelection
                      )
                 )
             }
@@ -56,7 +61,8 @@ fun SnapshotStateList<MultipleChoiceDropdownState>.getDropDownState (
         state = generateDefault(
             maxSelections,
             names,
-            choiceName
+            choiceName,
+            maxOfSameSelection
         )
         this.add(key, state)
     }
@@ -66,11 +72,13 @@ fun SnapshotStateList<MultipleChoiceDropdownState>.getDropDownState (
 private fun generateDefault(
     maxSelections : Int,
     names : MutableList<String>,
-    choiceName: String
+    choiceName: String,
+    maxOfSameSelection: Int
 ): MultipleChoiceDropdownState {
     val result = MultipleChoiceDropdownState()
     result.maxSelections = maxSelections
     result.choiceName = choiceName
     result.names = names
+    result.maxSameSelections = maxOfSameSelection
     return result
 }

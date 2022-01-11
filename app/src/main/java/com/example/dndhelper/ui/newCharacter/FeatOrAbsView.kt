@@ -72,7 +72,8 @@ fun FeatOrAbsView(viewModel: FeatOrAbsViewModel) {
                                     key = it,
                                     maxSelections = 2,
                                     names = viewModel.abilityNames,
-                                    choiceName = "Ability Score Improvement"
+                                    choiceName = "Ability Score Improvement",
+                                    maxOfSameSelection = 2
                                 )
                         )
                     }

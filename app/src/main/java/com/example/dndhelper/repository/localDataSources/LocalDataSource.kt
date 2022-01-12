@@ -89,6 +89,34 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         return null
     }
 
+    //TODO implement the rest of the indexes as needed
+    private fun getItemsByIndex(index: String): List<ItemInterface>? {
+
+        when(index) {
+            "musical_instruments" -> return emptyList() //TODO update
+        }
+
+       getWeaponsByIndex(index).let {
+           if(it != null) {
+               return it
+           }
+       }
+
+       getArmorByIndex(index).let {
+           if(it != null) {
+               return it
+           }
+        }
+
+        getItemByIndex(index).let {
+            if(it != null) {
+                return listOf(it)
+            }
+        }
+
+        return null
+    }
+
     private fun getWeaponsByIndex(index: String) : List<Weapon>? {
         return when(index) {
             "simple_weapons" -> _simpleWeapons.value
@@ -727,7 +755,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val proficiencyChoices = mutableListOf<ProficiencyChoice>()
             val proficiencies = mutableListOf<Proficiency>()
             val equipmentChoices: MutableList<ItemChoice> = mutableListOf()
-            val equipment: MutableList<Item> = mutableListOf()
+            val equipment: MutableList<ItemInterface> = mutableListOf()
             extractEquipmentChoices(
                 classJson.getJSONArray("equipment"),
                 equipmentChoices,
@@ -760,7 +788,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun extractEquipmentChoices(
         jsonArray: JSONArray,
         itemChoices: MutableList<ItemChoice>,
-        items: MutableList<Item>
+        items: MutableList<ItemInterface>
     ) {
         for(i in 0 until jsonArray.length()) {
             val json = jsonArray.getJSONObject(i)
@@ -770,11 +798,16 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             } catch (e: JSONException) { }
 
             if (choose == 0) {
-                items.add(
-                    Item(
-                        name = json.getString("name")
+                try {
+                    val index = json.getString("index")
+                    getItemByIndex(index)?.let { items.add(it) }
+                } catch (e: JSONException) {
+                    items.add(
+                        Item(
+                            name = json.getString("name")
+                        )
                     )
-                )
+                }
             } else {
 
                 val from = mutableListOf<ItemInterface>()
@@ -791,7 +824,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
                     try {
                         index = itemJson.getString("index")
-                        getWeaponsByIndex(index)?.let { from.addAll(it) }
+                        getItemsByIndex(index)?.let { from.addAll(it) }
 
                     } catch (e: JSONException) {
                         from.add(

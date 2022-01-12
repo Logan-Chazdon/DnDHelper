@@ -37,9 +37,24 @@ fun FeatOrAbsView(viewModel: FeatOrAbsViewModel, navController: NavController) {
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+
+            Card(
+                modifier = Modifier.fillMaxWidth(0.9f),
+                elevation = 10.dp
+            ){
+                Row(
+                    modifier = Modifier.padding(2.dp)
+                ) {
+                    Text(text = "Hp: ")
+                    Text(text = viewModel.generatedHp.observeAsState().value.toString())
+                }
+            }
+
+            Spacer(Modifier.height(8.dp))
+
             for (it in 0..(viewModel.featOrAbsNum.value ?: 0)) {
                 Card(
                     modifier = Modifier.fillMaxWidth(0.9f),

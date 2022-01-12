@@ -35,6 +35,13 @@ data class Character(
     var currentHp: Int = 0
     var tempHp: Int = 0
     var maxHp: Int = 0
+    fun generateMaxHp(): Int {
+        var newMax = 0
+        for(item in classes) {
+            newMax += (((item.hitDie / 2) + 1) + getStatMod("Con")) * item.level
+        }
+        return newMax
+    }
 
     var classes = mutableListOf<Class>()
     val totalClassLevels: Int

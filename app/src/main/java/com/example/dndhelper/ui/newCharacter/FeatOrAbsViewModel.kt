@@ -30,8 +30,11 @@ public class FeatOrAbsViewModel @Inject constructor(
                 )
             }
         }
+        newChar?.maxHp = generatedHp.value!!
         newChar?.let { repository.insertCharacter(it) }
     }
+
+    val generatedHp: MediatorLiveData<Int> = MediatorLiveData()
 
     val abilityNames = mutableListOf(
         "Strength",
@@ -53,12 +56,13 @@ public class FeatOrAbsViewModel @Inject constructor(
 
 
 
-    var character: LiveData<Character>? = null
+    val character: LiveData<Character>? = null
+
     init {
         id = savedStateHandle.get<String>("characterId")!!.toInt()
 
         viewModelScope.launch {
-            character = repository.getLiveCharacterById(id)
+            val character = repository.getLiveCharacterById(id)
             feats = repository.getFeats()
 
             featNames.addSource(feats!!) {
@@ -68,6 +72,7 @@ public class FeatOrAbsViewModel @Inject constructor(
                 }
                 featNames.value = names
             }
+
             featOrAbsNum.addSource(character!!) {
                 featOrAbsNum.value = when(it.totalClassLevels) {
                     in 0..4 -> {
@@ -86,6 +91,12 @@ public class FeatOrAbsViewModel @Inject constructor(
                         5
                     }
                     else -> 0
+                }
+            }
+
+            generatedHp.addSource(character) {
+                if(it != null) {
+                    generatedHp.value = it.generateMaxHp()
                 }
             }
         }

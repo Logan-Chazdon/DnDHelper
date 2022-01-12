@@ -30,7 +30,7 @@ fun StatsView(viewModel: StatsViewModel) {
 
     Column {
         //Stats
-        val stats = character?.value?.baseStats
+        val stats = character?.value?.getStats()
         val statNames =
             listOf("Strength", "Dexterity", "Constitution", "Wisdom", "Intelligence", "Charisma")
         val statNamesAbr = listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")

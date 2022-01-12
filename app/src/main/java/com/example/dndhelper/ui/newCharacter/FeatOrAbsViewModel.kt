@@ -32,35 +32,16 @@ public class FeatOrAbsViewModel @Inject constructor(
     val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
     var id = -1
 
-    val featOrAbsNum: Int
-    get() {
-        when(character?.totalClassLevels) {
-            in 0..4 -> {
-                return 1
-            }
-            in 5..8 -> {
-                return 2
-            }
-            in 9..12 -> {
-                return 3
-            }
-            in  13..16 -> {
-                return 4
-            }
-            in  17..19 -> {
-                return 5
-            }
-        }
-        return 0
-    }
+    val featOrAbsNum: MediatorLiveData<Int> = MediatorLiveData()
 
 
-    var character: Character? = null
+
+    var character: LiveData<Character>? = null
     init {
         id = savedStateHandle.get<String>("characterId")!!.toInt()
 
         viewModelScope.launch {
-            character = repository.getCharacterById(id)
+            character = repository.getLiveCharacterById(id)
             feats = repository.getFeats()
 
             featNames.addSource(feats!!) {
@@ -69,6 +50,26 @@ public class FeatOrAbsViewModel @Inject constructor(
                     names.add(item.name)
                 }
                 featNames.value = names
+            }
+            featOrAbsNum.addSource(character!!) {
+                featOrAbsNum.value = when(it.totalClassLevels) {
+                    in 0..4 -> {
+                        1
+                    }
+                    in 5..8 -> {
+                        2
+                    }
+                    in 9..12 -> {
+                        3
+                    }
+                    in  13..16 -> {
+                        4
+                    }
+                    in  17..19 -> {
+                        5
+                    }
+                    else -> 0
+                }
             }
         }
 

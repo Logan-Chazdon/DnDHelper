@@ -34,7 +34,7 @@ fun FeatOrAbsView(viewModel: FeatOrAbsViewModel, navController: NavController) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            for (it in 0..viewModel.featOrAbsNum) {
+            for (it in 0..(viewModel.featOrAbsNum.value ?: 0)) {
                 Card(
                     modifier = Modifier.fillMaxWidth(0.9f),
                     elevation = 10.dp

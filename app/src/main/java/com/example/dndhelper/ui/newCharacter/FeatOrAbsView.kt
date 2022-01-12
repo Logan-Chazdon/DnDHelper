@@ -13,74 +13,87 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import java.lang.IndexOutOfBoundsException
 import kotlin.math.exp
 
 @Composable
-fun FeatOrAbsView(viewModel: FeatOrAbsViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+fun FeatOrAbsView(viewModel: FeatOrAbsViewModel, navController: NavController) {
+    Scaffold(
+        floatingActionButton = {
+            Button(onClick = {
+                navController.navigate("characterView/MainView/${viewModel.id}")
+            }) {
+                Text("Finish!")
+            }
+        }
     ) {
-        for(it in 0..viewModel.featOrAbsNum) {
-            Card(
-                modifier = Modifier.fillMaxWidth(0.9f),
-                elevation = 10.dp
-            ) {
-                var expanded by remember { mutableStateOf(false) }
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            for (it in 0..viewModel.featOrAbsNum) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    elevation = 10.dp
+                ) {
+                    var expanded by remember { mutableStateOf(false) }
 
-                Column {
-                    Text(text = "Feat or Ability score increase", modifier = Modifier.clickable { expanded = !expanded })
+                    Column {
+                        Text(
+                            text = "Feat or Ability score increase",
+                            modifier = Modifier.clickable { expanded = !expanded })
 
-                    //Fill out the list
-                    try {
-                        viewModel.isFeat[it]
-                    } catch (e : IndexOutOfBoundsException) {
-                        viewModel.isFeat.add(it, false)
-                    }
-
-                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                        DropdownMenuItem(onClick = { viewModel.isFeat[it] = true }) {
-                            Text(text = "Feat")
+                        //Fill out the list
+                        try {
+                            viewModel.isFeat[it]
+                        } catch (e: IndexOutOfBoundsException) {
+                            viewModel.isFeat.add(it, false)
                         }
-                        DropdownMenuItem(onClick = { viewModel.isFeat[it] = false }) {
-                            Text(text = "Ability Score Increase")
-                        }
-                    }
-                    
 
-                    if(viewModel.isFeat[it]) {
-                        viewModel.featNames.observeAsState().value?.let { featNames ->
-                            viewModel.featDropDownStates
-                                .getDropDownState(
-                                    key = it,
-                                    maxSelections = 1,
-                                    names = featNames,
-                                    choiceName = "Feat"
+                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                            DropdownMenuItem(onClick = { viewModel.isFeat[it] = true }) {
+                                Text(text = "Feat")
+                            }
+                            DropdownMenuItem(onClick = { viewModel.isFeat[it] = false }) {
+                                Text(text = "Ability Score Increase")
+                            }
+                        }
+
+
+                        if (viewModel.isFeat[it]) {
+                            viewModel.featNames.observeAsState().value?.let { featNames ->
+                                viewModel.featDropDownStates
+                                    .getDropDownState(
+                                        key = it,
+                                        maxSelections = 1,
+                                        names = featNames,
+                                        choiceName = "Feat"
+                                    )
+                            }?.let { state ->
+                                MultipleChoiceDropdownView(
+                                    state = state
                                 )
-                        }?.let { state ->
+                            }
+                        } else {
                             MultipleChoiceDropdownView(
-                                state = state
+                                state = viewModel.absDropDownStates
+                                    .getDropDownState(
+                                        key = it,
+                                        maxSelections = 2,
+                                        names = viewModel.abilityNames,
+                                        choiceName = "Ability Score Improvement",
+                                        maxOfSameSelection = 2
+                                    )
                             )
                         }
-                    } else {
-                        MultipleChoiceDropdownView(
-                            state = viewModel.absDropDownStates
-                                .getDropDownState(
-                                    key = it,
-                                    maxSelections = 2,
-                                    names = viewModel.abilityNames,
-                                    choiceName = "Ability Score Improvement",
-                                    maxOfSameSelection = 2
-                                )
-                        )
+
                     }
-                    
                 }
+                Spacer(Modifier.padding(top = 8.dp))
             }
-            Spacer(Modifier.padding(top = 8.dp))
         }
     }
 }

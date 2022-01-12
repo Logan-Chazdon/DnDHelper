@@ -122,7 +122,7 @@ fun Navigation(navController: NavHostController) {
         }
 
         composable("newCharacterView/FeatOrAbsView/{characterId}") {
-            FeatOrAbsView(hiltViewModel())
+            FeatOrAbsView(hiltViewModel(), navController)
         }
     }
 }

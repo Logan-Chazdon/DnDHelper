@@ -30,6 +30,7 @@ public class FeatOrAbsViewModel @Inject constructor(
     val isFeat = mutableStateListOf<Boolean>()
     val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
     val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
+    var id = -1
 
     val featOrAbsNum: Int
     get() {
@@ -56,7 +57,7 @@ public class FeatOrAbsViewModel @Inject constructor(
 
     var character: Character? = null
     init {
-        val id = savedStateHandle.get<String>("characterId")!!.toInt()
+        id = savedStateHandle.get<String>("characterId")!!.toInt()
 
         viewModelScope.launch {
             character = repository.getCharacterById(id)

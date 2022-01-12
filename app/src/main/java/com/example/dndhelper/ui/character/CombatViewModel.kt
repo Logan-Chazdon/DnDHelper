@@ -2,6 +2,7 @@ package com.example.dndhelper.ui.character
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
@@ -16,13 +17,13 @@ public class CombatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val repository: Repository, application: Application
 ): AndroidViewModel(application) {
-    var character : Character? = null
+    var character : LiveData<Character>? = null
 
 
     init {
         val id = savedStateHandle.get<String>("characterId")!!.toInt()
         viewModelScope.launch {
-            character = repository.getCharacterById(id)
+            character = repository.getLiveCharacterById(id)
         }
 
     }

@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -25,7 +26,12 @@ fun CombatView(viewModel: CombatViewModel) {
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        HeathStatsView(10, 10, 20)
+        val character = viewModel.character?.observeAsState()
+        HeathStatsView(
+            character?.value?.currentHp ?: 0,
+            character?.value?.maxHp ?: 0,
+            character?.value?.tempHp ?: 0
+        )
 
         Spacer(Modifier.height(5.dp))
 
@@ -52,7 +58,7 @@ fun CombatView(viewModel: CombatViewModel) {
                             "",
                             Modifier.size(75.dp)
                         )
-                        val ac = viewModel.character?.equiptArmor?.getAC(viewModel.character?.getStatMod("Dex")!!)
+                        val ac = character?.value?.equiptArmor?.getAC(character.value?.getStatMod("Dex") ?: 10)
                         Text(
                             text = "$ac",
                             modifier = Modifier.padding(bottom = 5.dp)

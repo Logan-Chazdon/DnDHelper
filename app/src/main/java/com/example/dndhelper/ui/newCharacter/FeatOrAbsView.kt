@@ -13,8 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.IndexOutOfBoundsException
 import kotlin.math.exp
 
@@ -23,6 +26,9 @@ fun FeatOrAbsView(viewModel: FeatOrAbsViewModel, navController: NavController) {
     Scaffold(
         floatingActionButton = {
             Button(onClick = {
+                GlobalScope.launch {
+                    viewModel.finish()
+                }
                 navController.navigate("characterView/MainView/${viewModel.id}")
             }) {
                 Text("Finish!")

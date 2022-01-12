@@ -16,6 +16,23 @@ public class FeatOrAbsViewModel @Inject constructor(
     private val repository: Repository,
     application: Application,
 ):  AndroidViewModel(application) {
+    suspend fun finish() {
+        val newChar = character!!.value
+        for((i, item) in isFeat.withIndex()) {
+            if(item) {
+                newChar?.feats?.addAll(featDropDownStates[i].getSelected(feats?.value!!) as List<Feat>)
+            } else {
+                newChar?.addAbilityScoreIncreases(
+                    (absDropDownStates[i].getSelected(abilityNames) as List<Pair<String, Int>>)
+                        .associateBy(
+                            {it.first}, {it.second}
+                        )
+                )
+            }
+        }
+        newChar?.let { repository.insertCharacter(it) }
+    }
+
     val abilityNames = mutableListOf(
         "Strength",
         "Dexterity",

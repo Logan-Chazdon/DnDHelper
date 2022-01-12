@@ -22,6 +22,15 @@ data class Character(
     var id: Int = 0
 
     var baseStats = mutableMapOf<String, Int>()
+    var abilityScoreIncreases: MutableMap<String, Int> = mutableMapOf(
+        "Strength" to 0,
+        "Dexterity" to 0,
+        "Constitution" to 0,
+        "Intelligence" to 0,
+        "Wisdom" to 0,
+        "Charisma" to 0
+    )
+
 
     var currentHp: Int = 0
     var tempHp: Int = 0
@@ -96,6 +105,12 @@ data class Character(
 
     fun getStatMod(name: String): Int {
         return (getStat(name)!! - 10) / 2
+    }
+
+    fun addAbilityScoreIncreases(increases: Map<String, Int>) {
+        for(item in increases) {
+            abilityScoreIncreases[item.key] = abilityScoreIncreases[item.key]?.plus(item.value) ?: 0
+        }
     }
 
 }

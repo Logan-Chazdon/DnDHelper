@@ -66,9 +66,14 @@ class MultipleChoiceDropdownState()  {
         val returnList = mutableListOf<Any>()
         for(i in from.indices) {
             if(selectedList[i] != 0) {
-                returnList.add(from[i])
+                if(maxSameSelections == 1) {
+                    returnList.add(from[i])
+                } else {
+                    returnList.add(Pair(from[i], selectedList[i]))
+                }
             }
         }
+
         return returnList
     }
 }

@@ -80,6 +80,44 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         }
     }
 
+    private fun getWeaponsByIndex(index: String) : List<Weapon>? {
+        return when(index) {
+            "simple_weapons" -> _simpleWeapons.value
+
+            "martial_weapons" -> _martialWeapons.value
+
+            "all_weapons" -> {
+                val weapons = _martialWeapons.value?.toMutableList()
+                _simpleWeapons.value?.let { weapons?.addAll(it) }
+                weapons
+            }
+
+            else -> null
+        }
+    }
+
+    private fun getLanguagesByIndex(index: String) : List<Language>? {
+        return when(index) {
+            "all_languages" -> _languages.value
+            else -> null
+        }
+    }
+
+    private fun getArmorByIndex(index: String) : List<Armor>? {
+        return when(index) {
+            "all_armor" -> _armors.value
+            else -> null
+        }
+    }
+
+    private fun getSpellsByIndex(index: String) : List<Spell>? {
+        //TODO implement me
+        return when(index) {
+            else -> null
+        }
+    }
+
+
     private fun generateFeats() {
         val dataAsString = context.resources.openRawResource(R.raw.feats).bufferedReader().readText()
         val feats = mutableListOf<Feat>()
@@ -122,9 +160,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             for(spellIndex in 0 until spellsJson.length()) {
                 val spellJson = spellsJson.getJSONObject(spellIndex)
                 val index = spellJson.getString("index")
-                //from.addAll( TODO
-                  //getSpellsByIndex(index)
-                //)
+                getSpellsByIndex(index)?.let {
+                    spells.addAll(
+                        it
+                    )
+                }
             }
 
             //Spell Choices
@@ -135,9 +175,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 val from = mutableListOf<Spell>()
                 try {
                     val index = spellChoiceJson.getString("index")
-                    //from.addAll( TODO
-                        //getSpellsByIndex(index)
-                    //)
+                    getSpellsByIndex(index)?.let {
+                        from.addAll(
+                            it
+                        )
+                    }
                 } catch (e: JSONException) { }
                 spellChoices.add(
                     SpellChoice(
@@ -740,16 +782,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
                     try {
                         index = itemJson.getString("index")
-
-                        //TODO extract this to a function
-                        when(index) {
-                            "simple_weapons" -> {
-                                _simpleWeapons.value?.let { from.addAll(it) }
-                            }
-                            "martial_weapons" -> {
-                                _martialWeapons.value?.let { from.addAll(it) }
-                            }
-                        }
+                        getWeaponsByIndex(index)?.let { from.addAll(it) }
 
                     } catch (e: JSONException) {
                         from.add(

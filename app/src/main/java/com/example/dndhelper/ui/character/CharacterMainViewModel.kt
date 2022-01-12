@@ -4,10 +4,10 @@ import android.app.Application
 import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndhelper.repository.Repository
+import com.example.dndhelper.repository.dataClasses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
-import com.example.dndhelper.repository.dataClasses.Character
 
 
 @HiltViewModel
@@ -29,9 +29,10 @@ public class CharacterMainViewModel @Inject constructor(
 
     }
 
-     fun setName(it: String) {
-         character?.value!!.name = it
-         repository.insertCharacter(character!!.value!!)
-    }
+    fun setName(it: String) {
+        val newChar = character!!.value!!.copy(name = it)
+        newChar.id = character!!.value!!.id
+        repository.insertCharacter(newChar)
+     }
 
 }

@@ -5,15 +5,23 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
 
 
 @Composable
 fun CharacterMainView(characterIndex: Int, viewModel: CharacterMainViewModel) {
-    val character = viewModel.character?.observeAsState()
+    val scope = rememberCoroutineScope()
     Column() {
-        TextField(value = character?.value?.name ?: "", onValueChange = {  viewModel.setName(it) })
+        TextField(
+            value = viewModel.character?.observeAsState()?.value?.name ?: "",
+            onValueChange = {
+                scope.launch(Dispatchers.IO) {
+                    viewModel.setName(it)
+                }
+            }
+        )
 
     }
 }

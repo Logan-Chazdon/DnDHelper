@@ -65,13 +65,13 @@ public class FeatOrAbsViewModel @Inject constructor(
 
 
 
-    val character: LiveData<Character>? = null
+    var character: LiveData<Character>? = null
 
     init {
         id = savedStateHandle.get<String>("characterId")!!.toInt()
 
         viewModelScope.launch {
-            val character = repository.getLiveCharacterById(id)
+            character = repository.getLiveCharacterById(id)
             feats = repository.getFeats()
 
             featNames.addSource(feats!!) {
@@ -103,7 +103,7 @@ public class FeatOrAbsViewModel @Inject constructor(
                 }
             }
 
-            generatedHp.addSource(character) {
+            generatedHp.addSource(character!!) {
                 if(it != null) {
                     generatedHp.value = it.generateMaxHp()
                 }

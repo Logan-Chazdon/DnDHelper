@@ -23,13 +23,24 @@ data class Character(
 
     var baseStats = mutableMapOf<String, Int>()
     var abilityScoreIncreases: MutableMap<String, Int> = mutableMapOf(
-        "Strength" to 0,
-        "Dexterity" to 0,
-        "Constitution" to 0,
-        "Intelligence" to 0,
-        "Wisdom" to 0,
-        "Charisma" to 0
+        "Str" to 0,
+        "Dex" to 0,
+        "Con" to 0,
+        "Int" to 0,
+        "Wis" to 0,
+        "Cha" to 0
     )
+    private val realStats : MutableMap<String, Int>
+    get() {
+        val stats = baseStats.toMutableMap()
+
+        for(item in abilityScoreIncreases.entries) {
+            stats[item.key] = stats[item.key]?.plus(item.value) ?: 0
+        }
+        //TODO all all other bonuses
+
+        return stats
+    }
 
 
     var currentHp: Int = 0
@@ -103,11 +114,11 @@ data class Character(
     var feats = mutableListOf<Feat>()
 
     fun getStats(): MutableMap<String, Int> {
-        return baseStats  //TODO add bonuses and such
+        return realStats
     }
 
     fun getStat(name: String): Int? {
-        return baseStats[name] //TODO add bonuses and such
+        return realStats[name]
     }
 
     fun getStatMod(name: String): Int {

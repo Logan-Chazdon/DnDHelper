@@ -23,7 +23,7 @@ public class FeatOrAbsViewModel @Inject constructor(
                 newChar?.feats?.addAll(featDropDownStates[i].getSelected(feats?.value!!) as List<Feat>)
             } else {
                 newChar?.addAbilityScoreIncreases(
-                    (absDropDownStates[i].getSelected(abilityNames) as List<Pair<String, Int>>)
+                    (absDropDownStates[i].getSelected(shortAbilityNames) as List<Pair<String, Int>>)
                         .associateBy(
                             {it.first}, {it.second}
                         )
@@ -35,6 +35,15 @@ public class FeatOrAbsViewModel @Inject constructor(
     }
 
     val generatedHp: MediatorLiveData<Int> = MediatorLiveData()
+
+    private val shortAbilityNames  = mutableListOf(
+        "Str",
+        "Dex",
+        "Con",
+        "Int",
+        "Wis",
+        "Cha"
+    )
 
     val abilityNames = mutableListOf(
         "Strength",

@@ -55,7 +55,7 @@ public class FeatOrAbsViewModel @Inject constructor(
     )
     var feats : LiveData<List<Feat>>? = null
     val featNames: MediatorLiveData<MutableList<String>> = MediatorLiveData()
-
+    //TODO observe these.
     val isFeat = mutableStateListOf<Boolean>()
     val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
     val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()

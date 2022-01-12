@@ -1,13 +1,10 @@
 package com.example.dndhelper.ui.character
 
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -30,6 +27,7 @@ import androidx.navigation.NavController
 import com.example.dndhelper.R
 
 
+@ExperimentalFoundationApi
 @Composable
 fun AllCharactersView(
     allCharactersViewModel: AllCharactersViewModel,
@@ -97,9 +95,10 @@ fun AllCharactersView(
                 modifier = Modifier
                     .fillMaxWidth(0.95f)
                     .padding(start = 10.dp)
-                    .clickable {
-                        navController.navigate("characterView/MainView/${it.id}")
-                    },
+                    .combinedClickable (
+                        onClick = {navController.navigate("characterView/MainView/${it.id}")},
+                        onLongClick = {navController.navigate("newCharacterView/ClassView/${it.id}")}
+                    ),
                 elevation = 10.dp
             ) {
                 Column() {

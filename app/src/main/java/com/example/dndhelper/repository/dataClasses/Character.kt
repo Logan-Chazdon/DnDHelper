@@ -23,8 +23,11 @@ data class Character(
 
     var baseStats = mutableMapOf<String, Int>()
 
-    var classes = mutableListOf<Class>()
+    var currentHp: Int = 0
+    var tempHp: Int = 0
+    var maxHp: Int = 0
 
+    var classes = mutableListOf<Class>()
     val totalClassLevels: Int
     get() {
         var result = 0

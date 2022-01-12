@@ -49,7 +49,7 @@ class MultipleChoiceDropdownState()  {
         //Update the name to only show the selected options.
         var newNames = ""
         for(i in names.indices) {
-            if(selectedList[i] < 0) {
+            if(selectedList[i] > 0) {
                 newNames += names[i] + " "
             }
         }

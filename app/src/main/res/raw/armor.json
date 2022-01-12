@@ -1,7 +1,7 @@
 {
   "armor" : [
     {
-      "name" : "Leather",
+      "name" : "Leather armor",
       "desc" : "Leather",
       "cost": {
         "pp": 0,

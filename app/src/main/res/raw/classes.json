@@ -499,35 +499,16 @@
       ],
        "equipment": [
          {
-           "name": "any two simple weapons",
-           "choose": 1,
-           "from": [
-             {
-               "index": "martial_melee_weapons"
-             },
-             {
-               "name": "a greataxe"
-             }
-           ]
-         },
-         {
           "name": "any two simple weapons",
           "choose": 1,
           "from" : [
             {
-                "index": "simple_weapon"
-            },
-            {
-                "name" : "two handaxes"
-            },
-            {
-              "name" : "An explorer’s pack and four javelins",
-              "desc" : "TODO"
+                "index": "simple_weapons"
             }
           ]
-          
         }
       ],
+
       "features": [
         {
           "name": "Rage",
@@ -648,20 +629,20 @@
       ],
        "equipment": [
         {
-          "name": "(a) a diplomat’s pack or (b) an entertainer’s pack",
+          "name": "A diplomat’s pack or an entertainer’s pack",
           "choose": 1,
           "from" : [
             {
-                "name": "diplomat’s pack"
-             },
-             {
+              "name": "diplomat’s pack"
+            },
+            {
               "name": "entertainer’s pack"
-             }
-            ]
+            }
+          ]
          },
 
          {
-          "name": "(a) a rapier, (b) a longsword, or (c) any simple weapon",
+          "name": "A rapier, a longsword, or any simple weapon",
           "choose": 1,
           "from" : [
               {
@@ -669,16 +650,18 @@
                 "index": "simple_weapons"
               },
               {
-                  "name" : "longsword"
+                  "name" : "longsword",
+                  "index" : "longsword"
               },
                {
-                  "name" : "rapier"
+                  "name" : "rapier",
+                  "index" : "rapier"
               }
             ]
          },
 
          {
-          "name": "(a) a lute or (b) any other musical instrument",
+          "name": "A lute or any other musical instrument",
           "choose": 1,
 
           "from" : [
@@ -692,7 +675,12 @@
             ]
          },
          {
-          "name": "Leather armor and a dagger"
+          "name": "Leather armor",
+          "index": "Leather armor"
+         },
+         {
+           "name": "Dagger",
+           "index": "Dagger"
          }
       ],
       "features": [
@@ -815,29 +803,34 @@
       ],
        "equipment": [
          {
-           "name": "(a) a mace or (b) a warhammer (if proficient)",
+           "name": "A mace or a warhammer (if proficient)",
            "choose": 1,
            "from": [
              {
-               "name": "mace"
+               "name": "Mace",
+               "index": "Mace"
              },
              {
-               "name": "warhammer TODO"
+               "name": "Warhammer",
+               "index": "Warhammer"
              }
            ]
          },
          {
-           "name": "(a) scale mail, (b) leather armor, or (c) chain mail (if proficient)",
+           "name": "Scale mail, leather armor, or chain mail (if proficient)",
            "choose": 1,
            "from": [
              {
-               "name": "chain mail"
+               "name": "chain mail",
+               "index": "chain mail"
              },
              {
-               "name": "scale mail"
+               "name": "scale mail",
+               "index": "scale mail"
              },
              {
-               "name": "leather armor"
+               "name": "Leather armor",
+               "index": "Leather armor"
              }
            ]
          },

@@ -80,6 +80,15 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         }
     }
 
+    private fun getItemByIndex(index : String) : ItemInterface? {
+        _items.value?.forEach {
+            if(index == it.name) {
+                return it
+            }
+        }
+        return null
+    }
+
     private fun getWeaponsByIndex(index: String) : List<Weapon>? {
         return when(index) {
             "simple_weapons" -> _simpleWeapons.value

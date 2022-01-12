@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.dndhelper.repository.dataClasses.utils.getValueInCopper
 import com.example.dndhelper.repository.model.Converters
+import java.lang.StringBuilder
 
 @Entity(tableName="characters")
 @TypeConverters(Converters::class)
@@ -147,4 +148,14 @@ data class Character(
         }
     }
 
+    fun getFormattedClasses(): String {
+        var result = ""
+        for((i, item) in classes.withIndex()) {
+            result += "${item.name} ${item.level}"
+            if(i != classes.size - 1) {
+                result += ", "
+            }
+        }
+        return result
+    }
 }

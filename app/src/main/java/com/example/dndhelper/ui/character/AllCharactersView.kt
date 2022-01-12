@@ -128,6 +128,8 @@ fun AllCharactersView(
                     Row() {
                        Spacer(modifier = Modifier.width(10.dp))
                        Text(text = it.race?.name.toString(), fontSize = 16.sp)
+                       Spacer(modifier = Modifier.width(5.dp))
+                       Text(text = it.getFormattedClasses(), fontSize = 16.sp)
                     }
                 }
             }

@@ -5,7 +5,7 @@ data class Feat(
     val desc: String,
     val prerequisite: String? = null,
     val features: List<Feature>? = null,
-    val abilityBonus: AbilityBonusChoice? = null,
+    val abilityBonus: AbilityBonus? = null,
     val abilityBonusChoice: AbilityBonusChoice? = null,
     val spells: List<Spell>,
     val spellChoices: List<SpellChoice>,

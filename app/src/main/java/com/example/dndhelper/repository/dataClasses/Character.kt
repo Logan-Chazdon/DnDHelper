@@ -33,11 +33,27 @@ data class Character(
     private val realStats : MutableMap<String, Int>
     get() {
         val stats = baseStats.toMutableMap()
-
+        //Ability Score Increases
         for(item in abilityScoreIncreases.entries) {
             stats[item.key] = stats[item.key]?.plus(item.value) ?: 0
         }
-        //TODO all all other bonuses
+
+        //Feats
+        for(item in feats) {
+            if(item.abilityBonus != null) {
+                stats[item.abilityBonus.ability] = stats[item.abilityBonus.ability]?.plus(item.abilityBonus.bonus) ?: 0
+            }
+            if(item.abilityBonusChoice != null) {
+                item.abilityBonusChoice.chosen?.forEach {
+                    stats[it.ability] = stats[it.ability]?.plus(it.bonus) ?: 0
+                }
+            }
+        }
+
+        //Races
+        race?.abilityBonuses?.forEach {
+            stats[it.ability] = stats[it.ability]?.plus(it.bonus) ?: 0
+        }
 
         return stats
     }

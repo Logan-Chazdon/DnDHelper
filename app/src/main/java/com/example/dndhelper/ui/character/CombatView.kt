@@ -67,38 +67,9 @@ fun CombatView(viewModel: CombatViewModel) {
                 }
             }
 
-            //TODO move these into a separate composable
-            Card(
-                modifier = Modifier.size(100.dp),
-                elevation = 10.dp
-            ) {
-                Column() {
-                    Text("Conditions")
-                    LazyColumn(
-                        Modifier.padding(4.dp)
-                    ) {
-                        items(2) {
-                            Text("Blinded")
-                        }
-                    }
-                }
-            }
+            CombatListView(name = "Conditions", list = viewModel.character?.observeAsState()?.value?.conditions)
 
-            Card(
-                modifier = Modifier.size(100.dp),
-                elevation = 10.dp
-            ) {
-                Column() {
-                    Text("Resistances")
-                    LazyColumn(
-                        Modifier.padding(4.dp)
-                    ) {
-                        items(2) {
-                            Text("Fire")
-                        }
-                    }
-                }
-            }
+            CombatListView(name = "Resistance", list = viewModel.character?.observeAsState()?.value?.resistances)
 
         }
 

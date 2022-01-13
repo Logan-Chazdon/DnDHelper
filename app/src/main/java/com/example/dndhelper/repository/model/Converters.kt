@@ -142,6 +142,20 @@ class Converters {
     }
 
     @TypeConverter
+    fun storedStringToStringList(data: String?): List<String>? {
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun stringListToStoredString(myObjects: List<String>): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
     fun storedStringToRace(data: String?): Race? {
         if (data == null) {
             return null

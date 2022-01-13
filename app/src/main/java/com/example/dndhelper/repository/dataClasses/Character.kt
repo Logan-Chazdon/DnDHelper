@@ -71,6 +71,9 @@ data class Character(
         return newMax
     }
 
+    var conditions = mutableListOf<String>()
+    var resistances = mutableListOf<String>()
+
     var classes = mutableListOf<Class>()
     val totalClassLevels: Int
     get() {

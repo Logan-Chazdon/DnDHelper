@@ -15,14 +15,18 @@ import java.lang.StringBuilder
 data class Character(
     @ColumnInfo(name="name")
     var name: String,
-    var race: Race? = null
-){
+    var race: Race? = null,
+    var currentHp: Int = 0,
+    var tempHp: Int = 0,
+    var maxHp: Int = 0,
+    var conditions: MutableList<String> = mutableListOf<String>(),
+    var resistances: MutableList<String> = mutableListOf<String>(),
+    var classes: MutableList<Class> = mutableListOf<Class>(),
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name="id")
-    var id: Int = 0
-
-    var baseStats = mutableMapOf<String, Int>()
+    var id: Int = 0,
+    var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
     var abilityScoreIncreases: MutableMap<String, Int> = mutableMapOf(
         "Str" to 0,
         "Dex" to 0,
@@ -30,7 +34,13 @@ data class Character(
         "Int" to 0,
         "Wis" to 0,
         "Cha" to 0
-    )
+    ),
+    var background: Background? = null,
+    var backpack: Backpack = Backpack(),
+    var inspiration: Boolean = false,
+    var equiptArmor: Armor = Armor.none,
+    var feats: MutableList<Feat> = mutableListOf<Feat>()
+){
     private val realStats : MutableMap<String, Int>
     get() {
         val stats = baseStats.toMutableMap()
@@ -60,9 +70,6 @@ data class Character(
     }
 
 
-    var currentHp: Int = 0
-    var tempHp: Int = 0
-    var maxHp: Int = 0
     fun generateMaxHp(): Int {
         var newMax = 0
         for(item in classes) {
@@ -71,10 +78,6 @@ data class Character(
         return newMax
     }
 
-    var conditions = mutableListOf<String>()
-    var resistances = mutableListOf<String>()
-
-    var classes = mutableListOf<Class>()
     val totalClassLevels: Int
     get() {
         var result = 0
@@ -121,17 +124,6 @@ data class Character(
         }
     }
 
-    var background: Background? = null
-
-
-    var backpack = Backpack()
-
-    var inspiration = false
-
-
-    var equiptArmor = Armor.none
-
-    var feats = mutableListOf<Feat>()
 
     fun getStats(): MutableMap<String, Int> {
         return realStats

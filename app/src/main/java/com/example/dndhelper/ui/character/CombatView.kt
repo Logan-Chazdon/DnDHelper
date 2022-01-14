@@ -1,29 +1,18 @@
 package com.example.dndhelper.ui.character
 
-import android.preference.PreferenceActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupPositionProvider
 import com.example.dndhelper.R
-import com.example.dndhelper.repository.dataClasses.Spell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -161,6 +150,34 @@ fun CombatView(viewModel: CombatViewModel) {
 
         }
 
+        Spacer(Modifier.height(12.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(0.9f),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+
+            DeathSavesView(
+                type = "Success",
+                num = viewModel.character?.observeAsState()?.value?.positiveDeathSaves,
+                onClick = {
+                    scope.launch(Dispatchers.IO) {
+                        viewModel.updateDeathSaveSuccesses(it)
+                    }
+                }
+            )
+
+            DeathSavesView(
+                type = "Fail",
+                num = viewModel.character?.observeAsState()?.value?.negativeDeathSaves,
+                onClick = {
+                    scope.launch(Dispatchers.IO) {
+                        viewModel.updateDeathSaveFailures(it)
+                    }
+                }
+            )
+
+        }
 
 
 

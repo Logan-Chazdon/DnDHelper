@@ -52,6 +52,24 @@ public class CombatViewModel @Inject constructor(
         repository.insertCharacter(tempChar)
     }
 
+    fun updateDeathSaveSuccesses(it: Boolean) {
+        val tempChar : Character = if(it){
+            character!!.value!!.copy(positiveDeathSaves = character!!.value!!.positiveDeathSaves + 1)
+        } else {
+            character!!.value!!.copy(positiveDeathSaves = character!!.value!!.positiveDeathSaves - 1)
+        }
+        repository.insertCharacter(tempChar)
+    }
+
+    fun updateDeathSaveFailures(it: Boolean) {
+        val tempChar : Character = if(it){
+            character!!.value!!.copy(negativeDeathSaves = character!!.value!!.negativeDeathSaves + 1)
+        } else {
+            character!!.value!!.copy(negativeDeathSaves = character!!.value!!.negativeDeathSaves - 1)
+        }
+        repository.insertCharacter(tempChar)
+    }
+
     var character : LiveData<Character>? = null
 
 

@@ -6,9 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.dndhelper.repository.dataClasses.utils.getValueInCopper
 import com.example.dndhelper.repository.model.Converters
-import java.lang.StringBuilder
 
 @Entity(tableName="characters")
 @TypeConverters(Converters::class)
@@ -39,7 +37,9 @@ data class Character(
     var backpack: Backpack = Backpack(),
     var inspiration: Boolean = false,
     var equiptArmor: Armor = Armor.none,
-    var feats: MutableList<Feat> = mutableListOf<Feat>()
+    var feats: MutableList<Feat> = mutableListOf<Feat>(),
+    var positiveDeathSaves: Int = 0,
+    var negativeDeathSaves: Int = 0,
 ){
     private val realStats : MutableMap<String, Int>
     get() {

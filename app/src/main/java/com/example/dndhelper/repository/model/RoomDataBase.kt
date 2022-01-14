@@ -5,12 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.dndhelper.repository.dataClasses.Class
 import com.example.dndhelper.repository.dataClasses.Character
+import com.example.dndhelper.repository.dataClasses.Class
 import com.example.dndhelper.repository.dataClasses.Race
 
 
-@Database(entities = [(Character::class), (Class::class), (Race::class)], version = 26)
+@Database(entities = [(Character::class), (Class::class), (Race::class)], version = 27)
 @TypeConverters(Converters::class)
 abstract class RoomDataBase: RoomDatabase() {
     abstract fun databaseDao(): DatabaseDao

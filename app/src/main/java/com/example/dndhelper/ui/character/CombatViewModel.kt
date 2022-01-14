@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.Character
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -36,9 +36,15 @@ public class CombatViewModel @Inject constructor(
     }
 
     fun damage(temp: String) {
-
-        var currentHp = 0
+        var currentHp = character!!.value!!.currentHp
         var tempHp = 0
+        if(character!!.value!!.tempHp < temp.toInt()) {
+            val amountRemoved = character!!.value!!.tempHp
+            currentHp -= temp.toInt() - amountRemoved
+
+        } else {
+            tempHp = character!!.value!!.tempHp - temp.toInt()
+        }
 
         val tempChar = character!!.value!!.copy(currentHp = currentHp, tempHp = tempHp)
         tempChar.id = character!!.value!!.id

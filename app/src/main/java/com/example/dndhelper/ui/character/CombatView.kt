@@ -110,7 +110,7 @@ fun CombatView(viewModel: CombatViewModel) {
             }
         )
 
-        Spacer(Modifier.height(5.dp))
+        Spacer(Modifier.height(12.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),

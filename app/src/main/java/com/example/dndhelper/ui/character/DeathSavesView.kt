@@ -34,7 +34,7 @@ fun DeathSavesView(
                             shape = CircleShape,
                             color = Color.White
                         ),
-                        checked = (i <= num ?: 0),
+                        checked = (i < num ?: 0),
                         onCheckedChange = onClick
                     )
                     if (i != 2)

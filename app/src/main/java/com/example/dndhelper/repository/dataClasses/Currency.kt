@@ -1,16 +1,15 @@
 package com.example.dndhelper.repository.dataClasses
 
-import androidx.compose.runtime.Composable
 import kotlin.math.ceil
 
 
 data class Currency(
     var amount: Int,
     override val name: String?,
-    override val weight: Int? = 0
+    override val weight: Int? = 0,
 ) : ItemInterface {
-   override val type = "Currency"
-
+    override val type = "Currency"
+    override val charges: Resource? = null
     override val index: String? = null
     override val desc: String? = null
     override val itemRarity: String? = null

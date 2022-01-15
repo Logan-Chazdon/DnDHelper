@@ -8,4 +8,5 @@ interface ItemInterface {
     val itemRarity : String?
     val cost : Map<String, Currency>?
     val weight : Int?
+    val charges: Resource?
 }

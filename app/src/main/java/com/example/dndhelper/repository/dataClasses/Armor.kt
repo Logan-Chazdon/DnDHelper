@@ -1,8 +1,5 @@
 package com.example.dndhelper.repository.dataClasses
 
-import com.google.gson.annotations.JsonAdapter
-import com.google.gson.annotations.SerializedName
-
 data class Armor(
     override val name : String? = null,
     override val index: String? = null,
@@ -12,7 +9,8 @@ data class Armor(
     override val weight : Int? = null,
     val baseAc : Int,
     val dexCap: Int,
-    val stealth: String
+    val stealth: String,
+    override val charges: Resource? = null
 ) : ItemInterface {
     override val type = "Armor"
 

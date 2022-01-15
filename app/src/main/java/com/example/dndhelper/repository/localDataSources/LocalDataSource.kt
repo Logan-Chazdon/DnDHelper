@@ -6,13 +6,12 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.AppModule
+import com.example.dndhelper.R
 import com.example.dndhelper.repository.dataClasses.*
 import dagger.Component
 import org.json.JSONArray
-import org.json.JSONObject
-import com.example.dndhelper.R
 import org.json.JSONException
-
+import org.json.JSONObject
 
 
 @Component(modules = [AppModule::class])
@@ -756,6 +755,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val proficiencies = mutableListOf<Proficiency>()
             val equipmentChoices: MutableList<ItemChoice> = mutableListOf()
             val equipment: MutableList<ItemInterface> = mutableListOf()
+            val spellCasting = classJson.getDouble("spell_casting")
             extractEquipmentChoices(
                 classJson.getJSONArray("equipment"),
                 equipmentChoices,
@@ -778,7 +778,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                      proficiencyChoices = proficiencyChoices,
                      proficiencies = proficiencies,
                      equipmentChoices = equipmentChoices,
-                     equipment = equipment
+                     equipment = equipment,
+                     spellCasting = spellCasting
                  )
              )
         }

@@ -10,7 +10,7 @@ import com.example.dndhelper.repository.dataClasses.Class
 import com.example.dndhelper.repository.dataClasses.Race
 
 
-@Database(entities = [(Character::class), (Class::class), (Race::class)], version = 27)
+@Database(entities = [(Character::class), (Class::class), (Race::class)], version = 28)
 @TypeConverters(Converters::class)
 abstract class RoomDataBase: RoomDatabase() {
     abstract fun databaseDao(): DatabaseDao

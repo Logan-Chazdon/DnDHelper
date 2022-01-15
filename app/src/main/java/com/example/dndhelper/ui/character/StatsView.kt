@@ -7,19 +7,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import com.example.dndhelper.ui.utils.*
+import com.example.dndhelper.ui.utils.Dimensions
+import com.example.dndhelper.ui.utils.MediaQuery
+import com.example.dndhelper.ui.utils.greaterThan
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -68,7 +67,7 @@ fun StatsView(viewModel: StatsViewModel) {
                     .background(
                         color = Color.White
                     )
-                    .clickable  {
+                    .clickable {
                         GlobalScope.launch {
                             viewModel.toggleInspiration()
                         }
@@ -79,13 +78,9 @@ fun StatsView(viewModel: StatsViewModel) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    var inspired by remember { mutableStateOf(character?.value?.inspiration ?: true) }
-                    viewModel.character?.observeForever {
-                        inspired = it.inspiration
-                    }
                     Text("Inspiration", Modifier.padding(5.dp))
                     Checkbox(
-                        checked = inspired,
+                        checked = viewModel.character?.observeAsState()?.value?.inspiration ?: false,
                         onCheckedChange = null,
                         Modifier.size(30.dp)
                     )

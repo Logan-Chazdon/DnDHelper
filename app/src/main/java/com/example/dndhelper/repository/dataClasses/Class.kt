@@ -25,4 +25,10 @@ class Class(
 ) {
     var isBaseClass: Boolean = false
     var level: Int = 1
+
+    fun longRest() {
+        levelPath.forEach{
+            it.recharge(level)
+        }
+    }
 }

@@ -8,4 +8,12 @@ data class Feature(
     val options: MutableList<Feature>?
 ) {
     var chosen : List<Feature>? = null
+    var resource: Resource? = null
+
+    fun recharge(basis: Int) {
+        resource?.recharge(basis)
+        chosen?.forEach {
+            it.resource?.recharge(basis)
+        }
+    }
 }

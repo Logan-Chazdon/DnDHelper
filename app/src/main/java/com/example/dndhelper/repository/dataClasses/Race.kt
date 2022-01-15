@@ -25,4 +25,10 @@ data class Race (
     val languageDesc: String,
     val traits: List<Feature>,
     val subraces: List<Subrace>,
-)
+) {
+    fun longRest() {
+        traits.forEach {
+            it.recharge(1)
+        }
+    }
+}

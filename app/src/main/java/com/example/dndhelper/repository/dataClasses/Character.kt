@@ -153,4 +153,20 @@ data class Character(
         }
         return result
     }
+
+    fun longRest() {
+        //Classes
+        classes.forEach {
+            it.longRest()
+        }
+
+        //Race
+        race?.longRest()
+
+        //Items
+
+        //Hp
+        tempHp = 0
+        currentHp = maxHp
+    }
 }

@@ -7,6 +7,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.dndhelper.repository.model.Converters
+import kotlin.math.floor
 
 @Entity(tableName="characters")
 @TypeConverters(Converters::class)
@@ -172,5 +173,14 @@ data class Character(
         //Hp
         tempHp = 0
         currentHp = maxHp
+    }
+
+    val totalCasterLevels : Int
+    get() {
+        var result = 0
+        classes.forEach{
+            result += floor(it.level.toDouble() * it.spellCasting).toInt()
+        }
+        return result
     }
 }

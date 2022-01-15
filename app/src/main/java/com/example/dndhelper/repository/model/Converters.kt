@@ -2,11 +2,11 @@ package com.example.dndhelper.repository.model
 
 import androidx.room.TypeConverter
 import com.example.dndhelper.repository.dataClasses.*
+import com.example.dndhelper.repository.dataClasses.Currency
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
-import com.example.dndhelper.repository.dataClasses.Currency
 
 class Converters {
     var gson = Gson()
@@ -166,6 +166,20 @@ class Converters {
 
     @TypeConverter
     fun raceToStoredString(myObjects: Race?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToResource(data: String?): Resource? {
+        if(data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<Resource?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun resourceToStoredString(myObjects: Resource?): String? {
         return gson.toJson(myObjects)
     }
 

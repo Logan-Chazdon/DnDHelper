@@ -153,6 +153,35 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         }
     }
 
+    private fun extractResource(rootJson: JSONObject) : Resource {
+        val recharge : (() -> Int)? = when(rootJson.getString("recharge")) {
+            "full" -> {
+                null
+            }
+            else -> {
+                null
+            }
+        }
+
+        val amountJson = rootJson.getJSONObject("maxAmount")
+        val maxAmt : (Int) -> Int = when(amountJson.getString("type")) {
+            "1:1" -> {
+                fun(it: Int): Int {
+                   return it
+                }
+            }
+            else -> {
+                throw IllegalStateException("Invalid max amount type")
+            }
+        }
+
+
+        return Resource(
+            name = rootJson.getString("name"),
+            rechargeAmount = recharge,
+            maxAmount = maxAmt
+        )
+    }
 
     private fun generateFeats() {
         val dataAsString = context.resources.openRawResource(R.raw.feats).bufferedReader().readText()

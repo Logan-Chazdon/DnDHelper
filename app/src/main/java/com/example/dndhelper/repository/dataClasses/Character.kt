@@ -73,7 +73,11 @@ data class Character(
     fun generateMaxHp(): Int {
         var newMax = 0
         for(item in classes) {
-            newMax += (((item.hitDie / 2) + 1) + getStatMod("Con")) * item.level
+            newMax += if(item.isBaseClass) {
+                ((((item.hitDie / 2) + 1) + getStatMod("Con")) * (item.level -1)) + 8 + getStatMod("Con")
+            } else {
+                (((item.hitDie / 2) + 1) + getStatMod("Con")) * item.level
+            }
         }
         return newMax
     }

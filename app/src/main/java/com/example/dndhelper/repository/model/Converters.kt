@@ -170,16 +170,16 @@ class Converters {
     }
 
     @TypeConverter
-    fun storedStringToResource(data: String?): Resource? {
+    fun storedStringToResourceList(data: String?): List<Resource>? {
         if(data == null) {
             return null
         }
-        val listType: Type = object : TypeToken<Resource?>() {}.type
+        val listType: Type = object : TypeToken<List<Resource>?>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun resourceToStoredString(myObjects: Resource?): String? {
+    fun resourceListToStoredString(myObjects: List<Resource>?): String? {
         return gson.toJson(myObjects)
     }
 

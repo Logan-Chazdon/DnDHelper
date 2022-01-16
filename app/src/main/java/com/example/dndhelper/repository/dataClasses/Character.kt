@@ -41,6 +41,7 @@ data class Character(
     var feats: MutableList<Feat> = mutableListOf<Feat>(),
     var positiveDeathSaves: Int = 0,
     var negativeDeathSaves: Int = 0,
+    var spellSlots: List<Resource> = listOf()
 ){
     private val realStats : MutableMap<String, Int>
     get() {
@@ -107,6 +108,17 @@ data class Character(
             }
         }
         classes.add(newClass)
+
+
+        spellSlots = when(totalCasterLevels) {
+            1 -> {
+                listOf(Resource(name = "1st", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"))
+            }
+            else -> {
+                listOf()
+            }
+
+        }
     }
 
 

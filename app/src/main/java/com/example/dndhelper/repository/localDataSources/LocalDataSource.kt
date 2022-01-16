@@ -791,7 +791,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                      proficiencies = proficiencies,
                      equipmentChoices = equipmentChoices,
                      equipment = equipment,
-                     spellCasting = spellCasting
+                     spellCasting = spellCasting,
+                     subclassLevel = classJson.getInt("subclass_level")
                  )
              )
         }

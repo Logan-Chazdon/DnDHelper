@@ -16,6 +16,7 @@ class Class(
     var name: String,
     var hitDie: Int = 8,
     var subClasses: List<Subclass> = emptyList(),
+    var subclassLevel: Int,
     var levelPath: MutableList<Feature> = mutableListOf<Feature>(),
     var proficiencyChoices: List<ProficiencyChoice> = emptyList(),
     var proficiencies: List<Proficiency> = emptyList(),

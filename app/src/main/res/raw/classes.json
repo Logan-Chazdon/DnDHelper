@@ -4,6 +4,7 @@
       "name": "Artificer",
       "spell_casting" : 0.5,
       "hit_die": 8,
+        "subclass_level" : 3,
       "proficiency_choices": [
         {
           "name" : "Choose two from Arcana, History, Investigation, Medicine, Nature, Perception, Sleight of Hand",
@@ -457,6 +458,7 @@
     {
       "name": "Barbarian",
       "spell_casting" : 0.0,
+        "subclass_level" : 3,
       "hit_die": 12,
       "proficiency_choices": [
         {
@@ -593,6 +595,7 @@
       "name": "Bard",
       "spell_casting" : 1.0,
       "hit_die": 8,
+      "subclass_level" : 3,
       "proficiency_choices": [
         {
           "name": "Choose any three skill proficiencies.",
@@ -759,6 +762,7 @@
     },
     {
       "name": "Cleric",
+      "subclass_level" : 1,
       "spell_casting" : 1.0,
       "hit_die": 8,
       "proficiency_choices": [

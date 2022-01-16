@@ -1,34 +1,6 @@
 {
   "weapons" : [
     {
-      "name": "short sword",
-      "desc" : "short sword",
-      "damage": "1d6",
-      "range": "5 ft",
-      "damage_type": "Piercing",
-      "item_rarity": "Standard",
-
-      "cost": {
-        "pp": 0,
-        "gp": 10,
-        "ep": 0,
-        "sp": 0,
-        "cp": 0
-      },
-
-      "properties": [
-        {
-          "name": "Finesse",
-          "desc": "Finesse Desc"
-        },
-        {
-          "name": "Light",
-          "desc": "A light weapon is small and easy to handle, making it ideal for use when fighting with two weapons."
-        }
-      ]
-
-    },
-    {
       "name": "Battleaxe",
       "desc" : "Proficiency with a battleaxe allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\n",
       "damage": "1d8",

@@ -1,8 +1,14 @@
 {
   "spells" : [
     {
-      "name": "Eldritch blast",
+      "name": "Acid Splash",
       "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 60,
+      "school" : "Necro",
+      "desc" : "nyeeeh",
+      "area" : "Single Target",
+
 
       "components" : [
         {
@@ -14,11 +20,6 @@
 
       ],
 
-      "school" : "Necro",
-      "desc" : "nyeeeh",
-      "range" : 60,
-      "area" : "Single Target",
-      "casting_time" : "1 Action",
 
       "duration" : "Instantaneous",
 

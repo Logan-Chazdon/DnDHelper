@@ -780,6 +780,18 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 )
             } catch (e: JSONException) {}
 
+            val subclassesJson = classJson.getJSONArray("subclasses")
+            for(subclassIndex in 0 until subclassesJson.length()) {
+                val subclassJson = subclassesJson.getJSONObject(subclassIndex)
+                subClasses.add(
+                    Subclass(
+                        name = subclassJson.getString("name"),
+                        features = extractFeatures(subclassJson.getJSONArray("features")),
+                        spells = listOf() //TODO fill out this list
+                    )
+                )
+            }
+
 
              classes.add(
                  Class(

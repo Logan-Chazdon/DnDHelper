@@ -185,7 +185,30 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                 }
             }
 
-
+            //Subclass
+            if(
+                viewModel.classes.observeAsState().value?.get(classIndex)?.subclassLevel ?: 21
+                <= try { levels.value.text.toInt() } catch(e: NumberFormatException) { 0 }
+            ) {
+                Card(
+                    elevation = 5.dp,
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                ) {
+                    Column {
+                        Text(text = "Subclass", fontSize = 18.sp)
+                        MultipleChoiceDropdownView(
+                            state = viewModel.getSubclassDropdownState(
+                                viewModel.classes.observeAsState().value?.get(
+                                    classIndex
+                                )!!
+                            )
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
 
             //ASIs
             for(

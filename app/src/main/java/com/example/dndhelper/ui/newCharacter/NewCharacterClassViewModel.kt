@@ -132,5 +132,23 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
     }
 
+    private var subclassDropdownState: MultipleChoiceDropdownState? = null
+    fun getSubclassDropdownState(it: Class): MultipleChoiceDropdownState {
+        return if(subclassDropdownState == null) {
+            subclassDropdownState = MultipleChoiceDropdownState()
+            subclassDropdownState!!.maxSelections = 1
+            subclassDropdownState!!.choiceName = "Subclass"
+            val names = mutableListOf<String>()
+            it.subClasses.forEach {
+                names.add(it.name)
+            }
+            subclassDropdownState!!.names = names
+            subclassDropdownState!!.maxSameSelections = 1
+            subclassDropdownState!!
+        } else {
+            subclassDropdownState!!
+        }
+    }
+
 }
 

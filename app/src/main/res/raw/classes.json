@@ -584,7 +584,8 @@
           "desc": "At 20th level, you embody the power of the wilds. Your Strength and Constitution scores increase by 4. Your maximum for those scores is now 24.",
           "level": 20
         }
-      ]
+      ],
+        "subclasses": [ ]
     },
  {
       "name": "Bard",
@@ -740,7 +741,8 @@
           "desc": "At 20th level, when you roll initiative and have no uses of Bardic Inspiration left, you regain one use.",
           "level": 20
         }
-      ]
+      ],
+     "subclasses": [ ]
     },
     {
       "name": "Cleric",
@@ -848,7 +850,8 @@
 
       "features": [
 
-      ]
+      ],
+        "subclasses": [ ]
     }
   ]
 }

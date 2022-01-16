@@ -13,16 +13,16 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.dndhelper.ui.character.AllCharactersView
 import com.example.dndhelper.ui.navigation.NavItem
 import com.example.dndhelper.ui.navigation.Navigation
 import com.example.dndhelper.ui.navigation.bottomNavBar.BottomNavigationBar
 import com.example.dndhelper.ui.navigation.sideDrawer.SideNavDrawer
 
+@ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -87,13 +87,7 @@ fun RootView() {
                                 route = "$route/StatsView/$id",
                                 baseRoute = "$route/StatsView",
                                 icon = Icons.Default.Home
-                            ),
-                            NavItem(
-                                name = "Feat or ABS",
-                                route = "$route/FeatOrAbsView/$id",
-                                baseRoute = "$route/FeatOrAbsView",
-                                icon = Icons.Default.Home
-                            ),
+                            )
                         ),
                         navController = navController,
                         onItemClick = {

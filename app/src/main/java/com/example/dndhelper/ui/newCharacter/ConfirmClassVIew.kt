@@ -7,13 +7,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,10 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.dndhelper.repository.dataClasses.Proficiency
-import java.lang.Exception
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -192,8 +187,72 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
 
 
 
+            //ASIs
+            for(
+                it in 0 until try {viewModel.getAsiNum(levels.value.text.toInt())}
+                    catch(e: NumberFormatException) { 0 }
+            ) {
+                var expanded by remember { mutableStateOf(false) }
+                Card(
+                    elevation = 5.dp,
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                ) {
+                    Column {
+                        Text(
+                            text = "Feat or Ability score increase",
+                            modifier = Modifier.clickable { expanded = !expanded },
+                            fontSize = 18.sp
+                        )
+
+                        //Fill out the list
+                        try {
+                            viewModel.isFeat[it]
+                        } catch (e: IndexOutOfBoundsException) {
+                            viewModel.isFeat.add(it, false)
+                        }
+
+                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                            DropdownMenuItem(onClick = { viewModel.isFeat[it] = true }) {
+                                Text(text = "Feat", fontSize = 18.sp)
+                            }
+                            DropdownMenuItem(onClick = { viewModel.isFeat[it] = false }) {
+                                Text(text = "Ability Score Increase", fontSize = 18.sp)
+                            }
+                        }
 
 
+                        if (viewModel.isFeat[it]) {
+                            viewModel.featNames.observeAsState().value?.let { featNames ->
+                                viewModel.featDropDownStates
+                                    .getDropDownState(
+                                        key = it,
+                                        maxSelections = 1,
+                                        names = featNames,
+                                        choiceName = "Feat"
+                                    )
+                            }?.let { state ->
+                                MultipleChoiceDropdownView(
+                                    state = state
+                                )
+                            }
+                        } else {
+                            MultipleChoiceDropdownView(
+                                state = viewModel.absDropDownStates
+                                    .getDropDownState(
+                                        key = it,
+                                        maxSelections = 2,
+                                        names = viewModel.abilityNames,
+                                        choiceName = "Ability Score Improvement",
+                                        maxOfSameSelection = 2
+                                    )
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+            }
 
 
             val levelPath = viewModel.classes.observeAsState().value?.get(classIndex)?.levelPath

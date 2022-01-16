@@ -1,22 +1,18 @@
 package com.example.dndhelper.ui.newCharacter
 
 import android.app.Application
-import androidx.compose.runtime.*
-import androidx.hilt.work.HiltWorker
-import androidx.lifecycle.*
-import androidx.test.espresso.intent.Intents.init
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.lang.IndexOutOfBoundsException
-import java.util.*
 import javax.inject.Inject
-import com.example.dndhelper.ui.newCharacter.utils.indexOf
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.internal.lifecycle.HiltViewModelMap
-import kotlin.math.max
 
 @HiltViewModel
 public class NewCharacterClassViewModel @Inject constructor(
@@ -28,13 +24,48 @@ public class NewCharacterClassViewModel @Inject constructor(
     var isBaseClass =  mutableStateOf(true)
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
 
+    //ASIs
+    private val shortAbilityNames  = mutableListOf(
+        "Str",
+        "Dex",
+        "Con",
+        "Int",
+        "Wis",
+        "Cha"
+    )
+
+    val abilityNames = mutableListOf(
+        "Strength",
+        "Dexterity",
+        "Constitution",
+        "Intelligence",
+        "Wisdom",
+        "Charisma"
+    )
+    var feats : LiveData<List<Feat>>? = null
+    val featNames: MediatorLiveData<MutableList<String>> = MediatorLiveData()
+    val isFeat = mutableStateListOf<Boolean>()
+    val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
+    val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
+
 
     init {
         viewModelScope.launch {
             classes = repository.getClasses()
+            feats = repository.getFeats()
+
+            featNames.addSource(feats!!) {
+                val names = mutableListOf<String>()
+                for(item in it) {
+                    names.add(item.name)
+                }
+                featNames.value = names
+            }
         }
 
     }
+
+
 
 
     suspend fun addClassLevels(newClass: Class, level: Int) {
@@ -60,8 +91,45 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
 
 
+
+        for((i, item) in isFeat.withIndex()) {
+            if(item) {
+                character!!.feats.addAll(featDropDownStates[i].getSelected(feats?.value!!) as List<Feat>)
+            } else {
+                character!!.addAbilityScoreIncreases(
+                    (absDropDownStates[i].getSelected(shortAbilityNames) as List<Pair<String, Int>>)
+                        .associateBy(
+                            {it.first}, {it.second}
+                        )
+                )
+            }
+        }
+
+        character!!.let { repository.insertCharacter(it) }
+
         character!!.addClass(newClass)
         repository.insertCharacter(character)
+    }
+
+    fun getAsiNum(levels: Int): Int {
+        return when(levels) {
+            in 0..3 -> {
+                0
+            }
+            in 4..7 -> {
+                1
+            }
+            in 8..11 -> {
+                2
+            }
+            in  12..15 -> {
+                3
+            }
+            in  16..18 -> {
+                4
+            }
+            else -> 0
+        }
     }
 
 }

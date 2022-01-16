@@ -3,6 +3,7 @@ package com.example.dndhelper.ui.navigation
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -11,6 +12,7 @@ import com.example.dndhelper.ui.character.*
 import com.example.dndhelper.ui.newCharacter.*
 
 
+@ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
@@ -119,10 +121,6 @@ fun Navigation(navController: NavHostController) {
                 val viewModel = hiltViewModel<NewCharacterStatsViewModel>()
                 StatsView(viewModel, characterId)
             }
-        }
-
-        composable("newCharacterView/FeatOrAbsView/{characterId}") {
-            FeatOrAbsView(hiltViewModel(), navController)
         }
     }
 }

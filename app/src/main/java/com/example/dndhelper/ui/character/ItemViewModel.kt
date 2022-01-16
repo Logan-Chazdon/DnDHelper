@@ -1,16 +1,15 @@
 package com.example.dndhelper.ui.character
 
 import android.app.Application
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.dataClasses.*
+import com.example.dndhelper.repository.dataClasses.Armor
+import com.example.dndhelper.repository.dataClasses.Character
+import com.example.dndhelper.repository.dataClasses.ItemInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -68,9 +67,14 @@ public class ItemViewModel @Inject constructor(
         }
     }
 
-    suspend fun equip(armor: Armor) {
-        character?.value?.equiptArmor = armor
-        repository.insertCharacter(character?.value!!)
+    suspend fun equip(armor: Armor) : Boolean {
+        return if(character?.value?.getStat("Str") ?: 0 >= armor.strengthPrerequisite ?: 0) {
+            character?.value?.equiptArmor = armor
+            repository.insertCharacter(character?.value!!)
+            true
+        } else {
+            false
+        }
     }
 
     suspend fun deleteItemAt(itemToDeleteIndex: Int) {

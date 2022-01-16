@@ -1,16 +1,96 @@
 {
   "weapons" : [
     {
-      "name": "short sword",
-      "desc" : "short sword",
-      "damage": "1d6",
-      "range": "5 ft",
-      "damage_type": "Piercing",
+      "name": "Boomerang",
+      "desc": "TODO",
+      "damage": "1d4 ",
+      "range": "60/120",
+      "damage_type": "bludgeoning",
       "item_rarity": "Standard",
 
       "cost": {
         "pp": 0,
-        "gp": 10,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+
+      ]
+
+    },
+    {
+      "name": "Club",
+      "desc": "TODO",
+      "damage": "1d4  ",
+      "range": "5ft",
+      "damage_type": "bludgeoning",
+      "item_rarity": "Standard",
+      "weight": "2 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 1,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Light",
+          "desc": "A light weapon is small and easy to handle, making it ideal for use when fighting with two weapons."
+        }
+      ]
+
+    },
+    {
+      "name": "Crossbow, Light",
+      "desc": "TODO",
+      "damage": "1d8",
+      "range": "80/320ft",
+      "damage_type": "piercing",
+      "item_rarity": "Standard",
+      "weight": "5  lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 25 ,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Ammunition",
+          "desc":"You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. Each time you attack with the weapon, you expend one piece of ammunition. Drawing the ammunition from a quiver, case, or other container is part of the attack (you need a free hand to load a one-handed weapon). At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield."
+        },
+        {
+          "name": "Loading",
+          "desc":"This weapon requires two hands when you attack with it. "
+        },
+        {
+          "name": "Two-Handed.",
+          "desc":"Because of the time required to load this weapon, you can fire only one piece of ammunition from it when you use an action, bonus action, or reaction to fire it, regardless of the number of attacks you can normally make."
+        }
+      ]
+
+    },
+    {
+      "name": "Dagger ",
+      "desc": "TODO",
+      "damage": "1d4",
+      "range": "20/60ft",
+      "damage_type": "piercing",
+      "item_rarity": "Standard",
+      "weight": "1 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 2,
         "ep": 0,
         "sp": 0,
         "cp": 0
@@ -19,12 +99,175 @@
       "properties": [
         {
           "name": "Finesse",
-          "desc": "Finesse Desc"
+          "desc":"When making an attack with a finesse weapon, you use your choice of your Strength or Dexterity modifier for the attack and damage rolls. You must use the same modifier for both rolls."
         },
         {
           "name": "Light",
-          "desc": "Light Desc"
+          "desc":"A light weapon is small and easy to handle, making it ideal for use when fighting with two weapons"
+        },
+        {
+          "name": "Thrown",
+          "desc":"If a weapon has the thrown property, you can throw the weapon to make a ranged attack. If the weapon is a melee weapon, you use the same ability modifier for that attack roll and damage roll that you would use for a melee attack with the weapon. For example, if you throw a handaxe, you use your Strength, but if you throw a dagger, you can use either your Strength or your Dexterity, since the dagger has the finesse property."
         }
+      ]
+
+    },
+    {
+      "name": "Dart",
+      "desc": "TODO",
+      "damage": "1d4",
+      "range": "20/60ft",
+      "damage_type": "piercing",
+      "item_rarity": "Standard",
+      "weight": "1/4 lb",
+
+      "cost": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 5
+      },
+
+      "properties": [
+        {
+          "name": "Finesse",
+          "desc":"When making an attack with a finesse weapon, you use your choice of your Strength or Dexterity modifier for the attack and damage rolls. You must use the same modifier for both rolls."
+        },
+        {
+          "name": "Thrown",
+          "desc":"If a weapon has the thrown property, you can throw the weapon to make a ranged attack. If the weapon is a melee weapon, you use the same ability modifier for that attack roll and damage roll that you would use for a melee attack with the weapon. For example, if you throw a handaxe, you use your Strength, but if you throw a dagger, you can use either your Strength or your Dexterity, since the dagger has the finesse property."
+        }
+      ]
+
+    },
+    {
+      "name": "Greatclub",
+      "desc": "TODO",
+      "damage": "1d8 ",
+      "range": "5ft",
+      "damage_type": "bludgeoning",
+      "item_rarity": "Standard",
+      "weight": "10 lb",
+
+      "cost": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 5
+      },
+
+      "properties": [
+        {
+          "name": "Two-Handed.",
+          "desc":"This weapon requires two hands when you attack with it."
+        }
+      ]
+
+    },
+    {
+      "name": "Handaxe",
+      "desc": "TODO",
+      "damage": "1d6",
+      "range": "20/60ft",
+      "damage_type": "slashing",
+      "item_rarity": "Standard",
+      "weight": "2 lb",
+
+      "cost": {
+        "pp": 0,
+        "gp": 5,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Light",
+          "desc":"A light weapon is small and easy to handle, making it ideal for use when fighting with two weapons."
+        },
+        {
+          "name": "Thrown",
+          "desc":"If a weapon has the thrown property, you can throw the weapon to make a ranged attack. If the weapon is a melee weapon, you use the same ability modifier for that attack roll and damage roll that you would use for a melee attack with the weapon. For example, if you throw a handaxe, you use your Strength, but if you throw a dagger, you can use either your Strength or your Dexterity, since the dagger has the finesse property."
+        }
+      ]
+
+    },
+    {
+      "name": "Javelin",
+      "desc": "TODO",
+      "damage": "1d6",
+      "range": "30/120ft",
+      "damage_type": "piercing",
+      "item_rarity": "Standard",
+      "weight": "2 lb",
+
+      "cost": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 5,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Thrown",
+          "desc":"If a weapon has the thrown property, you can throw the weapon to make a ranged attack. If the weapon is a melee weapon, you use the same ability modifier for that attack roll and damage roll that you would use for a melee attack with the weapon. For example, if you throw a handaxe, you use your Strength, but if you throw a dagger, you can use either your Strength or your Dexterity, since the dagger has the finesse property."
+        }
+      ]
+
+    },
+    {
+      "name": "Light Hammer",
+      "desc": "TODO",
+      "damage": "1d4 ",
+      "range": "20/60ft",
+      "damage_type": "bludgeoning",
+      "item_rarity": "Standard",
+      "weight": "2 lb",
+
+      "cost": {
+        "pp": 0,
+        "gp": 2,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Thrown",
+          "desc":"If a weapon has the thrown property, you can throw the weapon to make a ranged attack. If the weapon is a melee weapon, you use the same ability modifier for that attack roll and damage roll that you would use for a melee attack with the weapon. For example, if you throw a handaxe, you use your Strength, but if you throw a dagger, you can use either your Strength or your Dexterity, since the dagger has the finesse property."
+        },
+        {
+          "name": "Light",
+          "desc":"A light weapon is small and easy to handle, making it ideal for use when fighting with two weapons."
+        }
+      ]
+
+    },
+    {
+      "name": "Mace",
+      "desc": "TODO",
+      "damage": "1d6  ",
+      "range": "5ft",
+      "damage_type": "bludgeoning",
+      "item_rarity": "Standard",
+      "weight": "2 lb",
+
+      "cost": {
+        "pp": 0,
+        "gp": 5,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+
       ]
 
     }

@@ -117,7 +117,7 @@
     },
     {
       "name": "Crossbow, Heavy",
-      "desc" : "short sword",
+      "desc" : "Proficiency with a heavy crossbow allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\n",
       "damage": "1d10",
       "range": "100/400 ft",
       "damage_type": "Piercing",
@@ -207,7 +207,7 @@
     },
     {
       "name": "Glaive",
-      "desc" : "short sword",
+      "desc" : "Proficiency with a glaive allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\n",
       "damage": "1d10",
       "range": "Reach",
       "damage_type": "slashing",

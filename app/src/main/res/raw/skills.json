@@ -5,27 +5,80 @@
       "skills" : [
           {
             "name" : "Athletics"
-          },
-        {
-          "name" : "Athletics"
-        },
-        {
-          "name" : "Athletics"
-        },
-        {
-          "name" : "Athletics"
-        },
+          }
+      ]
+    },
 
+    {
+      "baseStat" : "Dexterity",
+      "skills" : [
         {
-          "name" : "Athletics"
+          "name" : "Acrobatics"
         },
+        {
+          "name" : "Sleight of Hand"
+        },
+        {
+          "name" : "Stealth"
+        }
+      ]
+    },
+    {
+      "baseStat" : "Intelligence",
+      "skills" : [
+        {
+          "name" : "Arcana"
+        },
+        {
+          "name" : "History"
+        },
+        {
+          "name" : "Investigation"
+        },
+        {
+          "name" : "Nature"
+        },
+        {
+          "name" : "Religion"
+        }
+      ]
+    },
+    {
+      "baseStat" : "Wisdom",
+      "skills" : [
+        {
+          "name" : "Animal Handling"
+        },
+        {
+          "name" : "Insight"
+        },
+        {
+          "name" : "Medicine"
+        },
+        {
+          "name" : "Perception"
+        },
+        {
+          "name" : "Survival"
+        }
+      ]
+    },
+    {
+      "baseStat" : "Charisma",
+      "skills" : [
         {
           "name" : "Deception"
+        },
+        {
+          "name" : "Intimidation"
+        },
+        {
+          "name" : "Performance"
+        },
+        {
+          "name" : "Persuasion"
         }
       ]
     }
-
-
-
   ]
 }

@@ -10,7 +10,8 @@ data class Armor(
     val baseAc : Int,
     val dexCap: Int,
     val stealth: String,
-    override val charges: Resource? = null
+    override val charges: Resource? = null,
+    val strengthPrerequisite: Int? = null
 ) : ItemInterface {
     override val type = "Armor"
 

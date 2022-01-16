@@ -295,7 +295,10 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     weight = armorJson.getInt("weight"),
                     baseAc = acJson.getInt("base"),
                     dexCap = acJson.getInt("dex_cap"),
-                    stealth = armorJson.getString("stealth")
+                    stealth = armorJson.getString("stealth"),
+                    strengthPrerequisite =
+                        try {armorJson.getInt("strength_prerequisite")}
+                        catch(e: JSONException) {null}
                 )
             )
         }

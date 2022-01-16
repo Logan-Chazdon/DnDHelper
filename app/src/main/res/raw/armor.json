@@ -35,6 +35,7 @@
       "weight" : 20,
       "item_rarity": "Standard",
       "stealth" : "-",
+      "strength_prerequisite" : 15,
 
       "ac" : {
         "base" : 14,

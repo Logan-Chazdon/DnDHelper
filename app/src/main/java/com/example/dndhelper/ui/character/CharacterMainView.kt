@@ -1,6 +1,7 @@
 package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -15,23 +16,36 @@ import kotlinx.coroutines.launch
 fun CharacterMainView(characterIndex: Int, viewModel: CharacterMainViewModel) {
     val scope = rememberCoroutineScope()
     Column() {
-        TextField(
-            value = viewModel.character?.observeAsState()?.value?.name ?: "",
-            onValueChange = {
-                scope.launch(Dispatchers.IO) {
-                    viewModel.setName(it)
+        Row() {
+            TextField(
+                value = viewModel.character?.observeAsState()?.value?.name ?: "",
+                onValueChange = {
+                    scope.launch(Dispatchers.IO) {
+                        viewModel.setName(it)
+                    }
                 }
-            }
-        )
+            )
 
-        Button(
-            onClick  = {
-                scope.launch(Dispatchers.IO) {
-                    viewModel.longRest()
+            Column() {
+                Button(
+                    onClick = {
+                        scope.launch(Dispatchers.IO) {
+                            viewModel.longRest()
+                        }
+                    }
+                ) {
+                    Text("Long rest")
+                }
+                Button(
+                    onClick = {
+                        scope.launch(Dispatchers.IO) {
+                            viewModel.shortRest()
+                        }
+                    }
+                ) {
+                    Text("Short rest")
                 }
             }
-        ) {
-            Text("Long rest")
         }
     }
 }

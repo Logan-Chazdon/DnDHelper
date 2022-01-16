@@ -44,4 +44,8 @@ public class CharacterMainViewModel @Inject constructor(
         repository.insertCharacter(newChar)
     }
 
+    fun shortRest() {
+      //TODO
+    }
+
 }

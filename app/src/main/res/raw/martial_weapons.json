@@ -27,7 +27,7 @@
     },
     {
       "name": "Blowgun",
-      "desc" : "Proficiency with a blowgun allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "desc" :"",
       "damage": "1",
       "range": "20/100 ft",
       "damage_type": "piercing",
@@ -56,7 +56,7 @@
     },
     {
       "name": "Crossbow, Hand",
-      "desc" : "Proficiency with a hand crossbow allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "desc" :"",
       "damage": "1d6",
       "range": "30/120 ft",
       "damage_type": "Piercing",
@@ -89,7 +89,7 @@
     },
     {
       "name": "Crossbow, Heavy",
-      "desc" : "Proficiency with a heavy crossbow allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\n",
+      "desc" :"",
       "damage": "1d10",
       "range": "100/400 ft",
       "damage_type": "Piercing",
@@ -126,7 +126,7 @@
     },
     {
       "name": "Double-Bladed Scimitar",
-      "desc" : "Proficiency with a flail allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "desc" : "The double-bladed scimitar is the signature weapon of Valenar elves. A haft of fine wood supports a long, curving blade on either end. Forged with techniques honed over centuries, these blades are strong, sharp, and remarkably light. Each scimitar is a masterpiece, and as a result the double-bladed scimitar is an expensive weapon (100 gp) — few though ever have the opportunity to purchase one. A Valenar blade in the hands of a non-elf is generally assumed to have been stolen or looted from a fallen foe, and a Valenar elf might feel entitled to demand its return or challenge the bearer to prove they’re worthy to wield it. Special. If you attack with a double-bladed scimitar as part of the Attack action on your turn, you can use a bonus action immediately after to make a melee attack with it. This attack deals 1d4 slashing damage on a hit, instead of 2d4.",
       "damage": "2d4",
       "range": "5 ft",
       "damage_type": "Piercing",
@@ -156,7 +156,7 @@
     },
     {
       "name": "Flail",
-      "desc" : "The double-bladed scimitar is the signature weapon of Valenar elves. A haft of fine wood supports a long, curving blade on either end. Forged with techniques honed over centuries, these blades are strong, sharp, and remarkably light. Each scimitar is a masterpiece, and as a result the double-bladed scimitar is an expensive weapon (100 gp) — few though ever have the opportunity to purchase one. A Valenar blade in the hands of a non-elf is generally assumed to have been stolen or looted from a fallen foe, and a Valenar elf might feel entitled to demand its return or challenge the bearer to prove they’re worthy to wield it.\n\n",
+      "desc" :"",
       "damage": "1d8",
       "range": "5 ft",
       "damage_type": "bludgeoning",
@@ -179,7 +179,7 @@
     },
     {
       "name": "Glaive",
-      "desc" : "Proficiency with a glaive allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\n",
+      "desc" :"",
       "damage": "1d10",
       "range": "Reach",
       "damage_type": "slashing",
@@ -212,7 +212,7 @@
     },
     {
       "name": "Greataxe",
-      "desc" : "Proficiency with a greataxe allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "desc" :"",
       "damage": "1d12",
       "range": "5ft",
       "damage_type": "slashing",
@@ -241,7 +241,7 @@
     },
     {
       "name": "Greatsword",
-      "desc" : "Proficiency with a greataxe allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "desc" :"",
       "damage": "2d6",
       "range": "5ft",
       "damage_type": "slashing",

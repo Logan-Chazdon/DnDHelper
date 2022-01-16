@@ -20,6 +20,28 @@
         "dex_cap" : 2
       }
 
+    },
+    {
+      "name" : "Breastplate",
+      "desc" : "This armor consists of a fitted metal chest piece worn with supple leather. Although it leaves the legs and arms relatively unprotected, this armor provides good protection for the wearer's vital organs while leaving the wearer relatively unencumbered.\n\n",
+      "cost": {
+        "pp": 0,
+        "gp": 400,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 20,
+      "item_rarity": "Standard",
+      "stealth" : "-",
+
+      "ac" : {
+        "base" : 14,
+        "dex_cap" : 2,
+        "TODO": 0
+      }
+
     }
   ]
 }

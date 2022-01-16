@@ -18,7 +18,7 @@ fun PassiveStatView(passive: String, value: Int) {
         horizontalArrangement = Arrangement.Center
     ) {
         Card(
-            Modifier.fillMaxWidth(0.9f),
+            Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(5.dp),
             elevation = 5.dp
         ) {

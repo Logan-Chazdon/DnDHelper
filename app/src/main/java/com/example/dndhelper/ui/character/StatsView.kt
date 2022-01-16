@@ -27,7 +27,9 @@ import kotlinx.coroutines.launch
 fun StatsView(viewModel: StatsViewModel) {
     val character = viewModel.character?.observeAsState()
 
-    Column {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         //Stats
         val stats = character?.value?.getStats()
         val statNames =
@@ -42,8 +44,7 @@ fun StatsView(viewModel: StatsViewModel) {
 
 
         LazyVerticalGrid(
-            cells = GridCells.Fixed(gridCells),
-            contentPadding = PaddingValues(8.dp)
+            cells = GridCells.Fixed(gridCells)
         ) {
             items(6) { item ->
                 val stat = stats?.get(statNamesAbr[item]) ?: 10
@@ -58,7 +59,8 @@ fun StatsView(viewModel: StatsViewModel) {
         Row(
             modifier = Modifier
                 .height(85.dp)
-                .padding(start = 10.dp)
+                .fillMaxWidth(0.9f),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             //Inspiration
             Card(
@@ -87,10 +89,12 @@ fun StatsView(viewModel: StatsViewModel) {
                 }
             }
 
+            Spacer(Modifier.width(20.dp))
+
             //Passives
             Column(
                 modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceEvenly
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 for(x in 0 until 3){
                     PassiveStatView(passive = "Passive Perception", value = 12)

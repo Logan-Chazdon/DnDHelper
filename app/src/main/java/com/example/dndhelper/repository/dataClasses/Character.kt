@@ -17,7 +17,6 @@ data class Character(
     var race: Race? = null,
     var currentHp: Int = 0,
     var tempHp: Int = 0,
-    var maxHp: Int = 0,
     var conditions: MutableList<String> = mutableListOf<String>(),
     var resistances: MutableList<String> = mutableListOf<String>(),
     var classes: MutableList<Class> = mutableListOf<Class>(),
@@ -71,8 +70,8 @@ data class Character(
         return stats
     }
 
-
-    fun generateMaxHp(): Int {
+    val maxHp: Int
+    get() {
         var newMax = 0
         for(item in classes) {
             newMax += if(item.isBaseClass) {

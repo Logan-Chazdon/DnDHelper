@@ -30,7 +30,7 @@ public class FeatOrAbsViewModel @Inject constructor(
                 )
             }
         }
-        newChar?.maxHp = generatedHp.value!!
+
         newChar?.let { repository.insertCharacter(it) }
     }
 
@@ -105,7 +105,7 @@ public class FeatOrAbsViewModel @Inject constructor(
 
             generatedHp.addSource(character!!) {
                 if(it != null) {
-                    generatedHp.value = it.generateMaxHp()
+                    generatedHp.value = it.maxHp
                 }
             }
         }

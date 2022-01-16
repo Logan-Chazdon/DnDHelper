@@ -703,11 +703,6 @@
           "level": 2
         },
          {
-          "name": "Danger Sense",
-          "desc": "At 2nd level, you gain an uncanny sense of when things nearby aren’t as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws against effects that you can see, such as traps and spells. To gain this benefit, you can’t be blinded, deafened, or incapacitated.",
-          "level": 2
-        },
-         {
           "name": "Bard College",
           "desc": "At 3rd level, you delve into the advanced techniques of a bard college of your choice: the College of Lore detailed at the end of the class description or another from the Player's Handbook or other sources. Your choice grants you features at 3rd level and again at 6th and 14th level.",
           "level": 3,

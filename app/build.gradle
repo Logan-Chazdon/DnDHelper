@@ -67,7 +67,7 @@ dependencies {
 
     //LiveData
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.compose.runtime:runtime-livedata:1.1.0-beta04'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.2.0-alpha01'
 
     //Compose Navigation
     implementation "androidx.navigation:navigation-compose:2.4.0-beta02"

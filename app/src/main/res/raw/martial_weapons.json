@@ -23,7 +23,271 @@
         },
         {
           "name": "Light",
-          "desc": "Light Desc"
+          "desc": "A light weapon is small and easy to handle, making it ideal for use when fighting with two weapons."
+        }
+      ]
+
+    },
+    {
+      "name": "Battleaxe",
+      "desc" : "Proficiency with a battleaxe allows you to add your proficiency bonus to the attack roll for any attack you make with it.\n\n",
+      "damage": "1d8",
+      "range": "5 ft",
+      "damage_type": "slashing",
+      "item_rarity": "Standard",
+      "weight": "4 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 10,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Versatile (1d10)",
+          "desc": "This weapon can be used with one or two hands. A damage value in parentheses appears with the property--the damage when the weapon is used with two hands to make a melee attack."
+        }
+      ]
+
+    },
+    {
+      "name": "Blowgun",
+      "desc" : "Proficiency with a blowgun allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "damage": "1",
+      "range": "20/100 ft",
+      "damage_type": "piercing",
+      "item_rarity": "Standard",
+      "weight": "1 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 10,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Ammunition",
+          "desc":"You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. Each time you attack with the weapon, you expend one piece of ammunition. Drawing the ammunition from a quiver, case, or other container is part of the attack (you need a free hand to load a one-handed weapon). At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield."
+        },
+        {
+          "name": "Loading",
+          "desc":"Because of the time required to load this weapon, you can fire only one piece of ammunition from it when you use an action, bonus action, or reaction to fire it, regardless of the number of attacks you can normally make."
+        }
+      ]
+
+    },
+    {
+      "name": "Crossbow, Hand",
+      "desc" : "Proficiency with a hand crossbow allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "damage": "1d6",
+      "range": "30/120 ft",
+      "damage_type": "Piercing",
+      "item_rarity": "Standard",
+      "weight": "4 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 75,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Ammunition",
+          "desc":"You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. Each time you attack with the weapon, you expend one piece of ammunition. Drawing the ammunition from a quiver, case, or other container is part of the attack (you need a free hand to load a one-handed weapon). At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield."
+        },
+        {
+          "name": "Light",
+          "desc": "A light weapon is small and easy to handle, making it ideal for use when fighting with two weapons."
+        },
+        {
+          "name": "Loading",
+          "desc": "Because of the time required to load this weapon, you can fire only one piece of ammunition from it when you use an action, bonus action, or reaction to fire it, regardless of the number of attacks you can normally make."
+        }
+      ]
+
+    },
+    {
+      "name": "Crossbow, Heavy",
+      "desc" : "short sword",
+      "damage": "1d10",
+      "range": "100/400 ft",
+      "damage_type": "Piercing",
+      "item_rarity": "Standard",
+      "weight": "18 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 50,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Ammunition",
+          "desc":"You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. Each time you attack with the weapon, you expend one piece of ammunition. Drawing the ammunition from a quiver, case, or other container is part of the attack (you need a free hand to load a one-handed weapon). At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield."
+        },
+        {
+          "name": "Loading",
+          "desc": "Because of the time required to load this weapon, you can fire only one piece of ammunition from it when you use an action, bonus action, or reaction to fire it, regardless of the number of attacks you can normally make."
+        },
+        {
+          "name": "Heavy",
+          "desc": "Creatures that are Small or Tiny have disadvantage on attack rolls with heavy weapons. A heavy weapon's size and bulk make it too large for a Small or Tiny creature to use effectively."
+        },
+        {
+          "name": "Two-Handed.",
+          "desc": "This weapon requires two hands when you attack with it."
+        }
+      ]
+
+    },
+    {
+      "name": "Double-Bladed Scimitar",
+      "desc" : "Proficiency with a flail allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "damage": "2d4",
+      "range": "5 ft",
+      "damage_type": "Piercing",
+      "item_rarity": "Standard",
+      "weight": "6 lbs",
+
+
+      "cost": {
+        "pp": 0,
+        "gp": 100,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Special",
+          "desc": "If you attack with a double-bladed scimitar as part of the Attack action on your turn, you can use a bonus action immediately after to make a melee attack with it. This attack deals 1d4 slashing damage on a hit, instead of 2d4"
+        },
+        {
+          "name": "Two-Handed.",
+          "desc": "This weapon requires two hands when you attack with it."
+        }
+      ]
+
+    },
+    {
+      "name": "Flail",
+      "desc" : "The double-bladed scimitar is the signature weapon of Valenar elves. A haft of fine wood supports a long, curving blade on either end. Forged with techniques honed over centuries, these blades are strong, sharp, and remarkably light. Each scimitar is a masterpiece, and as a result the double-bladed scimitar is an expensive weapon (100 gp) — few though ever have the opportunity to purchase one. A Valenar blade in the hands of a non-elf is generally assumed to have been stolen or looted from a fallen foe, and a Valenar elf might feel entitled to demand its return or challenge the bearer to prove they’re worthy to wield it.\n\n",
+      "damage": "1d8",
+      "range": "5 ft",
+      "damage_type": "bludgeoning",
+      "item_rarity": "Standard",
+      "weight": "2 lbs",
+
+
+      "cost": {
+        "pp": 0,
+        "gp": 10,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      }
+
+    },
+    {
+      "name": "Glaive",
+      "desc" : "short sword",
+      "damage": "1d10",
+      "range": "Reach",
+      "damage_type": "slashing",
+      "item_rarity": "Standard",
+      "weight": "6 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 20,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Heavy",
+          "desc": "Creatures that are Small or Tiny have disadvantage on attack rolls with heavy weapons. A heavy weapon's size and bulk make it too large for a Small or Tiny creature to use effectively."
+        },
+        {
+          "name": "Two-Handed.",
+          "desc": "This weapon requires two hands when you attack with it."
+        },
+        {
+          "name": "Reach",
+          "desc": "This weapon adds 5 feet to your reach when you attack with it, as well as when determining your reach for opportunity attacks with it."
+        }
+      ]
+
+    },
+    {
+      "name": "Greataxe",
+      "desc" : "Proficiency with a greataxe allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "damage": "1d12",
+      "range": "5ft",
+      "damage_type": "slashing",
+      "item_rarity": "Standard",
+      "weight": "7 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 30,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Heavy",
+          "desc": "Creatures that are Small or Tiny have disadvantage on attack rolls with heavy weapons. A heavy weapon's size and bulk make it too large for a Small or Tiny creature to use effectively."
+        },
+        {
+          "name": "Two-Handed.",
+          "desc": "This weapon requires two hands when you attack with it."
+        }
+      ]
+
+    },
+    {
+      "name": "Greatsword",
+      "desc" : "Proficiency with a greataxe allows you to add your proficiency bonus to the attack roll for any attack you make with it.",
+      "damage": "2d6",
+      "range": "5ft",
+      "damage_type": "slashing",
+      "item_rarity": "Standard",
+      "weight": "6 lbs",
+
+      "cost": {
+        "pp": 0,
+        "gp": 50,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "properties": [
+        {
+          "name": "Heavy",
+          "desc": "Creatures that are Small or Tiny have disadvantage on attack rolls with heavy weapons. A heavy weapon's size and bulk make it too large for a Small or Tiny creature to use effectively."
+        },
+        {
+          "name": "Two-Handed.",
+          "desc": "This weapon requires two hands when you attack with it."
         }
       ]
 

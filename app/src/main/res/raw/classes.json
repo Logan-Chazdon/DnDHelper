@@ -587,7 +587,7 @@
       ],
         "subclasses": [ ]
     },
- {
+    {
       "name": "Bard",
       "spell_casting" : 1.0,
       "hit_die": 8,

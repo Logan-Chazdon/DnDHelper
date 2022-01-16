@@ -1,20 +1,197 @@
 {
   "languages" : [
       {
-        "name" : "Common1",
+        "name" : "Common",
         "index" : "common"
       },
       {
-        "name" : "Common2",
-        "index" : "common"
+        "name" : "Dwarvish",
+        "index" : "Dwarvish"
       },
       {
-        "name" : "Common3",
-        "index" : "common"
+        "name" : "Elvish",
+        "index" : "Elvish"
       },
       {
-        "name" : "Common4",
-        "index" : "common"
+        "name" : "Giant",
+        "index" : "Giant"
+      },
+      {
+          "name" : "Gnomish",
+          "index" : "Gnomish"
+      },
+      {
+          "name" : "Goblin",
+          "index" : "Goblin"
+      },
+      {
+          "name" : "Halfling",
+          "index" : "Halfling"
+      },
+      {
+          "name" : "Orc",
+          "index" : "Orc"
+      },
+      {
+          "name" : "Abyssal",
+          "index" : "Abyssal"
+      },
+      {
+          "name" : "Celestial",
+          "index" : "Celestial"
+      },
+      {
+          "name" : "Deep Speech",
+          "index" : "Deep Speech"
+      },
+      {
+          "name" : "Draconic",
+          "index" : "Draconic"
+      },
+      {
+          "name" : "Infernal",
+          "index" : "Infernal"
+      },
+      {
+          "name" : "Primordial",
+          "index" : "Primordial"
+      },
+      {
+          "name" : "Sylvan",
+          "index" : "Sylvan"
+      },
+      {
+          "name" : "Undercommon",
+          "index" : "Undercommon"
+      },
+      {
+          "name" : "Ignan",
+          "index" : "Ignan"
+      },
+      {
+          "name" : "Terran",
+          "index" : "Terran"
+      },
+      {
+          "name" : "Aquan",
+          "index" : "Aquan"
+      },
+      {
+          "name" : "Gnoll",
+          "index" : "Gnoll"
+      },
+      {
+          "name" : "Grung",
+          "index" : "Grung"
+      },
+      {
+          "name" : "riedran",
+          "index" : "riedran"
+      },
+      {
+          "name" : "quori ",
+          "index" : "quori"
+      },
+      {
+          "name" : "arakocra",
+          "index" : "arakocra"
+      },
+      {
+          "name" : "gith",
+          "index" : "gith"
+      },
+      {
+          "name" : "krual",
+          "index" : "krual"
+      },
+      {
+          "name" : "minotaur",
+          "index" : "minotaur"
+      },
+      {
+          "name" : "vedalken",
+          "index" : "vedalken"
+      },
+      {
+          "name" : "Dambrathan",
+          "index" : "Dambrathan"
+      },
+      {
+          "name" : "Bedine",
+          "index" : "Bedine"
+      },
+      {
+          "name" : "Alzhedo",
+          "index" : "Alzhedo"
+      },
+      {
+          "name" : "Chondathan",
+          "index" : "Chondathan"
+      },
+      {
+          "name" : "Damaran",
+          "index" : "Damaran"
+      },
+      {
+          "name" : "Waelan",
+          "index" : "Waelan"
+      },
+      {
+          "name" : "Guran",
+          "index" : "Guran"
+      },
+      {
+          "name" : "Halruaan",
+          "index" : "Halruaan"
+      },
+      {
+          "name" : "Illuskan",
+          "index" : "Illuskan"
+      },
+      {
+          "name" : "Roushoum",
+          "index" : "Roushoum"
+      },
+      {
+          "name" : "Chessentan",
+          "index" : "Chessentan"
+      },
+      {
+          "name" : "Mulhorandi",
+          "index" : "Mulhorandi"
+      },
+      {
+          "name" : "Untheric",
+          "index" : "Untheric"
+      },
+      {
+          "name" : "Thayan",
+          "index" : "Thayan"
+      },
+      {
+          "name" : "Rashemi",
+          "index" : "Rashemi"
+      },
+      {
+          "name" : "Shaaran",
+          "index" : "Shaaran"
+      },
+      {
+          "name" : "Shou",
+          "index" : "Shou"
+      },
+      {
+          "name" : "Tuigan",
+          "index" : "Tuigan"
+      },
+      {
+          "name" : "Turmic",
+          "index" : "Turmic"
+      },
+      {
+          "name": "Uluik",
+          "index": "Uluik"
       }
+
   ]
 }

@@ -8,7 +8,8 @@
       "school" : "Necro",
       "desc" : "nyeeeh",
       "area" : "Single Target",
-
+      "duration" : "Instantaneous",
+      "damage" : "Put the description of the damage here",
 
       "components" : [
         {
@@ -20,18 +21,13 @@
 
       ],
 
-
-      "duration" : "Instantaneous",
-
       "classes" : [
         {
           "name" : "Warlock",
           "index": "warlock"
         }
-      ],
+      ]
 
-      "damage" : "Put the description of the damage here"
     }
-
   ]
 }

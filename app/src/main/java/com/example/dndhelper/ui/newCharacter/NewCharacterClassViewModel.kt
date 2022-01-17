@@ -165,5 +165,10 @@ public class NewCharacterClassViewModel @Inject constructor(
         return false
     }
 
+    val hasBaseClass: Boolean
+    get() {
+        return character?.hasBaseClass ?: false
+    }
+
 }
 

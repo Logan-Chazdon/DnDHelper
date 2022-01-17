@@ -28,6 +28,7 @@ data class Character(
     @NonNull
     @ColumnInfo(name="id")
     var id: Int = 0,
+    var statGenerationMethodIndex: Int = 0,
     var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
     var abilityScoreIncreases: MutableMap<String, Int> = mutableMapOf(
         "Str" to 0,

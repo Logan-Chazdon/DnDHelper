@@ -233,4 +233,16 @@ data class Character(
         }
         return false
     }
+
+    val proficiencyBonus : Int
+    get() {
+        return when(totalClassLevels) {
+            in 1..4 -> 2
+            in 5..8 -> 3
+            in 9..12 -> 4
+            in 13..16  -> 5
+            in 17..20 -> 6
+            else -> 0
+        }
+    }
 }

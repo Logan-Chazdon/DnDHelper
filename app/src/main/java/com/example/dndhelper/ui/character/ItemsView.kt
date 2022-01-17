@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.dndhelper.repository.dataClasses.Armor
+import com.example.dndhelper.repository.dataClasses.Item
+import com.example.dndhelper.repository.dataClasses.ItemInterface
 import com.example.dndhelper.repository.dataClasses.Weapon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -32,15 +35,15 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
-fun ItemsView(viewModel : ItemViewModel) {
+fun ItemsView(viewModel: ItemViewModel) {
 
-    var expanded by remember{ mutableStateOf(false)}
-    var confirmDeleteExpanded by remember{ mutableStateOf(false)}
+    var expanded by remember { mutableStateOf(false) }
+    var confirmDeleteExpanded by remember { mutableStateOf(false) }
     var itemToDeleteIndex by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        floatingActionButton =  {
+        floatingActionButton = {
             FloatingActionButton(onClick = {
                 expanded = !expanded
             }) {
@@ -229,7 +232,7 @@ fun ItemsView(viewModel : ItemViewModel) {
 
                             Column(
                                 modifier = Modifier
-                                    .fillMaxHeight(0.75f)
+                                    .fillMaxHeight(0.55f)
                                     .verticalScroll(scrollState)
                             ) {
                                 allItems?.value?.forEachIndexed { i, item ->
@@ -263,86 +266,268 @@ fun ItemsView(viewModel : ItemViewModel) {
                                 }
                             }
 
-                            val enabled = selected != -1
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Bottom
+                            //Custom item
+                            var itemTypeExpanded by remember { mutableStateOf(false) }
+                            val itemTypes = listOf(
+                                "Normal Item",
+                                "Armor",
+                                "Weapon"
+                            )
+                            var customItemType by remember { mutableStateOf(0) }
+                            Text(
+                                text = itemTypes[customItemType],
+                                modifier = Modifier
+                                    .clickable { itemTypeExpanded = true }
+                                    .fillMaxWidth(),
+                                fontSize = 20.sp
+                            )
+                            DropdownMenu(
+                                expanded = itemTypeExpanded,
+                                onDismissRequest = { itemTypeExpanded = false }
                             ) {
-                                Row(
-                                    horizontalArrangement = Arrangement.End,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Button(
-                                        enabled = enabled,
-                                        onClick = {
-                                            scope.launch(Dispatchers.IO) {
-                                                viewModel.addItem(allItems!!.value!!.get(selected))
-                                                selected = -1
-                                                expanded = false
-                                            }
-                                        }
-                                    ) {
-                                        Text("Add Item")
-                                    }
-
-                                    Spacer(Modifier.width(10.dp))
-
-                                    Button(
-                                        enabled = if (enabled) {
-                                            allItems?.value?.get(selected)?.hasCost() == true
-                                        } else {
-                                            false
-                                        },
-                                        onClick = {
-                                            scope.launch(Dispatchers.IO) {
-                                                viewModel.buyItem(allItems!!.value!!.get(selected))
-                                                selected = -1
-                                                expanded = false
-                                            }
-                                        }
-                                    ) {
-                                        Text("Buy Item")
+                                for (i in 0..2) {
+                                    DropdownMenuItem(onClick = { customItemType = i }) {
+                                        Text(itemTypes[i])
+                                        selected = -1
                                     }
                                 }
                             }
 
+                            var customWeaponDamage by remember { mutableStateOf("") }
+                            var customWeaponDamageType by remember { mutableStateOf("") }
+                            var customWeaponRange by remember { mutableStateOf("5ft") }
+                            var baseAc by remember { mutableStateOf("") }
+                            var maxAcFromDex by remember { mutableStateOf("") }
+                            var customItemName by remember { mutableStateOf("") }
+                            var stealth by remember { mutableStateOf(false) }
+
+
+                            TextField(
+                                value = customItemName,
+                                onValueChange = {
+                                    customItemName = it
+                                },
+                                label = { Text("Custom item name") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            when (customItemType) {
+                                0 -> {
+                                    //Normal item
+                                }
+                                1 -> {
+                                    //Armor
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly
+                                    ) {
+                                        val textFieldSize = LocalConfiguration.current.screenWidthDp.dp * 0.45f
+                                        OutlinedTextField(
+                                            value = baseAc,
+                                            onValueChange = {
+                                                baseAc = it
+                                            },
+                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                            singleLine = true,
+                                            label = { Text("Base AC") },
+                                            modifier = Modifier.width(textFieldSize)
+                                        )
+
+
+                                        OutlinedTextField(
+                                            value = maxAcFromDex,
+                                            onValueChange = {
+                                                maxAcFromDex = it
+                                            },
+                                            label = { Text("Max AC from Dex") },
+                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                            singleLine = true,
+                                            modifier = Modifier.width(textFieldSize)
+                                        )
+                                    }
+                                    Row() {
+                                        Text("Disadvantage on stealth: ")
+                                        Checkbox(
+                                            checked = stealth,
+                                            onCheckedChange = {
+                                                stealth = it
+                                            },
+                                        )
+                                    }
+                            }
+                            2 -> {
+                                //Weapon
+                                val textFieldSize = LocalConfiguration.current.screenWidthDp.dp * 0.45f
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    OutlinedTextField(
+                                        value = customWeaponDamage,
+                                        onValueChange = {
+                                            customWeaponDamage = it
+                                        },
+                                        label = {
+                                            Text("Damage")
+                                        },
+                                        modifier = Modifier.width(textFieldSize)
+                                    )
+                                    OutlinedTextField(
+                                        value = customWeaponDamageType,
+                                        onValueChange = {
+                                            customWeaponDamageType = it
+                                        },
+                                        label = {
+                                            Text("Damage type")
+                                        },
+                                        modifier = Modifier.width(textFieldSize)
+                                    )
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    OutlinedTextField(
+                                        value = customWeaponRange,
+                                        onValueChange = {
+                                            customWeaponRange = it
+                                        },
+                                        label = {
+                                            Text("Range")
+                                        },
+                                        modifier = Modifier.width(textFieldSize)
+                                    )
+                                    //TODO find a way to to properties
+                                }
+                            }
                         }
+
+                        val enabled = (selected != -1 || (
+                            if (customItemName.isBlank()) {
+                                 false
+                            } else {
+                            when (customItemType) {
+                                0 -> {
+                                     true
+                                }
+                                1 -> {
+                                    !(baseAc.isBlank() || maxAcFromDex.isBlank())
+                                }
+                                2 -> {
+                                    !(customWeaponDamage.isBlank() || customWeaponRange.isBlank() || customWeaponDamageType.isBlank())
+                                }
+                                else -> {
+                                     false
+                                }
+                            } }))
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Button(
+                                    enabled = enabled,
+                                    onClick = {
+                                        scope.launch(Dispatchers.IO) {
+                                            if(selected == -1) {
+                                                val item : ItemInterface? = when(customItemType) {
+                                                    0 -> {
+                                                        Item(name = customItemName)
+                                                    }
+                                                    1 -> {
+                                                        Armor(
+                                                            name = customItemName,
+                                                            baseAc = baseAc.toInt(),
+                                                            dexCap = maxAcFromDex.toInt(),
+                                                            stealth = if(stealth) { "-" } else { "Disadvantage" }
+                                                        )
+                                                    }
+                                                    2 -> {
+                                                        Weapon(
+                                                            name = customItemName,
+                                                            damage = customWeaponDamage,
+                                                            range = customWeaponRange,
+                                                            damageType = customWeaponDamageType
+                                                            //TODO properties
+                                                        )
+                                                    }
+                                                    else -> {
+                                                        null
+                                                    }
+                                                }
+                                                item?.let{ it : ItemInterface -> viewModel.addItem(it) }
+
+                                            } else {
+                                                viewModel.addItem(allItems!!.value!!.get(selected))
+                                                selected = -1
+                                            }
+                                            expanded = false
+                                        }
+                                    }
+                                ) {
+                                    Text("Add Item")
+                                }
+
+                                Spacer(Modifier.width(10.dp))
+
+                                Button(
+                                    enabled = if (enabled) {
+                                        allItems?.value?.getOrNull(selected)?.hasCost() == true
+                                    } else {
+                                        false
+                                    },
+                                    onClick = {
+                                        scope.launch(Dispatchers.IO) {
+                                            viewModel.buyItem(allItems!!.value!!.get(selected))
+                                            selected = -1
+                                            expanded = false
+                                        }
+                                    }
+                                ) {
+                                    Text("Buy Item")
+                                }
+                            }
+                        }
+
                     }
                 }
             }
         }
-
-        if (confirmDeleteExpanded) {
-            AlertDialog(
-                onDismissRequest = { confirmDeleteExpanded = false },
-                title = {
-                    Text(text = "Delete Item?")
-                },
-                text = {
-                    Text(
-                        "Would you like to delete " +
-                            "${viewModel.character?.value?.backpack?.allItems!![itemToDeleteIndex].name}"
-                    )
-                },
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            GlobalScope.launch {
-                                viewModel.deleteItemAt(itemToDeleteIndex)
-                            }
-                            confirmDeleteExpanded = false
-                        }) {
-                        Text("Delete Item")
-                    }
-                },
-                dismissButton = {
-                    Button(
-                        onClick = {
-                            confirmDeleteExpanded = false
-                        }) {
-                        Text("Cancel")
-                    }
-            })
-        }
     }
+
+    if (confirmDeleteExpanded) {
+        AlertDialog(
+            onDismissRequest = { confirmDeleteExpanded = false },
+            title = {
+                Text(text = "Delete Item?")
+            },
+            text = {
+                Text(
+                    "Would you like to delete " +
+                            "${viewModel.character?.value?.backpack?.allItems!![itemToDeleteIndex].name}"
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        GlobalScope.launch {
+                            viewModel.deleteItemAt(itemToDeleteIndex)
+                        }
+                        confirmDeleteExpanded = false
+                    }) {
+                    Text("Delete Item")
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        confirmDeleteExpanded = false
+                    }) {
+                    Text("Cancel")
+                }
+            })
+    }
+}
 }

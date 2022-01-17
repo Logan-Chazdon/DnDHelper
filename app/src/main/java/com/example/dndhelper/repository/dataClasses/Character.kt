@@ -223,4 +223,14 @@ data class Character(
         }
         return result
     }
+
+    val hasBaseClass: Boolean
+    get() {
+        classes.forEach {
+            if(it.value.isBaseClass) {
+                return true
+            }
+        }
+        return false
+    }
 }

@@ -100,7 +100,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             Text(text = "Use as base class", fontSize = 20.sp)
             Checkbox(
                 checked = viewModel.isBaseClass.value,
-                onCheckedChange = { viewModel.isBaseClass.value = it }
+                onCheckedChange = { viewModel.isBaseClass.value = it },
+                enabled = !viewModel.hasBaseClass
             )
         }
 

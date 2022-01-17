@@ -57,6 +57,7 @@ public class NewCharacterClassViewModel @Inject constructor(
             classes = repository.getClasses()
             feats = repository.getFeats()
             character = repository.getCharacterById(id)
+            isBaseClass.value = !(character?.hasBaseClass ?: false)
             featNames.addSource(feats!!) {
                 val names = mutableListOf<String>()
                 for(item in it) {

@@ -215,6 +215,9 @@ fun ItemsView(viewModel: ItemViewModel) {
                             ) {
                                 TextField(
                                     value = search,
+                                    label = {
+                                            Text("Search")
+                                    },
                                     onValueChange = {
                                         search = it
                                     },

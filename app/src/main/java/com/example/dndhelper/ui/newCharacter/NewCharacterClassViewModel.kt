@@ -107,11 +107,13 @@ public class NewCharacterClassViewModel @Inject constructor(
                 )
             }
         }
-
-        character!!.let { repository.insertCharacter(it) }
+        if(newClass.level > newClass.subclassLevel) {
+            newClass.subclass =
+                (subclassDropdownState?.getSelected(newClass.subClasses) as List<Subclass>).getOrNull(0)
+        }
 
         character!!.addClass(newClass)
-        repository.insertCharacter(character)
+        character.let { repository.insertCharacter(it) }
     }
 
     fun getAsiNum(levels: Int): Int {

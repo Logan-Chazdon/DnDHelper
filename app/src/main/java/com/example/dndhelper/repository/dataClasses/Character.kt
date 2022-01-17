@@ -19,7 +19,7 @@ data class Character(
     var tempHp: Int = 0,
     var conditions: MutableList<String> = mutableListOf<String>(),
     var resistances: MutableList<String> = mutableListOf<String>(),
-    var classes: MutableList<Class> = mutableListOf<Class>(),
+    var classes: MutableMap<String, Class> = mutableMapOf(),
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name="id")
@@ -47,7 +47,7 @@ data class Character(
         val result = mutableListOf<Feature>()
         race?.let { result.addAll(it.traits) }
 
-        classes.forEach {
+        classes.values.forEach {
             it.levelPath.forEach { feature ->
                 if(feature.level <= it.level) {
                     result.add(feature)
@@ -92,7 +92,7 @@ data class Character(
     val maxHp: Int
     get() {
         var newMax = 0
-        for(item in classes) {
+        for(item in classes.values) {
             newMax += if(item.isBaseClass) {
                 ((((item.hitDie / 2) + 1) + getStatMod("Con")) * (item.level -1)) + 8 + getStatMod("Con")
             } else {
@@ -105,7 +105,7 @@ data class Character(
     val totalClassLevels: Int
     get() {
         var result = 0
-        for(item in classes) {
+        for(item in classes.values) {
             result = item.level
         }
         return result
@@ -125,7 +125,7 @@ data class Character(
                 it.chosen?.let { items -> backpack.classItems.addAll(items) }
             }
         }
-        classes.add(newClass)
+        classes[newClass.name] = newClass
 
 
         spellSlots = when(totalCasterLevels) {
@@ -180,7 +180,7 @@ data class Character(
 
     fun getFormattedClasses(): String {
         var result = ""
-        for((i, item) in classes.withIndex()) {
+        for((i, item) in classes.values.withIndex()) {
             result += "${item.name} ${item.level}"
             if(i != classes.size - 1) {
                 result += ", "
@@ -191,7 +191,7 @@ data class Character(
 
     fun longRest() {
         //Classes
-        classes.forEach {
+        classes.values.forEach {
             it.longRest()
         }
 
@@ -208,7 +208,7 @@ data class Character(
     val totalCasterLevels : Int
     get() {
         var result = 0
-        classes.forEach{
+        classes.values.forEach{
             result += floor(it.level.toDouble() * it.spellCasting).toInt()
         }
         return result

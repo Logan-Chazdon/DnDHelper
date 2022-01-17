@@ -128,6 +128,9 @@ public class NewCharacterClassViewModel @Inject constructor(
             in  16..18 -> {
                 4
             }
+            in 19..20 -> {
+                5
+            }
             else -> 0
         }
     }

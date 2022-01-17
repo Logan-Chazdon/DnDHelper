@@ -44,7 +44,8 @@ data class Character(
     var feats: MutableList<Feat> = mutableListOf<Feat>(),
     var positiveDeathSaves: Int = 0,
     var negativeDeathSaves: Int = 0,
-    var spellSlots: List<Resource> = listOf()
+    var spellSlots: List<Resource> = listOf(),
+    private val addedLanguages: MutableList<Language> = mutableListOf<Language>()
 ){
     val features: List<Feature>
     get() {
@@ -254,4 +255,17 @@ data class Character(
                 "Passive Insight" to (10 + getStatMod("Wis") + proficiencyBonus)
             )
         }
+
+
+    val languages: List<Language>
+    get() {
+        val result = mutableListOf<Language>()
+        race?.languages?.let { result.addAll(it) }
+        background?.languages?.let {result.addAll(it) }
+        background?.languageChoices?.forEach { choice ->
+            choice.chosen?.let { result.addAll(it) }
+        }
+        result.addAll(addedLanguages)
+        return result
+    }
 }

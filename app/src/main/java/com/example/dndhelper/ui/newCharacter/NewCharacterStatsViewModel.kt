@@ -1,28 +1,28 @@
 package com.example.dndhelper.ui.newCharacter
 import android.app.Application
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.dataClasses.Class
-import com.example.dndhelper.repository.dataClasses.Race
+import com.example.dndhelper.repository.dataClasses.Character
+import com.example.dndhelper.ui.newCharacter.utils.indexOf
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.IndexOutOfBoundsException
 import java.util.*
 import javax.inject.Inject
-import com.example.dndhelper.ui.newCharacter.utils.indexOf
-import com.example.dndhelper.repository.dataClasses.Character
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.GlobalScope
+import kotlin.collections.set
 
 @HiltViewModel
 public class NewCharacterStatsViewModel @Inject constructor(
     private val repository: Repository,
     application: Application,
+    savedStateHandle : SavedStateHandle
 ): AndroidViewModel(application)
 
 {
+    var character: Character? = null
     var currentStateGenTypeIndex : MutableLiveData<Int> = MutableLiveData(0)
     var currentStats = MutableLiveData(listOf<Int>())
     var selectedStatIndexes = MutableLiveData(listOf<Int>(-1, -1, -1, -1, -1, -1))
@@ -35,6 +35,7 @@ public class NewCharacterStatsViewModel @Inject constructor(
             id = repository.createDefaultCharacter()!!
         val character = repository.getCharacterById(id)
         character!!.baseStats = generateStatMap()
+        character.statGenerationMethodIndex = currentStateGenTypeIndex.value!!
         if(character.baseStats.isNotEmpty())
             repository.insertCharacter(character)
     }
@@ -52,6 +53,21 @@ public class NewCharacterStatsViewModel @Inject constructor(
 
 
     init {
+        id = try {
+            savedStateHandle.get<String>("characterId")!!.toInt()
+        } catch (E : Exception) {
+            -1
+        }
+        viewModelScope.launch {
+            character = repository.getCharacterById(id)
+            character?.let {
+                if(!it.baseStats.values.contains(0) && it.baseStats.isNotEmpty()) {
+                    currentStateGenTypeIndex.value = it.statGenerationMethodIndex
+                    selectedStatIndexes.postValue(listOf(0, 1 ,2 ,3 ,4, 5))
+                    currentStats.postValue(it.baseStats.values.toList())
+                }
+            }
+        }
 
         currentStateGenTypeIndex.observeForever {
             val newStats = mutableListOf<Int>()

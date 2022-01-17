@@ -23,7 +23,6 @@ fun StatsView(
     viewModel: NewCharacterStatsViewModel,
     characterId: Int
 ) {
-    viewModel.id = characterId
     Column {
         var statGenDropdownExpanded by remember { mutableStateOf(false) }
         val selectedIndexStatGen = viewModel.currentStateGenTypeIndex.observeAsState()

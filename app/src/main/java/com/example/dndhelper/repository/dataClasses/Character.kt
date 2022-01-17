@@ -45,7 +45,8 @@ data class Character(
     var positiveDeathSaves: Int = 0,
     var negativeDeathSaves: Int = 0,
     var spellSlots: List<Resource> = listOf(),
-    private val addedLanguages: MutableList<Language> = mutableListOf<Language>()
+    private val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
+    private val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
 ){
     val features: List<Feature>
     get() {
@@ -266,6 +267,21 @@ data class Character(
             choice.chosen?.let { result.addAll(it) }
         }
         result.addAll(addedLanguages)
+        return result
+    }
+
+    val proficiencies: List<Proficiency>
+    get() {
+        val result = mutableListOf<Proficiency>()
+        background?.proficiencies?.let { result.addAll(it) }
+        classes.forEach {
+            result.addAll(it.value.proficiencies)
+            it.value.proficiencyChoices.forEach { choice ->
+                choice.chosen?.let { chosen -> result.addAll(chosen) }
+            }
+        }
+        race?.startingProficiencies?.let { result.addAll(it) }
+        result.addAll(addedProficiencies)
         return result
     }
 }

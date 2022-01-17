@@ -33,11 +33,7 @@ public class CharacterMainViewModel @Inject constructor(
 
     }
 
-    fun setName(it: String) {
-        val newChar = character!!.value!!.copy(name = it)
-        newChar.id = character!!.value!!.id
-        repository.insertCharacter(newChar)
-     }
+
 
     fun longRest() {
         val newChar = character!!.value!!.copy()
@@ -48,6 +44,36 @@ public class CharacterMainViewModel @Inject constructor(
 
     fun shortRest() {
       //TODO
+    }
+
+    fun setName(it: String) {
+        val newChar = character!!.value!!.copy(name = it)
+        newChar.id = character!!.value!!.id
+        repository.insertCharacter(newChar)
+    }
+
+    fun setPersonalityTraits(it: String) {
+        val newChar = character!!.value!!.copy(personalityTraits = it)
+        newChar.id = character!!.value!!.id
+        repository.insertCharacter(newChar)
+    }
+
+    fun setIdeals(it: String) {
+        val newChar = character!!.value!!.copy(ideals = it)
+        newChar.id = character!!.value!!.id
+        repository.insertCharacter(newChar)
+    }
+
+    fun setBonds(it: String) {
+        val newChar = character!!.value!!.copy(bonds = it)
+        newChar.id = character!!.value!!.id
+        repository.insertCharacter(newChar)
+    }
+
+    fun setFlaws(it: String) {
+        val newChar = character!!.value!!.copy(flaws = it)
+        newChar.id = character!!.value!!.id
+        repository.insertCharacter(newChar)
     }
 
 }

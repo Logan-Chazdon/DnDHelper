@@ -25,15 +25,59 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
         ) {
             Column() {
                 Row() {
-                    TextField(
-                        value = viewModel.character?.observeAsState()?.value?.name ?: "",
-                        onValueChange = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(0.6f)
+                    ) {
+                         TextField(
+                            value = viewModel.character?.observeAsState()?.value?.name ?: "",
+                            onValueChange = {
                             scope.launch(Dispatchers.IO) {
                                 viewModel.setName(it)
                             }
-                        },
-                        modifier = Modifier.fillMaxWidth(0.6f)
-                    )
+                            },
+                        )
+                        
+                        CharacterTextView(
+                            name = "Personality Traits",
+                            value = viewModel.character?.observeAsState()?.value?.personalityTraits
+                                ?: "",
+                            onChange = {
+                                scope.launch(Dispatchers.IO) {
+                                    viewModel.setPersonalityTraits(it)
+                                }
+                            }
+                        )
+                        
+                        CharacterTextView(
+                            name = "Ideals",
+                            value = viewModel.character?.observeAsState()?.value?.ideals ?: "",
+                            onChange = {
+                                scope.launch(Dispatchers.IO) {
+                                    viewModel.setIdeals(it)
+                                }
+                            }
+                        )
+
+                        CharacterTextView(
+                            name = "Bonds",
+                            value = viewModel.character?.observeAsState()?.value?.bonds ?: "",
+                            onChange = {
+                                scope.launch(Dispatchers.IO) {
+                                    viewModel.setBonds(it)
+                                }
+                            }
+                        )
+
+                        CharacterTextView(
+                            name = "Flaws",
+                            value = viewModel.character?.observeAsState()?.value?.flaws ?: "",
+                            onChange = {
+                                scope.launch(Dispatchers.IO) {
+                                    viewModel.setFlaws(it)
+                                }
+                            }
+                        )
+                    }
                     FeaturesAndTraitsView(
                         features = viewModel.characterFeatures.observeAsState(listOf()).value,
                         modifier = Modifier.fillMaxHeight(0.4f)

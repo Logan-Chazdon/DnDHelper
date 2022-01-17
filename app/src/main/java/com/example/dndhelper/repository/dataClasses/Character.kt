@@ -14,6 +14,10 @@ import kotlin.math.floor
 data class Character(
     @ColumnInfo(name="name")
     var name: String,
+    var personalityTraits: String = "",
+    var ideals: String = "",
+    var bonds: String = "",
+    var flaws: String = "",
     var race: Race? = null,
     var currentHp: Int = 0,
     var tempHp: Int = 0,

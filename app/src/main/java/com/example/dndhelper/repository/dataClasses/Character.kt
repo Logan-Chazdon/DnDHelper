@@ -57,6 +57,12 @@ data class Character(
                     result.add(feature)
                 }
             }
+
+            it.subclass?.features?.forEach { feature ->
+                if(feature.level <= it.level) {
+                    result.add(feature)
+                }
+            }
         }
 
         feats.forEach {

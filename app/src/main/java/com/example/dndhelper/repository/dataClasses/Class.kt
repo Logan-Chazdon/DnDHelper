@@ -26,6 +26,7 @@ class Class(
 ) {
     var isBaseClass: Boolean = false
     var level: Int = 1
+    var subclass: Subclass? = null
 
     fun longRest() {
         levelPath.forEach{

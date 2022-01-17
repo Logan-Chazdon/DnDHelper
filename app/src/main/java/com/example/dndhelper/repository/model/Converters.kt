@@ -53,7 +53,21 @@ class Converters {
     }
 
     @TypeConverter
-    fun storedStringToSubClass(data: String?): MutableList<Subclass> {
+    fun storedStringToSubClass(data: String?): Subclass? {
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<Subclass?>() {}.getType()
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun subClassToStoredString(myObjects: Subclass?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToSubClassList(data: String?): MutableList<Subclass> {
         if (data == null) {
             return mutableListOf()
         }
@@ -62,7 +76,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun subClassToStoredString(myObjects: MutableList<Subclass>): String? {
+    fun subClassListToStoredString(myObjects: MutableList<Subclass>): String? {
         return gson.toJson(myObjects)
     }
 

@@ -53,8 +53,10 @@ public class ItemViewModel @Inject constructor(
         val cost = allItems?.value?.get(selected)?.cost
         if(character?.value?.backpack?.subtractCurrency(cost!!) == true) {
             addItem(selected)
+            val newChar = character!!.value!!.copy(backpack = character!!.value!!.backpack)
+            newChar.id = character!!.value!!.id
+            repository.insertCharacter(newChar)
         }
-
     }
 
     suspend fun addCurrency(name: String?, newAmount: Int) {

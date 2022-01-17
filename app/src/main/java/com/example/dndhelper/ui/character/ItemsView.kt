@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -26,6 +25,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.dndhelper.repository.dataClasses.Armor
 import com.example.dndhelper.repository.dataClasses.Weapon
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -37,7 +37,7 @@ fun ItemsView(viewModel : ItemViewModel) {
     var expanded by remember{ mutableStateOf(false)}
     var confirmDeleteExpanded by remember{ mutableStateOf(false)}
     var itemToDeleteIndex by remember { mutableStateOf(0) }
-
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         floatingActionButton =  {
@@ -146,18 +146,15 @@ fun ItemsView(viewModel : ItemViewModel) {
                             .width(90.dp),
                         elevation = 5.dp
                     ) {
-                        //TODO this text system is a little bit iffy. Look for a better system later.
                         val text = remember { mutableStateOf(it.amount.toString()) }
-                        viewModel.character!!.observeForever() { item ->
-                            text.value = item.backpack.allCurrency[i]?.amount.toString()
-                        }
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.fillMaxSize()
                         ) {
                             Text("${it.abbreviatedName}: ", Modifier.padding(start = 4.dp))
                             BasicTextField(
-                                text.value,
+                                value = it.amount.toString(),
                                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                                 singleLine = true,
                                 onValueChange = { string ->
@@ -276,7 +273,7 @@ fun ItemsView(viewModel : ItemViewModel) {
                                     Button(
                                         enabled = enabled,
                                         onClick = {
-                                            GlobalScope.launch {
+                                            scope.launch(Dispatchers.IO) {
                                                 viewModel.addItem(selected)
                                                 selected = -1
                                                 expanded = false
@@ -295,7 +292,7 @@ fun ItemsView(viewModel : ItemViewModel) {
                                             false
                                         },
                                         onClick = {
-                                            GlobalScope.launch {
+                                            scope.launch(Dispatchers.IO) {
                                                 viewModel.buyItem(selected)
                                                 selected = -1
                                                 expanded = false

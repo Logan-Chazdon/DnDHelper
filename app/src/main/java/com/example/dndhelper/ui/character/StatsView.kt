@@ -96,8 +96,8 @@ fun StatsView(viewModel: StatsViewModel) {
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                for(x in 0 until 3){
-                    PassiveStatView(passive = "Passive Perception", value = 12)
+                viewModel.character?.observeAsState()?.value?.passives?.forEach {
+                    PassiveStatView(passive = it.key, value = it.value)
                 }
             }
 

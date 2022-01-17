@@ -447,7 +447,9 @@
                             "choose": 1,
                             "from": [
                                 {
+                                    "name" : "Artisans Tools",
                                     "index": "artisans_tools",
+                                    "desc" : "TODO",
                                     "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
                                 }
                             ]
@@ -531,7 +533,9 @@
                             "choose": 1,
                             "from": [
                                 {
+                                    "name" : "Artisans Tools",
                                     "index": "artisans_tools",
+                                    "desc" : "TODO",
                                     "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
                                 }
 

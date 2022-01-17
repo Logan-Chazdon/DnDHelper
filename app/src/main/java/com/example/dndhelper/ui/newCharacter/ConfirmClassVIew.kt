@@ -25,9 +25,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavController, classIndex: Int, characterId: Int) {
+fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavController, classIndex: Int) {
     val classes = viewModel.classes.observeAsState()
-    viewModel.id = characterId
     val mainLooper = Looper.getMainLooper()
 
     val levels = remember {
@@ -53,6 +52,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
 
             //Add Class Button
             Button(
+                enabled = viewModel.canAffordMoreClassLevels(try {levels.value.text.toInt()} catch(e: java.lang.Exception) {0}),
                 onClick = {
                     GlobalScope.launch{
                         classes.value?.get(classIndex)?.let { viewModel.addClassLevels(it, levels.value.text.toInt()) }

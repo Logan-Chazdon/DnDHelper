@@ -4,10 +4,7 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,12 +15,13 @@ import javax.inject.Inject
 public class NewCharacterClassViewModel @Inject constructor(
     private val repository: Repository,
     application: Application,
+    savedStateHandle: SavedStateHandle
 ): AndroidViewModel(application){
     lateinit var classes : LiveData<List<Class>>
     var id = -1
     var isBaseClass =  mutableStateOf(true)
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
-
+    var character : Character?  = null
     //ASIs
     private val shortAbilityNames  = mutableListOf(
         "Str",
@@ -50,10 +48,15 @@ public class NewCharacterClassViewModel @Inject constructor(
 
 
     init {
+        id = try {
+            savedStateHandle.get<String>("characterId")!!.toInt()
+        } catch (E : Exception) {
+            -1
+        }
         viewModelScope.launch {
             classes = repository.getClasses()
             feats = repository.getFeats()
-
+            character = repository.getCharacterById(id)
             featNames.addSource(feats!!) {
                 val names = mutableListOf<String>()
                 for(item in it) {
@@ -151,6 +154,13 @@ public class NewCharacterClassViewModel @Inject constructor(
         } else {
             subclassDropdownState!!
         }
+    }
+
+    fun canAffordMoreClassLevels(num: Int): Boolean {
+        if((character?.totalClassLevels ?: 0) + num <= 20) {
+            return true
+        }
+        return false
     }
 
 }

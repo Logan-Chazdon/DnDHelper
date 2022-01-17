@@ -45,8 +45,8 @@ data class Character(
     var positiveDeathSaves: Int = 0,
     var negativeDeathSaves: Int = 0,
     var spellSlots: List<Resource> = listOf(),
-    private val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
-    private val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
+    val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
+    val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
 ){
     val features: List<Feature>
     get() {

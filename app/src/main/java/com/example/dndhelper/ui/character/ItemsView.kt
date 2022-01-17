@@ -252,9 +252,11 @@ fun ItemsView(viewModel : ItemViewModel) {
                                             backgroundColor = color
                                         ) {
                                             Row(
-                                                Modifier.padding(5.dp)
+                                                Modifier.padding(5.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween
                                             ) {
                                                 Text(text = item.name!!)
+                                                Text(text = item.costString())
                                             }
                                         }
                                     }
@@ -287,7 +289,7 @@ fun ItemsView(viewModel : ItemViewModel) {
 
                                     Button(
                                         enabled = if (enabled) {
-                                            allItems?.value?.get(selected)?.cost != null
+                                            allItems?.value?.get(selected)?.hasCost() == true
                                         } else {
                                             false
                                         },

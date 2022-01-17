@@ -26,11 +26,9 @@ fun Navigation(navController: NavHostController) {
         }
 
 
-        composable("characterView/MainView/{characterId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("characterId")?.toInt()?.let {
-                val viewModel = hiltViewModel<CharacterMainViewModel>()
-                CharacterMainView(it, viewModel)
-            }
+        composable("characterView/MainView/{characterId}") {
+            val viewModel = hiltViewModel<CharacterMainViewModel>()
+            CharacterMainView(viewModel)
         }
 
         composable("characterView/AbilitiesView/{characterId}") { backStackEntry ->

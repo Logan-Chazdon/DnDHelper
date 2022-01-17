@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun CharacterMainView(characterIndex: Int, viewModel: CharacterMainViewModel) {
+fun CharacterMainView( viewModel: CharacterMainViewModel) {
     val scope = rememberCoroutineScope()
     Column() {
         Row() {

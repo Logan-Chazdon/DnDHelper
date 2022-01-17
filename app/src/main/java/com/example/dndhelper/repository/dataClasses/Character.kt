@@ -218,6 +218,22 @@ data class Character(
         currentHp = maxHp
     }
 
+    private fun checkForProficiency(it: String) : Boolean {
+        proficiencies.forEach { prof ->
+            if(prof.name?.lowercase() ?: "" == it.lowercase())
+                return true
+        }
+        return false
+    }
+
+    fun checkForProficiencies(stats: List<String>): Map<String, Boolean> {
+        val result = mutableMapOf<String, Boolean>()
+        stats.forEach {
+            result[it] = checkForProficiency(it)
+        }
+        return result
+    }
+
     val totalCasterLevels : Int
     get() {
         var result = 0

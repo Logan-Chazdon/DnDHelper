@@ -1,8 +1,7 @@
 package com.example.dndhelper.ui.character
 
-import android.graphics.Paint
-import android.graphics.drawable.shapes.OvalShape
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
@@ -17,10 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.dndhelper.ui.theme.Shapes
 
 @Composable
-fun StatBoxView(stat: String, value: Int, mod: Int) {
+fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -30,7 +28,8 @@ fun StatBoxView(stat: String, value: Int, mod: Int) {
                 .size(100.dp)
                 .background(
                     color = Color.White
-                ),
+                )
+                .clickable { onClick() },
             elevation = 10.dp,
             shape = RoundedCornerShape(10.dp),
         ) {
@@ -84,5 +83,5 @@ fun StatBoxView(stat: String, value: Int, mod: Int) {
 @Preview
 @Composable
 fun Preview() {
-    StatBoxView("Strength", 20, 5)
+    StatBoxView("Strength", 20, 5) {}
 }

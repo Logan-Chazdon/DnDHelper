@@ -10,7 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,10 +47,23 @@ fun StatsView(viewModel: StatsViewModel) {
             cells = GridCells.Fixed(gridCells)
         ) {
             items(6) { item ->
+                var expanded by remember { mutableStateOf(false) }
                 val stat = stats?.get(statNamesAbr[item]) ?: 10
                 val mod = (stat - 10) / 2
-                StatBoxView(stat = statNames[item], value = stat, mod = mod)
-                //TODO add a popup to show all skills Single click shows one double click shows all
+                StatBoxView(stat = statNames[item], value = stat, mod = mod, onClick = {
+                    expanded = true
+                })
+                if(expanded) {
+                    ProficienciesBoxView(
+                        baseStat = statNames[item],
+                        baseStatNum = viewModel.character?.observeAsState()
+                            ?.value?.getStat(statNamesAbr[item]) ?: 0,
+                        profBonus = viewModel.character?.observeAsState()?.value?.proficiencyBonus ?: 2,
+                        stats = viewModel.checkForProficiencies
+                            (viewModel.skills!!.value!![statNames[item]]!!) ?: mutableMapOf(),
+                        modifier = Modifier.fillMaxWidth(0.4f)
+                    )
+                }
             }
         }
 

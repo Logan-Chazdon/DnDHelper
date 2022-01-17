@@ -6,11 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
+import com.example.dndhelper.repository.dataClasses.Character
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-import com.example.dndhelper.repository.dataClasses.Character
 
 @HiltViewModel
 public class StatsViewModel @Inject constructor(
@@ -19,6 +18,7 @@ public class StatsViewModel @Inject constructor(
 ): AndroidViewModel(application) {
 
 
+    var skills: LiveData<Map<String, List<String>>>? = repository.getSkillsByIndex("skill_proficiencies")
 
     var character : LiveData<Character>? = null
 
@@ -28,6 +28,7 @@ public class StatsViewModel @Inject constructor(
         viewModelScope.launch {
             character = repository.getLiveCharacterById(id)
         }
+
 
     }
 
@@ -39,5 +40,9 @@ public class StatsViewModel @Inject constructor(
     fun toggleInspiration() {
         character?.value!!.inspiration = !character?.value!!.inspiration
         repository.insertCharacter(character!!.value!!)
+    }
+
+    fun checkForProficiencies(stats: List<String>): Map<String, Boolean>? {
+        return character?.value?.checkForProficiencies(stats)
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -78,10 +79,20 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                             }
                         )
                     }
-                    FeaturesAndTraitsView(
-                        features = viewModel.characterFeatures.observeAsState(listOf()).value,
-                        modifier = Modifier.fillMaxHeight(0.4f)
-                    )
+                    Column() {
+                        FeaturesAndTraitsView(
+                            features = viewModel.characterFeatures.observeAsState(listOf()).value,
+                            modifier = Modifier.fillMaxHeight(0.4f)
+                        )
+
+                        Spacer(Modifier.height(8.dp))
+
+                        LanguagesAndProficienciesView(
+                            languages = viewModel.character?.observeAsState()?.value?.languages ?: listOf(),
+                            proficiencies = viewModel.character?.observeAsState()?.value?.proficiencies ?: listOf(),
+                            modifier = Modifier.fillMaxHeight(0.4f)
+                        )
+                    }
                 }
             }
         }

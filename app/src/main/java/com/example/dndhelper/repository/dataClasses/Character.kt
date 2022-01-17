@@ -245,4 +245,13 @@ data class Character(
             else -> 0
         }
     }
+
+    val passives : Map<String, Int>
+        get() {
+            return mapOf(
+                "Passive Perception" to (10 + getStatMod("Wis") + proficiencyBonus),
+                "Passive Investigation" to (10 + getStatMod("Int") + proficiencyBonus),
+                "Passive Insight" to (10 + getStatMod("Wis") + proficiencyBonus)
+            )
+        }
 }

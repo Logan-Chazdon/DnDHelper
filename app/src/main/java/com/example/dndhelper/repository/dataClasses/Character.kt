@@ -42,6 +42,25 @@ data class Character(
     var negativeDeathSaves: Int = 0,
     var spellSlots: List<Resource> = listOf()
 ){
+    val features: List<Feature>
+    get() {
+        val result = mutableListOf<Feature>()
+        race?.let { result.addAll(it.traits) }
+
+        classes.forEach {
+            it.levelPath.forEach { feature ->
+                if(feature.level <= it.level) {
+                    result.add(feature)
+                }
+            }
+        }
+
+        feats.forEach {
+            it.features?.let { features -> result.addAll(features) }
+        }
+        return result
+    }
+
     private val realStats : MutableMap<String, Int>
     get() {
         val stats = baseStats.toMutableMap()

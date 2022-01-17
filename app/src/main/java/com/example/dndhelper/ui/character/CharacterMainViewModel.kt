@@ -1,12 +1,10 @@
 package com.example.dndhelper.ui.character
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.Character
+import com.example.dndhelper.repository.dataClasses.Feature
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +17,7 @@ public class CharacterMainViewModel @Inject constructor(
 ): AndroidViewModel(application) {
 
 
+    val characterFeatures: MediatorLiveData<List<Feature>> = MediatorLiveData()
 
     var character : LiveData<Character>? = null
 
@@ -27,6 +26,9 @@ public class CharacterMainViewModel @Inject constructor(
 
         viewModelScope.launch {
             character = repository.getLiveCharacterById(id)
+            characterFeatures.addSource(character!!) {
+                characterFeatures.value = it.features
+            }
         }
 
     }

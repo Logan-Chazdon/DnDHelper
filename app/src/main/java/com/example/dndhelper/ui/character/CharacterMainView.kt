@@ -8,6 +8,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -47,5 +48,9 @@ fun CharacterMainView(characterIndex: Int, viewModel: CharacterMainViewModel) {
                 }
             }
         }
+        FeaturesAndTraitsView(
+            features = viewModel.characterFeatures.observeAsState(listOf()).value,
+            modifier = Modifier
+        )
     }
 }

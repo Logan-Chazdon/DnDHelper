@@ -392,6 +392,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             }
             abilitiesToSkills[baseStat] = skills
         }
+        _abilitiesToSkills.postValue(abilitiesToSkills)
         return abilitiesToSkills
     }
 

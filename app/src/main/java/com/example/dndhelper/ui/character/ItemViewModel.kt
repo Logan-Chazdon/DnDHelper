@@ -17,10 +17,10 @@ import javax.inject.Inject
 public class ItemViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val repository: Repository, application: Application
-): AndroidViewModel(application) {
+) : AndroidViewModel(application) {
 
-    var character : LiveData<Character>? = null
-    var allItems : LiveData<List<ItemInterface>>? = null
+    var character: LiveData<Character>? = null
+    var allItems: LiveData<List<ItemInterface>>? = null
 
 
     init {
@@ -35,24 +35,21 @@ public class ItemViewModel @Inject constructor(
     }
 
 
-
-    suspend fun addItem(selected: Int) {
-        allItems?.value?.let {
-            character?.value?.backpack?.addItem(
-                it[selected]
-            )
-            character?.value.let { newCharacter ->
-                if (newCharacter != null) {
-                    repository.insertCharacter(newCharacter)
-                }
+    suspend fun addItem(item: ItemInterface) {
+        character?.value?.backpack?.addItem(
+            item
+        )
+        character?.value.let { newCharacter ->
+            if (newCharacter != null) {
+                repository.insertCharacter(newCharacter)
             }
         }
     }
 
-    suspend fun buyItem(selected: Int) {
-        val cost = allItems?.value?.get(selected)?.cost
-        if(character?.value?.backpack?.subtractCurrency(cost!!) == true) {
-            addItem(selected)
+    suspend fun buyItem(item: ItemInterface) {
+        val cost = item.cost
+        if (character?.value?.backpack?.subtractCurrency(cost!!) == true) {
+            addItem(item)
             val newChar = character!!.value!!.copy(backpack = character!!.value!!.backpack)
             newChar.id = character!!.value!!.id
             repository.insertCharacter(newChar)
@@ -60,17 +57,18 @@ public class ItemViewModel @Inject constructor(
     }
 
     suspend fun addCurrency(name: String?, newAmount: Int) {
-        var nonAddedCurrency : Int = character?.value?.backpack!!.backgroundCurrency[name]?.copy()?.amount ?: 0
+        var nonAddedCurrency: Int =
+            character?.value?.backpack!!.backgroundCurrency[name]?.copy()?.amount ?: 0
         nonAddedCurrency += character?.value?.backpack!!.classCurrency[name]?.copy()?.amount ?: 0
         character?.value?.backpack!!.addedCurrency[name]!!.amount = newAmount - nonAddedCurrency
 
-        character?.value?.let{
+        character?.value?.let {
             repository.insertCharacter(it)
         }
     }
 
-    suspend fun equip(armor: Armor) : Boolean {
-        return if(character?.value?.getStat("Str") ?: 0 >= armor.strengthPrerequisite ?: 0) {
+    suspend fun equip(armor: Armor): Boolean {
+        return if (character?.value?.getStat("Str") ?: 0 >= armor.strengthPrerequisite ?: 0) {
             character?.value?.equiptArmor = armor
             repository.insertCharacter(character?.value!!)
             true

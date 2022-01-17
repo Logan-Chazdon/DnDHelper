@@ -276,7 +276,7 @@ fun ItemsView(viewModel : ItemViewModel) {
                                         enabled = enabled,
                                         onClick = {
                                             scope.launch(Dispatchers.IO) {
-                                                viewModel.addItem(selected)
+                                                viewModel.addItem(allItems!!.value!!.get(selected))
                                                 selected = -1
                                                 expanded = false
                                             }
@@ -295,7 +295,7 @@ fun ItemsView(viewModel : ItemViewModel) {
                                         },
                                         onClick = {
                                             scope.launch(Dispatchers.IO) {
-                                                viewModel.buyItem(selected)
+                                                viewModel.buyItem(allItems!!.value!!.get(selected))
                                                 selected = -1
                                                 expanded = false
                                             }

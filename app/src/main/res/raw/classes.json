@@ -1,929 +1,1011 @@
 {
-  "classes": [
-    {
-      "name": "Artificer",
-      "spell_casting" : 0.5,
-      "hit_die": 8,
-        "subclass_level" : 3,
-      "proficiency_choices": [
-        {
-          "name" : "Choose two from Arcana, History, Investigation, Medicine, Nature, Perception, Sleight of Hand",
-          "choose" : 2,
-          "from" : [
-            {
-              "name": "Arcana"
-            },
-            {
-              "name": "History"
-            },
-            {
-              "name": "Investigation"
-            },
-            {
-              "name": "Medicine"
-            },
-            {
-              "name": "Nature"
-            },
-            {
-              "name": "Perception"
-            },
-            {
-              "name": "Sleight of Hand"
-            }
-          ]
-        }
-      ],
-      "features": [
-        {
-          "name": "Magical Tinkering",
-          "desc": "At 1st level, you've learned how to invest a spark of magic into mundane objects. To use this ability, you must have thieves' tools or artisan's tools in hand. You then touch a Tiny nonmagical object as an action and give it one of the following magical properties of your choice: The object sheds bright light in a 5-foot radius and dim light for an additional 5 feet. Whenever tapped by a creature, the object emits a recorded message that can be heard up to 10 feet away. You utter the message when you bestow this property on the object, and the recording can be no more than 6 seconds long. The object continuously emits your choice of an odor or a nonverbal sound (wind, waves, chirping, or the like). The chosen phenomenon is perceivable up to 10 feet away. A static visual effect appears on one of the object's surfaces. This effect can be a picture, up to 25 words of text, lines and shapes, or a mixture of these elements, as you like. The chosen property lasts indefinitely. As an action, you can touch the object and end the property early. You can bestow magic on multiple objects, touching one object each time you use this feature, though a single object can only bear one property at a time. The maximum number of objects you can affect with this feature at one time is equal to your Intelligence modifier (minimum of one object). If you try to exceed your maximum, the oldest property immediately ends, and then the new property applies.",
-          "level": 1
-        },
-        {
-          "name": "The Right Tool for the Job",
-          "desc": "At 3rd level, you've learned how to produce exactly the tool you need: with thieves' tools or artisan's tools in hand, you can magically create one set of artisan's tools in an unoccupied space within 5 feet of you. This creation requires 1 hour of uninterrupted work, which can coincide with a short or long rest. Though the product of magic, the tools are nonmagical, and they vanish when you use this feature again.",
-          "level": 3
-        },
-         {
-          "name": "Tool Expertise",
-          "desc": "At 6th level, your proficiency bonus is now doubled for any ability check you make that uses your proficiency with a tool.",
-          "level": 6
-        },
-         {
-          "name": "Flash of Genius",
-          "desc": "At 7th level, you've gained the ability to come up with solutions under pressure. When you or another creature you can see within 30 feet of you makes an ability check or a saving throw, you can use your reaction to add your Intelligence modifier to the roll. You can use this feature a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a long rest.",
-          "level": 7
-        },
-         {
-          "name": "Magic Item Adept",
-          "desc": "When you reach 10th level, you achieve a profound understanding of how to use and make magic items: You can attune to up to four magic items at once. If you craft a magic item with a rarity of common or uncommon, it takes you a quarter of the normal time, and it costs you half as much of the usual gold. ",
-          "level": 10
-        },
-        {
-          "name": "Spell-Storing Item",
-          "desc": "At 11th level, you can now store a spell in an object. Whenever you finish a long rest, you can touch one simple or martial weapon or one item that you can use as a spellcasting focus, and you store a spell in it, choosing a lst- or 2nd-level spell from the artificer spell list that requires 1 action to cast (you needn't have it prepared). While holding the object, a creature can take an action to produce the spell's effect from it, using your spellcasting ability modifier. If the spell requires concentration, the creature must concentrate. The spell stays in the object until it's been used a number of times equal to twice your Intelligence modifier (minimum of twice) or until you use this feature again to store a spell in an object.",
-          "level": 11
-        },
-        {
-          "name": "Magic Item Savant",
-          "desc": "At 14th level, your skill with magic items deepens more: You can attune to up to five magic items at once. You ignore all class, race, spell and level requirements on attuning to or using a magic item.",
-          "level": 14
-        },
-         {
-          "name": "Magic Item Master",
-          "desc": "At 14th level, your skill with magic items deepens more: You can attune to up to five magic items at once. You ignore all class, race, spell and level requirements on attuning to or using a magic item.",
-          "level": 18
-        },
-         {
-          "name": "Soul of Artifice",
-          "desc": "At 20th level, you develop a mystical connection to your magic items, which you can draw on for protection: You gain a +1 bonus to all saving throws per magic item you are currently attuned to. If you're reduced to 0 hit points but not killed out-right, you can use your reaction to end one of your artificer infusions, causing you to drop to 1 hit point instead of 0.",
-          "level": 20
-        }
-      ],
-      "equipment": [
-        {
-          "name": "any two simple weapons",
-          "choose": 2,
-          "from" : [
-            {
-              "index" : "simple_weapons"
-            }
-          ]
-        }
-      ],
-      "infusions": [
-        {
-          "name": "Arcane Propulsion Armor",
-          "level": 14,
-          "desc": "Prerequisite: 14th-level artificer. Item: A suit of armor (requires attunement). The wearer of this armor gains these benefits: The wearer's walking speed increases by 5 feet. The armor includes gauntlets, each of which is a magic melee weapon that can be wielded only when the hand is holding nothing. The wearer is proficient with the gauntlets, and each one deals 1d8 force damage on a hit and has the thrown property, with a normal range of 20 feet and a long range of 60 feet. When thrown, the gauntlet detaches and flies at the attack's target, then immediately returns to the wearer and reattaches. The armor can't be removed against the wearer's will. If the wearer is missing any limbs, the armor replaces those limbs - hands, arms, feet, legs, or similar appendages. The replacements function identically to the body parts they replace.",
-          "requires_attunement": 1
-        },
-          {
-          "name": "Armor of Magical Strength",
-          "desc": "Item: A suit of armor (requires attunement). This armor has 6 charges. The wearer can expend the armor's charges in the following ways: When the wearer makes a Strength check or a Strength saving throw, it can expend 1 charge to add a bonus to the roll equal to its Intelligence modifier. If the creature would be knocked prone, it can use its reaction to expend 1 charge to avoid being knocked prone. The armor regains 1d6 expended charges daily at dawn.",
-          "requires_attunement": 1
-        },
-        {
-          "name": "Armor of Tools (UA)",
-          "desc": "Item: A suit of armor. As an action, a creature wearing this infused armor can integrate into it artisan’s tools or thieves’ tools. The tools remain integrated in the armor for 8 hours or until the wearer removes the tools as an action. The armor can have only one tool integrated at a time. The wearer can add its Intelligence modifier to any ability checks it makes with the integrated tool. The wearer must have a hand free to use the tool."
-        },
-          {
-          "name": "Boots of the Winding Path",
-          "desc": "Item: A rod, staff or wand (requires attunement). While holding this item, a creature gains +1 bonus to spell attack rolls. In addition, the creature ignores half cover when making a spell attack. The bonus increases to +2 when you reach 10th level in this class.",
-          "requires_attunement": 1
-        },
-       {
-          "name": "Enhanced Arcane Focus",
-          "desc": "Item: A suit of armor. As an action, a creature wearing this infused armor can integrate into it artisan’s tools or thieves’ tools. The tools remain integrated in the armor for 8 hours or until the wearer removes the tools as an action. The armor can have only one tool integrated at a time. The wearer can add its Intelligence modifier to any ability checks it makes with the integrated tool. The wearer must have a hand free to use the tool."
-        }, 
-         {
-          "name": "Enhanced Defense",
-          "desc": "Item: A suit of armor or a shield. A creature gains a +1 bonus to Armor Class while wearing (armor) or wielding (shield) the infused item. The bonus increases to +2 when you reach 10th level in this class."
-        },
-         {
-          "name": "Enhanced Weapon",
-          "desc": "Item: A simple or martial weapon. This magic weapon grants a +1 bonus to attack and damage rolls made with it. The bonus increases to +2 when you reach 10th level in this class."
-        }, 
-         {
-          "name": "Helm of Awareness",
-          "level": 10,
-          "desc": "Prerequisite: 10th-level artificer. Item: A helmet (requires attunement). While wearing this helmet, a creature has advantage on initiative rolls. In addition, the wearer can’t be surprised, provided it isn’t incapacitated.",
-          "requires_attunement": 1
-        },
-        {
-          "name": "Mind Sharpener",
-          "desc": "Item: A suit of armor or robes. The infused item can send a jolt to the wearer to refocus their mind. The item has 4 charges. When the wearer fails a Constitution saving throw to maintain concentration on a spell, the wearer can use its reaction to expend 1 of the item's charges to succeed instead. The item regains 1d4 expended charges daily at dawn."
-        }, 
-           {
-          "name": "Radiant Weapon",
-          "desc": "Prerequisite: 6th-level artificer. Item: A simple or martial weapon (requires attunement). ",
-          "level": 6,
-          "requires_attunement": 1
-        },
-         {
-          "name": "Repeating Shot",
-          "desc": "Item: A simple or martial weapon with the ammunition property (requires attunement). This magic weapon grants a + 1 bonus to attack and damage rolls made with it when it's used to make a ranged attack, and it ignores the loading property if it has it. If you load no ammunition in the weapon, it produces its own, automatically creating one piece of magic ammunition when you make a ranged attack with it. The ammunition created by the weapon vanishes the instant after it hits or misses a target."
-        },
-        {
-          "name": "Replicate Magic Item",
-          "desc": "Using this infusion, you replicate a particular magic item. You can learn this infusion multiple times; each time you do so, choose a magic item that you can make with it, picking from the Replicable Items tables. A table's title tells you the level you must be in the class to choose an item from the table. Alternatively, you can choose the magic item from among the common magic items in the game, not including potions or scrolls. In the tables, an item's entry tells you whether the item requires attunement. See the item's description in the Dungeon Master's Guide for more information about it, including the type of object required for its making. If you have Xanathar's Guide to Everything, you can choose from among the common magic items in that book when you pick a magic item you can replicate with this infusion.",
-          "choose": 1,
-          "from": [
-        {
-          "name": "Alchemy Jug",
-          "requires_attunement": 0,
-          "level": 2
-        },
-        {
-          "name": "Bag of Holding",
-          "requires_attunement": 0,
-          "level": 2
-        },  {
-          "name": "Cap of Water Breathing",
-          "requires_attunement": 0,
-          "level": 2
-        },  {
-          "name": "Goggles of Night",
-          "requires_attunement": 0,
-          "level": 2
-        },  {
-          "name": "Rope of Climbing",
-          "requires_attunement": 0,
-          "level": 2
-        },  {
-          "name": "Wand of Magic Detection",
-          "requires_attunement": 0,
-          "level": 2
-        },  {
-          "name": "Wand of Secrets",
-          "requires_attunement": 0,
-          "level": 2
-        }, 
-        {
-          "name": "Sending Stones",
-          "requires_attunement": 0,
-          "level": 2
-        },
-        {
-          "name": "Boots of Elvenkind",
-          "requires_attunement": 0,
-          "level": 6
-        },
-        {
-          "name": "Cloak of Elvenkind",
-          "requires_attunement": 1,
-          "level": 6
-        },
-        {
-          "name": "Cloak of the Manta Ray",
-          "requires_attunement": 0,
-          "level": 6
-        },
-        {
-          "name": "Eyes of Charming",
-          "requires_attunement": 1,
-          "level": 6
-        },
-        {
-          "name": "Gloves of Thievery",
-          "requires_attunement": 0,
-          "level": 6
-        },
-        {
-          "name": "Lantern of Revealing",
-          "requires_attunement": 0,
-          "level": 6
-        },
-        {
-          "name": "Pipes of Haunting",
-          "requires_attunement": 0,
-          "level": 6
-        },
-        {
-          "name": "Ring of Water Walking",
-          "requires_attunement": 0,
-          "level": 6
-        },
-        {
-          "name": "Boots of Striding and Springing",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Boots of the Winterlands",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Bracers of Archery",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Brooch of Shielding",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Cloak of Protection",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Eyes of the Eagle",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Gauntlets of Ogre Power",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Gloves of Missile Snaring",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Gloves of Swimming and Climbing",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Hat of Disguise",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Headband of Intellect",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Helm of Telepathy",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Medallion of Thoughts",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Necklace of Adaptation",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Periapt of Wound Closure",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Pipes of the Sewers",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Ring of Jumping",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Ring of Mind Shielding",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Slippers of Spider Climbing",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Ring of Water Walking",
-          "requires_attunement": 0,
-          "level": 10
-        },
-        {
-          "name": "Ventilating Lungs (Eberron: Rising from the Last War)",
-          "requires_attunement": 1,
-          "level": 10
-        },
-        {
-          "name": "Winged Boots",
-          "requires_attunement": 1,
-          "level": 10
-        },
-         {
-          "name": "Amulet of Health",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Arcane Propulsion Arm (Eberron: Rising from the Last War)",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Belt of Hill Giant Strength",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Boots of Levitation",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Boots of Speed",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Bracers of Defense",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Cloak of the Bat",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Dimensional Shackles",
-          "requires_attunement": 0,
-          "level": 14
-        },
-         {
-          "name": "Gem of Seeing",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Horn of Blasting",
-          "requires_attunement": 0,
-          "level": 14
-        },
-         {
-          "name": "Ring of Free Action",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Ring of Protection",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "Ring of the Ram",
-          "requires_attunement": 1,
-          "level": 14
-        },
-         {
-          "name": "",
-          "requires_attunement": 1,
-          "level": 14
-        }
-
-
-          ]
-        },
-         {
-          "name": "Repulsion Shield",
-          "level": 6,
-          "desc": "Prerequisite: 6th-level artificer. Item: A shield (requires attunement). A creature gains a +1 bonus to Armor Class while wielding this shield. The shield has 4 charges. While holding it, the wielder can use a reaction immediately after being hit by a melee attack to expend 1 of the shield's charges and push the attacker up to 15 feet away. The shield regains 1d4 expended charges daily at dawn.",
-          "requires_attunement": 1
-        },
-        {
-          "name": "Resistant Armor",
-          "level": 6,
-          "desc": "Prerequisite: 6th-level artificer. Item: A suit of armor (requires attunement). While wearing this armor, a creature has resistance to one of the following damage types, which you choose when you infuse the item: acid, cold, fire, force, lightning, necrotic, poison, psychic, radiant, or thunder.",
-          "requires_attunement": 1
-        },
-        {
-          "name": "Returning Weapon",
-          "level": 1,
-          "desc": "Item: A simple or martial weapon with the thrown property. This magic weapon grants a +1 bonus to attack and damage rolls made with it, and it returns to the wielder’s hand immediately after it is used to make a ranged attack.",
-          "requires_attunement": 0
-        },
-          {
-          "name": "Spell-Refueling Ring",
-          "level": 6,
-          "desc": "Prerequisite: 6th-level artificer. Item: A ring (requires attunement). While wearing this ring, the creature can recover one expended spell slot as an action. The recovered slot can be of 3rd level or lower. Once used, the ring can't be used again until the next dawn.",
-          "requires_attunement": 1
-        }
-
-
-      ],
-      "subclasses": [
-        {
-          "name": "Alchemist",
-          "features": [
-            {
-              "name": "Tool Proficiency",
-              "desc": "You gain proficiency with alchemist’s supplies. If you already have this proficiency, you gain proficiency with one other type of artisan’s tools of your choice.",
-              "choose": 1,
-              "from": [
-                  {
-                      "index": "artisans_tools",
-                      "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
-                  }
-              ]
-            },
-              {
-                  "level": 3,
-                  "name": "Experimental Elixir",
-                  "desc": "Whenever you finish a long rest, you can magically produce an experimental elixir in an empty flask you touch. Roll on the Experimental Elixir table for the elixir’s effect, which is triggered when someone drinks the elixir. As an action, a creature can drink the elixir or administer it to an incapacitated creature. You can create additional experimental elixirs by expending a spell slot of 1st level or higher for each one. When you do so, you use your action to create the elixir in an empty flask you touch, and you choose the elixir’s effect from the Experimental Elixir table. Creating an experimental elixir requires you to have alchemist’s supplies on your person, and any elixir you create with this feature lasts until it is drunk or until the end of your next long rest. When you reach certain levels in this class, you can make more elixirs at the end of a long rest: two at 6th level and three at 15th level. Roll for each elixir’s effect separately. Each elixir requires its own flask. 1, Healing. The drinker regains a number of hit points equal to 2d4 + your Intelligence modifier. 2, Swiftness. The drinker’s walking speed increases by 10 feet for 1 hour. 3, Resilience. The drinker gains a +1 bonus to AC for 10 minutes. 4, Boldness. The drinker can roll a d4 and add the number rolled to every attack roll and saving throw they make for the next minute. 5, Flight. The drinker gains a flying speed of 10 feet for 10 minutes. 6, Transformation. The drinker’s body is transformed as if by the alter self spell. The drinker determines the transformation caused by the spell, the effects of which last for 10 minutes."
-              },
-              {
-                  "level": 5,
-                  "name": "Alchemical Savant",
-                  "desc": "You've developed masterful command of magical chemicals, enhancing the healing and damage you create through them. Whenever you cast a spell using your alchemist’s supplies as the spellcasting focus, you gain a bonus to one roll of the spell. That roll must restore hit points or be a damage roll that deals acid, fire, necrotic, or poison damage, and the bonus equals your Intelligence modifier (minimum of +1)."
-              },
-              {
-                  "level": 9,
-                  "name": "Restorative Reagents",
-                  "desc": "You can incorporate restorative reagents into some of your works: Whenever a creature drinks an experimental elixir you created, the creature gains temporary hit points equal to 2d6 + your Intelligence modifier (minimum of 1 temporary hit point). You can cast lesser restoration without expending a spell slot and without preparing the spell, provided you use alchemist’s supplies as the spellcasting focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a long rest."
-              },
-              {
-                  "level": 15,
-                  "name": "Chemical Mastery",
-                  "desc": "You have been exposed to so many chemicals that they pose little risk to you, and you can use them to quickly end certain ailments: You gain resistance to acid damage and poison damage, and you are immune to the poisoned condition. You can cast greater restoration and heal without expending a spell slot, without preparing the spell, and without material components, provided you use alchemist’s supplies as the spellcasting focus. Once you cast either spell with this feature, you can’t cast that spell with it again until you finish a long rest."
-              }
-
-
-
-          ],
-          "spells": [
-            {
-              "level": 3,
-              "name": "healing word",
-              "index": "healing_word"
-            },
-            {
-              "level": 3,
-              "name": "ray of sickness",
-              "index": "ray_of_sickness"
-            },
-            {
-              "level": 5,
-              "name": "flaming sphere",
-              "index": "flaming_sphere"
-            },
-              {
-                  "level": 5,
-                  "name": "Melf’s acid arrow",
-                  "index": "Melf’s_acid_arrow"
-              },
-              {
-                  "level": 9,
-                  "name": "gaseous form",
-                  "index": "gaseous_form"
-              },
-              {
-                  "level": 9,
-                  "name": "mass healing word",
-                  "index": "mass_healing_word"
-              },
-              {
-                  "level": 13,
-                  "name": "blight",
-                  "index": "blight"
-              },
-              {
-                  "level":17,
-                  "name": "cloudkill",
-                  "index": "cloudkill"
-              },
-              {
-                  "level": 3,
-                  "name": "raise dead",
-                  "index": "raise_dead"
-              }
-          ]
-        }
-      ]
-
-
-    },
-    {
-      "name": "Barbarian",
-      "spell_casting" : 0.0,
-        "subclass_level" : 3,
-      "hit_die": 12,
-      "proficiency_choices": [
-        {
-          "name" : "Choose two from Animal Handling, Athletics, Intimidation, Nature, Perception, and Survival",
-         "choose": 2,
-         "from": [
-            {
-              "name": " Animal Handling"
-            },
-            {
-              "name": " Athletics"
-            },
-            {
-              "name": " Intimidation"
-            },
-            {
-              "name": " Nature"
-            },
-            {
-              "name": "Perception"
-            },
-            {
-              "name": "Survival"
-            }
-        ]
-       }
-      ],
-       "proficiencies": [
-        {
-          "name": "Armor: Light armor, medium armor, shields"
-        },
-        {
-          "name": "Weapons: Simple weapons, martial weapons"
-        },
-        {
-          "name": "Intimidation"
-        },
-        {
-          "name": "Saving Throws: Strength, Constitution"
-        }
-
-      ],
-       "equipment": [
-         {
-          "name": "any two simple weapons",
-          "choose": 1,
-          "from" : [
-            {
-                "index": "simple_weapons"
-            }
-          ]
-        }
-      ],
-
-      "features": [
-        {
-          "name": "Rage",
-          "desc": "While you are not wearing any armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.",
-          "level": 1
-        },
-           {
-          "name": "Unarmored Defense",
-          "desc": "In battle, you fight with primal ferocity. On your turn, you can enter a rage as a bonus action. While raging, you gain the following benefits if you aren’t wearing heavy armor: You have advantage on Strength checks and Strength saving throws. When you make a melee weapon attack using Strength, you gain a bonus to the damage roll that increases as you gain levels as a barbarian, as shown in the Rage Damage column of the Barbarian table. You have resistance to bludgeoning, piercing, and slashing damage. If you are able to cast spells, you can’t cast them or concentrate on them while raging. Your rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven’t attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn as a bonus action. Once you have raged the number of times shown for your barbarian level in the Rages column of the Barbarian table, you must finish a long rest before you can rage again.",
-          "level": 1
-        },
-          {
-          "name": "Reckless Attack",
-          "desc": "Starting at 2nd level, you can throw aside all concern for defense to attack with fierce desperation. When you make your first attack on your turn, you can decide to attack recklessly. Doing so gives you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.",
-          "level": 2
-        },
-         {
-          "name": "Danger Sense",
-          "desc": "At 2nd level, you gain an uncanny sense of when things nearby aren’t as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws against effects that you can see, such as traps and spells. To gain this benefit, you can’t be blinded, deafened, or incapacitated.",
-          "level": 2
-        },
-        {
-          "name": "Extra Attack",
-          "desc": "Beginning at 5th level, you can attack twice, instead of once, whenever you take the Attack action on your turn.",
-          "level": 5
-        },
-         {
-          "name": "Fast Movement",
-          "desc": "Starting at 5th level, your speed increases by 10 feet while you aren’t wearing heavy armor.",
-          "level": 5
-        },
-        {
-          "name": "Feral Instinct",
-          "desc": "By 7th level, your instincts are so honed that you have advantage on initiative rolls. Additionally, if you are surprised at the beginning of combat and aren’t incapacitated, you can act normally on your first turn, but only if you enter your rage before doing anything else on that turn.",
-          "level": 7
-        },
-         {
-          "name": "Brutal Critical",
-          "desc": "Beginning at 9th level, you can roll one additional weapon damage die when determining the extra damage for a critical hit with a melee attack. This increases to two additional dice at 13th level and three additional dice at 17th level.",
-          "level": 9
-        },
-        {
-          "name": "Relentless Rage",
-          "desc": "Starting at 11th level, your rage can keep you fighting despite grievous wounds. If you drop to 0 hit points while you’re raging and don’t die outright, you can make a DC 10 Constitution saving throw. If you succeed, you drop to 1 hit point instead. Each time you use this feature after the first, the DC increases by 5. When you finish a short or long rest, the DC resets to 10.",
-          "level": 11
-        },
-         {
-          "name": "Brutal Critical",
-          "desc": "At 13th level, you can roll two additional weapon damage dice when determining the extra damage for a critical hit with a melee attack. This increases to three additional dice at 17th level.",
-          "level": 13
-        },
-         {
-          "name": "Persistent Rage",
-          "desc": "Beginning at 15th level, your rage is so fierce that it ends early only if you fall unconscious or if you choose to end it.",
-          "level": 15
-        },
-        {
-          "name": "Brutal Critical",
-          "desc": "At 17th level, you can roll three additional weapon damage dice when determining the extra damage for a critical hit with a melee attack.",
-          "level": 17
-        },
-        {
-          "name": "Indomitable Might",
-          "desc": "Beginning at 18th level, if your total for a Strength check is less than your Strength score, you can use that score in place of the total.",
-          "level": 18
-        },
-        {
-          "name": "Primal Champion",
-          "desc": "At 20th level, you embody the power of the wilds. Your Strength and Constitution scores increase by 4. Your maximum for those scores is now 24.",
-          "level": 20
-        }
-      ],
-        "subclasses": [ ]
-    },
-    {
-      "name": "Bard",
-      "spell_casting" : 1.0,
-      "hit_die": 8,
-      "subclass_level" : 3,
-      "proficiency_choices": [
-        {
-          "name": "Choose any three skill proficiencies.",
-          "choose": 3,
-          "from" :[
-            {
-              "index": "skill_proficiencies"
-            }
-          ]
-        }
-      ],
-       "proficiencies": [
-        {
-          "name": "Armor: Light armor"
-        },
-        {
-          "name": "Weapons: Simple weapons, hand crossbows, longswords, rapiers, shortswords"
-        },
-        {
-          "name": "Tools: Three musical instruments of your choice",
-          "choose": 3,
-          "from":[
-            {
-              "index":"musical_instruments"
-            }
-          ]
-        },
-        {
-          "name": "Saving Throws: Dexterity, Charisma"
-        },
-        {
-          "name": "Saving Throws: Strength, Constitution"
-        },
-        {
-          "name": "Survival"
-        }
-      ],
-       "equipment": [
-        {
-          "name": "A diplomat’s pack or an entertainer’s pack",
-          "choose": 1,
-          "from" : [
-            {
-              "name": "diplomat’s pack"
-            },
-            {
-              "name": "entertainer’s pack"
-            }
-          ]
-         },
-
-         {
-          "name": "A rapier, a longsword, or any simple weapon",
-          "choose": 1,
-          "from" : [
-              {
-                "name" : "Any simple weapon",
-                "index": "simple_weapons"
-              },
-              {
-                  "name" : "longsword",
-                  "index" : "longsword"
-              },
-               {
-                  "name" : "rapier",
-                  "index" : "rapier"
-              }
-            ]
-         },
-
-         {
-          "name": "A lute or any other musical instrument",
-          "choose": 1,
-
-          "from" : [
-              {
-                "name" : "Any musical instrument",
-                  "options_index": "musical_instrument"
-              },
-              {
-                  "name" : "lute"
-              }
-            ]
-         },
-         {
-          "name": "Leather armor",
-          "index": "Leather armor"
-         },
-         {
-           "name": "Dagger",
-           "index": "Dagger"
-         }
-      ],
-      "features": [
-        {
-          "name": "Bardic Inspiration",
-          "desc": "You can inspire others through stirring words or music. To do so, you use a bonus action on your turn to choose one creature other than yourself within 60 feet of you who can hear you. That creature gains one Bardic Inspiration die, a d6. Once within the next 10 minutes, the creature can roll the die and add the number rolled to one ability check, attack roll, or saving throw it makes. The creature can wait until after it rolls the d20 before deciding to use the Bardic Inspiration die, but must decide before the DM says whether the roll succeeds or fails. Once the Bardic Inspiration die is rolled, it is lost. A creature can have only one Bardic Inspiration die at a time. You can use this feature a number of times equal to your Charisma modifier (a minimum of once). You regain any expended uses when you finish a long rest. Your Bardic Inspiration die changes when you reach certain levels in this class. The die becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level.",
-          "level": 1
-        },
-           {
-          "name": "Jack of All Trades",
-          "desc": "Beginning at 2nd level, you can use soothing music or oration to help revitalize your wounded allies during a short rest. If you or any friendly creatures who can hear your performance regain hit points at the end of the short rest by spending one or more Hit Dice, each of those creatures regains an extra 1d6 hit points. The extra hit points increase when you reach certain levels in this class: to 1d8 at 9th level, to 1d10 at 13th level, and to 1d12 at 17th level.",
-          "level": 2
-        },
-          {
-          "name": "Song of Rest",
-          "desc": "Starting at 2nd level, you can throw aside all concern for defense to attack with fierce desperation. When you make your first attack on your turn, you can decide to attack recklessly. Doing so gives you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.",
-          "level": 2
-        },
-        {
-          "name": "Expertise",
-          "desc": "At 3rd level, choose two of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
-          "level": 3
-        },
-         {
-          "name": "Font of Inspiration",
-          "desc": "Beginning when you reach 5th level, you regain all of your expended uses of Bardic Inspiration when you finish a short or long rest.",
-          "level": 5
-        },
-        {
-          "name": "Countercharm",
-          "desc": "At 6th level, you gain the ability to use musical notes or words of power to disrupt mind-influencing effects. As an action, you can start a performance that lasts until the end of your next turn. During that time, you and any friendly creatures within 30 feet of you have advantage on saving throws against being frightened or charmed. A creature must be able to hear you to gain this benefit. The performance ends early if you are incapacitated or silenced or if you voluntarily end it (no action required).",
-          "level": 6
-        },
-         {
-          "name": "Expertise",
-          "desc": "At 10th level, choose two more of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
-          "level": 10
-        },
-         {
-          "name": "Magical Secrets",
-          "desc": "By 10th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 14th level and again at 18th level.",
-          "level": 10
-        },
-         {
-          "name": "Magical Secrets",
-          "desc": "At 14th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 18th level.",
-          "level": 14
-        },
-        {
-          "name": "Magical Secrets",
-          "desc": "At 18th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table.",
-          "level": 18
-        },
-        {
-          "name": "Superior Inspiration",
-          "desc": "At 20th level, when you roll initiative and have no uses of Bardic Inspiration left, you regain one use.",
-          "level": 20
-        }
-      ],
-     "subclasses": [ ]
-    },
-    {
-      "name": "Cleric",
-      "subclass_level" : 1,
-      "spell_casting" : 1.0,
-      "hit_die": 8,
-      "proficiency_choices": [
-        {
-          "name": "Choose two from History, Insight, Medicine, Persuasion, and Religion",
-          "choose": 2,
-          "from" :[
-            {
-              "name": "History"
-            },
-             {
-              "name": "Insight"
-            },
-             {
-              "name": "Medicine"
-            },
-             {
-              "name": "Persuasion"
-            },
-             {
-              "name": "Religion"
-            }
-
-          ]
-        }
-      ],
-       "proficiencies": [
-        {
-          "name": "Armor: Light armor, medium armor, shields"
-        },
-        {
-          "name": "Weapons: Simple weapons"
-        },
-        {
-          "name": "Tools: None"
-        },
-        {
-          "name": "Saving Throws: Wisdom, Charisma"
-        }
-
-      ],
-       "equipment": [
-         {
-           "name": "A mace or a warhammer (if proficient)",
-           "choose": 1,
-           "from": [
-             {
-               "name": "Mace",
-               "index": "Mace"
-             },
-             {
-               "name": "Warhammer",
-               "index": "Warhammer"
-             }
-           ]
-         },
-         {
-           "name": "Scale mail, leather armor, or chain mail (if proficient)",
-           "choose": 1,
-           "from": [
-             {
-               "name": "chain mail",
-               "index": "chain mail"
-             },
-             {
-               "name": "scale mail",
-               "index": "scale mail"
-             },
-             {
-               "name": "Leather armor",
-               "index": "Leather armor"
-             }
-           ]
-         },
-         {
-            "name": "(a) a light crossbow and 20 bolts or (b) any simple weapon",
-            "choose": 1,
-            "from" : [
+    "classes": [
+        {
+            "name": "Artificer",
+            "spell_casting": 0.5,
+            "hit_die": 8,
+            "subclass_level": 3,
+            "proficiency_choices": [
                 {
-                    "index": "simple_weapons"
+                    "name": "Choose two from Arcana, History, Investigation, Medicine, Nature, Perception, Sleight of Hand",
+                    "choose": 2,
+                    "from": [
+                        {
+                            "name": "Arcana"
+                        },
+                        {
+                            "name": "History"
+                        },
+                        {
+                            "name": "Investigation"
+                        },
+                        {
+                            "name": "Medicine"
+                        },
+                        {
+                            "name": "Nature"
+                        },
+                        {
+                            "name": "Perception"
+                        },
+                        {
+                            "name": "Sleight of Hand"
+                        }
+                    ]
+                }
+            ],
+            "features": [
+                {
+                    "name": "Magical Tinkering",
+                    "desc": "At 1st level, you've learned how to invest a spark of magic into mundane objects. To use this ability, you must have thieves' tools or artisan's tools in hand. You then touch a Tiny nonmagical object as an action and give it one of the following magical properties of your choice: The object sheds bright light in a 5-foot radius and dim light for an additional 5 feet. Whenever tapped by a creature, the object emits a recorded message that can be heard up to 10 feet away. You utter the message when you bestow this property on the object, and the recording can be no more than 6 seconds long. The object continuously emits your choice of an odor or a nonverbal sound (wind, waves, chirping, or the like). The chosen phenomenon is perceivable up to 10 feet away. A static visual effect appears on one of the object's surfaces. This effect can be a picture, up to 25 words of text, lines and shapes, or a mixture of these elements, as you like. The chosen property lasts indefinitely. As an action, you can touch the object and end the property early. You can bestow magic on multiple objects, touching one object each time you use this feature, though a single object can only bear one property at a time. The maximum number of objects you can affect with this feature at one time is equal to your Intelligence modifier (minimum of one object). If you try to exceed your maximum, the oldest property immediately ends, and then the new property applies.",
+                    "level": 1
                 },
                 {
-                    "name" : "light crossbow"
+                    "name": "The Right Tool for the Job",
+                    "desc": "At 3rd level, you've learned how to produce exactly the tool you need: with thieves' tools or artisan's tools in hand, you can magically create one set of artisan's tools in an unoccupied space within 5 feet of you. This creation requires 1 hour of uninterrupted work, which can coincide with a short or long rest. Though the product of magic, the tools are nonmagical, and they vanish when you use this feature again.",
+                    "level": 3
+                },
+                {
+                    "name": "Tool Expertise",
+                    "desc": "At 6th level, your proficiency bonus is now doubled for any ability check you make that uses your proficiency with a tool.",
+                    "level": 6
+                },
+                {
+                    "name": "Flash of Genius",
+                    "desc": "At 7th level, you've gained the ability to come up with solutions under pressure. When you or another creature you can see within 30 feet of you makes an ability check or a saving throw, you can use your reaction to add your Intelligence modifier to the roll. You can use this feature a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a long rest.",
+                    "level": 7
+                },
+                {
+                    "name": "Magic Item Adept",
+                    "desc": "When you reach 10th level, you achieve a profound understanding of how to use and make magic items: You can attune to up to four magic items at once. If you craft a magic item with a rarity of common or uncommon, it takes you a quarter of the normal time, and it costs you half as much of the usual gold. ",
+                    "level": 10
+                },
+                {
+                    "name": "Spell-Storing Item",
+                    "desc": "At 11th level, you can now store a spell in an object. Whenever you finish a long rest, you can touch one simple or martial weapon or one item that you can use as a spellcasting focus, and you store a spell in it, choosing a lst- or 2nd-level spell from the artificer spell list that requires 1 action to cast (you needn't have it prepared). While holding the object, a creature can take an action to produce the spell's effect from it, using your spellcasting ability modifier. If the spell requires concentration, the creature must concentrate. The spell stays in the object until it's been used a number of times equal to twice your Intelligence modifier (minimum of twice) or until you use this feature again to store a spell in an object.",
+                    "level": 11
+                },
+                {
+                    "name": "Magic Item Savant",
+                    "desc": "At 14th level, your skill with magic items deepens more: You can attune to up to five magic items at once. You ignore all class, race, spell and level requirements on attuning to or using a magic item.",
+                    "level": 14
+                },
+                {
+                    "name": "Magic Item Master",
+                    "desc": "At 14th level, your skill with magic items deepens more: You can attune to up to five magic items at once. You ignore all class, race, spell and level requirements on attuning to or using a magic item.",
+                    "level": 18
+                },
+                {
+                    "name": "Soul of Artifice",
+                    "desc": "At 20th level, you develop a mystical connection to your magic items, which you can draw on for protection: You gain a +1 bonus to all saving throws per magic item you are currently attuned to. If you're reduced to 0 hit points but not killed out-right, you can use your reaction to end one of your artificer infusions, causing you to drop to 1 hit point instead of 0.",
+                    "level": 20
                 }
-              ]
-            },
-            {
-              "name": "(a) a priest’s pack or (b) an explorer’s pack",
-              "choose": 1,
-              "from" : [
-                  {
-                    "name": "priest’s pack"
-                  },
-                  {
-                    "name" : "explorer’s pack"
-                  }
-              ]
-            }
-      ],
+            ],
+            "equipment": [
+                {
+                    "name": "any two simple weapons",
+                    "choose": 2,
+                    "from": [
+                        {
+                            "index": "simple_weapons"
+                        }
+                    ]
+                }
+            ],
+            "infusions": [
+                {
+                    "name": "Arcane Propulsion Armor",
+                    "level": 14,
+                    "desc": "Prerequisite: 14th-level artificer. Item: A suit of armor (requires attunement). The wearer of this armor gains these benefits: The wearer's walking speed increases by 5 feet. The armor includes gauntlets, each of which is a magic melee weapon that can be wielded only when the hand is holding nothing. The wearer is proficient with the gauntlets, and each one deals 1d8 force damage on a hit and has the thrown property, with a normal range of 20 feet and a long range of 60 feet. When thrown, the gauntlet detaches and flies at the attack's target, then immediately returns to the wearer and reattaches. The armor can't be removed against the wearer's will. If the wearer is missing any limbs, the armor replaces those limbs - hands, arms, feet, legs, or similar appendages. The replacements function identically to the body parts they replace.",
+                    "requires_attunement": 1
+                },
+                {
+                    "name": "Armor of Magical Strength",
+                    "desc": "Item: A suit of armor (requires attunement). This armor has 6 charges. The wearer can expend the armor's charges in the following ways: When the wearer makes a Strength check or a Strength saving throw, it can expend 1 charge to add a bonus to the roll equal to its Intelligence modifier. If the creature would be knocked prone, it can use its reaction to expend 1 charge to avoid being knocked prone. The armor regains 1d6 expended charges daily at dawn.",
+                    "requires_attunement": 1
+                },
+                {
+                    "name": "Armor of Tools (UA)",
+                    "desc": "Item: A suit of armor. As an action, a creature wearing this infused armor can integrate into it artisan’s tools or thieves’ tools. The tools remain integrated in the armor for 8 hours or until the wearer removes the tools as an action. The armor can have only one tool integrated at a time. The wearer can add its Intelligence modifier to any ability checks it makes with the integrated tool. The wearer must have a hand free to use the tool."
+                },
+                {
+                    "name": "Boots of the Winding Path",
+                    "desc": "Item: A rod, staff or wand (requires attunement). While holding this item, a creature gains +1 bonus to spell attack rolls. In addition, the creature ignores half cover when making a spell attack. The bonus increases to +2 when you reach 10th level in this class.",
+                    "requires_attunement": 1
+                },
+                {
+                    "name": "Enhanced Arcane Focus",
+                    "desc": "Item: A suit of armor. As an action, a creature wearing this infused armor can integrate into it artisan’s tools or thieves’ tools. The tools remain integrated in the armor for 8 hours or until the wearer removes the tools as an action. The armor can have only one tool integrated at a time. The wearer can add its Intelligence modifier to any ability checks it makes with the integrated tool. The wearer must have a hand free to use the tool."
+                },
+                {
+                    "name": "Enhanced Defense",
+                    "desc": "Item: A suit of armor or a shield. A creature gains a +1 bonus to Armor Class while wearing (armor) or wielding (shield) the infused item. The bonus increases to +2 when you reach 10th level in this class."
+                },
+                {
+                    "name": "Enhanced Weapon",
+                    "desc": "Item: A simple or martial weapon. This magic weapon grants a +1 bonus to attack and damage rolls made with it. The bonus increases to +2 when you reach 10th level in this class."
+                },
+                {
+                    "name": "Helm of Awareness",
+                    "level": 10,
+                    "desc": "Prerequisite: 10th-level artificer. Item: A helmet (requires attunement). While wearing this helmet, a creature has advantage on initiative rolls. In addition, the wearer can’t be surprised, provided it isn’t incapacitated.",
+                    "requires_attunement": 1
+                },
+                {
+                    "name": "Mind Sharpener",
+                    "desc": "Item: A suit of armor or robes. The infused item can send a jolt to the wearer to refocus their mind. The item has 4 charges. When the wearer fails a Constitution saving throw to maintain concentration on a spell, the wearer can use its reaction to expend 1 of the item's charges to succeed instead. The item regains 1d4 expended charges daily at dawn."
+                },
+                {
+                    "name": "Radiant Weapon",
+                    "desc": "Prerequisite: 6th-level artificer. Item: A simple or martial weapon (requires attunement). ",
+                    "level": 6,
+                    "requires_attunement": 1
+                },
+                {
+                    "name": "Repeating Shot",
+                    "desc": "Item: A simple or martial weapon with the ammunition property (requires attunement). This magic weapon grants a + 1 bonus to attack and damage rolls made with it when it's used to make a ranged attack, and it ignores the loading property if it has it. If you load no ammunition in the weapon, it produces its own, automatically creating one piece of magic ammunition when you make a ranged attack with it. The ammunition created by the weapon vanishes the instant after it hits or misses a target."
+                },
+                {
+                    "name": "Replicate Magic Item",
+                    "desc": "Using this infusion, you replicate a particular magic item. You can learn this infusion multiple times; each time you do so, choose a magic item that you can make with it, picking from the Replicable Items tables. A table's title tells you the level you must be in the class to choose an item from the table. Alternatively, you can choose the magic item from among the common magic items in the game, not including potions or scrolls. In the tables, an item's entry tells you whether the item requires attunement. See the item's description in the Dungeon Master's Guide for more information about it, including the type of object required for its making. If you have Xanathar's Guide to Everything, you can choose from among the common magic items in that book when you pick a magic item you can replicate with this infusion.",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "name": "Alchemy Jug",
+                            "requires_attunement": 0,
+                            "level": 2
+                        },
+                        {
+                            "name": "Bag of Holding",
+                            "requires_attunement": 0,
+                            "level": 2
+                        },
+                        {
+                            "name": "Cap of Water Breathing",
+                            "requires_attunement": 0,
+                            "level": 2
+                        },
+                        {
+                            "name": "Goggles of Night",
+                            "requires_attunement": 0,
+                            "level": 2
+                        },
+                        {
+                            "name": "Rope of Climbing",
+                            "requires_attunement": 0,
+                            "level": 2
+                        },
+                        {
+                            "name": "Wand of Magic Detection",
+                            "requires_attunement": 0,
+                            "level": 2
+                        },
+                        {
+                            "name": "Wand of Secrets",
+                            "requires_attunement": 0,
+                            "level": 2
+                        },
+                        {
+                            "name": "Sending Stones",
+                            "requires_attunement": 0,
+                            "level": 2
+                        },
+                        {
+                            "name": "Boots of Elvenkind",
+                            "requires_attunement": 0,
+                            "level": 6
+                        },
+                        {
+                            "name": "Cloak of Elvenkind",
+                            "requires_attunement": 1,
+                            "level": 6
+                        },
+                        {
+                            "name": "Cloak of the Manta Ray",
+                            "requires_attunement": 0,
+                            "level": 6
+                        },
+                        {
+                            "name": "Eyes of Charming",
+                            "requires_attunement": 1,
+                            "level": 6
+                        },
+                        {
+                            "name": "Gloves of Thievery",
+                            "requires_attunement": 0,
+                            "level": 6
+                        },
+                        {
+                            "name": "Lantern of Revealing",
+                            "requires_attunement": 0,
+                            "level": 6
+                        },
+                        {
+                            "name": "Pipes of Haunting",
+                            "requires_attunement": 0,
+                            "level": 6
+                        },
+                        {
+                            "name": "Ring of Water Walking",
+                            "requires_attunement": 0,
+                            "level": 6
+                        },
+                        {
+                            "name": "Boots of Striding and Springing",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Boots of the Winterlands",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Bracers of Archery",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Brooch of Shielding",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Cloak of Protection",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Eyes of the Eagle",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Gauntlets of Ogre Power",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Gloves of Missile Snaring",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Gloves of Swimming and Climbing",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Hat of Disguise",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Headband of Intellect",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Helm of Telepathy",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Medallion of Thoughts",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Necklace of Adaptation",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Periapt of Wound Closure",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Pipes of the Sewers",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Ring of Jumping",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Ring of Mind Shielding",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Slippers of Spider Climbing",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Ring of Water Walking",
+                            "requires_attunement": 0,
+                            "level": 10
+                        },
+                        {
+                            "name": "Ventilating Lungs (Eberron: Rising from the Last War)",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Winged Boots",
+                            "requires_attunement": 1,
+                            "level": 10
+                        },
+                        {
+                            "name": "Amulet of Health",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Arcane Propulsion Arm (Eberron: Rising from the Last War)",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Belt of Hill Giant Strength",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Boots of Levitation",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Boots of Speed",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Bracers of Defense",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Cloak of the Bat",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Dimensional Shackles",
+                            "requires_attunement": 0,
+                            "level": 14
+                        },
+                        {
+                            "name": "Gem of Seeing",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Horn of Blasting",
+                            "requires_attunement": 0,
+                            "level": 14
+                        },
+                        {
+                            "name": "Ring of Free Action",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Ring of Protection",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "Ring of the Ram",
+                            "requires_attunement": 1,
+                            "level": 14
+                        },
+                        {
+                            "name": "",
+                            "requires_attunement": 1,
+                            "level": 14
+                        }
+                    ]
+                },
+                {
+                    "name": "Repulsion Shield",
+                    "level": 6,
+                    "desc": "Prerequisite: 6th-level artificer. Item: A shield (requires attunement). A creature gains a +1 bonus to Armor Class while wielding this shield. The shield has 4 charges. While holding it, the wielder can use a reaction immediately after being hit by a melee attack to expend 1 of the shield's charges and push the attacker up to 15 feet away. The shield regains 1d4 expended charges daily at dawn.",
+                    "requires_attunement": 1
+                },
+                {
+                    "name": "Resistant Armor",
+                    "level": 6,
+                    "desc": "Prerequisite: 6th-level artificer. Item: A suit of armor (requires attunement). While wearing this armor, a creature has resistance to one of the following damage types, which you choose when you infuse the item: acid, cold, fire, force, lightning, necrotic, poison, psychic, radiant, or thunder.",
+                    "requires_attunement": 1
+                },
+                {
+                    "name": "Returning Weapon",
+                    "level": 1,
+                    "desc": "Item: A simple or martial weapon with the thrown property. This magic weapon grants a +1 bonus to attack and damage rolls made with it, and it returns to the wielder’s hand immediately after it is used to make a ranged attack.",
+                    "requires_attunement": 0
+                },
+                {
+                    "name": "Spell-Refueling Ring",
+                    "level": 6,
+                    "desc": "Prerequisite: 6th-level artificer. Item: A ring (requires attunement). While wearing this ring, the creature can recover one expended spell slot as an action. The recovered slot can be of 3rd level or lower. Once used, the ring can't be used again until the next dawn.",
+                    "requires_attunement": 1
+                }
+            ],
+            "subclasses": [
+                {
+                    "name": "Alchemist",
+                    "features": [
+                        {
+                            "name": "Tool Proficiency",
+                            "desc": "You gain proficiency with alchemist’s supplies. If you already have this proficiency, you gain proficiency with one other type of artisan’s tools of your choice.",
+                            "choose": 1,
+                            "from": [
+                                {
+                                    "index": "artisans_tools",
+                                    "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
+                                }
+                            ]
+                        },
+                        {
+                            "level": 3,
+                            "name": "Experimental Elixir",
+                            "desc": "Whenever you finish a long rest, you can magically produce an experimental elixir in an empty flask you touch. Roll on the Experimental Elixir table for the elixir’s effect, which is triggered when someone drinks the elixir. As an action, a creature can drink the elixir or administer it to an incapacitated creature. You can create additional experimental elixirs by expending a spell slot of 1st level or higher for each one. When you do so, you use your action to create the elixir in an empty flask you touch, and you choose the elixir’s effect from the Experimental Elixir table. Creating an experimental elixir requires you to have alchemist’s supplies on your person, and any elixir you create with this feature lasts until it is drunk or until the end of your next long rest. When you reach certain levels in this class, you can make more elixirs at the end of a long rest: two at 6th level and three at 15th level. Roll for each elixir’s effect separately. Each elixir requires its own flask. 1, Healing. The drinker regains a number of hit points equal to 2d4 + your Intelligence modifier. 2, Swiftness. The drinker’s walking speed increases by 10 feet for 1 hour. 3, Resilience. The drinker gains a +1 bonus to AC for 10 minutes. 4, Boldness. The drinker can roll a d4 and add the number rolled to every attack roll and saving throw they make for the next minute. 5, Flight. The drinker gains a flying speed of 10 feet for 10 minutes. 6, Transformation. The drinker’s body is transformed as if by the alter self spell. The drinker determines the transformation caused by the spell, the effects of which last for 10 minutes."
+                        },
+                        {
+                            "level": 5,
+                            "name": "Alchemical Savant",
+                            "desc": "You've developed masterful command of magical chemicals, enhancing the healing and damage you create through them. Whenever you cast a spell using your alchemist’s supplies as the spellcasting focus, you gain a bonus to one roll of the spell. That roll must restore hit points or be a damage roll that deals acid, fire, necrotic, or poison damage, and the bonus equals your Intelligence modifier (minimum of +1)."
+                        },
+                        {
+                            "level": 9,
+                            "name": "Restorative Reagents",
+                            "desc": "You can incorporate restorative reagents into some of your works: Whenever a creature drinks an experimental elixir you created, the creature gains temporary hit points equal to 2d6 + your Intelligence modifier (minimum of 1 temporary hit point). You can cast lesser restoration without expending a spell slot and without preparing the spell, provided you use alchemist’s supplies as the spellcasting focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a long rest."
+                        },
+                        {
+                            "level": 15,
+                            "name": "Chemical Mastery",
+                            "desc": "You have been exposed to so many chemicals that they pose little risk to you, and you can use them to quickly end certain ailments: You gain resistance to acid damage and poison damage, and you are immune to the poisoned condition. You can cast greater restoration and heal without expending a spell slot, without preparing the spell, and without material components, provided you use alchemist’s supplies as the spellcasting focus. Once you cast either spell with this feature, you can’t cast that spell with it again until you finish a long rest."
+                        }
+                    ],
+                    "spells": [
+                        {
+                            "level": 3,
+                            "name": "healing word",
+                            "index": "healing_word"
+                        },
+                        {
+                            "level": 3,
+                            "name": "ray of sickness",
+                            "index": "ray_of_sickness"
+                        },
+                        {
+                            "level": 5,
+                            "name": "flaming sphere",
+                            "index": "flaming_sphere"
+                        },
+                        {
+                            "level": 5,
+                            "name": "Melf’s acid arrow",
+                            "index": "Melf’s_acid_arrow"
+                        },
+                        {
+                            "level": 9,
+                            "name": "gaseous form",
+                            "index": "gaseous_form"
+                        },
+                        {
+                            "level": 9,
+                            "name": "mass healing word",
+                            "index": "mass_healing_word"
+                        },
+                        {
+                            "level": 13,
+                            "name": "blight",
+                            "index": "blight"
+                        },
+                        {
+                            "level": 17,
+                            "name": "cloudkill",
+                            "index": "cloudkill"
+                        },
+                        {
+                            "level": 3,
+                            "name": "raise dead",
+                            "index": "raise_dead"
+                        }
+                    ]
+                },
+                {
+                    "name": "Armorer",
+                    "features": [
+                        {
+                            "level": 3,
+                            "name": "Tools of the Trade",
+                            "desc": "You gain proficiency with heavy armor. You also gain proficiency with smith’s tools. If you already have this tool proficiency, you gain proficiency with one other type of artisan’s tools of your choice.",
+                            "choose": 1,
+                            "from": [
+                                {
+                                    "index": "artisans_tools",
+                                    "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
+                                }
 
+                            ]
+                        },
+                        {
+                            "level": 3,
+                            "name": "Arcane Armor",
+                            "desc": "Your metallurgical pursuits have led to you making armor a conduit for your magic. As an action, you can turn a suit of armor you are wearing into Arcane Armor, provided you have smith’s tools in hand. You gain the following benefits while wearing this armor: If the armor normally has a Strength requirement, the arcane armor lacks this requirement for you. You can use the arcane armor as a spellcasting focus for your artificer spells. The armor attaches to you and can’t be removed against your will. It also expands to cover your entire body, although you can retract or deploy the helmet as a bonus action. The armor replaces any missing limbs, functioning identically to a limb it replaces. You can doff or don the armor as an action. The armor continues to be Arcane Armor until you don another suit of armor or you die."
+                        },
+                        {
+                            "level": 3,
+                            "name": "Armor Model",
+                            "desc": "You can customize your Arcane Armor. When you do so, choose one of the following armor models: Guardian or Infiltrator. The model you choose gives you special benefits while you wear it. Each model includes a special weapon. When you attack with that weapon, you can add your Intelligence modifier, instead of Strength or Dexterity, to the attack and damage rolls. You can change the armor’s model whenever you finish a short or long rest, provided you have smith’s tools in hand. Guardian) You design your armor to be in the front line of conflict. It has the following features: Thunder Gauntlets. Each of the armor’s gauntlets counts as a simple melee weapon while you aren’t holding anything in it, and it deals 1d8 thunder damage on a hit. A creature hit by the gauntlet has disadvantage on attack rolls against targets other than you until the start of your next turn, as the armor magically emits a distracting pulse when the creature attacks someone else. Defensive Field. As a bonus action, you can gain temporary hit points equal to your level in this class, replacing any temporary hit points you already have. You lose these temporary hit points if you doff the armor. You can use this bonus action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest. Infiltrator) You customize your armor for subtle undertakings. It has the following features: Lightning Launcher. A gemlike node appears on one of your armored fists or on the chest (your choice). It counts as a simple ranged weapon, with a normal range of 90 feet and a long range of 300 feet, and it deals 1d6 lightning damage on a hit. Once on each of your turns when you hit a creature with it, you can deal an extra 1d6 lightning damage to that target. Powered Steps. Your walking speed increases by 5 feet. Dampening Field. You have advantage on Dexterity (Stealth) checks. If the armor normally imposes disadvantage on such checks, the advantage and disadvantage cancel each other, as normal."
+                        },
+                        {
+                            "level": 5,
+                            "name": "Extra Attack",
+                            "desc": "You can attack twice, rather than once, whenever you take the Attack action on your turn."
+                        },
+                        {
+                            "level": 9,
+                            "name": "Armor Modifications",
+                            "desc": "You learn how to use your artificer infusions to specially modify your Arcane Armor. That armor now counts as separate items for the purposes of your Infuse Items feature: armor (the chest piece), boots, helmet, and the armor’s special weapon. Each of those items can bear one of your infusions, and the infusions transfer over if you change your armor’s model with the Armor Model feature. In addition, the maximum number of items you can infuse at once increases by 2, but those extra items must be part of your Arcane Armor."
+                        },
+                        {
+                            "level": 15,
+                            "name": "Perfected Armor",
+                            "desc": "Your Arcane Armor gains additional benefits based on its model, as shown below. Guardian. When a Huge or smaller creature you can see ends its turn within 30 feet of you, you can use your reaction to magically force it to make a Strength saving throw against your spell save DC. On a failed save, you pull the creature up to 25 feet directly to an unoccupied space. If you pull the target to a space within 5 feet of you, you can make a melee weapon attack against it as part of this reaction. You can use this reaction a number of times equal to your proficiency bonus, and you regain all expended uses of it when you finish a long rest. Infiltrator. Any creature that takes lightning damage from your Lightning Launcher glimmers with magical light until the start of your next turn. The glimmering creature sheds dim light in a 5-foot radius, and it has disadvantage on attack rolls against you, as the light jolts it if it attacks you. In addition, the next attack roll against it has advantage, and if that attack hits, the target takes an extra 1d6 lightning damage."
+                        }
 
-      "features": [
-
-      ],
-        "subclasses": [ ]
-    }
-  ]
+                    ],
+                    "spells": [
+                        {
+                            "level": 3,
+                            "name": "magic missile",
+                            "index": "magic_missile"
+                        },
+                        {
+                            "level": 3,
+                            "name": "thunderwave",
+                            "index": "thunderwave"
+                        },
+                        {
+                            "level": 5,
+                            "name": "mirror image,",
+                            "index": "mirror_image,"
+                        },
+                        {
+                            "level": 5,
+                            "name": "shatter",
+                            "index": "shatter"
+                        },
+                        {
+                            "level": 9,
+                            "name": "hypnotic pattern",
+                            "index": "hypnotic_pattern"
+                        },
+                        {
+                            "level": 9,
+                            "name": "lightning bolt",
+                            "index": "lightning_bolt"
+                        },
+                        {
+                            "level": 13,
+                            "name": "fire shield",
+                            "index": "fire_shield"
+                        },
+                        {
+                            "level": 13,
+                            "name": "greater invisibility",
+                            "index": "greater_invisibility"
+                        },
+                        {
+                            "level": 17,
+                            "name": "passwall",
+                            "index": "passwall"
+                        },
+                        {
+                            "level": 17,
+                            "name": "wall of force",
+                            "index": "wall_of_force"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Barbarian",
+            "spell_casting": 0.0,
+            "subclass_level": 3,
+            "hit_die": 12,
+            "proficiency_choices": [
+                {
+                    "name": "Choose two from Animal Handling, Athletics, Intimidation, Nature, Perception, and Survival",
+                    "choose": 2,
+                    "from": [
+                        {
+                            "name": " Animal Handling"
+                        },
+                        {
+                            "name": " Athletics"
+                        },
+                        {
+                            "name": " Intimidation"
+                        },
+                        {
+                            "name": " Nature"
+                        },
+                        {
+                            "name": "Perception"
+                        },
+                        {
+                            "name": "Survival"
+                        }
+                    ]
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name": "Armor: Light armor, medium armor, shields"
+                },
+                {
+                    "name": "Weapons: Simple weapons, martial weapons"
+                },
+                {
+                    "name": "Intimidation"
+                },
+                {
+                    "name": "Saving Throws: Strength, Constitution"
+                }
+            ],
+            "equipment": [
+                {
+                    "name": "any two simple weapons",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "index": "simple_weapons"
+                        }
+                    ]
+                }
+            ],
+            "features": [
+                {
+                    "name": "Rage",
+                    "desc": "While you are not wearing any armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.",
+                    "level": 1
+                },
+                {
+                    "name": "Unarmored Defense",
+                    "desc": "In battle, you fight with primal ferocity. On your turn, you can enter a rage as a bonus action. While raging, you gain the following benefits if you aren’t wearing heavy armor: You have advantage on Strength checks and Strength saving throws. When you make a melee weapon attack using Strength, you gain a bonus to the damage roll that increases as you gain levels as a barbarian, as shown in the Rage Damage column of the Barbarian table. You have resistance to bludgeoning, piercing, and slashing damage. If you are able to cast spells, you can’t cast them or concentrate on them while raging. Your rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven’t attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn as a bonus action. Once you have raged the number of times shown for your barbarian level in the Rages column of the Barbarian table, you must finish a long rest before you can rage again.",
+                    "level": 1
+                },
+                {
+                    "name": "Reckless Attack",
+                    "desc": "Starting at 2nd level, you can throw aside all concern for defense to attack with fierce desperation. When you make your first attack on your turn, you can decide to attack recklessly. Doing so gives you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.",
+                    "level": 2
+                },
+                {
+                    "name": "Danger Sense",
+                    "desc": "At 2nd level, you gain an uncanny sense of when things nearby aren’t as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws against effects that you can see, such as traps and spells. To gain this benefit, you can’t be blinded, deafened, or incapacitated.",
+                    "level": 2
+                },
+                {
+                    "name": "Extra Attack",
+                    "desc": "Beginning at 5th level, you can attack twice, instead of once, whenever you take the Attack action on your turn.",
+                    "level": 5
+                },
+                {
+                    "name": "Fast Movement",
+                    "desc": "Starting at 5th level, your speed increases by 10 feet while you aren’t wearing heavy armor.",
+                    "level": 5
+                },
+                {
+                    "name": "Feral Instinct",
+                    "desc": "By 7th level, your instincts are so honed that you have advantage on initiative rolls. Additionally, if you are surprised at the beginning of combat and aren’t incapacitated, you can act normally on your first turn, but only if you enter your rage before doing anything else on that turn.",
+                    "level": 7
+                },
+                {
+                    "name": "Brutal Critical",
+                    "desc": "Beginning at 9th level, you can roll one additional weapon damage die when determining the extra damage for a critical hit with a melee attack. This increases to two additional dice at 13th level and three additional dice at 17th level.",
+                    "level": 9
+                },
+                {
+                    "name": "Relentless Rage",
+                    "desc": "Starting at 11th level, your rage can keep you fighting despite grievous wounds. If you drop to 0 hit points while you’re raging and don’t die outright, you can make a DC 10 Constitution saving throw. If you succeed, you drop to 1 hit point instead. Each time you use this feature after the first, the DC increases by 5. When you finish a short or long rest, the DC resets to 10.",
+                    "level": 11
+                },
+                {
+                    "name": "Brutal Critical",
+                    "desc": "At 13th level, you can roll two additional weapon damage dice when determining the extra damage for a critical hit with a melee attack. This increases to three additional dice at 17th level.",
+                    "level": 13
+                },
+                {
+                    "name": "Persistent Rage",
+                    "desc": "Beginning at 15th level, your rage is so fierce that it ends early only if you fall unconscious or if you choose to end it.",
+                    "level": 15
+                },
+                {
+                    "name": "Brutal Critical",
+                    "desc": "At 17th level, you can roll three additional weapon damage dice when determining the extra damage for a critical hit with a melee attack.",
+                    "level": 17
+                },
+                {
+                    "name": "Indomitable Might",
+                    "desc": "Beginning at 18th level, if your total for a Strength check is less than your Strength score, you can use that score in place of the total.",
+                    "level": 18
+                },
+                {
+                    "name": "Primal Champion",
+                    "desc": "At 20th level, you embody the power of the wilds. Your Strength and Constitution scores increase by 4. Your maximum for those scores is now 24.",
+                    "level": 20
+                }
+            ],
+            "subclasses": []
+        },
+        {
+            "name": "Bard",
+            "spell_casting": 1.0,
+            "hit_die": 8,
+            "subclass_level": 3,
+            "proficiency_choices": [
+                {
+                    "name": "Choose any three skill proficiencies.",
+                    "choose": 3,
+                    "from": [
+                        {
+                            "index": "skill_proficiencies"
+                        }
+                    ]
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name": "Armor: Light armor"
+                },
+                {
+                    "name": "Weapons: Simple weapons, hand crossbows, longswords, rapiers, shortswords"
+                },
+                {
+                    "name": "Tools: Three musical instruments of your choice",
+                    "choose": 3,
+                    "from": [
+                        {
+                            "index": "musical_instruments"
+                        }
+                    ]
+                },
+                {
+                    "name": "Saving Throws: Dexterity, Charisma"
+                },
+                {
+                    "name": "Saving Throws: Strength, Constitution"
+                },
+                {
+                    "name": "Survival"
+                }
+            ],
+            "equipment": [
+                {
+                    "name": "A diplomat’s pack or an entertainer’s pack",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "name": "diplomat’s pack"
+                        },
+                        {
+                            "name": "entertainer’s pack"
+                        }
+                    ]
+                },
+                {
+                    "name": "A rapier, a longsword, or any simple weapon",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "name": "Any simple weapon",
+                            "index": "simple_weapons"
+                        },
+                        {
+                            "name": "longsword",
+                            "index": "longsword"
+                        },
+                        {
+                            "name": "rapier",
+                            "index": "rapier"
+                        }
+                    ]
+                },
+                {
+                    "name": "A lute or any other musical instrument",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "name": "Any musical instrument",
+                            "options_index": "musical_instrument"
+                        },
+                        {
+                            "name": "lute"
+                        }
+                    ]
+                },
+                {
+                    "name": "Leather armor",
+                    "index": "Leather armor"
+                },
+                {
+                    "name": "Dagger",
+                    "index": "Dagger"
+                }
+            ],
+            "features": [
+                {
+                    "name": "Bardic Inspiration",
+                    "desc": "You can inspire others through stirring words or music. To do so, you use a bonus action on your turn to choose one creature other than yourself within 60 feet of you who can hear you. That creature gains one Bardic Inspiration die, a d6. Once within the next 10 minutes, the creature can roll the die and add the number rolled to one ability check, attack roll, or saving throw it makes. The creature can wait until after it rolls the d20 before deciding to use the Bardic Inspiration die, but must decide before the DM says whether the roll succeeds or fails. Once the Bardic Inspiration die is rolled, it is lost. A creature can have only one Bardic Inspiration die at a time. You can use this feature a number of times equal to your Charisma modifier (a minimum of once). You regain any expended uses when you finish a long rest. Your Bardic Inspiration die changes when you reach certain levels in this class. The die becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level.",
+                    "level": 1
+                },
+                {
+                    "name": "Jack of All Trades",
+                    "desc": "Beginning at 2nd level, you can use soothing music or oration to help revitalize your wounded allies during a short rest. If you or any friendly creatures who can hear your performance regain hit points at the end of the short rest by spending one or more Hit Dice, each of those creatures regains an extra 1d6 hit points. The extra hit points increase when you reach certain levels in this class: to 1d8 at 9th level, to 1d10 at 13th level, and to 1d12 at 17th level.",
+                    "level": 2
+                },
+                {
+                    "name": "Song of Rest",
+                    "desc": "Starting at 2nd level, you can throw aside all concern for defense to attack with fierce desperation. When you make your first attack on your turn, you can decide to attack recklessly. Doing so gives you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.",
+                    "level": 2
+                },
+                {
+                    "name": "Expertise",
+                    "desc": "At 3rd level, choose two of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
+                    "level": 3
+                },
+                {
+                    "name": "Font of Inspiration",
+                    "desc": "Beginning when you reach 5th level, you regain all of your expended uses of Bardic Inspiration when you finish a short or long rest.",
+                    "level": 5
+                },
+                {
+                    "name": "Countercharm",
+                    "desc": "At 6th level, you gain the ability to use musical notes or words of power to disrupt mind-influencing effects. As an action, you can start a performance that lasts until the end of your next turn. During that time, you and any friendly creatures within 30 feet of you have advantage on saving throws against being frightened or charmed. A creature must be able to hear you to gain this benefit. The performance ends early if you are incapacitated or silenced or if you voluntarily end it (no action required).",
+                    "level": 6
+                },
+                {
+                    "name": "Expertise",
+                    "desc": "At 10th level, choose two more of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
+                    "level": 10
+                },
+                {
+                    "name": "Magical Secrets",
+                    "desc": "By 10th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 14th level and again at 18th level.",
+                    "level": 10
+                },
+                {
+                    "name": "Magical Secrets",
+                    "desc": "At 14th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 18th level.",
+                    "level": 14
+                },
+                {
+                    "name": "Magical Secrets",
+                    "desc": "At 18th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table.",
+                    "level": 18
+                },
+                {
+                    "name": "Superior Inspiration",
+                    "desc": "At 20th level, when you roll initiative and have no uses of Bardic Inspiration left, you regain one use.",
+                    "level": 20
+                }
+            ],
+            "subclasses": []
+        },
+        {
+            "name": "Cleric",
+            "subclass_level": 1,
+            "spell_casting": 1.0,
+            "hit_die": 8,
+            "proficiency_choices": [
+                {
+                    "name": "Choose two from History, Insight, Medicine, Persuasion, and Religion",
+                    "choose": 2,
+                    "from": [
+                        {
+                            "name": "History"
+                        },
+                        {
+                            "name": "Insight"
+                        },
+                        {
+                            "name": "Medicine"
+                        },
+                        {
+                            "name": "Persuasion"
+                        },
+                        {
+                            "name": "Religion"
+                        }
+                    ]
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name": "Armor: Light armor, medium armor, shields"
+                },
+                {
+                    "name": "Weapons: Simple weapons"
+                },
+                {
+                    "name": "Tools: None"
+                },
+                {
+                    "name": "Saving Throws: Wisdom, Charisma"
+                }
+            ],
+            "equipment": [
+                {
+                    "name": "A mace or a warhammer (if proficient)",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "name": "Mace",
+                            "index": "Mace"
+                        },
+                        {
+                            "name": "Warhammer",
+                            "index": "Warhammer"
+                        }
+                    ]
+                },
+                {
+                    "name": "Scale mail, leather armor, or chain mail (if proficient)",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "name": "chain mail",
+                            "index": "chain mail"
+                        },
+                        {
+                            "name": "scale mail",
+                            "index": "scale mail"
+                        },
+                        {
+                            "name": "Leather armor",
+                            "index": "Leather armor"
+                        }
+                    ]
+                },
+                {
+                    "name": "(a) a light crossbow and 20 bolts or (b) any simple weapon",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "index": "simple_weapons"
+                        },
+                        {
+                            "name": "light crossbow"
+                        }
+                    ]
+                },
+                {
+                    "name": "(a) a priest’s pack or (b) an explorer’s pack",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "name": "priest’s pack"
+                        },
+                        {
+                            "name": "explorer’s pack"
+                        }
+                    ]
+                }
+            ],
+            "features": [
+            ],
+            "subclasses": []
+        }
+    ]
 }

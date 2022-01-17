@@ -4,11 +4,9 @@ package com.example.dndhelper.ui.character
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -78,58 +76,69 @@ fun AllCharactersView(
         }
     }
 
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState)
-    ) {
-        allCharacters?.value?.forEachIndexed { i, it ->
-            Card(
-                backgroundColor = Color.White,
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .padding(start = 10.dp)
-                    .combinedClickable (
-                        onClick = {navController.navigate("characterView/MainView/${it.id}")},
-                        onLongClick = {navController.navigate("newCharacterView/ClassView/${it.id}")}
-                    ),
-                elevation = 10.dp
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate("newCharacterView/ClassView/-1")
+                }
             ) {
-                Column() {
-                    Row(verticalAlignment = Alignment.Bottom) {
-                        Text(text = it.name, fontSize = 24.sp)
-                        Spacer(Modifier.width(5.dp))
-                        it.background?.let { it1 -> Text(text = it1.name, fontSize = 14.sp) }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .clickable {
-                                        characterToDeleteIndex.value = i
-                                        openDialog.value = true
-                                    }
+                Icon(Icons.Default.Add, "Add Character")
+            }
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState)
+        ) {
+            allCharacters?.value?.forEachIndexed { i, it ->
+                Card(
+                    backgroundColor = Color.White,
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .padding(start = 10.dp)
+                        .combinedClickable(
+                            onClick = { navController.navigate("characterView/MainView/${it.id}") },
+                            onLongClick = { navController.navigate("newCharacterView/ClassView/${it.id}") }
+                        ),
+                    elevation = 10.dp
+                ) {
+                    Column() {
+                        Row(verticalAlignment = Alignment.Bottom) {
+                            Text(text = it.name, fontSize = 24.sp)
+                            Spacer(Modifier.width(5.dp))
+                            it.background?.let { it1 -> Text(text = it1.name, fontSize = 14.sp) }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
                             ) {
-                                Icon(
-                                    Icons.Default.Delete,
-                                    "Delete Character",
-                                    modifier = Modifier.padding(7.dp)
-                                )
+                                Box(
+                                    modifier = Modifier
+                                        .clickable {
+                                            characterToDeleteIndex.value = i
+                                            openDialog.value = true
+                                        }
+                                ) {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        "Delete Character",
+                                        modifier = Modifier.padding(7.dp)
+                                    )
+                                }
                             }
                         }
-                    }
-                    Row() {
-                       Spacer(modifier = Modifier.width(10.dp))
-                       Text(text = it.race?.name.toString(), fontSize = 16.sp)
-                       Spacer(modifier = Modifier.width(5.dp))
-                       Text(text = it.getFormattedClasses(), fontSize = 16.sp)
+                        Row() {
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(text = it.race?.name.toString(), fontSize = 16.sp)
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(text = it.getFormattedClasses(), fontSize = 16.sp)
+                        }
                     }
                 }
+                Spacer(modifier = Modifier.height(10.dp))
             }
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

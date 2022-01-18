@@ -626,9 +626,7 @@
                             ]
                         }
                     ]
-                }
-            ]
-        },
+                },
         {
             "name": "Barbarian",
             "spell_casting": 0.0,

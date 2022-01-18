@@ -10,8 +10,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,29 +43,20 @@ fun StatsView(viewModel: StatsViewModel) {
         MediaQuery(Dimensions.Width greaterThan 600.dp) {
             gridCells = 6
         }
+        val proficiencyBoxesExpanded =
+            remember { mutableStateListOf<Boolean>(true, false, false, false, false, false) }
 
 
         LazyVerticalGrid(
             cells = GridCells.Fixed(gridCells)
         ) {
             items(6) { item ->
-                var expanded by remember { mutableStateOf(false) }
                 val stat = stats?.get(statNamesAbr[item]) ?: 10
                 val mod = (stat - 10) / 2
                 StatBoxView(stat = statNames[item], value = stat, mod = mod, onClick = {
-                    expanded = true
+                    proficiencyBoxesExpanded.replaceAll { false }
+                    proficiencyBoxesExpanded[item] = true
                 })
-                if(expanded) {
-                    ProficienciesBoxView(
-                        baseStat = statNames[item],
-                        baseStatNum = viewModel.character?.observeAsState()
-                            ?.value?.getStat(statNamesAbr[item]) ?: 0,
-                        profBonus = viewModel.character?.observeAsState()?.value?.proficiencyBonus ?: 2,
-                        stats = viewModel.checkForProficiencies
-                            (viewModel.skills!!.value!![statNames[item]]!!) ?: mutableMapOf(),
-                        modifier = Modifier.fillMaxWidth(0.4f)
-                    )
-                }
             }
         }
 
@@ -95,7 +88,8 @@ fun StatsView(viewModel: StatsViewModel) {
                 ) {
                     Text("Inspiration", Modifier.padding(5.dp))
                     Checkbox(
-                        checked = viewModel.character?.observeAsState()?.value?.inspiration ?: false,
+                        checked = viewModel.character?.observeAsState()?.value?.inspiration
+                            ?: false,
                         onCheckedChange = null,
                         Modifier.size(30.dp)
                     )
@@ -114,6 +108,24 @@ fun StatsView(viewModel: StatsViewModel) {
                 }
             }
 
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        viewModel.skills?.value?.let {
+            for (item in 0 until 5) {
+                if (proficiencyBoxesExpanded[item]) {
+                    ProficienciesBoxView(
+                        baseStat = statNames[item],
+                        baseStatNum = viewModel.character?.observeAsState()
+                            ?.value?.getStatMod(statNamesAbr[item]) ?: 0,
+                        profBonus = viewModel.character?.observeAsState()?.value?.proficiencyBonus ?: 2,
+                        stats = viewModel.checkForProficiencies
+                            (it[statNames[item]]!!) ?: mutableMapOf(),
+                    modifier = Modifier.fillMaxSize(0.9f)
+                    )
+                }
+            }
         }
     }
 }

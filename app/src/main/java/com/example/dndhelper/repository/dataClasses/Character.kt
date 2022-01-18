@@ -238,7 +238,7 @@ data class Character(
     get() {
         var result = 0
         classes.values.forEach{
-            result += floor(it.level.toDouble() * it.spellCasting).toInt()
+            result += floor(it.level.toDouble() * (it.spellCasting?.type ?: 0.0)).toInt()
         }
         return result
     }

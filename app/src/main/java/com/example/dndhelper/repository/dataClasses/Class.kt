@@ -22,7 +22,7 @@ class Class(
     var proficiencies: List<Proficiency> = emptyList(),
     var equipmentChoices: List<ItemChoice> = emptyList(),
     var equipment: List<ItemInterface> = emptyList(),
-    val spellCasting : Double = 0.0
+    val spellCasting : SpellCasting? = null
 ) {
     var isBaseClass: Boolean = false
     var level: Int = 1

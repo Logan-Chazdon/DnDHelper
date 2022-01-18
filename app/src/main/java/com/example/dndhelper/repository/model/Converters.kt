@@ -67,6 +67,21 @@ class Converters {
     }
 
     @TypeConverter
+    fun storedStringToCasting(data: String?): SpellCasting? {
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<SpellCasting?>() {}.getType()
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun castingToStoredString(myObjects: SpellCasting?): String? {
+        return gson.toJson(myObjects)
+    }
+
+
+    @TypeConverter
     fun storedStringToSubClassList(data: String?): MutableList<Subclass> {
         if (data == null) {
             return mutableListOf()

@@ -42,17 +42,30 @@ fun BottomNavigationBar(
                                     Text(text = item.badgeCount.toString())
                                 }
                             ) {
+                                if(item.icon != null) {
+                                    Icon(
+                                        imageVector = item.icon,
+                                        contentDescription = item.name
+                                    )
+                                } else {
+                                    Icon(
+                                        painter = item.painter!!,
+                                        contentDescription = item.name
+                                    )
+                                }
+                            }
+                        } else {
+                            if(item.icon != null) {
                                 Icon(
                                     imageVector = item.icon,
                                     contentDescription = item.name
                                 )
+                            } else {
+                                Icon(
+                                    painter = item.painter!!,
+                                    contentDescription = item.name
+                                )
                             }
-                        } else {
-
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.name
-                            )
                         }
                         if(selected) {
                             Text(

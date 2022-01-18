@@ -30,7 +30,9 @@ fun DrawerNavigationItem(
     scaffoldState: ScaffoldState,
     scope: CoroutineScope,
 ) {
-    val selected = item.baseRoute.split("/")?.get(0) == backStackEntry.value?.destination?.route?.split("/")?.get(0) ?: ""
+    val selected =
+        item.baseRoute.split("/")?.get(0) == backStackEntry.value?.destination?.route?.split("/")
+            ?.get(0) ?: ""
     Row(
         modifier = Modifier
             .clickable {
@@ -51,15 +53,24 @@ fun DrawerNavigationItem(
             .height(50.dp)
             .background(if (selected) Color.LightGray else Color.White),
         verticalAlignment = Alignment.CenterVertically,
-    ){
-        val icon =  Icon(
-            imageVector = item.icon,
-            contentDescription = item.name,
-            modifier = Modifier.size(30.dp),
-            tint = (if(selected) Purple700 else Color.Gray)
-        )
+    ) {
+        val icon = if (item.icon != null) {
+            Icon(
+                imageVector = item.icon,
+                contentDescription = item.name,
+                modifier = Modifier.size(30.dp),
+                tint = (if (selected) Purple700 else Color.Gray)
+            )
+        } else {
+            Icon(
+                painter = item.painter!!,
+                contentDescription = item.name,
+                modifier = Modifier.size(30.dp),
+                tint = (if (selected) Purple700 else Color.Gray)
+            )
+        }
 
-        if(item.badgeCount > 0){
+        if (item.badgeCount > 0) {
             BadgeBox(
                 badgeContent = { Text(text = item.badgeCount.toString()) }
             ) {
@@ -76,9 +87,10 @@ fun DrawerNavigationItem(
         Text(
             text = item.name,
             textAlign = TextAlign.Center,
-            fontSize =  18.sp,
-            color = if(selected) Purple700 else Color.Black,
-            fontStyle = if(selected) FontStyle.Italic else FontStyle.Normal
+            fontSize = 18.sp,
+            color = if (selected) Purple700 else Color.Black,
+            fontStyle = if (selected) FontStyle.Italic else FontStyle.Normal
         )
     }
 }
+

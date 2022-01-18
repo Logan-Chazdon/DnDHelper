@@ -15,8 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.dndhelper.R
 import com.example.dndhelper.ui.navigation.NavItem
 import com.example.dndhelper.ui.navigation.Navigation
 import com.example.dndhelper.ui.navigation.bottomNavBar.BottomNavigationBar
@@ -116,13 +118,13 @@ fun RootView() {
                                 name = "Stats",
                                 route = "$route/StatsView/$id",
                                 baseRoute = "$route/StatsView",
-                                icon = Icons.Default.Home
+                                painter = painterResource(R.drawable.ic_stats_icon)
                             ),
                             NavItem(
                                 name = "Combat",
                                 route = "$route/CombatView/$id",
                                 baseRoute = "$route/CombatView",
-                                icon = Icons.Default.Home
+                                painter = painterResource(R.drawable.ic_combat_icon)
                             ),
                             NavItem(
                                 name = "Items",

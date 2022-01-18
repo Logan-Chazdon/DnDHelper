@@ -17,15 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import androidx.core.app.ActivityCompat.recreate
-
-import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
-import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
-
-
-
 
 
 @Composable
@@ -67,7 +59,7 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, navController: NavCont
                         }
 
                     }) {
-                        Text(text = "Set as race", fontSize = 18.sp)
+                        Text(text = "Set as race")
                     }
                 }
             }

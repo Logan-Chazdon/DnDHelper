@@ -451,7 +451,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 extractItemComponents(spellJson.getJSONArray("item_components"))
             val school = spellJson.getString("school")
             val desc = spellJson.getString("desc")
-            val range = spellJson.getInt("range")
+            val range = spellJson.getString("range")
             val area = spellJson.getString("area")
             val castingTime = spellJson.getString("casting_time")
             val duration = spellJson.getString("duration")

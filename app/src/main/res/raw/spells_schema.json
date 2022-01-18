@@ -52,7 +52,7 @@
 							"type": "string"
 						},
 						"range": {
-							"type": "integer"
+							"type": "string"
 						},
 						"area": {
 							"type": "string"

@@ -7,7 +7,7 @@ data class Spell(
     val itemComponents: List<Item>,
     val school: String,
     val desc: String,
-    val range: Int,
+    val range: String,
     val area: String,
     val castingTime: String,
     val duration: String,

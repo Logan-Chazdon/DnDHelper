@@ -4,7 +4,7 @@
       "name": "Acid Splash",
       "level" : 0,
       "casting_time" : "1 Action",
-      "range" : 60,
+      "range" : "60 ft",
       "school" : "Necro",
       "desc" : "nyeeeh",
       "area" : "Single Target",

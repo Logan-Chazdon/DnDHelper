@@ -1,5 +1,7 @@
 package com.example.dndhelper.repository.dataClasses
 
+import kotlin.math.floor
+
 data class SpellCasting (
     val type : Double, //1 for full casters, 0.5 for half casters.
     val castingAbility: String,
@@ -10,5 +12,7 @@ data class SpellCasting (
     val prepared: MutableList<Spell> = mutableListOf(),
     val known: MutableList<Spell> = mutableListOf()
 ) {
-
+    fun getMaxPrepared(classLevel: Int, castingMod: Int) : Int {
+        return castingMod +  floor((classLevel.toDouble() * preparationModMultiplier!!)).toInt()
+    }
 }

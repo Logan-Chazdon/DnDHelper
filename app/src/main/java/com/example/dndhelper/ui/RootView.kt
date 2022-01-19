@@ -64,7 +64,6 @@ fun RootView() {
                 "newCharacterView" -> {
                     val id : Int = navBackStackEntry?.arguments?.getString("characterId")?.toInt() ?: -1
                     BottomNavigationBar(
-                        //TODO add custom icons
                         items = listOf(
                             NavItem(
                                 name = "Class",
@@ -82,13 +81,13 @@ fun RootView() {
                                 name = "Background",
                                 route = "$route/BackgroundView/$id",
                                 baseRoute = "$route/BackgroundView",
-                                icon = Icons.Default.Home
+                                painter = painterResource(R.drawable.ic_background_icon)
                             ),
                             NavItem(
                                 name = "Stats",
                                 route = "$route/StatsView/$id",
                                 baseRoute = "$route/StatsView",
-                                icon = Icons.Default.Home
+                                painter = painterResource(R.drawable.ic_stats_icon)
                             )
                         ),
                         navController = navController,
@@ -100,7 +99,6 @@ fun RootView() {
                 "characterView" -> {
                     val id : Int = navBackStackEntry?.arguments?.getString("characterId")?.toInt() ?: -1
                     BottomNavigationBar(
-                        //TODO add custom icons
                         items = listOf(
                             NavItem(
                                 name = "Character",
@@ -112,7 +110,7 @@ fun RootView() {
                                 name = "Abilities",
                                 route = "$route/AbilitiesView/$id",
                                 baseRoute = "$route/AbilitiesView",
-                                icon = Icons.Default.Home
+                                painter = painterResource(R.drawable.ic_abilities_icon)
                             ),
                             NavItem(
                                 name = "Stats",
@@ -130,7 +128,7 @@ fun RootView() {
                                 name = "Items",
                                 route = "$route/ItemsView/$id",
                                 baseRoute = "$route/ItemsView",
-                                icon = Icons.Default.Home
+                                painter = painterResource(R.drawable.ic_items_icon)
                             )
                         ),
                         navController = navController,

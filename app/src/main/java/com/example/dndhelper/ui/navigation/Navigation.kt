@@ -32,9 +32,7 @@ fun Navigation(navController: NavHostController) {
         }
 
         composable("characterView/AbilitiesView/{characterId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("characterId")?.toInt()?.let {
-                AbilitiesView(it)
-            }
+            AbilitiesView(hiltViewModel())
         }
 
         composable("characterView/CombatView/{characterId}") { backStackEntry ->

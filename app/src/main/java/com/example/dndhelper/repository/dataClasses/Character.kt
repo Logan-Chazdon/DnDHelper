@@ -301,4 +301,12 @@ data class Character(
         result.addAll(addedProficiencies)
         return result
     }
+
+    val isCaster : Boolean
+    get() {
+        if(totalCasterLevels != 0) {
+            return true
+        }
+        return false
+    }
 }

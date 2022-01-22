@@ -2,7 +2,9 @@ package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +33,7 @@ fun ProficienciesBoxView(
         shape = RoundedCornerShape(10.dp)
     ) {
         Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = baseStat, fontSize = 18.sp)
@@ -66,7 +69,9 @@ private fun LargeSkillView(
             modifier = Modifier.absoluteOffset(x = 20.dp)
         ) {
             Canvas(
-                modifier = Modifier.fillMaxWidth(0.8f).height(30.dp)
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(30.dp)
             ) {
                 drawRoundRect(
                     color = Color.Black,

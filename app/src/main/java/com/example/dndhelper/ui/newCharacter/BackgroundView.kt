@@ -48,7 +48,7 @@ fun BackgroundView(
                     elevation = 10.dp
                 ) {
                     Column(
-                        modifier = Modifier.padding(start = 15.dp)
+                        modifier = Modifier.padding(start = 5.dp)
                     ) {
                         Text(text = it.name, fontSize = 24.sp, )
                         Text(

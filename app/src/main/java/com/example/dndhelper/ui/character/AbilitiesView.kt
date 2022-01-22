@@ -12,7 +12,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun AbilitiesView(viewModel: AbilitiesViewModel) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
     ) {
         viewModel.character?.observeAsState()?.value?.let {
             if (it.isCaster) {

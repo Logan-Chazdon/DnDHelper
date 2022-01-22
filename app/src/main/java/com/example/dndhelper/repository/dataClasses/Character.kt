@@ -309,4 +309,17 @@ data class Character(
         }
         return false
     }
+    val allSpells: Map<Int, List<Spell>>
+    get() {
+        //TODO implement me
+        return mapOf(
+            1 to listOf(
+                Spell("Firebolt", 1, listOf(), listOf(), "", "", "", "", "", "", listOf(), ""),
+                Spell("Firebolt", 1, listOf(), listOf(), "", "", "", "", "", "", listOf(), ""),
+                Spell("Firebolt", 1, listOf(), listOf(), "", "", "", "", "", "", listOf(), ""),
+                Spell("Firebolt", 1, listOf(), listOf(), "", "", "", "", "", "", listOf(), "")
+            )
+        )
+    }
+
 }

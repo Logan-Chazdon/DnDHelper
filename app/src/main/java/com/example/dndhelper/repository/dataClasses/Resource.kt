@@ -6,10 +6,10 @@ class Resource(
     val maxAmountType: String,
     val rechargeAmountType: String,
 ) {
-    private fun maxAmount(maxAmountBasis: Int) : Int {
+    fun maxAmount(maxAmountBasis: Int? = null) : Int {
         return when(maxAmountType) {
             "1:1" -> {
-                maxAmountBasis
+                maxAmountBasis!!
             }
             else -> maxAmountType.toInt()
         }

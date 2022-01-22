@@ -6,14 +6,17 @@
       "casting_time" : "1 Action",
       "range" : "60 ft",
       "school" : "Necro",
-      "desc" : "nyeeeh",
-      "area" : "Single Target",
+      "desc" : "You hurl a bubble of acid. Choose one or two creatures you can see within range. If you choose two, they must be within 5 feet of each other. A target must succeed on a Dexterity saving throw or take 1d6 acid damage. This spell’s damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
+      "area" : "-",
       "duration" : "Instantaneous",
-      "damage" : "Put the description of the damage here",
+      "damage" : "1d6 Acid",
 
       "components" : [
         {
           "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
         }
       ],
 
@@ -23,11 +26,457 @@
 
       "classes" : [
         {
-          "name" : "Warlock",
-          "index": "warlock"
+          "name" : "SORCERER",
+          "index": "SORCERER"
+        },
+        {
+          "name" : "WIZARD",
+          "index": "WIZARD"
+        },
+        {
+          "name" : "ARTIFICER",
+          "index": "ARTIFICER"
         }
       ]
 
+    },
+    {
+      "name": "Blade Ward",
+      "level" : 0,
+      "casting_time" : "",
+      "range" : 0,
+      "school" : "Abjuration",
+      "desc" : "You extend your hand and trace a sigil of warding in the air. Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+      "duration" : "1 Round",
+
+      "classes" : [
+        {
+          "name" : "bard",
+          "index": "bard"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "warlock",
+          "index": "warlock"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Booming Blade",
+      "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 0,
+      "school" : "Evocation",
+      "desc" : "You brandish the weapon used in the spell’s casting and make a melee attack with it against one creature within 5 feet of you. On a hit, the target suffers the weapon attack’s normal effects and then becomes sheathed in booming energy until the start of your next turn. If the target willingly moves 5 feet or more before then, the target takes 1d8 thunder damage, and the spell ends. This spell’s damage increases when you reach certain levels. At 5th level, the melee attack deals an extra 1d8 thunder damage to the target on a hit, and the damage the target takes for moving increases to 2d8. Both damage rolls increase by 1d8 at 11th level (2d8 and 3d8) and again at 17th level (3d8 and 4d8).",
+      "area" : "5ft sphere",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+        {
+          "name" : "a melee weapon worth at least 1 sp",
+          "index": "melee_weapons"
+        }
+
+      ],
+
+
+      "duration" : "1 Round",
+
+      "classes" : [
+        {
+          "name" : "SORCERER",
+          "index": "SORCERER"
+        },
+        {
+          "name" : "WARLOCK",
+          "index": "WARLOCK"
+        },
+        {
+          "name" : "WIZARD",
+          "index": "WIZARD"
+        },
+        {
+          "name" : "ARTIFICER",
+          "index": "ARTIFICER"
+        }
+      ],
+
+      "damage" : "1d8 Thunder"
+    },
+    {
+      "name": "Chill Touch",
+      "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 120,
+      "school" : "Necromancy",
+      "desc" : "You create a ghostly, skeletal hand in the space of a creature within range. Make a ranged spell attack against the creature to assail it with the chill of the grave. On a hit, the target takes 1d8 necrotic damage, and it can't regain hit points until the start of your next turn. Until then, the hand clings to the target. If you hit an undead target, it also has disadvantage on attack rolls against you until the end of your next turn. This spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        "classes": [
+          {
+            "name" : "sorcerer",
+            "index": "sorcerer"
+          },
+          {
+            "name" : "warlock",
+            "index": "warlock"
+          },
+          {
+            "name" : "wizard",
+            "index": "wizard"
+          }
+        ]
+
+      ],
+
+      "damage" : "1d8 necrotic"
     }
+    {
+      "name": "Control Flames",
+      "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 60,
+      "school" : "Transmutation",
+      "desc" : "You choose nonmagical flame that you can see within range and that fits within a 5-foot cube. You affect it in one of the following ways: You instantaneously expand the flame 5 feet in one direction, provided that wood or other fuel is present in the new location. You instantaneously extinguish the flames within the cube. You double or halve the area of bright light and dim light cast by the flame, change its color, or both. The change lasts for 1 hour. You cause simple shapes—such as the vague form of a creature, an inanimate object, or a location—to appear within the flames and animate as you like. The shapes last for 1 hour. If you cast this spell multiple times, you can have up to three of its non-instantaneous effects active at a time, and you can dismiss such an effect as an action.",
+      "area" : "5ft cube",
+
+
+      "components" : [
+        {
+          "name" : "Somatic"
+        }
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        "classes" : [
+          {
+            "name" : "druid",
+            "index": "druid"
+          },
+          {
+            "name" : "sorcerer",
+            "index": "sorcerer"
+          },
+          {
+            "name" : "wizard",
+            "index": "wizard"
+          }
+        ]
+
+      ],
+
+      "damage" : "-"
+    }
+    {
+      "name": "Cantrip",
+      "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 60,
+      "school" : "Conjuration",
+      "desc" : "You create a bonfire on ground that you can see within range. Until the spell ends, the magic bonfire fills a 5-foot cube. Any creature in the bonfire’s space when you cast the spell must succeed on a Dexterity saving throw or take 1d8 fire damage. A creature must also make the saving throw when it moves into the bonfire’s space for the first time on a turn or ends its turn there. The bonfire ignites flammable objects in its area that aren’t being worn or carried. The spell’s damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
+      "area" : "5ft cube",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+      "duration" : "Concentration 1 Minute",
+
+      "classes" : [
+        "classes" : [
+          {
+            "name" : "artificer",
+            "index": "artificer"
+          },
+          {
+            "name" : "druid",
+            "index": "druid"
+          },
+          {
+            "name" : "sorcerer",
+            "index": "sorcerer"
+          },
+          {
+            "name" : "warlock",
+            "index": "warlock"
+          },
+          {
+            "name" : "wizard",
+            "index": "wizard"
+          }
+        ]
+
+      ],
+
+      "damage" : "1d8 fire"
+    }
+    {
+      "name": "Dancing Lights",
+      "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 120,
+      "school" : "Evocation",
+      "desc" : "You create up to four torch-sized lights within range, making them appear as torches, lanterns, or glowing orbs that hover in the air for the duration. You can also combine the four lights into one glowing vaguely humanoid form of Medium size. Whichever form you choose, each light sheds dim light in a 10-foot radius. As a bonus action on your turn, you can move the lights up to 60 feet to a new spot within range. A light must be within 20 feet of another light created by this spell, and a light winks out if it exceeds the spell's range.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        },
+        {
+          "name" : "Material"
+        }
+
+      ],
+
+      "item_components" : [
+        {
+          "name" : "phosphorus "
+        },
+        {
+          "name" : "wychwood"
+        },
+        {
+          "name" : "glowworm"
+        }
+      ],
+
+
+      "duration" : "Concentration 1 Minute",
+
+      "classes" : [
+        "classes" : [
+          {
+            "name" : "artificer",
+            "index": "artificer"
+          }
+          {
+            "name" : "bard",
+            "index": "bard"
+          },
+          {
+            "name" : "sorcerer",
+            "index": "sorcerer"
+          },
+          {
+            "name" : "wizard",
+            "index": "wizard"
+          }
+        ]
+
+      ],
+
+      "damage" : "-"
+    }
+    {
+      "name": "Druidcraft",
+      "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 30,
+      "school" : "Transmutation",
+      "desc" : "Whispering to the spirits of nature, you create one of the following effects within range: You create a tiny, harmless sensory effect that predicts what the weather will be at your location for the next 24 hours. The effect might manifest as a golden orb for clear skies, a cloud for rain, falling snowflakes for snow, and so on. This effect persists for 1 round. You instantly make a flower blossom, a seed pod open, or a leaf bud bloom. You create an instantaneous, harmless sensory effect, such as falling leaves, a puff of wind, the sound of a small animal, or the faint odor of skunk. The effect must fit in a 5-foot cube. You instantly light or snuff out a candle, a torch, or a small campfire.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        "classes" : [
+          {
+            "name" : "druid",
+            "index": "druid"
+          }
+        ]
+
+      ],
+
+      "damage" : "-"
+    }
+    {
+      "name": "Eldritch Blast",
+      "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 120,
+      "school" : "Evocation",
+      "desc" : "A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage. The spell creates more than one beam when you reach higher levels: two beams at 5th level, three beams at 11th level, and four beams at 17th level. You can direct the beams at the same target or at different ones. Make a separate attack roll for each beam.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        "classes" : [
+          {
+            "name" : "warlock",
+            "index": "warlock"
+          }
+        ]
+
+      ],
+
+      "damage" : "1d10 force"
+    }
+    {
+      "name": "Encode Thoughts",
+      "level" : 0,
+      "casting_time" : "1 Action",
+      "range" : 60,
+      "school" : "Enchantment",
+      "desc" : "Putting a finger to your head, you pull a memory, an idea, or a message from your mind and transform it into a tangible string of glowing energy called a thought strand, which persists for the duration or until you cast this spell again. The thought strand appears in an unoccupied space within 5 feet of you as a Tiny, weightless, semisolid object that can be held and carried like a ribbon. It is otherwise stationary. If you cast this spell while concentrating on a spell or an ability that allows you to read or manipulate the thoughts of others (such as detect thoughts or modify memory), you can transform the thoughts or memories you read, rather than your own, into a thought strand. Casting this spell while holding a thought strand allows you to instantly receive whatever memory, idea, or message the thought strand contains. (Casting detect thoughts on the strand has the same effect.)",
+      "area" : "",
+
+
+      "components" : [
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+      "duration" : "8 Hours",
+
+      "classes" : [
+        "classes" : [
+          {
+            "name" : "wizard",
+            "index": "wizard"
+          }
+        ]
+
+      ],
+
+      "damage" : "-"
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   ]
 }

@@ -185,7 +185,7 @@
             "damage": "-"
         },
         {
-            "name": "Cantrip",
+            "name": "Create Bonfire",
             "level": 0,
             "casting_time": "1 Action",
             "range": 60,

@@ -1,9 +1,11 @@
 package com.example.dndhelper.ui.newCharacter
 
 import android.app.Application
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.*
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
@@ -202,6 +204,30 @@ public class NewCharacterClassViewModel @Inject constructor(
         } else {
             classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel] > spells.count { it.level == level }
         }
+    }
+
+    fun totalSpells(classIndex: Int, level: MutableState<TextFieldValue>): Int {
+        return try {
+            classes.value?.getOrNull(classIndex)?.spellCasting?.spellsKnown?.getOrNull(
+                level.value.text.toInt() - 1
+            ) ?: 0
+        } catch (e: NumberFormatException) {
+            0
+        }
+    }
+
+    fun totalCantrips(classIndex: Int, level: MutableState<TextFieldValue>): Int {
+        return try {
+            classes.value?.getOrNull(classIndex)?.spellCasting?.cantripsKnown?.getOrNull(
+                level.value.text.toInt() - 1
+            ) ?: 0
+        } catch (e: NumberFormatException) {
+            0
+        }
+    }
+
+    fun getCastingMod(classIndex: Int): String {
+        return abilityNames[shortAbilityNames.indexOf(classes.value?.getOrNull(classIndex)?.spellCasting?.castingAbility)]
     }
 
 

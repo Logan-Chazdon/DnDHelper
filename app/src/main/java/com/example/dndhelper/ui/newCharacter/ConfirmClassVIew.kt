@@ -134,13 +134,22 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     Column(
                         modifier = Modifier.padding(start = 5.dp)
                     ) {
-                        Row {
-                            //TODO update this UI
-                            Text("Spell casting")
+                        Text(text = "Spell casting", fontSize = 18.sp)
+                        Text(
+                            "You may choose "
+                                    + viewModel.totalSpells(classIndex, levels)
+                                    + " spells and "
+                                    + viewModel.totalCantrips(classIndex, levels)
+                                    + " cantrips."
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Spell mod: " + viewModel.getCastingMod(classIndex))
+
                             Button(
-                                onClick = {
-                                    spellsExpanded = true
-                                }
+                                onClick = { spellsExpanded = true }
                             ) {
                                 Text("Choose Spells")
                             }
@@ -416,10 +425,14 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                     shape = RoundedCornerShape(5.dp),
                                     elevation = 2.dp,
                                     modifier = Modifier
-                                            //TODO long clickable for detail view
+                                        //TODO long clickable for detail view
                                         .clickable {
-                                            if(
-                                                viewModel.canAffordSpellOfLevel(it.level, classIndex, levels.value.text.toInt())
+                                            if (
+                                                viewModel.canAffordSpellOfLevel(
+                                                    it.level,
+                                                    classIndex,
+                                                    levels.value.text.toInt()
+                                                )
                                                 || viewModel.spells.contains(it)
                                             ) {
                                                 viewModel.toggleSpell(it)

@@ -138,18 +138,34 @@ data class Character(
                 it.chosen?.let { items -> backpack.classItems.addAll(items) }
             }
         }
+        val alreadyHasCasterClass = classes.run {
+            var result = false
+            for (it in this.values) {
+                if(it.spellCasting?.type ?: 0.0 != 0.0) {
+                    result = true
+                    break
+                }
+            }
+            result
+        }
         classes[newClass.name] = newClass
 
 
-        spellSlots = when(totalCasterLevels) {
-            1 -> {
-                listOf(Resource(name = "1st", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"))
+        if(alreadyHasCasterClass && newClass.spellCasting?.type ?: 0.0 != 0.0) {
+            //Get spells lots from the multiclass table
+            spellSlots = when(totalCasterLevels) {
+                1 -> {
+                    listOf(Resource(name = "1st", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"))
+                }
+                else -> {
+                    listOf()
+                }
             }
-            else -> {
-                listOf()
-            }
-
+        } else {
+            //Get the spell slots from the class itself
+            spellSlots = newClass.spellCasting?.spellSlotsByLevel?.get(newClass.level) ?: listOf()
         }
+
     }
 
 

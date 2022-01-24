@@ -327,15 +327,18 @@ data class Character(
     }
     val allSpells: Map<Int, List<Spell>>
     get() {
-        //TODO implement me
-        return mapOf(
-            1 to listOf(
-                Spell("Firebolt", 1, listOf(), listOf(), "", "", "", "", "", "", listOf(), ""),
-                Spell("Firebolt", 1, listOf(), listOf(), "", "", "", "", "", "", listOf(), ""),
-                Spell("Firebolt", 1, listOf(), listOf(), "", "", "", "", "", "", listOf(), ""),
-                Spell("Firebolt", 1, listOf(), listOf(), "", "", "", "", "", "", listOf(), "")
-            )
-        )
+        //TODO finish impl
+        val result = mutableMapOf<Int, MutableList<Spell>>()
+
+        classes.forEach {
+            it.value.spellCasting?.known?.forEach { spell ->
+                val oldVal: MutableList<Spell> = result.getOrDefault(spell.level, mutableListOf())
+                oldVal.add(spell)
+                result[spell.level] = oldVal
+            }
+        }
+
+        return result
     }
 
 }

@@ -168,7 +168,9 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
                         backgroundColor = Color.White
                     ) {
-                        Column() {
+                        Column(
+                            Modifier.padding(start = 5.dp)
+                        ) {
                             Text(text = choice.name, style = MaterialTheme.typography.h6)
 
                             //Tell the state bundle what the user can choose from.
@@ -199,7 +201,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
                         backgroundColor = Color.White
                     ) {
-                        Column() {
+                        Column(Modifier.padding(start = 5.dp)) {
                             Text(text = choice.name, style = MaterialTheme.typography.h6)
 
                             //Tell the state bundle what the user can choose from.
@@ -234,7 +236,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         .fillMaxWidth(0.95f)
                         .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
                 ) {
-                    Column {
+                    Column(Modifier.padding(start = 5.dp)){
                         Text(text = "Subclass", style = MaterialTheme.typography.h6)
                         MultipleChoiceDropdownView(
                             state = viewModel.getSubclassDropdownState(
@@ -259,7 +261,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         .fillMaxWidth(0.95f)
                         .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
                 ) {
-                    Column {
+                    Column (Modifier.padding(start = 5.dp)){
                         Text(
                             text = "Feat or Ability score increase",
                             modifier = Modifier.clickable { expanded = !expanded },
@@ -334,7 +336,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             var expanded by remember { mutableStateOf(false) }
                             var selectedLastIndex by remember { mutableStateOf(0) } //TODO change how we do this to for a more scaleable solution. maybe a for loop i < choose
                             var selectedFirstIndex by remember { mutableStateOf(0) }
-                            Column() {
+                            Column(Modifier.padding(start = 5.dp)) {
                                 Text(text = choice.name, style = MaterialTheme.typography.h6)
                                 Text(text = choice.description, fontSize = 12.sp, modifier = Modifier.padding(start = 5.dp))
 

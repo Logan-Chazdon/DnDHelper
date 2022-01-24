@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.example.dndhelper.repository.dataClasses.Character
+import com.example.dndhelper.repository.dataClasses.Resource
 
 
 @ExperimentalFoundationApi
@@ -33,43 +34,57 @@ fun SpellCastingView(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            character.allSpells.forEach { level ->
-                stickyHeader {
+            val spellSlotsOffsetForCantrips = mutableListOf(
+                Resource("Cantrip", 0, "0", "0")
+            )
+            spellSlotsOffsetForCantrips.addAll(character.spellSlots)
+
+            spellSlotsOffsetForCantrips.forEachIndexed { slotLevel, slots ->
+
+                val spells = character.allSpells[slotLevel]
+
+                item {
                     Row(
                         modifier = Modifier.fillMaxWidth(0.9f).padding(5.dp),
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
                     ) {
-                        if (level.key == 0) {
+                        if (slotLevel == 0) {
                             Text("Cantrip")
                         } else {
-                            Text(level.key.toString())
-                            for (index in 0 until character.spellSlots[level.key - 1].maxAmount()) {
-                                Canvas(
-                                    modifier = Modifier.size(20.dp)
-                                ) {
-                                    drawCircle(
-                                        color = if( character.spellSlots[level.key - 1].currentAmount >= index) {
-                                            Color.White
-                                        } else {
-                                            Color.Gray
-                                        },
-                                        center = this.center,
-                                        style = Fill
-                                    )
+                            Text(slots.name)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End)
+                            ) {
 
-                                    drawCircle(
-                                        color = Color.Black,
-                                        center = this.center,
-                                        style = Stroke(0.2f)
-                                    )
+                                for (index in 0 until slots.maxAmount()) {
+                                    Canvas(
+                                        modifier = Modifier.size(20.dp)
+                                    ) {
+                                        drawCircle(
+                                            color = if (slots.currentAmount >= index) {
+                                                Color.White
+                                            } else {
+                                                Color.Gray
+                                            },
+                                            center = this.center,
+                                            style = Fill
+                                        )
+
+                                        drawCircle(
+                                            color = Color.Black,
+                                            center = this.center,
+                                            style = Stroke(2f)
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                items(level.value.size) { i ->
-                    val spell = level.value[i]
+                items(spells?.size ?: 0) { i ->
+                    val spell = spells!![i]
                     Card(
                         modifier = Modifier.fillMaxWidth(0.9f),
                         elevation = 2.dp

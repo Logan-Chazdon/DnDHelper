@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -36,28 +37,25 @@ fun RaceView(
         races.value?.forEachIndexed { i, race ->
             Card(
                 backgroundColor = Color.White,
-                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth(0.95f)
                     .clickable {
-                               navController.navigate("newCharacterView/ConfirmRaceView/$i/$characterId")
+                        navController.navigate("newCharacterView/ConfirmRaceView/$i/$characterId")
                     },
+                shape = RoundedCornerShape(10.dp),
                 elevation = 10.dp
             ) {
-                Column(Modifier.padding(start =5.dp)) {
+                Column(Modifier.padding(start =5.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Row(
                         verticalAlignment = Alignment.Bottom
-                    )
-                    {
+                    ) {
                         Text(text = race.name, fontSize = 24.sp)
                         Spacer(Modifier.fillMaxWidth(0.1f))
                         Text(text = race.size, fontSize = 18.sp)
                     }
-                    Column(
-                        modifier = Modifier.padding(start = 20.dp)
-                    ) {
+                    Column {
 
-                        Text(text = "Languages", fontSize = 16.sp)
+                        Text(text = "Languages", style = MaterialTheme.typography.subtitle1)
                         Row()
                         {
                             for (language in race.languages) {
@@ -65,15 +63,12 @@ fun RaceView(
                                 Spacer(modifier = Modifier.width(10.dp))
                             }
                         }
-                        Spacer(Modifier.height(2.dp))
 
                         for(trait in race.traits) {
-                            Text(text = trait.name, fontSize = 18.sp)
+                            Text(text = trait.name, style = MaterialTheme.typography.subtitle1)
                             Spacer(Modifier.height(2.dp))
                             Text(text = trait.description, modifier = Modifier.padding(start = 5.dp))
                         }
-
-                        Spacer(Modifier.height(2.dp))
 
                         Row()
                         {
@@ -85,7 +80,6 @@ fun RaceView(
                             Spacer(modifier = Modifier.fillMaxWidth(0.2f))
                             Text(text = "Speed: ${race.groundSpeed}")
                         }
-                        Spacer(Modifier.height(2.dp))
                     }
                 }
             }

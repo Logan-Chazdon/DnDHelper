@@ -12,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -40,11 +41,13 @@ fun ConfirmBackgroundView(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .padding(start = 10.dp)
-                    .verticalScroll(scrollState)
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row() {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(text = background.name, style = MaterialTheme.typography.h4)
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                         Button(
@@ -59,16 +62,15 @@ fun ConfirmBackgroundView(
 
                             }
                         ) {
-                            Text(text = "Add background")
+                            Text(text = "Set")
                         }
 
                     }
                 }
                 Text(text = background.desc, fontSize = 16.sp, modifier = Modifier.padding(start = 10.dp))
-
                 background.equipmentChoices.forEach { choice ->
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(0.95f),
                         backgroundColor = Color.White,
                         elevation = 5.dp,
                         shape = RoundedCornerShape(10.dp)
@@ -104,7 +106,7 @@ fun ConfirmBackgroundView(
 
                 if(background.proficiencies.isNotEmpty() || background.toolProficiencies.isNotEmpty()) {
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(0.95f),
                         backgroundColor = Color.White,
                         elevation = 5.dp,
                         shape = RoundedCornerShape(10.dp)
@@ -127,7 +129,7 @@ fun ConfirmBackgroundView(
 
                 if(background.languageChoices.isNotEmpty()) {
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(0.95f),
                         backgroundColor = Color.White,
                         elevation = 5.dp,
                         shape = RoundedCornerShape(10.dp)
@@ -166,7 +168,7 @@ fun ConfirmBackgroundView(
 
                 background.features.forEach {
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(0.95f),
                         backgroundColor = Color.White,
                         elevation = 5.dp,
                         shape = RoundedCornerShape(10.dp)
@@ -175,7 +177,7 @@ fun ConfirmBackgroundView(
                             modifier = Modifier.padding(5.dp)
                         ) {
                             Text(text = it.name, style = MaterialTheme.typography.h6)
-                            Text(text = it.description, modifier = Modifier.padding(start = 5.dp))
+                            Text(text = it.description)
                         }
                     }
                 }

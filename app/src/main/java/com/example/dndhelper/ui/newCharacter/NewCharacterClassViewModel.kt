@@ -22,6 +22,8 @@ public class NewCharacterClassViewModel @Inject constructor(
     var isBaseClass =  mutableStateOf(true)
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var character : Character?  = null
+    val spells = mutableStateListOf<Spell>()
+
     //ASIs
     private val shortAbilityNames  = mutableListOf(
         "Str",
@@ -113,6 +115,10 @@ public class NewCharacterClassViewModel @Inject constructor(
                 (subclassDropdownState?.getSelected(newClass.subClasses) as List<Subclass>).getOrNull(0)
         }
 
+        if(newClass.spellCasting?.prepareFrom != "all") {
+            newClass.spellCasting?.known?.addAll(spells.toList())
+        }
+
         character!!.addClass(newClass)
         character.let { repository.insertCharacter(it) }
     }
@@ -170,6 +176,34 @@ public class NewCharacterClassViewModel @Inject constructor(
     get() {
         return character?.hasBaseClass ?: false
     }
+
+    fun getSpells(classIndex: Int): MediatorLiveData<MutableList<Spell>> {
+        return repository.getAllSpellsByClassIndex(classIndex)
+    }
+
+    fun toggleSpell(it: Spell) {
+        if(spells.contains(it)) {
+            spells.remove(it)
+        } else {
+            spells.add(it)
+        }
+    }
+
+    fun learnsSpells(classIndex: Int): Boolean {
+        if(classes.value?.get(classIndex)?.spellCasting?.prepareFrom?.lowercase() == "all") {
+            return false
+        }
+        return (classes.value?.get(classIndex)?.spellCasting?.type ?: 0) != 0
+    }
+
+    fun canAffordSpellOfLevel(level: Int, classIndex: Int, classLevel: Int): Boolean {
+        return if(level == 0) {
+            classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel] > spells.count { it.level == level }
+        } else {
+            classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel] > spells.count { it.level == level }
+        }
+    }
+
 
 }
 

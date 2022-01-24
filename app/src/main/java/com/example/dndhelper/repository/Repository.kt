@@ -1,14 +1,15 @@
 package com.example.dndhelper.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.dndhelper.repository.model.DatabaseDao
+import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.repository.localDataSources.LocalDataSource
-import javax.inject.Inject
 import com.example.dndhelper.repository.localDataSources.LocalDataSourceImpl
+import com.example.dndhelper.repository.model.DatabaseDao
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import com.example.dndhelper.repository.dataClasses.*
+import javax.inject.Inject
 
 
 class Repository @Inject constructor(
@@ -25,6 +26,7 @@ class Repository @Inject constructor(
         (LocalDataSource as LocalDataSourceImpl)._abilitiesToSkills
     private val _items: MutableLiveData<List<ItemInterface>> =  (LocalDataSource as LocalDataSourceImpl)._items
     private val _feats: MutableLiveData<List<Feat>> =  (LocalDataSource as LocalDataSourceImpl)._feats
+    private val _spells: MutableLiveData<List<Spell>> =  (LocalDataSource as LocalDataSourceImpl)._spells
 
     init {
  /*
@@ -118,6 +120,21 @@ class Repository @Inject constructor(
 
     fun getAllItems(): LiveData<List<ItemInterface>> {
         return _items
+    }
+
+    fun getAllSpellsByClassIndex(classIndex: Int): MediatorLiveData<MutableList<Spell>> {
+        val result = MediatorLiveData<MutableList<Spell>>()
+        result.addSource(_spells) {
+            it.forEach { spell ->
+                if(_classes.value?.get(classIndex)?.let {  it1 -> spell.classes.contains(it1.name.lowercase()) } == true){
+                    val newList = mutableListOf<Spell>()
+                    result.value?.let { oldValues -> newList.addAll(oldValues) }
+                    newList.add(spell)
+                    result.value = newList
+                }
+            }
+        }
+        return result
     }
 
 

@@ -10,25 +10,32 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+@ExperimentalComposeUiApi
 @Composable
 fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavController, classIndex: Int) {
     val classes = viewModel.classes.observeAsState()
     val mainLooper = Looper.getMainLooper()
-
+    var spellsExpanded by remember { mutableStateOf(false) }
     val levels = remember {
         mutableStateOf(TextFieldValue("1"))
     }
@@ -116,6 +123,31 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                 .verticalScroll(state = scrollState, enabled = true),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if(viewModel.learnsSpells(classIndex)) {
+                Card(
+                    elevation = 5.dp,
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                    backgroundColor = Color.White
+                ) {
+                    Column(
+                        modifier = Modifier.padding(start = 5.dp)
+                    ) {
+                        Row {
+                            //TODO update this UI
+                            Text("Spell casting")
+                            Button(
+                                onClick = {
+                                    spellsExpanded = true
+                                }
+                            ) {
+                                Text("Choose Spells")
+                            }
+                        }
+                    }
+                }
+            }
 
             if(viewModel.isBaseClass.value) {
                 val proficiencyChoices = viewModel.classes.observeAsState().value?.get(classIndex)?.proficiencyChoices
@@ -341,5 +373,93 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             }
         }
     }
+
+    if(spellsExpanded) {
+        Dialog(
+            onDismissRequest = {
+                spellsExpanded = false
+            },
+            properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = true)
+        ) {
+            Card(
+                modifier = Modifier.fillMaxSize(0.9f),
+                shape = RoundedCornerShape(10.dp),
+                elevation = 10.dp
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    var search by remember { mutableStateOf("") }
+                    Row(
+                        Modifier
+                            .fillMaxWidth(),
+                    ) {
+                        TextField(
+                            value = search,
+                            label = {
+                                Text("Search")
+                            },
+                            onValueChange = {
+                                search = it
+                            },
+                            singleLine = true,
+                            textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+                            modifier = Modifier.fillMaxWidth(),
+                            trailingIcon = {
+                                Icon(
+                                    Icons.Default.Search,
+                                    "Search"
+                                )
+                            }
+                        )
+                    }
+
+                    viewModel.getSpells(classIndex).observeAsState().value?.let { spells ->
+                        spells.forEach {
+                            //TODO upgrade search
+                            if(search == "" || it.name.lowercase().contains(search.lowercase())) {
+                                Card(
+                                    shape = RoundedCornerShape(5.dp),
+                                    elevation = 2.dp,
+                                    modifier = Modifier
+                                            //TODO long clickable for detail view
+                                        .clickable {
+                                            if(
+                                                viewModel.canAffordSpellOfLevel(it.level, classIndex, levels.value.text.toInt())
+                                                || viewModel.spells.contains(it)
+                                            ) {
+                                                viewModel.toggleSpell(it)
+                                            }
+                                        }
+                                        .fillMaxWidth(),
+                                    backgroundColor = when {
+                                        viewModel.spells.contains(it) -> {
+                                            MaterialTheme.colors.primary
+                                        }
+                                        viewModel.canAffordSpellOfLevel(it.level, classIndex, levels.value.text.toInt()) -> {
+                                            MaterialTheme.colors.background
+                                        }
+                                        else -> {
+                                            //TODO add a color here
+                                            Color.LightGray
+                                        }
+                                    }
+                                ) {
+                                    //TODO add more data here
+                                    Row(
+                                        modifier = Modifier.padding(5.dp)
+                                    ) {
+                                        Text(it.name)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
 }
 

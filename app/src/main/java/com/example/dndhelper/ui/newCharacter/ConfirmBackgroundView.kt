@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -77,7 +78,7 @@ fun ConfirmBackgroundView(
                         ) {
                             Text(
                                 text = choice.name,
-                                fontSize = 16.sp,
+                                style = MaterialTheme.typography.h6
                             )
 
                             //Tell the state bundle what the user can choose from.
@@ -132,11 +133,12 @@ fun ConfirmBackgroundView(
                         shape = RoundedCornerShape(10.dp)
                     ) {
                         background.languageChoices.forEach { choice ->
-                            Column {
+                            Column (
+                                modifier = Modifier.padding(start = 5.dp)
+                            ){
                                 Text(
                                     text = choice.name,
-                                    fontSize = 16.sp,
-                                    modifier = Modifier.padding(start = 5.dp)
+                                    style = MaterialTheme.typography.h6,
                                 )
 
                                 //Tell the state bundle what the user can choose from.
@@ -172,7 +174,7 @@ fun ConfirmBackgroundView(
                         Column(
                             modifier = Modifier.padding(5.dp)
                         ) {
-                            Text(text = it.name, fontSize = 16.sp)
+                            Text(text = it.name, style = MaterialTheme.typography.h6)
                             Text(text = it.description, modifier = Modifier.padding(start = 5.dp))
                         }
                     }

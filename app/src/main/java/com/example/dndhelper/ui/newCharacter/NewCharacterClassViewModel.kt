@@ -200,9 +200,9 @@ public class NewCharacterClassViewModel @Inject constructor(
 
     fun canAffordSpellOfLevel(level: Int, classIndex: Int, classLevel: Int): Boolean {
         return if(level == 0) {
-            classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel] > spells.count { it.level == level }
+            classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel - 1] > spells.count { it.level == level }
         } else {
-            classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel] > spells.count { it.level == level }
+            classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel - 1] > spells.count { it.level == level }
         }
     }
 

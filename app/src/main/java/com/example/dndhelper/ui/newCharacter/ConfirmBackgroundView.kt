@@ -45,7 +45,7 @@ fun ConfirmBackgroundView(
                     .verticalScroll(scrollState)
             ) {
                 Row() {
-                    Text(text = background.name, fontSize = 24.sp)
+                    Text(text = background.name, style = MaterialTheme.typography.h4)
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                         Button(
                             onClick = {

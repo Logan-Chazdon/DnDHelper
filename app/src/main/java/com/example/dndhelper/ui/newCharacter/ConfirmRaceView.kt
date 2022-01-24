@@ -37,7 +37,7 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, navController: NavCont
             races.value?.get(raceIndex)?.let {
                 Text(
                     text = it.name,
-                    fontSize = 24.sp
+                    style = MaterialTheme.typography.h4,
                 )
                 Spacer(Modifier.width(15.dp))
                 Text(

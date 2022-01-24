@@ -53,7 +53,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             classes.value?.get(classIndex)?.let {
                 Text(
                     text = it.name,
-                    fontSize = 32.sp,
+                    style = MaterialTheme.typography.h4,
                 )
             }
 

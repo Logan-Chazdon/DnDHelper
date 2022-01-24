@@ -1,6 +1,5 @@
 package com.example.dndhelper.ui.newCharacter
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -39,7 +38,6 @@ fun RaceView(
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth(0.95f)
-                    .padding(start = 10.dp)
                     .clickable {
                                navController.navigate("newCharacterView/ConfirmRaceView/$i/$characterId")
                     },

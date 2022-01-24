@@ -41,7 +41,6 @@ fun BackgroundView(
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .padding(start = 10.dp)
                         .clickable {
                             navController.navigate("newCharacterView/BackgroundView/ConfirmBackGroundView/$i/${viewModel.id}")
                         },

@@ -840,7 +840,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 val slot = levelJson.getInt(slotIndex)
                                 level.add(
                                     Resource(
-                                        name = slot.toString(), //TODO make this change 1 to 1st
+                                        name = (slotIndex + 1).toString(), //TODO make this change 1 to 1st
                                         currentAmount = slot,
                                         maxAmountType = slot.toString(),
                                         rechargeAmountType = "full"

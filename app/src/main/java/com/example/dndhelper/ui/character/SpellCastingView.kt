@@ -90,18 +90,16 @@ fun SpellCastingView(
                         elevation = 2.dp
                     ) {
                         Row(
-                            modifier = Modifier.padding(2.dp)
+                            modifier = Modifier.padding(2.dp),
+                            horizontalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                            Text(spell.name, Modifier.width(200.dp))
-                            Spacer(Modifier.width(2.dp))
+                            Text(spell.name, Modifier.width(150.dp))
 
                             if (spell.damage != "-") {
                                 Text(spell.damage, Modifier.width(100.dp))
-                                Spacer(Modifier.width(2.dp))
                             }
 
                             Text(spell.castingTime, Modifier.width(100.dp))
-                            Spacer(Modifier.width(2.dp))
                         }
                     }
                     Spacer(Modifier.height(2.dp))

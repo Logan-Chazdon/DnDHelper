@@ -89,8 +89,9 @@ fun AllCharactersView(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(scrollState)
+                .fillMaxSize()
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             allCharacters?.value?.forEachIndexed { i, it ->
                 Card(
@@ -137,7 +138,6 @@ fun AllCharactersView(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     }

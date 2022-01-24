@@ -37,7 +37,9 @@ fun ConfirmBackgroundView(
     viewModel.backgroundIndex = backgroundIndex
     if (background != null) {
         Row(
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                    .fillMaxSize()
         ) {
             Column(
                 modifier = Modifier

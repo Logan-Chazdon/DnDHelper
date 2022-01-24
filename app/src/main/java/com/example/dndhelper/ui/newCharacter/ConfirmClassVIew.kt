@@ -112,7 +112,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             )
         }
 
-        Spacer(modifier = Modifier.height(5.dp))
 
 
         val scrollState = rememberScrollState()
@@ -121,7 +120,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .verticalScroll(state = scrollState, enabled = true),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if(viewModel.learnsSpells(classIndex)) {
                 Card(
@@ -181,7 +181,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             MultipleChoiceDropdownView(state = multipleChoiceState)
                         }
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
                 }
 
                 val equipmentChoices = viewModel.classes.observeAsState().value?.get(classIndex)?.equipmentChoices
@@ -214,7 +213,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             MultipleChoiceDropdownView(state = multipleChoiceState)
                         }
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
                 }
             }
 
@@ -240,7 +238,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(10.dp))
             }
 
             //ASIs
@@ -307,7 +304,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(10.dp))
             }
 
 
@@ -366,8 +362,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.height(10.dp))
-
                     }
                 }
             }

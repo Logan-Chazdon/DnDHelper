@@ -34,6 +34,7 @@ fun BackgroundView(
         Column(
             modifier = Modifier
                 .verticalScroll(scrollState)
+                .fillMaxHeight()
         ) {
             backgrounds.value?.forEachIndexed { i, it ->
                 Card(

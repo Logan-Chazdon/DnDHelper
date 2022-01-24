@@ -28,9 +28,10 @@ fun RaceView(
 
     Column(
         Modifier
-            .verticalScroll(state = scrollState, enabled = true)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .verticalScroll(state = scrollState, enabled = true),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         races.value?.forEachIndexed { i, race ->
             Card(
@@ -88,8 +89,6 @@ fun RaceView(
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

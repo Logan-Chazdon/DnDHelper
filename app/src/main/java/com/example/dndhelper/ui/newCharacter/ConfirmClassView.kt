@@ -338,7 +338,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             var selectedFirstIndex by remember { mutableStateOf(0) }
                             Column(Modifier.padding(start = 5.dp)) {
                                 Text(text = choice.name, style = MaterialTheme.typography.h6)
-                                Text(text = choice.description, fontSize = 12.sp, modifier = Modifier.padding(start = 5.dp))
+                                Text(text = choice.description, style = MaterialTheme.typography.caption)
 
 
                                 if (choice.choiceNum != 0) {

@@ -43,7 +43,7 @@ fun ConfirmBackgroundView(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -79,9 +79,8 @@ fun ConfirmBackgroundView(
                 )
 
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Card(
                         modifier = Modifier.fillMaxWidth(0.95f),

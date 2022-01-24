@@ -51,10 +51,13 @@ fun ConfirmBackgroundView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = background.name, style = MaterialTheme.typography.h4)
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
                         Button(
                             onClick = {
-                                GlobalScope.launch{
+                                GlobalScope.launch {
                                     viewModel.setBackGround(background)
                                     //Navigate to the next step
                                     Handler(mainLooper).post {
@@ -69,80 +72,54 @@ fun ConfirmBackgroundView(
 
                     }
                 }
-                Text(text = background.desc, fontSize = 16.sp, modifier = Modifier.padding(start = 10.dp))
-                background.equipmentChoices.forEach { choice ->
+                Text(
+                    text = background.desc,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     Card(
                         modifier = Modifier.fillMaxWidth(0.95f),
                         backgroundColor = Color.White,
                         elevation = 5.dp,
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Column(
-                            modifier = Modifier.padding(start = 5.dp)
-                        ) {
+                        Column(modifier = Modifier.padding(start = 5.dp)) {
                             Text(
-                                text = choice.name,
+                                text = "Equipment",
                                 style = MaterialTheme.typography.h6
                             )
-
-                            //Tell the state bundle what the user can choose from.
-                            val names = mutableListOf<String>()
-                            for (item in choice.from) {
-                                item.name?.let { names.add(it) }
-                            }
-
-                            val multipleChoiceState = viewModel.dropDownStates.getDropDownState(
-                                key = choice.name,
-                                maxSelections = choice.choose,
-                                names = names,
-                                choiceName = choice.name
-                            )
-
-                            //Create the view.
-                            MultipleChoiceDropdownView(state = multipleChoiceState)
+                            Text(background.equipment.let {
+                                var result = ""
+                                it.forEachIndexed { i, item ->
+                                    result += item.name
+                                    if (i != it.size - 1) {
+                                        result += ", "
+                                    }
+                                }
+                                result
+                            })
                         }
                     }
-                }
 
-                Spacer(Modifier.height(10.dp))
-
-                if(background.proficiencies.isNotEmpty() || background.toolProficiencies.isNotEmpty()) {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(0.95f),
-                        backgroundColor = Color.White,
-                        elevation = 5.dp,
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-
-                        var proficiencies = ""
-                        background.proficiencies.forEach {
-                            proficiencies += it.name + " "
-                        }
-                        background.toolProficiencies.forEach {
-                            proficiencies += it.name + " "
-                        }
-                        Row(modifier = Modifier.padding(5.dp)) {
-                            Text(text = "Proficiencies: $proficiencies")
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(10.dp))
-
-                if(background.languageChoices.isNotEmpty()) {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(0.95f),
-                        backgroundColor = Color.White,
-                        elevation = 5.dp,
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        background.languageChoices.forEach { choice ->
-                            Column (
+                    background.equipmentChoices.forEach { choice ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth(0.95f),
+                            backgroundColor = Color.White,
+                            elevation = 5.dp,
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Column(
                                 modifier = Modifier.padding(start = 5.dp)
-                            ){
+                            ) {
                                 Text(
                                     text = choice.name,
-                                    style = MaterialTheme.typography.h6,
+                                    style = MaterialTheme.typography.h6
                                 )
 
                                 //Tell the state bundle what the user can choose from.
@@ -163,29 +140,87 @@ fun ConfirmBackgroundView(
                             }
                         }
                     }
-                }
 
-
-                Spacer(Modifier.height(10.dp))
-
-                background.features.forEach {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(0.95f),
-                        backgroundColor = Color.White,
-                        elevation = 5.dp,
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(5.dp)
+                    if (background.proficiencies.isNotEmpty() || background.toolProficiencies.isNotEmpty()) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(0.95f),
+                            backgroundColor = Color.White,
+                            elevation = 5.dp,
+                            shape = RoundedCornerShape(10.dp)
                         ) {
-                            Text(text = it.name, style = MaterialTheme.typography.h6)
-                            Text(text = it.description)
+                            Column(
+                                modifier = Modifier.padding(5.dp)
+                            ) {
+                                Text(
+                                    text = "Proficiencies",
+                                    style = MaterialTheme.typography.h6
+                                )
+                                var proficiencies = ""
+                                background.proficiencies.forEach {
+                                    proficiencies += it.name + " "
+                                }
+                                background.toolProficiencies.forEach {
+                                    proficiencies += it.name + " "
+                                }
+                                Text(text = proficiencies)
+                            }
+                        }
+                    }
+
+                    if (background.languageChoices.isNotEmpty()) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(0.95f),
+                            backgroundColor = Color.White,
+                            elevation = 5.dp,
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            background.languageChoices.forEach { choice ->
+                                Column(
+                                    modifier = Modifier.padding(start = 5.dp)
+                                ) {
+                                    Text(
+                                        text = choice.name,
+                                        style = MaterialTheme.typography.h6,
+                                    )
+
+                                    //Tell the state bundle what the user can choose from.
+                                    val names = mutableListOf<String>()
+                                    for (item in choice.from) {
+                                        item.name?.let { names.add(it) }
+                                    }
+
+                                    val multipleChoiceState =
+                                        viewModel.dropDownStates.getDropDownState(
+                                            key = choice.name,
+                                            maxSelections = choice.choose,
+                                            names = names,
+                                            choiceName = choice.name
+                                        )
+
+                                    //Create the view.
+                                    MultipleChoiceDropdownView(state = multipleChoiceState)
+                                }
+                            }
+                        }
+                    }
+
+
+                    background.features.forEach {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(0.95f),
+                            backgroundColor = Color.White,
+                            elevation = 5.dp,
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(5.dp)
+                            ) {
+                                Text(text = it.name, style = MaterialTheme.typography.h6)
+                                Text(text = it.description)
+                            }
                         }
                     }
                 }
-
-                Spacer(Modifier.height(10.dp))
-
             }
 
         }

@@ -830,8 +830,27 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         result
                     } catch (e: JSONException) {
                         null
+                    },
+                    spellSlotsByLevel = spellCastingJson.getJSONArray("spell_slots").let {
+                        val result = mutableListOf<List<Resource>>()
+                        for(levelIndex in 0 until it.length()) {
+                            val level = mutableListOf<Resource>()
+                            val levelJson = it.getJSONArray(levelIndex)
+                            for(slotIndex in 0 until levelJson.length()) {
+                                val slot = levelJson.getInt(slotIndex)
+                                level.add(
+                                    Resource(
+                                        name = slot.toString(), //TODO make this change 1 to 1st
+                                        currentAmount = slot,
+                                        maxAmountType = slot.toString(),
+                                        rechargeAmountType = "full"
+                                    )
+                                )
+                            }
+                            result.add(level.toList())
+                        }
+                        result
                     }
-
                 )
             }
 

@@ -457,7 +457,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val duration = spellJson.getString("duration")
             val classes = extractClasses(spellJson.getJSONArray("classes"))
             val damage = spellJson.getString("damage")
-
+            val ritual = try {
+                spellJson.getBoolean("ritual")
+            } catch (e: JSONException) {
+                false
+            }
 
             spells.add(
                 Spell(
@@ -472,7 +476,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     castingTime = castingTime,
                     duration = duration,
                     classes = classes,
-                    damage = damage
+                    damage = damage,
+                    isRitual = ritual
                 )
             )
         }

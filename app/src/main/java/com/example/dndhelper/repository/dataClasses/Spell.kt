@@ -12,5 +12,6 @@ data class Spell(
     val castingTime: String,
     val duration: String,
     val classes: List<String>,
-    val damage: String
+    val damage: String,
+    val isRitual: Boolean = false
 )

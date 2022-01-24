@@ -28,6 +28,7 @@ import com.example.dndhelper.repository.dataClasses.Armor
 import com.example.dndhelper.repository.dataClasses.Item
 import com.example.dndhelper.repository.dataClasses.ItemInterface
 import com.example.dndhelper.repository.dataClasses.Weapon
+import com.example.dndhelper.repository.dataClasses.utils.getValueInCopper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -477,7 +478,12 @@ fun ItemsView(viewModel: ItemViewModel) {
 
                                 Button(
                                     enabled = if (enabled) {
-                                        allItems?.value?.getOrNull(selected)?.hasCost() == true
+                                        if(allItems?.value?.getOrNull(selected)?.hasCost() == true) {
+                                            (allItems.value!![selected].cost!!.getValueInCopper()
+                                                    <= viewModel.character!!.observeAsState().value!!.backpack.allCurrency.getValueInCopper())
+                                        } else {
+                                            false
+                                        }
                                     } else {
                                         false
                                     },

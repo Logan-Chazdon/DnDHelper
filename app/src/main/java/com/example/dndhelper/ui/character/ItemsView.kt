@@ -16,7 +16,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -248,7 +247,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                                         val color = if (selected == i) {
                                             MaterialTheme.colors.primary
                                         } else {
-                                            Color.White
+                                            MaterialTheme.colors.surface
                                         }
                                         Card(
                                             shape = RoundedCornerShape(5.dp),

@@ -9,19 +9,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.dndhelper.R
-
 import androidx.navigation.NavController
+import com.example.dndhelper.R
 
 @Composable
 fun ClassView(
@@ -62,7 +62,10 @@ fun ClassView(
                 modifier = Modifier
                     .fillMaxWidth(0.95f)
                     .height(100.dp)
-                    .background(color = Color.Gray, shape = RoundedCornerShape(10.dp))
+                    .background(
+                        color = MaterialTheme.colors.onPrimary.copy(alpha = 0.2f)
+                            .compositeOver(MaterialTheme.colors.background)
+                        , shape = RoundedCornerShape(10.dp))
                     .clickable {
                         navController.navigate("newCharacterView/ClassView/ConfirmClassView/$i/$characterId")
                     }

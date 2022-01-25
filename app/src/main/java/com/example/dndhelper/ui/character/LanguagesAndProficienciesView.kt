@@ -9,7 +9,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.dndhelper.repository.dataClasses.Language
 import com.example.dndhelper.repository.dataClasses.Proficiency
@@ -31,12 +30,12 @@ fun LanguagesAndProficienciesView(
         ) {
             items(items = languages) { item: Language ->
                 item.name?.let { Text(text = it) }
-                Divider(color = Color.LightGray, thickness = (0.5).dp, startIndent = 10.dp)
+                Divider(thickness = (0.5).dp, startIndent = 10.dp)
             }
 
             items(items = proficiencies) { item: Proficiency ->
                 item.name?.let { Text(text = it) }
-                Divider(color = Color.LightGray, thickness = (0.5).dp, startIndent = 10.dp)
+                Divider(thickness = (0.5).dp, startIndent = 10.dp)
             }
         }
     }

@@ -7,12 +7,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,7 +28,7 @@ fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
             modifier = Modifier
                 .size(100.dp)
                 .background(
-                    color = Color.White
+                    color = MaterialTheme.colors.surface
                 )
                 .clickable { onClick() },
             elevation = 10.dp,
@@ -47,7 +48,8 @@ fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
                       .size(40.dp)
                       .background(
                       shape = CutCornerShape(10.dp),
-                      color = Color.LightGray
+                      color = MaterialTheme.colors.onSurface
+                          .copy(alpha = 0.3f)
                   ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -61,7 +63,11 @@ fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
             modifier = Modifier
                 .offset(y = (-13).dp)
                 .clip(CircleShape)
-                .background(Color.LightGray)
+                .background(
+                    MaterialTheme.colors.onBackground
+                        .copy(alpha = 0.2f)
+                        .compositeOver(MaterialTheme.colors.background)
+                )
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,

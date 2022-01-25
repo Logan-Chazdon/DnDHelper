@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -37,7 +36,7 @@ fun AllCharactersView(
 
     if (openDialog.value) {
         Dialog(onDismissRequest = { openDialog.value = false }) {
-            Box(Modifier.background(color = Color.White, shape = RoundedCornerShape(10.dp))) {
+            Box(Modifier.background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp))) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
@@ -95,7 +94,7 @@ fun AllCharactersView(
         ) {
             allCharacters?.value?.forEachIndexed { i, it ->
                 Card(
-                    backgroundColor = Color.White,
+                    backgroundColor = MaterialTheme.colors.surface,
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .fillMaxWidth(0.95f)

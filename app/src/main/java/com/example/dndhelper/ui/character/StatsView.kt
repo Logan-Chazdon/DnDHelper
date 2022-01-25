@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -16,7 +17,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.dndhelper.ui.utils.Dimensions
 import com.example.dndhelper.ui.utils.MediaQuery
@@ -73,7 +73,7 @@ fun StatsView(viewModel: StatsViewModel) {
                 modifier = Modifier
                     .fillMaxHeight()
                     .background(
-                        color = Color.White
+                        MaterialTheme.colors.surface
                     )
                     .clickable {
                         GlobalScope.launch {

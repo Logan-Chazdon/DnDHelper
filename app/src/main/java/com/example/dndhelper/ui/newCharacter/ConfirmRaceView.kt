@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -81,7 +80,7 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, navController: NavCont
         ) {
             Card(
                 modifier = Modifier.fillMaxWidth(0.95f),
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colors.surface,
                 elevation = 5.dp,
                 shape = RoundedCornerShape(10.dp)
             ) {
@@ -133,7 +132,7 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, navController: NavCont
 
             Card(
                 modifier = Modifier.fillMaxWidth(0.95f),
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colors.surface,
                 elevation = 5.dp,
                 shape = RoundedCornerShape(10.dp)
             ) {
@@ -145,7 +144,7 @@ fun ConfirmRaceView(viewModel: NewCharacterRaceViewModel, navController: NavCont
 
             Card(
                 modifier = Modifier.fillMaxWidth(0.95f),
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colors.surface,
                 elevation = 5.dp,
                 shape = RoundedCornerShape(10.dp)
             ) {

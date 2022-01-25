@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -84,7 +83,7 @@ fun ConfirmBackgroundView(
                 ) {
                     Card(
                         modifier = Modifier.fillMaxWidth(0.95f),
-                        backgroundColor = Color.White,
+                        backgroundColor = MaterialTheme.colors.surface,
                         elevation = 5.dp,
                         shape = RoundedCornerShape(10.dp)
                     ) {
@@ -109,7 +108,7 @@ fun ConfirmBackgroundView(
                     background.equipmentChoices.forEach { choice ->
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = Color.White,
+                            backgroundColor = MaterialTheme.colors.surface,
                             elevation = 5.dp,
                             shape = RoundedCornerShape(10.dp)
                         ) {
@@ -143,7 +142,7 @@ fun ConfirmBackgroundView(
                     if (background.proficiencies.isNotEmpty() || background.toolProficiencies.isNotEmpty()) {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = Color.White,
+                            backgroundColor = MaterialTheme.colors.surface,
                             elevation = 5.dp,
                             shape = RoundedCornerShape(10.dp)
                         ) {
@@ -169,7 +168,7 @@ fun ConfirmBackgroundView(
                     if (background.languageChoices.isNotEmpty()) {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = Color.White,
+                            backgroundColor = MaterialTheme.colors.surface,
                             elevation = 5.dp,
                             shape = RoundedCornerShape(10.dp)
                         ) {
@@ -207,7 +206,7 @@ fun ConfirmBackgroundView(
                     background.features.forEach {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = Color.White,
+                            backgroundColor = MaterialTheme.colors.surface,
                             elevation = 5.dp,
                             shape = RoundedCornerShape(10.dp)
                         ) {

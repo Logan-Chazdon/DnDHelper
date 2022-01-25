@@ -11,7 +11,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +39,7 @@ fun BackgroundView(
         ) {
             backgrounds.value?.forEachIndexed { i, it ->
                 Card(
-                    backgroundColor = Color.White,
+                    backgroundColor = MaterialTheme.colors.surface,
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .fillMaxWidth(0.95f)

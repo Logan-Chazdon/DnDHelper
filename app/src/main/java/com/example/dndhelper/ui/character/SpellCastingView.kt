@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
@@ -56,23 +57,27 @@ fun SpellCastingView(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End)
                             ) {
-
+                                val selected = MaterialTheme.colors.onBackground
+                                    .copy(alpha = 0.2f)
+                                    .compositeOver(MaterialTheme.colors.background)
+                                val onPrimary = MaterialTheme.colors.onSurface
+                                val surface = MaterialTheme.colors.surface
                                 for (index in 0 until slots.maxAmount()) {
                                     Canvas(
                                         modifier = Modifier.size(20.dp)
                                     ) {
                                         drawCircle(
                                             color = if (slots.currentAmount >= index) {
-                                                Color.White
+                                                surface
                                             } else {
-                                                Color.Gray
+                                                selected
                                             },
                                             center = this.center,
                                             style = Fill
                                         )
 
                                         drawCircle(
-                                            color = Color.Black,
+                                            color = onPrimary,
                                             center = this.center,
                                             style = Stroke(2f)
                                         )

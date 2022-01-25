@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -128,8 +129,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     elevation = 5.dp,
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
-                    backgroundColor = Color.White
+                        .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
+                    backgroundColor = MaterialTheme.colors.surface
                 ) {
                     Column(
                         modifier = Modifier.padding(start = 5.dp)
@@ -165,8 +166,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         elevation = 5.dp,
                         modifier = Modifier
                             .fillMaxWidth(0.95f)
-                            .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
-                        backgroundColor = Color.White
+                            .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
+                        backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Column(
                             Modifier.padding(start = 5.dp)
@@ -198,8 +199,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         elevation = 5.dp,
                         modifier = Modifier
                             .fillMaxWidth(0.95f)
-                            .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
-                        backgroundColor = Color.White
+                            .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
+                        backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Column(Modifier.padding(start = 5.dp)) {
                             Text(text = choice.name, style = MaterialTheme.typography.h6)
@@ -234,7 +235,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     elevation = 5.dp,
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                        .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
                 ) {
                     Column(Modifier.padding(start = 5.dp)){
                         Text(text = "Subclass", style = MaterialTheme.typography.h6)
@@ -259,7 +260,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     elevation = 5.dp,
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
+                        .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
                 ) {
                     Column (Modifier.padding(start = 5.dp)){
                         Text(
@@ -322,9 +323,9 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     if(levels.value.text.isNotBlank())
                         if (choice.level <= levels.value.text.toInt()) {
                         val color = if (choice.choiceNum != 0) {
-                            Color.White
+                            MaterialTheme.colors.surface
                         } else {
-                            Color.LightGray
+                            MaterialTheme.colors.onSurface.copy(alpha = 0.2f).compositeOver(MaterialTheme.colors.surface)
                         }
                         Card(
                             elevation = 5.dp,

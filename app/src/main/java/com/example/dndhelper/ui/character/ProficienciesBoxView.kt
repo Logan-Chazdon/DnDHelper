@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
@@ -86,17 +88,22 @@ private fun LargeSkillView(
         Box(
             contentAlignment = Alignment.Center
         ) {
+            val selected = MaterialTheme.colors.onBackground
+                .copy(alpha = 0.2f)
+                .compositeOver(MaterialTheme.colors.background)
+            val onPrimary = MaterialTheme.colors.onSurface
+            val surface = MaterialTheme.colors.surface
             Canvas(
                 modifier = Modifier.size(30.dp)
             ) {
                 drawCircle(
-                    color = if(checked) { Color.LightGray } else { Color.White },
+                    color = if(checked) { selected } else { surface },
                     center = Offset(x = size.width / 2, y = size.height / 2),
                     radius = size.minDimension / 1.5f,
                     style = Fill
                 )
                 drawCircle(
-                    color = Color.Black,
+                    color = onPrimary,
                     center = Offset(x = size.width / 2, y = size.height / 2),
                     radius = size.minDimension / 1.5f,
                     style = Stroke(2f)

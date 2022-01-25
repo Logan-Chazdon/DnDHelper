@@ -10,7 +10,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.dndhelper.repository.dataClasses.Feature
@@ -35,7 +34,7 @@ fun FeaturesAndTraitsView(
                 item.chosen?.forEach {
                     Text(text = it.name, modifier = Modifier.padding(start = 5.dp))
                 }
-                Divider(color = Color.LightGray, thickness = (0.5).dp, startIndent = 10.dp)
+                Divider(thickness = (0.5).dp, startIndent = 10.dp)
                 if(expanded) {
                     Dialog(
                         onDismissRequest = {expanded = false}

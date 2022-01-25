@@ -1,5 +1,6 @@
 package com.example.dndhelper.ui.character
 
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -96,122 +97,137 @@ fun CombatView(viewModel: CombatViewModel) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
         val character = viewModel.character?.observeAsState()
-
-        HeathStatsView(
-            currentHp = viewModel.character?.observeAsState()?.value?.currentHp,
-            maxHp = viewModel.character?.observeAsState()?.value?.maxHp,
-            tempHp = viewModel.character?.observeAsState()?.value?.tempHp,
-            addTemp = {
-                hpPopUpExpanded = true
-                hpPopUpMode = "addTemp"
-            },
-            heal = {
-                hpPopUpExpanded = true
-                hpPopUpMode = "heal"
-            },
-            damage = {
-                hpPopUpExpanded = true
-                hpPopUpMode = "damage"
-            }
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Card(
-                modifier = Modifier.size(100.dp),
-                elevation = 10.dp,
-                shape = RoundedCornerShape(10.dp)
+        val isVertical = LocalConfiguration.current.orientation == ORIENTATION_PORTRAIT
+        VariableOrientationView(isVertical = isVertical, arrangement = Arrangement.SpaceBetween) {
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth(if(isVertical) { 0.95f} else {0.45f})
             ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    Text(
-                        text = "AC"
-                    )
-                    Box(
-                        contentAlignment = Alignment.Center
+                HeathStatsView(
+                    currentHp = viewModel.character?.observeAsState()?.value?.currentHp,
+                    maxHp = viewModel.character?.observeAsState()?.value?.maxHp,
+                    tempHp = viewModel.character?.observeAsState()?.value?.tempHp,
+                    addTemp = {
+                        hpPopUpExpanded = true
+                        hpPopUpMode = "addTemp"
+                    },
+                    heal = {
+                        hpPopUpExpanded = true
+                        hpPopUpMode = "heal"
+                    },
+                    damage = {
+                        hpPopUpExpanded = true
+                        hpPopUpMode = "damage"
+                    }
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Card(
+                        modifier = Modifier.size(100.dp),
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(10.dp)
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_armour_class),
-                            "",
-                            Modifier.size(75.dp)
-                        )
-                        val ac = character?.value?.equiptArmor?.getAC(character.value?.getStatMod("Dex") ?: 10)
-                        Text(
-                            text = "$ac",
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "AC"
+                            )
+                            Box(
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_armour_class),
+                                    "",
+                                    Modifier.size(75.dp)
+                                )
+                                val ac = character?.value?.equiptArmor?.getAC(
+                                    character.value?.getStatMod("Dex") ?: 10
+                                )
+                                Text(
+                                    text = "$ac",
+                                    modifier = Modifier.padding(bottom = 5.dp)
+                                )
+                            }
+                        }
                     }
+
+                    CombatListView(
+                        name = "Conditions",
+                        list = viewModel.character?.observeAsState()?.value?.conditions
+                    )
+
+                    CombatListView(
+                        name = "Resistance",
+                        list = viewModel.character?.observeAsState()?.value?.resistances
+                    )
+
+                }
+
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+
+                    DeathSavesView(
+                        type = "Success",
+                        num = viewModel.character?.observeAsState()?.value?.positiveDeathSaves,
+                        onClick = {
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.updateDeathSaveSuccesses(it)
+                            }
+                        }
+                    )
+
+                    DeathSavesView(
+                        type = "Fail",
+                        num = viewModel.character?.observeAsState()?.value?.negativeDeathSaves,
+                        onClick = {
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.updateDeathSaveFailures(it)
+                            }
+                        }
+                    )
+
                 }
             }
 
-            CombatListView(name = "Conditions", list = viewModel.character?.observeAsState()?.value?.conditions)
-
-            CombatListView(name = "Resistance", list = viewModel.character?.observeAsState()?.value?.resistances)
-
-        }
-
-
-        Row(
-            modifier = Modifier.fillMaxWidth(0.9f),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-
-            DeathSavesView(
-                type = "Success",
-                num = viewModel.character?.observeAsState()?.value?.positiveDeathSaves,
-                onClick = {
-                    scope.launch(Dispatchers.IO) {
-                        viewModel.updateDeathSaveSuccesses(it)
-                    }
-                }
-            )
-
-            DeathSavesView(
-                type = "Fail",
-                num = viewModel.character?.observeAsState()?.value?.negativeDeathSaves,
-                onClick = {
-                    scope.launch(Dispatchers.IO) {
-                        viewModel.updateDeathSaveFailures(it)
-                    }
-                }
-            )
-
-        }
-
-
-        Card (
-            modifier = Modifier
-                .fillMaxWidth(0.95f)
-                .padding(5.dp),
-            elevation = 2.dp,
-            shape = RoundedCornerShape(20.dp)
-        ) {
-            Row(
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                        .fillMaxWidth(0.95f)
+                        .padding(5.dp),
+                elevation = 2.dp,
+                shape = RoundedCornerShape(20.dp)
             ) {
-                Box(
-                    Modifier.width((LocalConfiguration.current.screenWidthDp - 20).dp)
-                ) {
-                    character?.value?.let { SpellCastingView(character = it) }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+                        Box(
+                            Modifier.width((LocalConfiguration.current.screenWidthDp - 20).dp)
+                        ) {
+                            character?.value?.let { SpellCastingView(character = it) }
+                        }
+
+                        Spacer(Modifier.width(10.dp))
+
+                        //TODO replace this with items and features
+                        Box(
+                            Modifier.width((LocalConfiguration.current.screenWidthDp - 20).dp)
+                        ) {
+                            character?.value?.let { SpellCastingView(character = it) }
+                        }
+
+                    }
                 }
-
-                Spacer(Modifier.width(10.dp))
-
-                //TODO replace this with items and features
-                Box(
-                    Modifier.width((LocalConfiguration.current.screenWidthDp - 20).dp)
-                ) {
-                    character?.value?.let { SpellCastingView(character = it) }
-                }
-
-            }
         }
     }
 }

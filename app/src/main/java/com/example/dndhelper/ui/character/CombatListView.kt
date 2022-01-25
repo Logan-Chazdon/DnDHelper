@@ -2,11 +2,10 @@ package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -19,7 +18,8 @@ fun CombatListView(
 ) {
     Card(
         modifier = Modifier.size(100.dp),
-        elevation = 10.dp
+        elevation = 10.dp,
+        shape = RoundedCornerShape(10.dp)
     ) {
         Column() {
 

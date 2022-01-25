@@ -2,6 +2,7 @@ package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -117,7 +118,8 @@ fun CombatView(viewModel: CombatViewModel) {
         ) {
             Card(
                 modifier = Modifier.size(100.dp),
-                elevation = 10.dp
+                elevation = 10.dp,
+                shape = RoundedCornerShape(10.dp)
             ) {
                 Column(
                     verticalArrangement = Arrangement.Center,

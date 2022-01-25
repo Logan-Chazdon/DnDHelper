@@ -1,7 +1,9 @@
 package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -9,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -179,7 +182,36 @@ fun CombatView(viewModel: CombatViewModel) {
 
         }
 
-       // TODO Implement this when we have some spells and abilities
 
+        Card (
+            modifier = Modifier
+                .fillMaxWidth(0.95f)
+                .padding(5.dp),
+            elevation = 2.dp,
+            shape = RoundedCornerShape(20.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                Box(
+                    Modifier.width((LocalConfiguration.current.screenWidthDp - 20).dp)
+                ) {
+                    character?.value?.let { SpellCastingView(character = it) }
+                }
+
+                Spacer(Modifier.width(10.dp))
+
+                //TODO replace this with items and features
+                Box(
+                    Modifier.width((LocalConfiguration.current.screenWidthDp - 20).dp)
+                ) {
+                    character?.value?.let { SpellCastingView(character = it) }
+                }
+
+            }
+        }
     }
 }

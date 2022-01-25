@@ -88,7 +88,8 @@ fun CombatView(viewModel: CombatViewModel) {
 
     Column(
         Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ){
         val character = viewModel.character?.observeAsState()
 
@@ -109,8 +110,6 @@ fun CombatView(viewModel: CombatViewModel) {
                 hpPopUpMode = "damage"
             }
         )
-
-        Spacer(Modifier.height(12.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -150,7 +149,6 @@ fun CombatView(viewModel: CombatViewModel) {
 
         }
 
-        Spacer(Modifier.height(12.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(0.9f),
@@ -179,30 +177,7 @@ fun CombatView(viewModel: CombatViewModel) {
 
         }
 
-
-
-       /* TODO Implement this when we have some spells and abilities
-        val contacts = listOf("Eldritch Blast")
-        // TODO: This ideally would be done in the ViewModel
-        val grouped = contacts.groupBy { it.firstName[0] }
-
-        @OptIn(ExperimentalFoundationApi::class)
-        @Composable
-        fun ContactsList(grouped: Map<Char, List<Contact>>) {
-            LazyColumn {
-                grouped.forEach { (initial, contactsForInitial) ->
-                    stickyHeader {
-                        CharacterHeader(initial)
-                    }
-
-                    items(contactsForInitial) { contact ->
-                        ContactListItem(contact)
-                    }
-                }
-            }
-        } */
-
-
+       // TODO Implement this when we have some spells and abilities
 
     }
 }

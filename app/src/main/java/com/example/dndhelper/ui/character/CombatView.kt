@@ -91,11 +91,7 @@ fun CombatView(viewModel: CombatViewModel) {
     }
 
 
-    Column(
-        Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ){
+
         val character = viewModel.character?.observeAsState()
         val isVertical = LocalConfiguration.current.orientation == ORIENTATION_PORTRAIT
         VariableOrientationView(isVertical = isVertical, arrangement = Arrangement.SpaceBetween) {
@@ -205,6 +201,11 @@ fun CombatView(viewModel: CombatViewModel) {
                 elevation = 2.dp,
                 shape = RoundedCornerShape(20.dp)
             ) {
+                val width = if(isVertical) {
+                    LocalConfiguration.current.screenWidthDp - 20
+                } else {
+                    (LocalConfiguration.current.screenWidthDp - 20) / 2
+                }.dp
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -212,7 +213,7 @@ fun CombatView(viewModel: CombatViewModel) {
                         horizontalArrangement = Arrangement.SpaceEvenly,
                     ) {
                         Box(
-                            Modifier.width((LocalConfiguration.current.screenWidthDp - 20).dp)
+                            Modifier.width(width)
                         ) {
                             character?.value?.let { SpellCastingView(character = it) }
                         }
@@ -221,13 +222,12 @@ fun CombatView(viewModel: CombatViewModel) {
 
                         //TODO replace this with items and features
                         Box(
-                            Modifier.width((LocalConfiguration.current.screenWidthDp - 20).dp)
+                            Modifier.width(width)
                         ) {
                             character?.value?.let { SpellCastingView(character = it) }
                         }
 
                     }
                 }
-        }
     }
 }

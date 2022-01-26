@@ -1,8 +1,12 @@
 package com.example.dndhelper.ui.character
 
 import android.content.res.Configuration
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -38,11 +42,12 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                 }
                             },
                         )
+                        //TODO add this to settings view
                         var gridNotRow by remember { mutableStateOf(false) }
+                        val isVertical =
+                            LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
 
                         if (gridNotRow) {
-                            val isVertical =
-                                LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
                             val topModifier = if (isVertical) {
                                 Modifier
                             } else {
@@ -110,12 +115,71 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                             }
                         } else {
                             //Row
+                            //TODO make this snap.
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.95f)
+                                    .padding(5.dp),
+                                elevation = 2.dp,
+                                shape = RoundedCornerShape(20.dp)
+                            ) {
+                                val width = ((LocalConfiguration.current.screenWidthDp + 20) / 2).dp
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .horizontalScroll(rememberScrollState()),
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                ) {
+                                    val modifier = Modifier.fillMaxHeight().width(width)
+                                    TextField(
+                                        modifier = modifier,
+                                        label = { Text("Personality Traits") },
+                                        value = viewModel.character?.observeAsState()?.value?.personalityTraits
+                                            ?: "",
+                                        onValueChange = {
+                                            scope.launch(Dispatchers.IO) {
+                                                viewModel.setPersonalityTraits(it)
+                                            }
+                                        }
+                                    )
 
+                                    TextField(
+                                        modifier = modifier,
+                                        label = { Text("Ideals") },
+                                        value = viewModel.character?.observeAsState()?.value?.ideals
+                                            ?: "",
+                                        onValueChange = {
+                                            scope.launch(Dispatchers.IO) {
+                                                viewModel.setIdeals(it)
+                                            }
+                                        }
+                                    )
+                                    TextField(
+                                        modifier = modifier,
+                                        label = { Text("Bonds") },
+                                        value = viewModel.character?.observeAsState()?.value?.bonds
+                                            ?: "",
+                                        onValueChange = {
+                                            scope.launch(Dispatchers.IO) {
+                                                viewModel.setBonds(it)
+                                            }
+                                        }
+                                    )
 
+                                    TextField(
+                                        modifier = modifier,
+                                        label = { Text("Flaws") },
+                                        value = viewModel.character?.observeAsState()?.value?.flaws
+                                            ?: "",
+                                        onValueChange = {
+                                            scope.launch(Dispatchers.IO) {
+                                                viewModel.setFlaws(it)
+                                            }
+                                        }
+                                    )
+                                }
+                            }
                         }
-
-
-
                     }
 
 

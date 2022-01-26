@@ -21,11 +21,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+@ExperimentalComposeUiApi
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @ExperimentalComposeUiApi
-    @ExperimentalFoundationApi
-    @ExperimentalMaterialApi
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

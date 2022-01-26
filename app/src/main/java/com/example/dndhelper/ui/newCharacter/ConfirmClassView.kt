@@ -129,7 +129,10 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     elevation = 5.dp,
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
+                        .background(
+                            color = MaterialTheme.colors.surface,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
                     backgroundColor = MaterialTheme.colors.surface
                 ) {
                     Column(
@@ -166,7 +169,10 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         elevation = 5.dp,
                         modifier = Modifier
                             .fillMaxWidth(0.95f)
-                            .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
+                            .background(
+                                color = MaterialTheme.colors.surface,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
                         backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Column(
@@ -199,7 +205,10 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         elevation = 5.dp,
                         modifier = Modifier
                             .fillMaxWidth(0.95f)
-                            .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
+                            .background(
+                                color = MaterialTheme.colors.surface,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
                         backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Column(Modifier.padding(start = 5.dp)) {
@@ -235,7 +244,10 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     elevation = 5.dp,
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
+                        .background(
+                            color = MaterialTheme.colors.surface,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
                 ) {
                     Column(Modifier.padding(start = 5.dp)){
                         Text(text = "Subclass", style = MaterialTheme.typography.h6)
@@ -260,7 +272,10 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     elevation = 5.dp,
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)),
+                        .background(
+                            color = MaterialTheme.colors.surface,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
                 ) {
                     Column (Modifier.padding(start = 5.dp)){
                         Text(
@@ -390,9 +405,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                 shape = RoundedCornerShape(10.dp),
                 elevation = 10.dp
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
+                Column {
                     var search by remember { mutableStateOf("") }
                     Row(
                         Modifier
@@ -417,53 +430,76 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             }
                         )
                     }
-
-                    viewModel.getSpells(classIndex).observeAsState().value?.let { spells ->
-                        spells.forEach {
-                            //TODO upgrade search
-                            if(search == "" || it.name.lowercase().contains(search.lowercase())) {
-                                Card(
-                                    shape = RoundedCornerShape(5.dp),
-                                    elevation = 2.dp,
-                                    modifier = Modifier
-                                        //TODO long clickable for detail view
-                                        .clickable {
-                                            if (
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .verticalScroll(state = rememberScrollState())
+                    ) {
+                        viewModel.getSpells(classIndex).observeAsState().value?.let { spells ->
+                            var lastCategory: Int = -1
+                            spells.forEach {
+                                //TODO upgrade search
+                                if (search == "" || it.name.lowercase()
+                                        .contains(search.lowercase())
+                                ) {
+                                    Column {
+                                        if (lastCategory != it.level) {
+                                            lastCategory = it.level
+                                            Text(
+                                                text = it.levelName,
+                                                style = MaterialTheme.typography.h5
+                                            )
+                                        }
+                                        Card(
+                                            shape = RoundedCornerShape(5.dp),
+                                            elevation = 2.dp,
+                                            modifier = Modifier
+                                                //TODO long clickable for detail view
+                                                .clickable {
+                                                    if (
+                                                        viewModel.canAffordSpellOfLevel(
+                                                            it.level,
+                                                            classIndex,
+                                                            levels.value.text.toInt()
+                                                        )
+                                                        || viewModel.spells.contains(it)
+                                                    ) {
+                                                        viewModel.toggleSpell(it)
+                                                    }
+                                                }
+                                                .fillMaxWidth(),
+                                            backgroundColor = when {
+                                                viewModel.spells.contains(it) -> {
+                                                    MaterialTheme.colors.primary
+                                                }
                                                 viewModel.canAffordSpellOfLevel(
                                                     it.level,
                                                     classIndex,
                                                     levels.value.text.toInt()
-                                                )
-                                                || viewModel.spells.contains(it)
+                                                ) -> {
+                                                    MaterialTheme.colors.background
+                                                }
+                                                else -> {
+                                                    //TODO add a color here
+                                                    Color.LightGray
+                                                }
+                                            }
+                                        ) {
+                                            //TODO add more data here
+                                            Row(
+                                                modifier = Modifier.padding(5.dp)
                                             ) {
-                                                viewModel.toggleSpell(it)
+                                                Text(text = it.name, modifier = Modifier.width(100.dp))
+                                                Text(text = it.damage, modifier = Modifier.width(150.dp))
+                                                Text(text = it.range, modifier = Modifier.width(40.dp))
+                                                Text(text = it.castingTime, modifier = Modifier.width(90.dp))
                                             }
                                         }
-                                        .fillMaxWidth(),
-                                    backgroundColor = when {
-                                        viewModel.spells.contains(it) -> {
-                                            MaterialTheme.colors.primary
-                                        }
-                                        viewModel.canAffordSpellOfLevel(it.level, classIndex, levels.value.text.toInt()) -> {
-                                            MaterialTheme.colors.background
-                                        }
-                                        else -> {
-                                            //TODO add a color here
-                                            Color.LightGray
-                                        }
-                                    }
-                                ) {
-                                    //TODO add more data here
-                                    Row(
-                                        modifier = Modifier.padding(5.dp)
-                                    ) {
-                                        Text(it.name)
                                     }
                                 }
                             }
                         }
-                    }
 
+                    }
                 }
             }
         }

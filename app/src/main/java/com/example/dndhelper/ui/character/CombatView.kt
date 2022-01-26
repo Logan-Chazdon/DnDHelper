@@ -220,13 +220,11 @@ fun CombatView(viewModel: CombatViewModel) {
 
                         Spacer(Modifier.width(10.dp))
 
-                        //TODO replace this with items and features
                         Box(
                             Modifier.width(width)
                         ) {
-                            character?.value?.let { SpellCastingView(character = it) }
+                            character?.value?.let { ItemsAndAbilitiesView(character = it) }
                         }
-
                     }
                 }
     }

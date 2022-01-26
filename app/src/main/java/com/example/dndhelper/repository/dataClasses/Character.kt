@@ -341,4 +341,15 @@ data class Character(
         return result
     }
 
+    val combatFeatures: List<Feature>
+    get() {
+        val result = mutableListOf<Feature>()
+        features.forEach {
+            if(it.resource != null) {
+                result.add(it)
+            }
+        }
+        return result
+    }
+
 }

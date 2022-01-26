@@ -1,7 +1,6 @@
 package com.example.dndhelper.repository.dataClasses
 
 import com.example.dndhelper.repository.dataClasses.utils.getValueInCopper
-import java.lang.NullPointerException
 
 class Backpack {
     var backgroundItems = mutableListOf<ItemInterface>()
@@ -137,5 +136,16 @@ class Backpack {
             return true
         }
         return false
+    }
+
+    val allWeapons: List<Weapon>
+    get() {
+        val result = mutableListOf<Weapon>()
+        allItems.forEach {
+            if(it is Weapon) {
+                result.add(it)
+            }
+        }
+        return result
     }
 }

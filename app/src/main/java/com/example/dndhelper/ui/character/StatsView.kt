@@ -30,7 +30,9 @@ fun StatsView(viewModel: StatsViewModel) {
     val character = viewModel.character?.observeAsState()
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         //Stats
         val stats = character?.value?.getStats()

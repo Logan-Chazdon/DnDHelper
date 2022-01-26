@@ -3,10 +3,10 @@ package com.example.dndhelper.ui.navigation.sideDrawer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.dndhelper.ui.navigation.NavItem
@@ -26,12 +26,12 @@ fun SideNavDrawer(
 
     Column(
         modifier = Modifier
-            .background(Color.White)
+            .background(MaterialTheme.colors.background)
             .fillMaxSize()
     ) {
         Box(
             modifier = Modifier
-                .background(color = Color.Gray)
+                .background(color = MaterialTheme.colors.onBackground.copy(0.35f))
                 .fillMaxWidth()
                 .fillMaxHeight(0.25f)
         )

@@ -10,14 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavBackStackEntry
 import com.example.dndhelper.ui.navigation.NavItem
-import com.example.dndhelper.ui.theme.Purple700
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -51,7 +49,9 @@ fun DrawerNavigationItem(
             }
             .fillMaxWidth()
             .height(50.dp)
-            .background(if (selected) Color.LightGray else Color.White),
+            .background(if (selected) {
+                MaterialTheme.colors.onSurface.copy(0.15f)
+            } else MaterialTheme.colors.background),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         val icon = if (item.icon != null) {
@@ -59,14 +59,14 @@ fun DrawerNavigationItem(
                 imageVector = item.icon,
                 contentDescription = item.name,
                 modifier = Modifier.size(30.dp),
-                tint = (if (selected) Purple700 else Color.Gray)
+                tint = (if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground.copy(0.5f))
             )
         } else {
             Icon(
                 painter = item.painter!!,
                 contentDescription = item.name,
                 modifier = Modifier.size(30.dp),
-                tint = (if (selected) Purple700 else Color.Gray)
+                tint = (if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground.copy(0.5f))
             )
         }
 
@@ -88,7 +88,7 @@ fun DrawerNavigationItem(
             text = item.name,
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
-            color = if (selected) Purple700 else Color.Black,
+            color = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground,
             fontStyle = if (selected) FontStyle.Italic else FontStyle.Normal
         )
     }

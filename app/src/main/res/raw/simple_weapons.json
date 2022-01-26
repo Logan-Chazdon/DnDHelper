@@ -252,7 +252,7 @@
     {
       "name": "Mace",
       "desc": "TODO",
-      "damage": "1d6  ",
+      "damage": "1d6",
       "range": "5ft",
       "damage_type": "bludgeoning",
       "item_rarity": "Standard",

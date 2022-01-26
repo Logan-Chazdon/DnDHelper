@@ -90,7 +90,8 @@ fun AllCharactersView(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             allCharacters?.value?.forEachIndexed { i, it ->
                 Card(
@@ -98,14 +99,16 @@ fun AllCharactersView(
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .padding(start = 10.dp)
                         .combinedClickable(
                             onClick = { navController.navigate("characterView/MainView/${it.id}") },
                             onLongClick = { navController.navigate("newCharacterView/ClassView/${it.id}") }
                         ),
                     elevation = 10.dp
                 ) {
-                    Column() {
+                    Column(
+                        modifier = Modifier
+                            .padding(start = 5.dp)
+                    ) {
                         Row(verticalAlignment = Alignment.Bottom) {
                             Text(text = it.name, fontSize = 24.sp)
                             Spacer(Modifier.width(5.dp))

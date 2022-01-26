@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.dndhelper.ui.character.*
 import com.example.dndhelper.ui.newCharacter.*
+import com.example.dndhelper.ui.preferences.PreferencesView
 
 
 @ExperimentalComposeUiApi
@@ -19,6 +20,10 @@ import com.example.dndhelper.ui.newCharacter.*
 fun Navigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "allCharactersView") {
 
+
+        composable("preferences") {
+            PreferencesView()
+        }
 
         composable("allCharactersView") {
             val viewModel = hiltViewModel<AllCharactersViewModel>()

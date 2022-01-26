@@ -37,8 +37,8 @@ fun BottomNavigationBar(
                 icon = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         if(item.badgeCount > 0){
-                            BadgeBox(
-                                badgeContent = {
+                            BadgedBox(
+                                badge = {
                                     Text(text = item.badgeCount.toString())
                                 }
                             ) {

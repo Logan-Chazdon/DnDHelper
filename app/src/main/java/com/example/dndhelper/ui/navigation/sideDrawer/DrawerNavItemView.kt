@@ -71,8 +71,8 @@ fun DrawerNavigationItem(
         }
 
         if (item.badgeCount > 0) {
-            BadgeBox(
-                badgeContent = { Text(text = item.badgeCount.toString()) }
+            BadgedBox(
+                badge = { Text(text = item.badgeCount.toString()) }
             ) {
                 icon
             }

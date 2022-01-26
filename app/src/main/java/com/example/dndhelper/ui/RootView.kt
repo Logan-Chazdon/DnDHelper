@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +49,12 @@ fun RootView() {
                             route = "newCharacterView/ClassView/-1",
                             baseRoute = "newCharacterView/ClassView",
                             icon = Icons.Default.Add
+                        ),
+                        NavItem(
+                            name = "Settings",
+                            route = "preferences",
+                            baseRoute = "preferences",
+                            icon = Icons.Default.Settings
                         )
                 ),
                 navController = navController,

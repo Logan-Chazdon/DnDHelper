@@ -14,4 +14,16 @@ data class Spell(
     val classes: List<String>,
     val damage: String,
     val isRitual: Boolean = false
-)
+) {
+    val levelName: String
+    get() {
+        return when(level) {
+            0 -> "Cantrip"
+            1 -> "1st level"
+            2 -> "2nd level"
+            3 -> "3rd level"
+            4 -> "${level}th level"
+            else -> level.toString()
+        }
+    }
+}

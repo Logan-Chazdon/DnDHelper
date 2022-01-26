@@ -12,21 +12,23 @@ import androidx.compose.ui.Modifier
 fun VariableOrientationView(
     isVertical: Boolean,
     arrangement: Arrangement.HorizontalOrVertical = Arrangement.SpaceEvenly,
+    verticalAlignment : Alignment.Vertical? = null,
+    horizontalAlignment : Alignment.Horizontal? = null,
     content: @Composable () -> Unit,
 ) {
     if(isVertical) {
         Column (
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = arrangement,
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement =  arrangement,
+            horizontalAlignment = horizontalAlignment ?: Alignment.CenterHorizontally
         ) {
             content.invoke()
         }
     } else {
         Row (
             modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = arrangement,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement =arrangement,
+            verticalAlignment = verticalAlignment ?: Alignment.CenterVertically
         ) {
             content.invoke()
         }

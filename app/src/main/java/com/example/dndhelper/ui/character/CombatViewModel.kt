@@ -19,7 +19,7 @@ public class CombatViewModel @Inject constructor(
 ): AndroidViewModel(application) {
 
     fun addTemp(temp: String) {
-        val tempChar = character!!.value!!.copy(tempHp = character!!.value!!.tempHp + temp.toInt())
+        val tempChar = character!!.value!!.copy(tempHp = temp.toInt())
         tempChar.id = character!!.value!!.id
         repository.insertCharacter(tempChar)
     }

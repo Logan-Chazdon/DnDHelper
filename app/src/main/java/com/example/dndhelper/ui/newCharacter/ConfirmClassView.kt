@@ -340,7 +340,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         val color = if (choice.choiceNum != 0) {
                             MaterialTheme.colors.surface
                         } else {
-                            MaterialTheme.colors.onSurface.copy(alpha = 0.2f).compositeOver(MaterialTheme.colors.surface)
+                            MaterialTheme.colors.onBackground.copy(alpha = 0.3f).compositeOver(MaterialTheme.colors.background)
                         }
                         Card(
                             elevation = 5.dp,

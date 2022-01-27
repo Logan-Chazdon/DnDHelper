@@ -2,12 +2,15 @@ package com.example.dndhelper.ui.character
 
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -18,6 +21,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.dndhelper.R
+import com.example.dndhelper.repository.dataClasses.Spell
+import com.example.dndhelper.ui.character.CombatViewModel.Companion.allSpellLevels
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -196,8 +201,8 @@ fun CombatView(viewModel: CombatViewModel) {
 
             Card(
                 modifier = Modifier
-                        .fillMaxWidth(0.95f)
-                        .padding(5.dp),
+                    .fillMaxWidth(0.95f)
+                    .padding(5.dp),
                 elevation = 2.dp,
                 shape = RoundedCornerShape(20.dp)
             ) {
@@ -206,6 +211,8 @@ fun CombatView(viewModel: CombatViewModel) {
                 } else {
                     (LocalConfiguration.current.screenWidthDp - 20) / 2
                 }.dp
+                var castIsExpanded by remember { mutableStateOf(false) }
+                var spell by remember { mutableStateOf<Spell?>(null) }
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -215,7 +222,12 @@ fun CombatView(viewModel: CombatViewModel) {
                         Box(
                             Modifier.width(width)
                         ) {
-                            character?.value?.let { SpellCastingView(character = it) }
+                            character?.value?.let {
+                                SpellCastingView(character = it, Cast = { newSpell ->
+                                    spell = newSpell
+                                    castIsExpanded = true
+                                })
+                            }
                         }
 
                         Spacer(Modifier.width(10.dp))
@@ -226,6 +238,78 @@ fun CombatView(viewModel: CombatViewModel) {
                             character?.value?.let { ItemsAndAbilitiesView(character = it) }
                         }
                     }
+
+                    if(castIsExpanded) {
+                        Dialog(onDismissRequest = { castIsExpanded = false }) {
+                            spell?.let {
+                                Card{
+                                    Column(
+                                        Modifier.padding(15.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ){
+                                            Text(it.name)
+                                            Text(it.school)
+                                            Text(it.castingTime)
+                                        }
+                                        Text(it.desc)
+                                        var expanded by remember { mutableStateOf(false) }
+                                        var level by remember { mutableStateOf(it.level)}
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ){
+                                            Card {
+                                                Row(
+                                                    modifier = Modifier
+                                                        .padding(5.dp)
+                                                        .fillMaxWidth(0.5f)
+                                                        .clickable {  expanded = true },
+                                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                                ) {
+                                                    Text(
+                                                        text = allSpellLevels[level - 1].second,
+                                                        style = MaterialTheme.typography.h6
+                                                    )
+                                                    Icon(
+                                                        Icons.Default.ArrowDropDown,
+                                                        "Select spell Level"
+                                                    )
+                                                }
+                                            }
+                                            DropdownMenu(
+                                                expanded = expanded,
+                                                onDismissRequest = { expanded = false }
+                                            ) {
+                                                viewModel.getCastingOptions(it).forEach {
+                                                    DropdownMenuItem(onClick = {
+                                                        expanded = false
+                                                        level = it.first
+                                                    }) {
+                                                        Text(it.second)
+                                                    }
+                                                }
+                                            }
+
+                                            Button(onClick = {
+                                                GlobalScope.launch {
+                                                    viewModel.cast(spell!!, level)
+                                                }
+                                                castIsExpanded = false
+                                            }) {
+                                                Text("CAST")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                 }
     }
 }

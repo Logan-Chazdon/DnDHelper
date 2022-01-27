@@ -20,7 +20,8 @@ fun AbilitiesView(viewModel: AbilitiesViewModel) {
             if (it.isCaster) {
                 SpellCastingView(
                     character = it,
-                    modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(0.6f)
+                    modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(0.6f),
+                    Cast = {}
                 )
             }
         }

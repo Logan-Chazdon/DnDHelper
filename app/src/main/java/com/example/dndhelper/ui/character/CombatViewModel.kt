@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.Character
+import com.example.dndhelper.repository.dataClasses.Spell
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -70,6 +71,22 @@ public class CombatViewModel @Inject constructor(
         repository.insertCharacter(tempChar)
     }
 
+    fun getCastingOptions(spell: Spell): List<Pair<Int, String>> {
+        return allSpellLevels.subList(
+            spell.level - 1,
+            character!!.value!!.spellSlots.lastIndex + 1
+        )
+    }
+
+    fun cast(spell: Spell, level: Int) {
+        val newSlots = character!!.value!!.spellSlots
+        newSlots[level-1].currentAmount -= 1
+        val tempChar : Character =
+            character!!.value!!.
+            copy(spellSlots = newSlots)
+        repository.insertCharacter(tempChar)
+    }
+
     var character : LiveData<Character>? = null
 
 
@@ -79,5 +96,19 @@ public class CombatViewModel @Inject constructor(
             character = repository.getLiveCharacterById(id)
         }
 
+    }
+
+    companion object {
+        val allSpellLevels = listOf(
+            Pair(1, "First Level"),
+            Pair(2, "Second Level"),
+            Pair(3, "Third Level"),
+            Pair(4, "Forth Level"),
+            Pair(5, "Fifth Level"),
+            Pair(6, "Sixth Level"),
+            Pair(7, "Seventh Level"),
+            Pair(8, "Eighth Level"),
+            Pair(9, "Ninth Level"),
+        )
     }
 }

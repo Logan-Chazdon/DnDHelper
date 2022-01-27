@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,13 +18,15 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.example.dndhelper.repository.dataClasses.Character
 import com.example.dndhelper.repository.dataClasses.Resource
+import com.example.dndhelper.repository.dataClasses.Spell
 
 
 @ExperimentalFoundationApi
 @Composable
 fun SpellCastingView(
     character: Character,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    Cast: (Spell) -> Unit
 ) {
     val state = rememberLazyListState()
     Card(
@@ -91,20 +94,26 @@ fun SpellCastingView(
                 items(spells?.size ?: 0) { i ->
                     val spell = spells!![i]
                     Card(
-                        modifier = Modifier.fillMaxWidth(0.9f),
+                        modifier = Modifier.fillMaxWidth(0.95f),
                         elevation = 2.dp
                     ) {
                         Row(
                             modifier = Modifier.padding(2.dp),
-                            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            horizontalArrangement = Arrangement.spacedBy(2.dp),
                         ) {
-                            Text(spell.name, Modifier.width(150.dp))
+                            Text(spell.name, Modifier.width(100.dp))
 
-                            if (spell.damage != "-") {
-                                Text(spell.damage, Modifier.width(100.dp))
+                            Text(spell.damage, Modifier.width(100.dp))
+
+                            Text(spell.castingTime, Modifier.width(75.dp))
+
+                            if(spell.level != 0) {
+                                Button({
+                                    Cast(spell)
+                                }) {
+                                    Text("CAST")
+                                }
                             }
-
-                            Text(spell.castingTime, Modifier.width(100.dp))
                         }
                     }
                     Spacer(Modifier.height(2.dp))

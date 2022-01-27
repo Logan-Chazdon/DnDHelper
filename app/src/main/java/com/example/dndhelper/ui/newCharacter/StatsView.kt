@@ -108,10 +108,6 @@ fun StatsView(
 
                                 Box(
                                     modifier = Modifier
-                                        .background(
-                                            shape = RoundedCornerShape(10.dp),
-                                            color = MaterialTheme.colors.surface
-                                        )
                                         .clickable(onClick = { statChoiceExpanded = true })
                                 ) {
                                     Text(

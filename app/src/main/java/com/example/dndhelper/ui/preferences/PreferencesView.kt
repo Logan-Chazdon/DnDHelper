@@ -17,6 +17,7 @@ fun PreferencesView() {
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
             prefsGroup("Theme") {
                 prefsItem { SwitchPref(key = "dark_mode", title = "Dark mode") }
+                prefsItem { SwitchPref(key = "grid_not_row", title = "Full size personality details") }
             }
         }
     }

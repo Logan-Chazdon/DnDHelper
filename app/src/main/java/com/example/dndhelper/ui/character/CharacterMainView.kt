@@ -1,5 +1,6 @@
 package com.example.dndhelper.ui.character
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -8,16 +9,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import com.example.dndhelper.dataStore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
+@SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun CharacterMainView( viewModel: CharacterMainViewModel) {
     val scope = rememberCoroutineScope()
@@ -42,12 +51,14 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                 }
                             },
                         )
-                        //TODO add this to settings view
-                        var gridNotRow by remember { mutableStateOf(false) }
+                        val gridNotRowFlow: Flow<Boolean> = LocalContext.current.dataStore.data
+                            .map { preferences ->
+                                preferences[booleanPreferencesKey("grid_not_row")] ?: false
+                            }
                         val isVertical =
                             LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
 
-                        if (gridNotRow) {
+                        if (!gridNotRowFlow.collectAsState(false).value) {
                             val topModifier = if (isVertical) {
                                 Modifier
                             } else {

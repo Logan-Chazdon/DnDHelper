@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -66,6 +65,10 @@ private fun LargeSkillView(
     name: String
 ) {
     Box {
+        val onBackground = MaterialTheme.colors.onBackground
+        val selected = MaterialTheme.colors.onSurface.copy(0.5f).compositeOver(MaterialTheme.colors.surface)
+        val surface = MaterialTheme.colors.surface
+
         Box(
             contentAlignment = Alignment.CenterStart,
             modifier = Modifier.absoluteOffset(x = 20.dp)
@@ -76,9 +79,9 @@ private fun LargeSkillView(
                     .height(30.dp)
             ) {
                 drawRoundRect(
-                    color = Color.Black,
+                    color = onBackground,
                     size = Size(width = size.width, height = size.height),
-                    style = Stroke(1f),
+                    style = Stroke(2f),
                     cornerRadius =  CornerRadius(x = 10f, y = 10f)
                 )
             }
@@ -88,11 +91,6 @@ private fun LargeSkillView(
         Box(
             contentAlignment = Alignment.Center
         ) {
-            val selected = MaterialTheme.colors.onBackground
-                .copy(alpha = 0.2f)
-                .compositeOver(MaterialTheme.colors.background)
-            val onPrimary = MaterialTheme.colors.onSurface
-            val surface = MaterialTheme.colors.surface
             Canvas(
                 modifier = Modifier.size(30.dp)
             ) {
@@ -103,7 +101,7 @@ private fun LargeSkillView(
                     style = Fill
                 )
                 drawCircle(
-                    color = onPrimary,
+                    color = onBackground,
                     center = Offset(x = size.width / 2, y = size.height / 2),
                     radius = size.minDimension / 1.5f,
                     style = Stroke(2f)

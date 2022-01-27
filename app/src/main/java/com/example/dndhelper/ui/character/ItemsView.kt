@@ -160,6 +160,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                                 value = it.amount.toString(),
                                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                                 singleLine = true,
+                                textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
                                 onValueChange = { string ->
                                     text.value = string
                                     if (string.isNotEmpty())

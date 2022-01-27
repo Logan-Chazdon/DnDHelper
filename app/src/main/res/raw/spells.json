@@ -3071,8 +3071,908 @@
       ],
 
       "damage" : "-"
-    }
+    },
+    {
+      "name": "Cure Wounds",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : "touch",
+      "school" : "Evocation",
+      "desc" : "A creature you touch regains a number of hit points equal to 1d8 + your spellcasting ability modifier. This spell has no effect on undead or constructs. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the healing increases by 1d8 for each slot level above 1st.",
+      "area" : "-",
 
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        {
+          "name" : "bard",
+          "index": "bard"
+        },
+        {
+          "name" : "druid",
+          "index": "druid"
+        },
+        {
+          "name" : "cleric",
+          "index": "cleric"
+        },
+        {
+          "name" : "paladin",
+          "index": "paladin"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Detect Evil and Good",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : "self",
+      "school" : "Divination",
+      "desc" : "For the duration, you know if there is an aberration, celestial, elemental, fey, fiend, or undead within 30 feet of you, as well as where the creature is located. Similarly, you know if there is a place or object within 30 feet of you that has been magically consecrated or desecrated. The spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
+      "area" : "30ft sphere",
+
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Concentration 10 Minutes",
+
+      "classes" : [
+        {
+          "name" : "cleric",
+          "index": "cleric"
+        },
+        {
+          "name" : "paladin",
+          "index": "paladin"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Detect Magic",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : "self",
+      "school" : "Divination",
+      "desc" : "For the duration, you sense the presence of magic within 30 feet of you. If you sense magic in this way, you can use your action to see a faint aura around any visible creature or object in the area that bears magic, and you learn its school of magic, if any. The spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
+      "area" : "30ft sphere",
+      "ritual" : true,
+
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Concentration 10 Minutes",
+
+      "classes" : [
+        {
+          "name" : "artificer",
+          "index": "artificer"
+        },
+        {
+          "name" : "bard",
+          "index": "bard"
+        },
+        {
+          "name" : "druid",
+          "index": "druid"
+        },
+        {
+          "name" : "cleric",
+          "index": "cleric"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "warlock",
+          "index": "warlock"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        },
+        {
+          "name" : "paladin",
+          "index": "paladin"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Detect Poison and Disease",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : "self",
+      "school" : "Divination",
+      "desc" : "For the duration, you can sense the presence and location of poisons, poisonous creatures, and diseases within 30 feet of you. You also identify the kind of poison, poisonous creature, or disease in each case. The spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
+      "area" : "30ft sphere",
+      "ritual" : true,
+
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        },
+        {
+          "name" : "Material"
+        }
+
+      ],
+
+      "item_components" : [
+        {
+          "name" : "a yew leaf"
+        }
+      ],
+
+
+
+      "duration" : "Concentration 10 Minutes",
+
+      "classes" : [
+        {
+          "name" : "druid",
+          "index": "druid"
+        },
+        {
+          "name" : "cleric",
+          "index": "cleric"
+        },
+        {
+          "name" : "paladin",
+          "index": "paladin"
+        },
+        {
+          "name" : "ranger",
+          "index": "ranger"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Disguise Self",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : "self",
+      "school" : "Illusion",
+      "desc" : "You make yourself--including your clothing, armor, weapons, and other belongings on your person--look different until the spell ends or until you use your action to dismiss it. You can seem 1 foot shorter or taller and can appear thin, fat, or in between. You can't change your body type, so you must adopt a form that has the same basic arrangement of limbs. Otherwise, the extent of the illusion is up to you. The changes wrought by this spell fail to hold up to physical inspection. For example, if you use this spell to add a hat to your outfit, objects pass through the hat, and anyone who touches it would feel nothing or would feel your head and hair. If you use this spell to appear thinner than you are, the hand of someone who reaches out to touch you would bump into you while it was seemingly still in midair. To discern that you are disguised, a creature can use its action to inspect your appearance and must succeed on an Intelligence (Investigation) check against your spell save DC.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "1 Hour",
+
+      "classes" : [
+        {
+          "name" : "artificer",
+          "index": "artificer"
+        },
+        {
+          "name" : "bard",
+          "index": "bard"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Dissonant Whispers",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : 60,
+      "school" : "Enchantment",
+      "desc" : "You whisper a discordant melody that only one creature of your choice within range can hear, wracking it with terrible pain. The target must make a Wisdom saving throw. On a failed save, it takes 3d6 psychic damage and must immediately use its reaction, if available, to move as far as its speed allows away from you. The creature doesn’t move into obviously dangerous ground, such as a fire or a pit. On a successful save, the target takes half as much damage and doesn’t have to move away. A deafened creature automatically succeeds on the save. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st.",
+      "area" : "-",
+
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        }
+
+      ],
+
+      "item_components" : [
+      ],
+
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        {
+          "name" : "bard",
+          "index": "bard"
+        }
+      ],
+
+      "damage" : "3d6 psychic"
+    },
+    {
+      "name": "Distort Value",
+      "level" : 1,
+      "casting_time" : "1 Minute",
+      "range" : "touch",
+      "school" : "Illusion",
+      "desc" : "Do you need to squeeze a few more gold pieces out of a merchant as you try to sell that weird octopus statue you liberated from the chaos temple? Do you need to downplay the worth of some magical assets when the tax collector stops by? Distort Value has you covered. You cast this spell on an object no more than 1 foot on a side, doubling the object’s perceived value by adding illusory flourishes or polish to it, or reducing its perceived value by half with the help of illusory scratches, dents, and other unsightly features. Anyone examining the object can ascertain its true value with a successful Intelligence (Investigation) check against your spell save DC. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the maximum size of the object increases by 1 foot for each slot level above 1st.",
+      "area" : "1ft cube",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "8 Hours",
+
+      "classes" : [
+        {
+          "name" : "bard",
+          "index": "bard"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "warlock",
+          "index": "warlock"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Divine Favor",
+      "level" : 1,
+      "casting_time" : "1 Bonus Action",
+      "range" : "self",
+      "school" : "Evocation",
+      "desc" : "Your prayer empowers you with divine radiance. Until the spell ends, your weapon attacks deal an extra 1d4 radiant damage on a hit.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Concentration 1 Minute",
+
+      "classes" : [
+        {
+          "name" : "paladin",
+          "index": "paladin"
+        }
+      ],
+
+      "damage" : "1d4 radiant"
+    },
+    {
+      "name": "Earth Tremor",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : 10,
+      "school" : "Evocation",
+      "desc" : "You cause a tremor in the ground within range. Each creature other than you in that area must make a Dexterity saving throw. On a failed save, a creature takes 1d6 bludgeoning damage and is knocked prone. If the ground in that area is loose earth or stone, it becomes difficult terrain until cleared, with each 5-foot-diameter portion requiring at least 1 minute to clear by hand. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        {
+          "name" : "bard",
+          "index": "bard"
+        },
+        {
+          "name" : "druid",
+          "index": "druid"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "1d6 bludgeoning"
+    },
+    {
+      "name": "Ensnaring Strike",
+      "level" : 1,
+      "casting_time" : "1 Bonus Action",
+      "range" : "self",
+      "school" : "Conjuration",
+      "desc" : "The next time you hit a creature with a weapon attack before this spell ends, a writhing mass of thorny vines appears at the point of impact, and the target must succeed on a Strength saving throw or be restrained by the magical vines until the spell ends. A Large or larger creature has advantage on this saving throw. If the target succeeds on the save, the vines shrivel away. While restrained by this spell, the target takes 1d6 piercing damage at the start of each of its turns. A creature restrained by the vines or one that can touch the creature can use its action to make a Strength check against your spell save DC. On a success, the target is freed. At Higher Levels. If you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Concentration 1 Minute",
+
+      "classes" : [
+        {
+          "name" : "ranger",
+          "index": "ranger"
+        }
+      ],
+
+      "damage" : "1d6 piercing"
+    },
+    {
+      "name": "Entangle",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : 90,
+      "school" : "Conjuration",
+      "desc" : "Grasping weeds and vines sprout from the ground in a 20-foot square starting from a point within range. For the duration, these plants turn the ground in the area into difficult terrain. A creature in the area when you cast the spell must succeed on a Strength saving throw or be restrained by the entangling plants until the spell ends. A creature restrained by the plants can use its action to make a Strength check against your spell save DC. On a success, it frees itself. When the spell ends, the conjured plants wilt away.",
+      "area" : "20ft square",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Concentration 1 Minute",
+
+      "classes" : [
+        {
+          "name" : "druid",
+          "index": "druid"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Expeditious Retreat",
+      "level" : 1,
+      "casting_time" : "1 Bonus Action",
+      "range" : "self",
+      "school" : "Transmutation",
+      "desc" : "This spell allows you to move at an incredible pace. When you cast this spell, and then as a bonus action on each of your turns until the spell ends, you can take the Dash action.",
+      "area" : "-",
+
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        {
+          "name" : "artificer",
+          "index": "artificer"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "warlock",
+          "index": "warlock"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Faerie Fire",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : 60,
+      "school" : "Evocation",
+      "desc" : "Each object in a 20-foot cube within range is outlined in blue, green, or violet light (your choice). Any creature in the area when the spell is cast is also outlined in light if it fails a Dexterity saving throw. For the duration, objects and affected creatures shed dim light in a 10-foot radius. Any attack roll against an affected creature or object has advantage if the attacker can see it, and the affected creature or object can't benefit from being invisible.",
+      "area" : "20ft cube",
+
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Concentration 1 Minute",
+
+      "classes" : [
+        {
+          "name" : "artificer",
+          "index": "artificer"
+        },
+        {
+          "name" : "bard",
+          "index": "bard"
+        },
+        {
+          "name" : "druid",
+          "index": "druid"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "False Life",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : "self",
+      "school" : "Necromancy",
+      "desc" : "Bolstering yourself with a necromantic facsimile of life, you gain 1d4 + 4 temporary hit points for the duration. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, you gain 5 additional temporary hit points for each slot level above 1st.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        },
+        {
+          "name" : "Material"
+        }
+
+      ],
+
+      "item_components" : [
+        {
+          "name" : "a small amount of alcohol or distilled spirits"
+        }
+      ],
+
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        {
+          "name" : "artificer",
+          "index": "artificer"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Feather Fall",
+      "level" : 1,
+      "casting_time" : "1 Reaction",
+      "range" : 60,
+      "school" : "Transmutation",
+      "desc" : "Choose up to five falling creatures within range. A falling creature's rate of descent slows to 60 feet per round until the spell ends. If the creature lands before the spell ends, it takes no falling damage and can land on its feet, and the spell ends for that creature.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Material"
+        }
+
+      ],
+
+      "item_components" : [
+        {
+          "name" : "a small feather or piece of down"
+        }
+      ],
+
+
+
+      "duration" : "1 Minute",
+
+      "classes" : [
+        {
+          "name" : "artificer",
+          "index": "artificer"
+        },
+        {
+          "name" : "bard",
+          "index": "bard"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Find Familiar",
+      "level" : 1,
+      "casting_time" : "1 Hour",
+      "range" : 10,
+      "school" : "Conjuration",
+      "desc" : "You gain the service of a familiar, a spirit that takes an animal form you choose: bat, cat, crab, frog (toad), hawk, lizard, octopus, owl, poisonous snake, fish (quipper), rat, raven, sea horse, spider, or weasel. Appearing in an unoccupied space within range, the familiar has the statistics of the chosen form, though it is a celestial, fey, or fiend (your choice) instead of a beast.Your familiar acts independently of you, but it always obeys your commands. In combat, it rolls its own initiative and acts on its own turn. A familiar can't attack, but it can take other actions as normal. When the familiar drops to 0 hit points, it disappears, leaving behind no physical form. It reappears after you cast this spell again. As an action, you can temporarily dismiss the familiar to a pocket dimension. Alternatively, you can dismiss it forever. As an action while it is temporarily dismissed, you can cause it to reappear in any unoccupied space within 30 feet of you. Whenever the familiar drops to 0 hit points or disappears into the pocket dimension, it leaves behind in its space anything it was wearing or carrying. While your familiar is within 100 feet of you, you can communicate with it telepathically. Additionally, as an action, you can see through your familiar's eyes and hear what it hears until the start of your next turn, gaining the benefits of any special senses that the familiar has. During this time, you are deaf and blind with regard to your own senses. You can't have more than one familiar at a time. If you cast this spell while you already have a familiar, you instead cause it to adopt a new form. Choose one of the forms from the above list. Your familiar transforms into the chosen creature. Finally, when you cast a spell with a range of touch, your familiar can deliver the spell as if it had cast the spell. Your familiar must be within 100 feet of you, and it must use its reaction to deliver the spell when you cast it. If the spell requires an attack roll, you use your attack modifier for the roll.",
+      "area" : "-",
+      "ritual" : true,
+
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        },
+        {
+          "name" : "Material"
+        }
+
+      ],
+
+      "item_components" : [
+        {
+          "name" : "10 gp worth of charcoal, incense, and herbs that must be consumed by fire in a brass brazier"
+        }
+      ],
+
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Floating Disk",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : 30,
+      "school" : "Conjuration",
+      "desc" : "This spell creates a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration, and can hold up to 500 pounds. If more weight is placed on it, the spell ends, and everything on the disk falls to the ground. The disk is immobile while you are within 20 feet of it. If you move more than 20 feet away from it, the disk follows you so that it remains within 20 feet of you. It can move across uneven terrain, up or down stairs, slopes and the like, but it can't cross an elevation change of 10 feet or more. For example, the disk can't move across a 10-foot-deep pit, nor could it leave such a pit if it was created at the bottom. If you move more than 100 feet from the disk (typically because it can't move around an obstacle to follow you), the spell ends.",
+      "area" : "-",
+      "ritual" : true,
+
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        },
+        {
+          "name" : "Material"
+        }
+
+      ],
+
+      "item_components" : [
+        {
+          "name" : "a drop of mercury"
+        }
+      ],
+
+
+
+      "duration" : "1 Hour",
+
+      "classes" : [
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Fog Cloud",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : 120,
+      "school" : "Conjuration",
+      "desc" : "You create a 20-foot-radius sphere of fog centered on a point within range. The sphere spreads around corners, and its area is heavily obscured. It lasts for the duration or until a wind of moderate or greater speed (at least 10 miles per hour) disperses it. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the radius of the fog increases by 20 feet for each slot level above 1st.",
+      "area" : "20ft sphere",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+
+      ],
+
+
+
+      "duration" : "Concentration 1 Hour  ",
+
+      "classes" : [
+
+        {
+          "name" : "druid",
+          "index": "druid"
+        },
+        {
+          "name" : "sorcerer",
+          "index": "sorcerer"
+        },
+        {
+          "name" : "ranger",
+          "index": "ranger"
+        },
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "-"
+    },
+    {
+      "name": "Frost Fingers",
+      "level" : 1,
+      "casting_time" : "1 Action",
+      "range" : "self",
+      "school" : "1 Action",
+      "desc" : "Freezing cold blasts from your fingertips in a 15-foot cone. Each creature in that area must make a Constitution saving throw, taking 2d8 cold damage on a failed save, or half as much damage on a successful one. The cold freezes nonmagical liquids in the area that aren’t being worn or carried. At Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d8 for each slot level above 1st.",
+      "area" : "15ft cone",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+      ],
+
+
+
+      "duration" : "Instantaneous",
+
+      "classes" : [
+        {
+          "name" : "wizard",
+          "index": "wizard"
+        }
+      ],
+
+      "damage" : "2d8 cold"
+    },
+    {
+      "name": "Gift of Alacrity",
+      "level" : 1,
+      "casting_time" : "1 Minute",
+      "range" : "touch",
+      "school" : "Divination",
+      "desc" : "You touch a willing creature. For the duration, the target can add 1d8 to its initiative rolls.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        },
+        {
+          "name" : "Somatic"
+        }
+
+      ],
+
+      "item_components" : [
+      ],
+
+
+
+      "duration" : "8 Hours",
+
+      "classes" : [
+
+      ],
+
+      "damage" : "-"
+    }
 
 
 

@@ -15,10 +15,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200,
-    background = Color.Black
+    primary = Purple700,
+    primaryVariant = Purple500,
+    secondary = Teal700,
+    background = Color.Black,
+    onBackground = Color.LightGray,
+    onSurface = Color.LightGray,
+    onPrimary = Color.White
 )
 
 private val LightColorPalette = lightColors(
@@ -26,14 +29,6 @@ private val LightColorPalette = lightColors(
     primaryVariant = Purple700,
     secondary = Teal200,
     background = Color.White
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
 )
 
 @SuppressLint("FlowOperatorInvokedInComposition")

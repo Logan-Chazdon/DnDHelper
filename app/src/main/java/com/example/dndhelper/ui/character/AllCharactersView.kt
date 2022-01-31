@@ -93,26 +93,28 @@ fun AllCharactersView(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            allCharacters?.value?.forEachIndexed { i, it ->
+            allCharacters?.value?.forEachIndexed { i, character ->
                 Card(
                     backgroundColor = MaterialTheme.colors.surface,
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
                         .combinedClickable(
-                            onClick = { navController.navigate("characterView/MainView/${it.id}") },
-                            onLongClick = { navController.navigate("newCharacterView/ClassView/${it.id}") }
+                            onClick = { navController.navigate("characterView/MainView/${character.id}") },
+                            onLongClick = { navController.navigate("newCharacterView/ClassView/${character.id}") }
                         ),
                     elevation = 10.dp
                 ) {
                     Column(
                         modifier = Modifier
                             .padding(start = 5.dp)
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.Top
                     ) {
                         Row(verticalAlignment = Alignment.Bottom) {
-                            Text(text = it.name, fontSize = 24.sp)
+                            Text(text = character.name, style = MaterialTheme.typography.h5)
                             Spacer(Modifier.width(5.dp))
-                            it.background?.let { it1 -> Text(text = it1.name, fontSize = 14.sp) }
+                            character.background?.let { background -> Text(text = background.name, style = MaterialTheme.typography.body2) }
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End
@@ -127,16 +129,15 @@ fun AllCharactersView(
                                     Icon(
                                         Icons.Default.Delete,
                                         "Delete Character",
-                                        modifier = Modifier.padding(7.dp)
+                                        modifier = Modifier.padding(top = 7.dp, end = 7.dp)
                                     )
                                 }
                             }
                         }
                         Row() {
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text(text = it.race?.name.toString(), fontSize = 16.sp)
+                            Text(text = character.race?.name.toString(), style = MaterialTheme.typography.body1)
                             Spacer(modifier = Modifier.width(5.dp))
-                            Text(text = it.getFormattedClasses(), fontSize = 16.sp)
+                            Text(text = character.getFormattedClasses(), style = MaterialTheme.typography.body1)
                         }
                     }
                 }

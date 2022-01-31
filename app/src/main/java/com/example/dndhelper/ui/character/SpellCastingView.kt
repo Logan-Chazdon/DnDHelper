@@ -35,7 +35,7 @@ fun SpellCastingView(
     ) {
         LazyColumn(
             state = state,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val spellSlotsOffsetForCantrips = mutableListOf(

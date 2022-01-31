@@ -75,7 +75,15 @@ public class CombatViewModel @Inject constructor(
         return allSpellLevels.subList(
             spell.level - 1,
             character!!.value!!.spellSlots.lastIndex + 1
-        )
+        ).let { levels ->
+            val result = mutableListOf<Pair<Int, String>>()
+            levels.forEach {
+                if(character!!.value!!.spellSlots[it.first - 1].currentAmount != 0) {
+                    result.add(it)
+                }
+            }
+            result
+        }
     }
 
     fun cast(spell: Spell, level: Int) {

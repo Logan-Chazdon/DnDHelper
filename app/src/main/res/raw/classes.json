@@ -1093,7 +1093,7 @@
                     ]
                 },
                 {
-                    "name": "(a) a light crossbow and 20 bolts or (b) any simple weapon",
+                    "name": "A light crossbow and 20 bolts or any simple weapon",
                     "choose": 1,
                     "from": [
                         {
@@ -1105,7 +1105,7 @@
                     ]
                 },
                 {
-                    "name": "(a) a priest’s pack or (b) an explorer’s pack",
+                    "name": "A priest’s pack or an explorer’s pack",
                     "choose": 1,
                     "from": [
                         {

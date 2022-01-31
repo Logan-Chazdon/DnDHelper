@@ -68,7 +68,7 @@ fun SpellCastingView(
                                         modifier = Modifier.size(20.dp)
                                     ) {
                                         drawCircle(
-                                            color = if (slots.currentAmount >= index) {
+                                            color = if (slots.currentAmount > index) {
                                                 surface
                                             } else {
                                                 selected

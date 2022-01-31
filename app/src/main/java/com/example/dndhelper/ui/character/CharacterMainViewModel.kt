@@ -76,4 +76,11 @@ public class CharacterMainViewModel @Inject constructor(
         repository.insertCharacter(newChar)
     }
 
+    fun setNotes(it: String) {
+        val newChar = character!!.value!!.copy(notes = it)
+        newChar.id = character!!.value!!.id
+        repository.insertCharacter(newChar)
+    }
+
+
 }

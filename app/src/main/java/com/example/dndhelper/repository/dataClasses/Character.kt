@@ -18,6 +18,7 @@ data class Character(
     var ideals: String = "",
     var bonds: String = "",
     var flaws: String = "",
+    var notes: String = "",
     var race: Race? = null,
     var currentHp: Int = 0,
     var tempHp: Int = 0,

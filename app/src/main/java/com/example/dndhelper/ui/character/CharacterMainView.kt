@@ -1,6 +1,5 @@
 package com.example.dndhelper.ui.character
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -12,6 +11,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 
-@SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun CharacterMainView( viewModel: CharacterMainViewModel) {
     val scope = rememberCoroutineScope()
@@ -51,10 +50,13 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                 }
                             },
                         )
-                        val gridNotRowFlow: Flow<Boolean> = LocalContext.current.dataStore.data
-                            .map { preferences ->
-                                preferences[booleanPreferencesKey("grid_not_row")] ?: false
+                        val gridNotRowFlow: Flow<Boolean> = LocalContext.current.dataStore.data.let {
+                            remember {
+                                it.map { preferences ->
+                                    preferences[booleanPreferencesKey("grid_not_row")] ?: false
+                                }
                             }
+                        }
                         val isVertical =
                             LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
 

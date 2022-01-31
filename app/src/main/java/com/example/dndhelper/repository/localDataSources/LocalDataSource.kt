@@ -7,6 +7,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.AppModule
 import com.example.dndhelper.R
+import com.example.dndhelper.repository.Repository.Companion.allSpellLevels
 import com.example.dndhelper.repository.dataClasses.*
 import dagger.Component
 import org.json.JSONArray
@@ -845,7 +846,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 val slot = levelJson.getInt(slotIndex)
                                 level.add(
                                     Resource(
-                                        name = (slotIndex + 1).toString(), //TODO make this change 1 to 1st
+                                        name = allSpellLevels[slotIndex].second,
                                         currentAmount = slot,
                                         maxAmountType = slot.toString(),
                                         rechargeAmountType = "full"

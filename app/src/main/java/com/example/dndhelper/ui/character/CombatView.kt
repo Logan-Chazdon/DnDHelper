@@ -21,8 +21,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.dndhelper.R
+import com.example.dndhelper.repository.Repository.Companion.allSpellLevels
 import com.example.dndhelper.repository.dataClasses.Spell
-import com.example.dndhelper.ui.character.CombatViewModel.Companion.allSpellLevels
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

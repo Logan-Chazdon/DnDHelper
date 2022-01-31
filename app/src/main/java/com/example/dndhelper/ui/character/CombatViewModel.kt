@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
+import com.example.dndhelper.repository.Repository.Companion.allSpellLevels
 import com.example.dndhelper.repository.dataClasses.Character
 import com.example.dndhelper.repository.dataClasses.Spell
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -104,19 +105,5 @@ public class CombatViewModel @Inject constructor(
             character = repository.getLiveCharacterById(id)
         }
 
-    }
-
-    companion object {
-        val allSpellLevels = listOf(
-            Pair(1, "First Level"),
-            Pair(2, "Second Level"),
-            Pair(3, "Third Level"),
-            Pair(4, "Forth Level"),
-            Pair(5, "Fifth Level"),
-            Pair(6, "Sixth Level"),
-            Pair(7, "Seventh Level"),
-            Pair(8, "Eighth Level"),
-            Pair(9, "Ninth Level"),
-        )
     }
 }

@@ -2,6 +2,7 @@ package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -26,7 +27,9 @@ import com.example.dndhelper.repository.dataClasses.Spell
 fun SpellCastingView(
     character: Character,
     modifier: Modifier = Modifier,
-    Cast: (Spell) -> Unit
+    Cast: (Spell) -> Unit,
+    useSlot: (Int) -> Unit,
+    refundSlot: (Int) -> Unit
 ) {
     val state = rememberLazyListState()
     Card(
@@ -65,7 +68,13 @@ fun SpellCastingView(
                                 val surface = MaterialTheme.colors.surface
                                 for (index in 0 until slots.maxAmount()) {
                                     Canvas(
-                                        modifier = Modifier.size(20.dp)
+                                        modifier = Modifier.size(20.dp).clickable {
+                                            if(slots.currentAmount > index) {
+                                                useSlot(slotLevel)
+                                            } else {
+                                                refundSlot(slotLevel)
+                                            }
+                                        }
                                     ) {
                                         drawCircle(
                                             color = if (slots.currentAmount > index) {

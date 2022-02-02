@@ -20,6 +20,7 @@ import androidx.navigation.NavHostController
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun ConfirmBackgroundView(
@@ -92,15 +93,15 @@ fun ConfirmBackgroundView(
                                 text = "Equipment",
                                 style = MaterialTheme.typography.h6
                             )
-                            Text(background.equipment.let {
+                            Text(background.equipment.let { items ->
                                 var result = ""
-                                it.forEachIndexed { i, item ->
+                                items.forEachIndexed { i, item ->
                                     result += item.name
-                                    if (i != it.size - 1) {
+                                    if (i != items.size - 1) {
                                         result += ", "
                                     }
                                 }
-                                result
+                                result.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                             })
                         }
                     }

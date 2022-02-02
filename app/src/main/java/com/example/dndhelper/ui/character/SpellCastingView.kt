@@ -55,43 +55,39 @@ fun SpellCastingView(
                         modifier = Modifier.fillMaxWidth(0.9f).padding(5.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
                     ) {
-                        if (slotLevel == 0) {
-                            Text("Cantrip")
-                        } else {
-                            Text(slots.name)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End)
-                            ) {
-                                val selected = Color.Gray
-                                val onPrimary = MaterialTheme.colors.onSurface
-                                val surface = MaterialTheme.colors.surface
-                                for (index in (0 until slots.maxAmount()).reversed()) {
-                                    Canvas(
-                                        modifier = Modifier.size(20.dp).clickable {
-                                            if(slots.currentAmount > index) {
-                                                useSlot(slotLevel)
-                                            } else {
-                                                refundSlot(slotLevel)
-                                            }
+                        Text(text = slots.name)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End)
+                        ) {
+                            val selected = Color.Gray
+                            val onPrimary = MaterialTheme.colors.onSurface
+                            val surface = MaterialTheme.colors.surface
+                            for (index in (0 until slots.maxAmount()).reversed()) {
+                                Canvas(
+                                    modifier = Modifier.size(20.dp).clickable {
+                                        if(slots.currentAmount > index) {
+                                            useSlot(slotLevel)
+                                        } else {
+                                            refundSlot(slotLevel)
                                         }
-                                    ) {
-                                        drawCircle(
-                                            color = if (slots.currentAmount > index) {
-                                                surface
-                                            } else {
-                                                selected
-                                            },
-                                            center = this.center,
-                                            style = Fill
-                                        )
-
-                                        drawCircle(
-                                            color = onPrimary,
-                                            center = this.center,
-                                            style = Stroke(2f)
-                                        )
                                     }
+                                ) {
+                                    drawCircle(
+                                        color = if (slots.currentAmount > index) {
+                                            surface
+                                        } else {
+                                            selected
+                                        },
+                                        center = this.center,
+                                        style = Fill
+                                    )
+
+                                    drawCircle(
+                                        color = onPrimary,
+                                        center = this.center,
+                                        style = Stroke(2f)
+                                    )
                                 }
                             }
                         }

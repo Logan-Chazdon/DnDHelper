@@ -404,7 +404,7 @@
             ],
             "equipment": [
                 {
-                    "name": "A set of fine clothes",
+                    "name": "a set of fine clothes",
                     "choose": 0
                 },
                 {
@@ -412,8 +412,25 @@
                     "choose": 0
                 },
                 {
-                    "name": "TODO tools of the con of your choice (ten stoppered bottles filled with colored liquid, a set of weighted dice, a deck of marked cards, or a signet ring of an imaginary duke)",
-                    "choose": 0
+                    "name": "Tools of the con of your choice",
+                    "choose": 1,
+                    "from" : [
+                        {
+                            "name" : "ten stoppered bottles filled with colored liquid"
+                        },
+                        {
+                            "name" : "a set of weighted dice"
+                        },
+                        {
+                            "name" : "a set of weighted dice"
+                        },
+                        {
+                            "name" : "a deck of marked cards"
+                        },
+                        {
+                            "name" : "a signet ring of an imaginary duke"
+                        }
+                    ]
                 },
                 {
                     "name": "a pouch containing 15 gp",

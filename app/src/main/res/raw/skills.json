@@ -8,7 +8,6 @@
           }
       ]
     },
-
     {
       "baseStat" : "Dexterity",
       "skills" : [
@@ -21,6 +20,12 @@
         {
           "name" : "Stealth"
         }
+      ]
+    },
+    {
+      "baseStat" : "Constitution",
+      "skills" : [
+
       ]
     },
     {

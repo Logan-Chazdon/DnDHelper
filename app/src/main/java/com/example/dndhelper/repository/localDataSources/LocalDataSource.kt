@@ -597,7 +597,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         if(index == "gold") {
                             equipment.add(
                                 Currency(
-                                    name = "Gold pieces",
+                                    name = "${itemChoiceJson.getInt("value")} gold pieces",
                                     amount = itemChoiceJson.getInt("value")
                                 )
                             )

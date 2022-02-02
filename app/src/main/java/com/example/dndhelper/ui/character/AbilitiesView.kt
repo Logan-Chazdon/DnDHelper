@@ -2,7 +2,6 @@ package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -18,11 +17,7 @@ fun AbilitiesView(viewModel: AbilitiesViewModel) {
     ) {
         viewModel.character?.observeAsState()?.value?.let {
             if (it.isCaster) {
-                SpellCastingView(
-                    character = it,
-                    modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(0.6f),
-                    Cast = {}
-                )
+
             }
         }
     }

@@ -37,7 +37,7 @@ fun StatsView(viewModel: StatsViewModel) {
         //Stats
         val stats = character?.value?.getStats()
         val statNames =
-            listOf("Strength", "Dexterity", "Constitution", "Wisdom", "Intelligence", "Charisma")
+            listOf("Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma")
         val statNamesAbr = listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")
 
 
@@ -115,7 +115,7 @@ fun StatsView(viewModel: StatsViewModel) {
         Spacer(Modifier.height(20.dp))
 
         viewModel.skills?.value?.let {
-            for (item in 0 until 5) {
+            for (item in 0..5) {
                 if (proficiencyBoxesExpanded[item]) {
                     ProficienciesBoxView(
                         baseStat = statNames[item],

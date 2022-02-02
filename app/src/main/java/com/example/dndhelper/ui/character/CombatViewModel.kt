@@ -96,6 +96,24 @@ public class CombatViewModel @Inject constructor(
         repository.insertCharacter(tempChar)
     }
 
+    fun refundSlot(slot: Int) {
+        val newSlots = character!!.value!!.spellSlots
+        newSlots[slot-1].currentAmount += 1
+        val tempChar : Character =
+            character!!.value!!.
+            copy(spellSlots = newSlots)
+        repository.insertCharacter(tempChar)
+    }
+
+    fun useSlot(slot: Int) {
+        val newSlots = character!!.value!!.spellSlots
+        newSlots[slot-1].currentAmount -= 1
+        val tempChar : Character =
+            character!!.value!!.
+            copy(spellSlots = newSlots)
+        repository.insertCharacter(tempChar)
+    }
+
     var character : LiveData<Character>? = null
 
 

@@ -223,10 +223,23 @@ fun CombatView(viewModel: CombatViewModel) {
                             Modifier.width(width)
                         ) {
                             character?.value?.let {
-                                SpellCastingView(character = it, Cast = { newSpell ->
-                                    spell = newSpell
-                                    castIsExpanded = true
-                                })
+                                SpellCastingView(
+                                    character = it,
+                                    Cast = { newSpell ->
+                                        spell = newSpell
+                                        castIsExpanded = true
+                                    },
+                                    refundSlot = { slot ->
+                                        scope.launch(Dispatchers.IO) {
+                                            viewModel.refundSlot(slot)
+                                        }
+                                    },
+                                    useSlot = { slot ->
+                                        scope.launch(Dispatchers.IO) {
+                                            viewModel.useSlot(slot)
+                                        }
+                                    }
+                                )
                             }
                         }
 

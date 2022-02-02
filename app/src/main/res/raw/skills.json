@@ -4,14 +4,19 @@
       "baseStat" : "Strength",
       "skills" : [
           {
+            "name" : "Saving throw (Strength)"
+          },
+          {
             "name" : "Athletics"
           }
       ]
     },
-
     {
       "baseStat" : "Dexterity",
       "skills" : [
+        {
+          "name" : "Saving throw (Dexterity)"
+        },
         {
           "name" : "Acrobatics"
         },
@@ -24,8 +29,19 @@
       ]
     },
     {
+      "baseStat" : "Constitution",
+      "skills" : [
+        {
+          "name" : "Saving throw (Constitution)"
+        }
+      ]
+    },
+    {
       "baseStat" : "Intelligence",
       "skills" : [
+        {
+          "name" : "Saving throw (Intelligence)"
+        },
         {
           "name" : "Arcana"
         },
@@ -47,6 +63,9 @@
       "baseStat" : "Wisdom",
       "skills" : [
         {
+          "name" : "Saving throw (Wisdom)"
+        },
+        {
           "name" : "Animal Handling"
         },
         {
@@ -66,6 +85,9 @@
     {
       "baseStat" : "Charisma",
       "skills" : [
+        {
+          "name" : "Saving throw (Charisma)"
+        },
         {
           "name" : "Deception"
         },

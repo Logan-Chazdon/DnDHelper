@@ -66,7 +66,7 @@ fun SpellCastingView(
                                 val selected = Color.Gray
                                 val onPrimary = MaterialTheme.colors.onSurface
                                 val surface = MaterialTheme.colors.surface
-                                for (index in 0 until slots.maxAmount()) {
+                                for (index in (0 until slots.maxAmount()).reversed()) {
                                     Canvas(
                                         modifier = Modifier.size(20.dp).clickable {
                                             if(slots.currentAmount > index) {

@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi
 @Composable
 fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavController, classIndex: Int) {
+    viewModel.classIndex = classIndex
     val classes = viewModel.classes.observeAsState()
     val mainLooper = Looper.getMainLooper()
     var spellsExpanded by remember { mutableStateOf(false) }
@@ -349,12 +350,10 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                 .background(color = color, shape = RoundedCornerShape(10.dp)),
                             backgroundColor = color
                         ) {
-                            var expanded by remember { mutableStateOf(false) }
-                            var selectedLastIndex by remember { mutableStateOf(0) } //TODO change how we do this to for a more scaleable solution. maybe a for loop i < choose
-                            var selectedFirstIndex by remember { mutableStateOf(0) }
                             Column(Modifier.padding(start = 5.dp)) {
                                 Text(text = choice.name, style = MaterialTheme.typography.h6)
                                 Text(text = choice.description, style = MaterialTheme.typography.caption)
+
 
 
                                 if (choice.choiceNum != 0) {
@@ -368,22 +367,6 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                             )
                                             .padding(start = 5.dp)
                                     )
-
-                                    DropdownMenu(
-                                        expanded = expanded,
-                                        onDismissRequest = { expanded = false }
-                                    ) {
-                                        choice.options.forEachIndexed { index, item ->
-                                            DropdownMenuItem(onClick = {
-                                                selectedFirstIndex = selectedLastIndex
-                                                selectedLastIndex = index
-                                                expanded = false
-                                            }) {
-                                                Text(text = item.name)
-                                            }
-
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -431,7 +414,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         )
                     }
                     Column(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .verticalScroll(state = rememberScrollState())
                     ) {
                         viewModel.getSpells(classIndex).observeAsState().value?.let { spells ->

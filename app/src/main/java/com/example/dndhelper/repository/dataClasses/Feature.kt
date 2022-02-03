@@ -5,7 +5,8 @@ data class Feature(
     val description: String,
     val level: Int = 1,
     val choiceNum: Int = 0,
-    val options: MutableList<Feature>?
+    val options: MutableList<Feature>?,
+    val prerequisite: Prerequisite? = null
 ) {
     var chosen : List<Feature>? = null
     var resource: Resource? = null
@@ -16,4 +17,18 @@ data class Feature(
             it.resource?.recharge(basis)
         }
     }
+
+    fun getAvailableOptions(
+        character: Character?,
+        assumedProficiencies: List<Proficiency>
+    ): MutableList<Feature> {
+        val result = mutableListOf<Feature>()
+        options?.forEach {
+            if(it.prerequisite?.check(character, assumedProficiencies) != false) {
+                result.add(it)
+            }
+        }
+        return result
+    }
+
 }

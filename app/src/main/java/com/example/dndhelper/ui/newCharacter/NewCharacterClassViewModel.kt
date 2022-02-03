@@ -49,6 +49,17 @@ public class NewCharacterClassViewModel @Inject constructor(
     val isFeat = mutableStateListOf<Boolean>()
     val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
     val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
+    var classIndex = 0
+
+    val proficiencies : List<Proficiency>
+    get() {
+        val profs : MutableList<Proficiency> = mutableListOf()
+        classes.value?.get(classIndex)?.proficiencies?.let { profs.addAll(it) }
+        classes.value?.get(classIndex)?.proficiencyChoices?.forEach {
+            profs.addAll(dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>)
+        }
+        return profs
+    }
 
 
     init {
@@ -94,7 +105,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 
         newClass.levelPath.filter { it.level <= level }.forEach {
             if(it.choiceNum != 0 && it.options?.isNullOrEmpty() == false) {
-                it.chosen = dropDownStates[it.name]?.getSelected(it.options) as List<Feature>
+                it.chosen = dropDownStates[it.name + it.level]?.getSelected(it.getAvailableOptions(character, proficiencies)) as List<Feature>
             }
         }
 

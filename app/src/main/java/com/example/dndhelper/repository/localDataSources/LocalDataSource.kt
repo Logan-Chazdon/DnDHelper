@@ -393,7 +393,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             }
             abilitiesToSkills[baseStat] = skills
         }
-        _abilitiesToSkills.postValue(abilitiesToSkills)
+        _abilitiesToSkills.value = abilitiesToSkills
         return abilitiesToSkills
     }
 
@@ -941,35 +941,65 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         }
     }
 
-    private fun extractFeatures(featuresJson: JSONArray) : MutableList<Feature> {
+    private fun extractFeatures(featuresJson: JSONArray): MutableList<Feature> {
         val features = mutableListOf<Feature>()
-        for(featureIndex in 0 until featuresJson.length()) {
+        for (featureIndex in 0 until featuresJson.length()) {
             val featureJson = featuresJson.getJSONObject(featureIndex)
             var numOfChoices = 0
             var level = 0
-
+            var options : MutableList<Feature>? = null
+            //If we have an index construct a list from that otherwise just make it normally.
             try {
-                level = featureJson.getInt("level")
-            } catch (e : JSONException) {}
+                when(featureJson.getString("index")) {
+                    "proficiencies" -> {
+                        _abilitiesToSkills.value!!.forEach {
+                            it.value.forEach { skill ->
+                                //Don't add saving throws
+                                if(!skill.lowercase().contains("throw")) {
+                                    features.add(Feature(
+                                        name = skill,
+                                        description = "",
+                                        level = 0,
+                                        choiceNum = 0,
+                                        options = null,
+                                        prerequisite = Prerequisite(
+                                            proficiency = Proficiency(
+                                                name = skill
+                                            )
+                                        )
+                                    ))
+                                }
+                            }
+                        }
+                    }
+                    else -> throw JSONException("Invalid index")
+                }
 
-            try {
-               numOfChoices = featureJson.getInt("choose")
-            } catch ( e : JSONException) {}
+            } catch (e: JSONException) {
+                try {
+                    level = featureJson.getInt("level")
+                } catch (e: JSONException) { }
 
-            val options = if(numOfChoices == 0) {
-                null
-            } else {
-                extractFeatures(featureJson.getJSONArray("from"))
-            }
-            features.add(
-                Feature(
-                    name = featureJson.getString("name"),
-                    description = featureJson.getString("desc"),
-                    level = level,
-                    choiceNum = numOfChoices,
-                    options = options
+                try {
+                    numOfChoices = featureJson.getInt("choose")
+                } catch (e: JSONException) { }
+
+                options = if (numOfChoices == 0) {
+                    null
+                } else {
+                    extractFeatures(featureJson.getJSONArray("from"))
+                }
+
+                features.add(
+                    Feature(
+                        name = featureJson.getString("name"),
+                        description = featureJson.getString("desc"),
+                        level = level,
+                        choiceNum = numOfChoices,
+                        options = options
+                    )
                 )
-            )
+            }
         }
         return features
     }

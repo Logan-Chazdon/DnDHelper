@@ -238,7 +238,7 @@ data class Character(
         currentHp = maxHp
     }
 
-    private fun checkForProficiency(it: String) : Boolean {
+    fun checkForProficiency(it: String) : Boolean {
         proficiencies.forEach { prof ->
             if(prof.name?.lowercase() ?: "" == it.lowercase())
                 return true

@@ -946,7 +946,13 @@
                 {
                     "name": "Expertise",
                     "desc": "At 3rd level, choose two of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
-                    "level": 3
+                    "level": 3,
+                    "choose" : 2,
+                    "from" : [
+                        {
+                            "index" : "proficiencies"
+                        }
+                    ]
                 },
                 {
                     "name": "Font of Inspiration",
@@ -961,7 +967,13 @@
                 {
                     "name": "Expertise",
                     "desc": "At 10th level, choose two more of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
-                    "level": 10
+                    "level": 10,
+                    "choose" : 2,
+                    "from" : [
+                        {
+                            "index" : "proficiencies"
+                        }
+                    ]
                 },
                 {
                     "name": "Magical Secrets",

@@ -25,7 +25,7 @@ fun ProficienciesBoxView(
     baseStat: String,
     baseStatNum: Int,
     profBonus: Int,
-    stats: Map<String, Boolean>,
+    stats: Map<String, Int>,
     modifier : Modifier
 ) {
     Card(
@@ -42,13 +42,10 @@ fun ProficienciesBoxView(
                 Spacer(Modifier.height(20.dp))
 
                 //TODO  make three skill views for different amounts of space
+                //TODO make a separate color for expertise
                 LargeSkillView(
-                    checked = it.value,
-                    value = (baseStatNum + if (it.value) {
-                        profBonus
-                    } else {
-                        0
-                    }),
+                    checked = it.value != 0,
+                    value = (baseStatNum + profBonus * it.value),
                     name = it.key
                 )
 

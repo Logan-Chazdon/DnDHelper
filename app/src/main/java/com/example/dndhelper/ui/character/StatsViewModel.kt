@@ -42,7 +42,7 @@ public class StatsViewModel @Inject constructor(
         repository.insertCharacter(character!!.value!!)
     }
 
-    fun checkForProficiencies(stats: List<String>): Map<String, Boolean>? {
-        return character?.value?.checkForProficiencies(stats)
+    fun checkForProficienciesOrExpertise(stats: List<String>): Map<String, Int>? {
+        return character?.value?.checkForProficienciesOrExpertise(stats)
     }
 }

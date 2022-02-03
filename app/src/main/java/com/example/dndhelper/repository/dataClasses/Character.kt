@@ -238,18 +238,35 @@ data class Character(
         currentHp = maxHp
     }
 
-    fun checkForProficiency(it: String) : Boolean {
-        proficiencies.forEach { prof ->
-            if(prof.name?.lowercase() ?: "" == it.lowercase())
-                return true
+    private fun checkForExpertise(it: String) : Boolean {
+        features.forEach { feature ->
+            if(feature.name == "Expertise") {
+                feature.chosen?.forEach { item ->
+                    if(item.name == it) {
+                        return true
+                    }
+                }
+            }
         }
         return false
     }
 
-    fun checkForProficiencies(stats: List<String>): Map<String, Boolean> {
-        val result = mutableMapOf<String, Boolean>()
+    fun checkForProficiencyOrExpertise(it: String) : Int {
+        proficiencies.forEach { prof ->
+            if(prof.name?.lowercase() ?: "" == it.lowercase()) {
+                if(checkForExpertise(prof.name.toString())) {
+                    return 2
+                }
+                return 1
+            }
+        }
+        return 0
+    }
+
+    fun checkForProficienciesOrExpertise(stats: List<String>): Map<String, Int> {
+        val result = mutableMapOf<String, Int>()
         stats.forEach {
-            result[it] = checkForProficiency(it)
+            result[it] = checkForProficiencyOrExpertise(it)
         }
         return result
     }

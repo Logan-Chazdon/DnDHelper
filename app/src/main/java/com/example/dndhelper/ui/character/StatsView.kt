@@ -122,7 +122,7 @@ fun StatsView(viewModel: StatsViewModel) {
                         baseStatNum = viewModel.character?.observeAsState()
                             ?.value?.getStatMod(statNamesAbr[item]) ?: 0,
                         profBonus = viewModel.character?.observeAsState()?.value?.proficiencyBonus ?: 2,
-                        stats = viewModel.checkForProficiencies
+                        stats = viewModel.checkForProficienciesOrExpertise
                             (it[statNames[item]]!!) ?: mutableMapOf(),
                     modifier = Modifier.fillMaxSize(0.9f)
                     )

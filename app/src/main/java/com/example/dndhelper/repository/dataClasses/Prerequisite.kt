@@ -6,7 +6,7 @@ data class Prerequisite(
     fun check(character: Character?, assumedProficiencies: List<Proficiency>) : Boolean {
         proficiency?.name?.let {
             if(
-                character?.checkForProficiency(it) == true ||
+                character?.checkForProficiencyOrExpertise(it) != 0 ||
                 assumedProficiencies.find {prof -> prof.name == it } == null
             ) {
                 return false

@@ -72,6 +72,9 @@ data class Character(
         feats.forEach {
             it.features?.let { features -> result.addAll(features) }
         }
+
+        background?.let { result.addAll(it.features) }
+
         return result
     }
 

@@ -357,15 +357,23 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
 
 
                                 if (choice.choiceNum != 0) {
-                                    Text(
-                                        choice.options!![selectedLastIndex].name,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .clickable(onClick = { expanded = true })
-                                            .background(
-                                                Color.White
-                                            )
-                                            .padding(start = 5.dp)
+                                    val options = choice.getAvailableOptions(
+                                        viewModel.character,
+                                        viewModel.proficiencies
+                                    )
+                                    MultipleChoiceDropdownView(
+                                        state = viewModel.dropDownStates.getDropDownState(
+                                            key = choice.name + choice.level,
+                                            choiceName = choice.name,
+                                            maxSelections = choice.choiceNum,
+                                            names = options.let { list ->
+                                                val result = mutableListOf<String>()
+                                                list.forEach {
+                                                    result.add(it.name)
+                                                }
+                                                result
+                                            }
+                                        )
                                     )
                                 }
                             }

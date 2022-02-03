@@ -37,6 +37,12 @@ public class CombatViewModel @Inject constructor(
         repository.insertCharacter(tempChar)
     }
 
+    fun setHp(it: String) {
+        val tempChar = character!!.value!!.copy(currentHp = it.toInt())
+        tempChar.id = character!!.value!!.id
+        repository.insertCharacter(tempChar)
+    }
+
     fun damage(temp: String) {
         var currentHp = character!!.value!!.currentHp
         var tempHp = 0

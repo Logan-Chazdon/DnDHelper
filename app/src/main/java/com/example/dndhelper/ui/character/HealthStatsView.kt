@@ -2,20 +2,34 @@ package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.android.InternalPlatformTextApi
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+
+@OptIn(InternalPlatformTextApi::class, androidx.compose.ui.ExperimentalComposeUiApi::class)
 @Composable
 fun HeathStatsView(
-    currentHp: Int?,
-    maxHp: Int?,
-    tempHp: Int?,
+    currentHp: Int,
+    maxHp: Int,
+    tempHp: Int,
+    setHp: (String) -> Unit,
+    setTemp: (String) -> Unit,
     heal: () -> Unit,
     addTemp: () -> Unit,
     damage: () -> Unit
@@ -32,13 +46,19 @@ fun HeathStatsView(
         "Damage" to damage
     )
 
+
+
     Card (
-        modifier = Modifier.fillMaxWidth(0.95f).padding(5.dp),
+        modifier = Modifier
+            .fillMaxWidth(0.95f)
+            .padding(5.dp),
         elevation = 2.dp,
         shape = RoundedCornerShape(20.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -60,12 +80,43 @@ fun HeathStatsView(
                                 text = item.key,
                                 style = MaterialTheme.typography.subtitle1
                             )
+                            val keyboardController = LocalSoftwareKeyboardController.current
+                            val focusController = LocalFocusManager.current
+                            var text by remember {
+                                mutableStateOf(item.value.toString())
+                            }
 
-                            Text(
-                                text = item.value.toString(),
-                                modifier = Modifier.padding(5.dp),
-                                style = MaterialTheme.typography.h6
+                            val onDone = mapOf(
+                                "HP" to fun(_: KeyboardActionScope) {
+                                    setHp.invoke(text)
+                                    keyboardController?.hide()
+                                    focusController.clearFocus()
+                                },
+                                "Temp HP" to fun(_: KeyboardActionScope){
+                                    setTemp.invoke(text)
+                                    keyboardController?.hide()
+                                    focusController.clearFocus()
+                                },
+                                "Max HP" to fun(_: KeyboardActionScope){
+
+                                }
                             )
+
+                            BasicTextField(
+                                value = text,
+                                modifier = Modifier.padding(5.dp),
+                                textStyle = MaterialTheme.typography.h6.copy(textAlign = TextAlign.Center),
+                                singleLine = true,
+                                enabled = i != 2,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(
+                                    onDone = onDone[item.key]
+                                ),
+                                onValueChange = {
+                                    text = it
+                                }
+                            )
+
                         }
                     }
 

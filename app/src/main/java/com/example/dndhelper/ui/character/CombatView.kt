@@ -105,23 +105,35 @@ fun CombatView(viewModel: CombatViewModel) {
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth(if(isVertical) { 0.95f} else {0.45f})
             ) {
-                HeathStatsView(
-                    currentHp = viewModel.character?.observeAsState()?.value?.currentHp,
-                    maxHp = viewModel.character?.observeAsState()?.value?.maxHp,
-                    tempHp = viewModel.character?.observeAsState()?.value?.tempHp,
-                    addTemp = {
-                        hpPopUpExpanded = true
-                        hpPopUpMode = "addTemp"
-                    },
-                    heal = {
-                        hpPopUpExpanded = true
-                        hpPopUpMode = "heal"
-                    },
-                    damage = {
-                        hpPopUpExpanded = true
-                        hpPopUpMode = "damage"
-                    }
-                )
+                viewModel.character?.observeAsState()?.value?.let {
+                    HeathStatsView(
+                        currentHp = it.currentHp,
+                        maxHp = it.maxHp,
+                        tempHp = it.tempHp,
+                        setTemp = {
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.addTemp(it)
+                            }
+                        },
+                        setHp = {
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.setHp(it)
+                            }
+                        },
+                        addTemp = {
+                            hpPopUpExpanded = true
+                            hpPopUpMode = "addTemp"
+                        },
+                        heal = {
+                            hpPopUpExpanded = true
+                            hpPopUpMode = "heal"
+                        },
+                        damage = {
+                            hpPopUpExpanded = true
+                            hpPopUpMode = "damage"
+                        }
+                    )
+                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

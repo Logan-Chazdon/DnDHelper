@@ -704,11 +704,13 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 if(index == "skill_proficiencies") {
                     generateSkills().values.forEach {
                         it.forEach{ item ->
-                            proficiencies.add(
-                                Proficiency(
-                                    name = item
+                            if(!item.contains("Saving")) {
+                                proficiencies.add(
+                                    Proficiency(
+                                        name = item
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 }

@@ -33,4 +33,19 @@ class Class(
             it.recharge(level)
         }
     }
+
+    //TODO implement me.
+    //Return all spells available through this class
+    //Regardless of if they are prepared.
+    fun getAvailableSpells() : List<Spell> {
+        val result = mutableListOf<Spell>()
+        spellCasting?.known?.let { result.addAll(it) }
+        for (it in levelPath) {
+            if(it.level > level) {
+                break
+            }
+            result.addAll(it.getSpellsGiven())
+        }
+        return result
+    }
 }

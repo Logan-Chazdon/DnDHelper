@@ -6,7 +6,8 @@ data class Feature(
     val level: Int = 1,
     val choiceNum: Int = 0,
     val options: MutableList<Feature>?,
-    val prerequisite: Prerequisite? = null
+    val prerequisite: Prerequisite? = null,
+    val spells: List<Spell>? = null //Spells granted by this feature
 ) {
     var chosen : List<Feature>? = null
     var resource: Resource? = null
@@ -27,6 +28,16 @@ data class Feature(
             if(it.prerequisite?.check(character, assumedProficiencies) != false) {
                 result.add(it)
             }
+        }
+        return result
+    }
+
+    //Returns all spells granted bu the feature in its current state.
+    fun getSpellsGiven(): List<Spell> {
+        val result = mutableListOf<Spell>()
+        spells?.let { result.addAll(it) }
+        chosen?.forEach {
+            it.spells?.let { spells -> result.addAll(spells) }
         }
         return result
     }

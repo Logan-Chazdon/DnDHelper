@@ -352,7 +352,7 @@ data class Character(
         val result = mutableMapOf<Int, MutableList<Spell>>()
 
         classes.forEach {
-            it.value.spellCasting?.known?.forEach { spell ->
+            it.value.getAvailableSpells().forEach { spell ->
                 val oldVal: MutableList<Spell> = result.getOrDefault(spell.level, mutableListOf())
                 oldVal.add(spell)
                 result[spell.level] = oldVal

@@ -948,7 +948,10 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         for (featureIndex in 0 until featuresJson.length()) {
             val featureJson = featuresJson.getJSONObject(featureIndex)
             var numOfChoices = 0
-            var level = 0
+            val level = try {
+                featureJson.getInt("level")
+            } catch (e: JSONException) { 0 }
+
             var options : MutableList<Feature>? = null
             //If we have an index construct a list from that otherwise just make it normally.
             try {
@@ -974,14 +977,29 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             }
                         }
                     }
+                    "all_spells" -> {
+                        val bound = try {
+                            featureJson.getInt("bound")
+                        } catch(e: JSONException) {
+                            null
+                        }
+                        _spells.value?.forEach { spell ->
+                            if(spell.level <= bound ?: 10) {
+                                features.add(
+                                    Feature(
+                                        name = spell.name,
+                                        spells = listOf(spell),
+                                        description = "",
+                                        options = null,
+                                    )
+                                )
+                            }
+                        }
+                    }
                     else -> throw JSONException("Invalid index")
                 }
 
             } catch (e: JSONException) {
-                try {
-                    level = featureJson.getInt("level")
-                } catch (e: JSONException) { }
-
                 try {
                     numOfChoices = featureJson.getInt("choose")
                 } catch (e: JSONException) { }

@@ -42,7 +42,7 @@ data class Character(
     var background: Background? = null,
     var backpack: Backpack = Backpack(),
     var inspiration: Boolean = false,
-    var equiptArmor: Armor = Armor.none,
+    var equippedArmor: Armor = Armor.none,
     var feats: MutableList<Feat> = mutableListOf<Feat>(),
     var positiveDeathSaves: Int = 0,
     var negativeDeathSaves: Int = 0,

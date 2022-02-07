@@ -69,7 +69,7 @@ public class ItemViewModel @Inject constructor(
 
     suspend fun equip(armor: Armor): Boolean {
         return if (character?.value?.getStat("Str") ?: 0 >= armor.strengthPrerequisite ?: 0) {
-            character?.value?.equiptArmor = armor
+            character?.value?.equippedArmor = armor
             repository.insertCharacter(character?.value!!)
             true
         } else {

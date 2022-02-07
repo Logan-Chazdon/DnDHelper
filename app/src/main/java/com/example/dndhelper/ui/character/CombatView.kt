@@ -159,7 +159,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                     "",
                                     Modifier.size(75.dp)
                                 )
-                                val ac = character?.value?.equiptArmor?.getAC(
+                                val ac = character?.value?.equippedArmor?.getAC(
                                     character.value?.getStatMod("Dex") ?: 10
                                 )
                                 Text(

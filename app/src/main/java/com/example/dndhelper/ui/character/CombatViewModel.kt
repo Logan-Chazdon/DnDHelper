@@ -177,6 +177,10 @@ public class CombatViewModel @Inject constructor(
         return spells
     }
 
+    fun togglePreparation(spell: Spell) {
+        //TODO implement me
+    }
+
     var character : LiveData<Character>? = null
 
 

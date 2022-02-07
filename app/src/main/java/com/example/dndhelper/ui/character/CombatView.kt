@@ -251,6 +251,11 @@ fun CombatView(viewModel: CombatViewModel) {
                                         scope.launch(Dispatchers.IO) {
                                             viewModel.useSlot(slot)
                                         }
+                                    },
+                                    togglePreparation = { spell ->
+                                        scope.launch(Dispatchers.IO) {
+                                            viewModel.togglePreparation(spell)
+                                        }
                                     }
                                 )
                             }

@@ -35,7 +35,8 @@ fun SpellCastingView(
     modifier: Modifier = Modifier,
     cast: (Spell) -> Unit,
     useSlot: (Int) -> Unit,
-    refundSlot: (Int) -> Unit
+    refundSlot: (Int) -> Unit,
+    togglePreparation: (Spell) -> Unit
 ) {
     val state = rememberLazyListState()
     Card(
@@ -52,12 +53,13 @@ fun SpellCastingView(
         ) {
 
             spellSlotsOffsetForCantrips.forEachIndexed { slotLevel, slots ->
-
                 val spells = allSpells[slotLevel]
 
                 item {
                     Row(
-                        modifier = Modifier.fillMaxWidth(0.9f).padding(5.dp),
+                        modifier = Modifier
+                            .fillMaxWidth(0.95f)
+                            .padding(5.dp),
                         horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
                     ) {
                         Row(
@@ -90,13 +92,15 @@ fun SpellCastingView(
                             val surface = MaterialTheme.colors.surface
                             for (index in (0 until slots.maxAmount()).reversed()) {
                                 Canvas(
-                                    modifier = Modifier.size(20.dp).clickable {
-                                        if(slots.currentAmount > index) {
-                                            useSlot(slotLevel)
-                                        } else {
-                                            refundSlot(slotLevel)
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .clickable {
+                                            if (slots.currentAmount > index) {
+                                                useSlot(slotLevel)
+                                            } else {
+                                                refundSlot(slotLevel)
+                                            }
                                         }
-                                    }
                                 ) {
                                     drawCircle(
                                         color = if (slots.currentAmount > index) {
@@ -122,28 +126,62 @@ fun SpellCastingView(
                 if (spellLevelsExpanded[slotLevel]) {
                     items(spells?.size ?: 0) { i ->
                         val spell = spells!![i].second
+                        val prepared = spells[i].first
                         Card(
-                            modifier = Modifier.fillMaxWidth(0.95f),
+                            modifier = Modifier.fillMaxWidth(0.95f)
+                                .clickable {
+                                    if(spell.level == 0 ) {
+                                        //TODO add something for cantrips
+                                    } else {
+                                        cast(spell)
+                                    }
+                                },
                             elevation = 2.dp
                         ) {
-                            Row {
-                                Row(
-                                    modifier = Modifier.padding(2.dp),
-                                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                            Row(
+                                modifier = Modifier.padding(2.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            ) {
+                                //Preparation
+                                Box(
+                                    modifier = Modifier.width(20.dp),
                                 ) {
-                                    Text(spell.name, Modifier.width(100.dp))
+                                    prepared?.let { isPrepared ->
+                                        if (spell.level != 0) {
+                                            val preparedColor = MaterialTheme.colors.onBackground
+                                            val onBackground = MaterialTheme.colors.onBackground
+                                            val background = MaterialTheme.colors.background
+                                            Canvas(modifier = Modifier
+                                                .size(20.dp)
+                                                .clickable {
+                                                    togglePreparation(spell)
+                                                }) {
+                                                drawCircle(
+                                                    color = if (isPrepared) {
+                                                        preparedColor
+                                                    } else {
+                                                        background
+                                                    },
+                                                    center = this.center,
+                                                    style = Fill
+                                                )
 
-                                    Text(spell.damage, Modifier.width(100.dp))
-
-                                    Text(spell.castingTime, Modifier.width(75.dp))
-                                }
-                                if (spell.level != 0) {
-                                    Button({
-                                        cast(spell)
-                                    }) {
-                                        Text("CAST")
+                                                drawCircle(
+                                                    color = onBackground,
+                                                    center = this.center,
+                                                    style = Stroke(2f)
+                                                )
+                                            }
+                                        }
                                     }
                                 }
+
+                                Text(spell.name, Modifier.width(120.dp))
+
+                                Text(spell.damage, Modifier.width(140.dp))
+
+                                Text(spell.castingTime, Modifier.width(160.dp))
                             }
                         }
                         Spacer(Modifier.height(2.dp))

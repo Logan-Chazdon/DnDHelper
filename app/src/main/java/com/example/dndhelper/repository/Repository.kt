@@ -1,5 +1,7 @@
 package com.example.dndhelper.repository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -52,6 +54,16 @@ class Repository @Inject constructor(
         }
         (webservice as WebserviceDnD).generateRaces(_races)
 */
+    }
+
+
+    fun getClassIndex(name: String): Int {
+        _classes.value?.forEachIndexed { index, it ->
+            if (it.name == name) {
+                return index
+            }
+        }
+        return -1
     }
 
     fun getLanguages() : LiveData<List<Language>> {

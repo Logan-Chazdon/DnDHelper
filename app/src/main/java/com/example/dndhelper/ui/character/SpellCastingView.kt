@@ -31,7 +31,8 @@ import com.example.dndhelper.repository.dataClasses.Spell
 @ExperimentalFoundationApi
 @Composable
 fun SpellCastingView(
-    character: Character,
+    allSpells: Map<Int, List<Pair<Boolean?, Spell>>>,
+    spellSlotsOffsetForCantrips: MutableList<Resource>,
     modifier: Modifier = Modifier,
     Cast: (Spell) -> Unit,
     useSlot: (Int) -> Unit,
@@ -42,7 +43,7 @@ fun SpellCastingView(
         elevation = 5.dp,
         modifier = modifier
     ) {
-        var spellLevelsExpanded = remember {
+        val spellLevelsExpanded = remember {
             mutableStateListOf(true, true, true, true, true, true, true, true, true, true)
         }
         LazyColumn(
@@ -50,14 +51,10 @@ fun SpellCastingView(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val spellSlotsOffsetForCantrips = mutableListOf(
-                Resource("Cantrip", 0, "0", "0")
-            )
-            spellSlotsOffsetForCantrips.addAll(character.spellSlots)
 
             spellSlotsOffsetForCantrips.forEachIndexed { slotLevel, slots ->
 
-                val spells = character.allSpells[slotLevel]
+                val spells = allSpells[slotLevel]
 
                 item {
                     Row(
@@ -125,21 +122,22 @@ fun SpellCastingView(
 
                 if (spellLevelsExpanded[slotLevel]) {
                     items(spells?.size ?: 0) { i ->
-                        val spell = spells!![i]
+                        val spell = spells!![i].second
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
                             elevation = 2.dp
                         ) {
-                            Row(
-                                modifier = Modifier.padding(2.dp),
-                                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                            ) {
-                                Text(spell.name, Modifier.width(100.dp))
+                            Row {
+                                Row(
+                                    modifier = Modifier.padding(2.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                ) {
+                                    Text(spell.name, Modifier.width(100.dp))
 
-                                Text(spell.damage, Modifier.width(100.dp))
+                                    Text(spell.damage, Modifier.width(100.dp))
 
-                                Text(spell.castingTime, Modifier.width(75.dp))
-
+                                    Text(spell.castingTime, Modifier.width(75.dp))
+                                }
                                 if (spell.level != 0) {
                                     Button({
                                         Cast(spell)

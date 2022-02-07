@@ -236,8 +236,9 @@ fun CombatView(viewModel: CombatViewModel) {
                         ) {
                             character?.value?.let {
                                 SpellCastingView(
-                                    character = it,
-                                    Cast = { newSpell ->
+                                    spellSlotsOffsetForCantrips = viewModel.getSpellSlotsAndCantrips(),
+                                    allSpells = viewModel.getAllSpells(),
+                                    cast = { newSpell ->
                                         spell = newSpell
                                         castIsExpanded = true
                                     },

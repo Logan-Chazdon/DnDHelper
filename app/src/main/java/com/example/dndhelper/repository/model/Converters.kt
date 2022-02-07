@@ -16,6 +16,7 @@ class Converters {
         converter.registerItemType("Weapon", Weapon::class.java)
         converter.registerItemType("Armor", Armor::class.java)
         converter.registerItemType("Currency", Currency::class.java)
+        converter.registerItemType("Shield", Shield::class.java)
         gson = GsonBuilder()
             .registerTypeAdapter(ItemInterface::class.java, converter)
             .create()
@@ -312,6 +313,20 @@ class Converters {
 
     @TypeConverter
     fun armorToStoredString(myObjects: Armor): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToShield(data: String?): Shield? {
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<Shield>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun shieldToStoredString(myObjects: Shield): String? {
         return gson.toJson(myObjects)
     }
 

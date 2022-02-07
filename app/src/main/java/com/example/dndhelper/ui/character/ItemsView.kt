@@ -23,10 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.dndhelper.repository.dataClasses.Armor
-import com.example.dndhelper.repository.dataClasses.Item
-import com.example.dndhelper.repository.dataClasses.ItemInterface
-import com.example.dndhelper.repository.dataClasses.Weapon
+import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.repository.dataClasses.utils.getValueInCopper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -104,6 +101,19 @@ fun ItemsView(viewModel: ItemViewModel) {
                                     when (item.type) {
                                         "Armor" -> {
                                             Text(text = (item as Armor).acDesc)
+                                            Button(
+                                                onClick = {
+                                                    GlobalScope.launch {
+                                                        viewModel.equip(item)
+                                                    }
+                                                }
+                                            ) {
+                                                //TODO maybe add a feature to stop the user from equiping an already equiped item.
+                                                Text(text = "Equip")
+                                            }
+                                        }
+                                        "Shield" -> {
+                                            Text(text = (item as Shield).acBonus.toString())
                                             Button(
                                                 onClick = {
                                                     GlobalScope.launch {

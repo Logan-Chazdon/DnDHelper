@@ -43,6 +43,7 @@ data class Character(
     var backpack: Backpack = Backpack(),
     var inspiration: Boolean = false,
     var equippedArmor: Armor = Armor.none,
+    var equippedShield: Shield? = null,
     var feats: MutableList<Feat> = mutableListOf<Feat>(),
     var positiveDeathSaves: Int = 0,
     var negativeDeathSaves: Int = 0,
@@ -50,6 +51,16 @@ data class Character(
     val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
     val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
 ){
+    val armorClass: Int
+    get() {
+        //TODO implement all other sources of ac.
+        var result = equippedArmor.getAC(getStatMod("Dex"))
+        equippedShield?.let {
+            result += it.acBonus
+        }
+        return result
+    }
+
     val features: List<Feature>
     get() {
         val result = mutableListOf<Feature>()

@@ -9,6 +9,7 @@ import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.Armor
 import com.example.dndhelper.repository.dataClasses.Character
 import com.example.dndhelper.repository.dataClasses.ItemInterface
+import com.example.dndhelper.repository.dataClasses.Shield
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -75,6 +76,12 @@ public class ItemViewModel @Inject constructor(
         } else {
             false
         }
+    }
+
+    suspend fun equip(shield: Shield): Boolean {
+        character?.value?.equippedShield = shield
+        repository.insertCharacter(character?.value!!)
+        return true
     }
 
     suspend fun deleteItemAt(itemToDeleteIndex: Int) {

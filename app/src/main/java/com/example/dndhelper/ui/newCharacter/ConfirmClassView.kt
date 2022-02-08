@@ -471,8 +471,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                                     MaterialTheme.colors.background
                                                 }
                                                 else -> {
-                                                    //TODO add a color here
-                                                    Color.LightGray
+                                                    MaterialTheme.colors.onBackground.copy(0.5f).compositeOver(MaterialTheme.colors.background)
                                                 }
                                             }
                                         ) {

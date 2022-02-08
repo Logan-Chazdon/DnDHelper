@@ -3,42 +3,161 @@
         {
             "name": "Artificer",
             "spell_casting": {
-                "type" : 0.5,
-                "casting_ability" : "Int",
-                "prepare_from" : "all",
-                "preparation_mod_multiplier" : 0.5,
-                "cantrips_known" : [
-                    2, 2, 2, 2, 2, 2, 2, 2, 2,
-                    3, 3, 3, 3,
-                    4, 4, 4, 4, 4, 4, 4
+                "type": 0.5,
+                "casting_ability": "Int",
+                "prepare_from": "all",
+                "preparation_mod_multiplier": 0.5,
+                "cantrips_known": [
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    3,
+                    3,
+                    3,
+                    3,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4
                 ],
-                "spells_known" : [
-                    2, 2, 2, 2, 2, 2, 2, 2, 2,
-                    3, 3, 3, 3,
-                    4, 4, 4, 4, 4, 4, 4
+                "spells_known": [
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    3,
+                    3,
+                    3,
+                    3,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4
                 ],
-                "spell_slots" : [
-                    [2],
-                    [2],
-                    [3],
-                    [3],
-                    [4, 2],
-                    [4, 2],
-                    [4, 3],
-                    [4, 3],
-                    [4, 3, 2],
-                    [4, 3, 2],
-                    [4, 3, 3],
-                    [4, 3, 3],
-                    [4, 3, 3, 1],
-                    [4, 3, 3, 1],
-                    [4, 3, 3, 2],
-                    [4, 3, 3, 2],
-                    [4, 3, 3, 3],
-                    [4, 3, 3, 3, 1],
-                    [4, 3, 3, 3, 1],
-                    [4, 3, 3, 3, 2],
-                    [4, 3, 3, 3, 2]
+                "spell_slots": [
+                    [
+                        2
+                    ],
+                    [
+                        2
+                    ],
+                    [
+                        3
+                    ],
+                    [
+                        3
+                    ],
+                    [
+                        4,
+                        2
+                    ],
+                    [
+                        4,
+                        2
+                    ],
+                    [
+                        4,
+                        3
+                    ],
+                    [
+                        4,
+                        3
+                    ],
+                    [
+                        4,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3
+                    ],
+                    [
+                        4,
+                        3,
+                        3
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2
+                    ]
                 ]
             },
             "hit_die": 8,
@@ -70,6 +189,41 @@
                             "name": "Sleight of Hand"
                         }
                     ]
+                },
+                {
+                    "name": "One type of artisan’s tools of your choice",
+                    "choose": 1,
+                    "from": [
+                        {
+                            "index": "artisans tools"
+                        }
+                    ]
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name": "Simple weapons"
+                },
+                {
+                    "name": "Light armor"
+                },
+                {
+                    "name": "Medium armor"
+                },
+                {
+                    "name": "Shields"
+                },
+                {
+                    "name": "Thieves tools"
+                },
+                {
+                    "name": "Tinkers tools"
+                },
+                {
+                    "name": "Saving throw (Constitution)"
+                },
+                {
+                    "name": "Saving throw (Intelligence)"
                 }
             ],
             "features": [
@@ -140,9 +294,9 @@
                             "choose": 1,
                             "from": [
                                 {
-                                    "name" : "Artisans Tools",
+                                    "name": "Artisans Tools",
                                     "index": "artisans_tools",
-                                    "desc" : "TODO",
+                                    "desc": "TODO",
                                     "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
                                 }
                             ]
@@ -226,9 +380,9 @@
                             "choose": 1,
                             "from": [
                                 {
-                                    "name" : "Artisans Tools",
+                                    "name": "Artisans Tools",
                                     "index": "artisans_tools",
-                                    "desc" : "TODO",
+                                    "desc": "TODO",
                                     "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
                                 }
                             ]
@@ -315,15 +469,14 @@
                 {
                     "name": "Artillerist",
                     "features": [
-
-                            ]
-                        }
                     ]
-                },
+                }
+            ]
+        },
         {
             "name": "Barbarian",
             "spell_casting": {
-                "type" : 0.0
+                "type": 0.0
             },
             "subclass_level": 3,
             "hit_die": 12,
@@ -355,16 +508,28 @@
             ],
             "proficiencies": [
                 {
-                    "name": "Armor: Light armor, medium armor, shields"
+                    "name": "Light armor"
                 },
                 {
-                    "name": "Weapons: Simple weapons, martial weapons"
+                    "name": "Medium armor"
+                },
+                {
+                    "name": "Shields"
+                },
+                {
+                    "name": "Simple weapons"
+                },
+                {
+                    "name": "Martial weapons"
                 },
                 {
                     "name": "Intimidation"
                 },
                 {
-                    "name": "Saving Throws: Strength, Constitution"
+                    "name": "Saving throw (Strength)"
+                },
+                {
+                    "name": "Saving throw (Constitution)"
                 }
             ],
             "equipment": [
@@ -455,39 +620,211 @@
         {
             "name": "Bard",
             "spell_casting": {
-                "type" : 1,
-                "casting_ability" : "Cha",
-                "spells_known" : [
-                    4, 5, 6, 7, 8, 9, 10, 11,
-                    12, 14, 15, 15, 16, 18,
-                    19, 19, 20, 23, 23, 23
+                "type": 1,
+                "casting_ability": "Cha",
+                "spells_known": [
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    14,
+                    15,
+                    15,
+                    16,
+                    18,
+                    19,
+                    19,
+                    20,
+                    23,
+                    23,
+                    23
                 ],
-                "cantrips_known" : [
-                    2, 2, 2, 3, 3, 3, 3, 3, 3,
-                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+                "cantrips_known": [
+                    2,
+                    2,
+                    2,
+                    3,
+                    3,
+                    3,
+                    3,
+                    3,
+                    3,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4
                 ],
-                "spell_slots" : [
-                    [2],
-                    [3],
-                    [3],
-                    [4, 2],
-                    [4, 3, 2],
-                    [4, 3, 3],
-                    [4, 3, 3, 1],
-                    [4, 3, 3 ,2],
-                    [4, 3, 3, 3, 1],
-                    [4, 3, 3, 3, 2],
-                    [4, 3, 3, 3, 2, 1],
-                    [4, 3, 3, 3, 2, 1],
-                    [4, 3, 3, 3, 2, 1, 1],
-                    [4, 3, 3, 2, 1, 1, 1],
-                    [4, 3, 3, 2, 1, 1, 1, 1],
-                    [4, 3, 3, 3, 1, 1, 1, 1],
-                    [4, 3, 3, 3, 1, 1, 1, 1, 1],
-                    [4, 3, 3, 3, 2, 1, 1, 1, 1],
-                    [4, 3, 3, 3, 3, 1, 1, 1, 1],
-                    [4, 3, 3, 3, 3, 2, 1, 1, 1],
-                    [4, 3, 3, 3, 3, 2, 2, 1, 1]
+                "spell_slots": [
+                    [
+                        2
+                    ],
+                    [
+                        3
+                    ],
+                    [
+                        3
+                    ],
+                    [
+                        4,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        1,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        3,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        3,
+                        2,
+                        2,
+                        1,
+                        1
+                    ]
                 ]
             },
             "hit_die": 8,
@@ -602,10 +939,10 @@
                     "name": "Expertise",
                     "desc": "At 3rd level, choose two of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
                     "level": 3,
-                    "choose" : 2,
-                    "from" : [
+                    "choose": 2,
+                    "from": [
                         {
-                            "index" : "proficiencies"
+                            "index": "proficiencies"
                         }
                     ]
                 },
@@ -623,10 +960,10 @@
                     "name": "Expertise",
                     "desc": "At 10th level, choose two more of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.",
                     "level": 10,
-                    "choose" : 2,
-                    "from" : [
+                    "choose": 2,
+                    "from": [
                         {
-                            "index" : "proficiencies"
+                            "index": "proficiencies"
                         }
                     ]
                 },
@@ -634,11 +971,11 @@
                     "name": "Magical Secrets",
                     "desc": "By 10th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 14th level and again at 18th level.",
                     "level": 10,
-                    "choose" : 2,
-                    "from" : [
+                    "choose": 2,
+                    "from": [
                         {
-                            "index" : "all_spells",
-                            "bound" : 5
+                            "index": "all_spells",
+                            "bound": 5
                         }
                     ]
                 },
@@ -646,22 +983,22 @@
                     "name": "Magical Secrets",
                     "desc": "At 14th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table. You learn two additional spells from any classes at 18th level.",
                     "level": 14,
-                    "choose" : 2,
-                    "from" : [
+                    "choose": 2,
+                    "from": [
                         {
-                            "index" : "all_spells",
-                            "bound" : 7
+                            "index": "all_spells",
+                            "bound": 7
                         }
                     ]
                 },
                 {
                     "name": "Magical Secrets",
                     "desc": "At 18th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table.",
-                    "choose" : 2,
-                    "from" : [
+                    "choose": 2,
+                    "from": [
                         {
-                            "index" : "all_spells",
-                            "bound" : 9
+                            "index": "all_spells",
+                            "bound": 9
                         }
                     ],
                     "level": 18
@@ -678,35 +1015,181 @@
             "name": "Cleric",
             "subclass_level": 1,
             "spell_casting": {
-                "type" : 1,
-                "casting_ability" : "Wis",
-                "prepare_from" : "all",
-                "preparation_mod_multiplier" : 1,
-                "cantrips_known" : [
-                    3, 3, 3, 4, 4, 4, 4, 4, 4,
-                    5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5
+                "type": 1,
+                "casting_ability": "Wis",
+                "prepare_from": "all",
+                "preparation_mod_multiplier": 1,
+                "cantrips_known": [
+                    3,
+                    3,
+                    3,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    5,
+                    5,
+                    5,
+                    5,
+                    5,
+                    5,
+                    5,
+                    5,
+                    5,
+                    5,
+                    5
                 ],
-                "spell_slots" : [
-                    [2],
-                    [3],
-                    [4, 2],
-                    [4, 3],
-                    [4, 3, 2],
-                    [4, 3, 3],
-                    [4, 3, 3, 1],
-                    [4, 3, 3, 2],
-                    [4, 3, 3, 3, 1],
-                    [4, 3, 3, 3, 2],
-                    [4, 3, 3, 3, 2, 1],
-                    [4, 3, 3, 3, 2, 1],
-                    [4, 3, 3, 3, 2, 1, 1],
-                    [4, 3, 3, 3, 2, 1, 1],
-                    [4, 3, 3, 3, 2, 1, 1, 1],
-                    [4, 3, 3, 3, 2, 1, 1, 1],
-                    [4, 3, 3, 3, 2, 1, 1, 1, 1],
-                    [4, 3, 3, 3, 3, 1, 1, 1, 1],
-                    [4, 3, 3, 3, 3, 2, 1, 1, 1],
-                    [4, 3, 3, 3, 3, 2, 2, 1, 1]
+                "spell_slots": [
+                    [
+                        2
+                    ],
+                    [
+                        3
+                    ],
+                    [
+                        4,
+                        2
+                    ],
+                    [
+                        4,
+                        3
+                    ],
+                    [
+                        4,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        3,
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        3,
+                        2,
+                        1,
+                        1,
+                        1
+                    ],
+                    [
+                        4,
+                        3,
+                        3,
+                        3,
+                        3,
+                        2,
+                        2,
+                        1,
+                        1
+                    ]
                 ]
             },
             "hit_die": 8,

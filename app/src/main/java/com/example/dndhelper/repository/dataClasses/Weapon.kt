@@ -12,6 +12,7 @@ data class Weapon(
     val damageType: String,
     val range: String,
     val properties : List<Property>? = null,
+    val isMartial: Boolean = false,
     override val charges: Resource? = null
 ) : ItemInterface {
     override val type = "Weapon"

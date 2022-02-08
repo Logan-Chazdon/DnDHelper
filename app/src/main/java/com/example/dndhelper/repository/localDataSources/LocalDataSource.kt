@@ -264,13 +264,15 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         //Add all the martial weapons to items and then generate martial weapons.
         _items.addSource(_martialWeapons) {value -> addData(value) }
         _martialWeapons.value = generateWeapons(
-            context.resources.openRawResource(R.raw.martial_weapons).bufferedReader().readText()
+            context.resources.openRawResource(R.raw.martial_weapons).bufferedReader().readText(),
+            true
         )
 
         //Add all the simple weapons to items and then generate simple weapons.
         _items.addSource(_simpleWeapons) {value -> addData(value) }
         _simpleWeapons.value = generateWeapons(
-            context.resources.openRawResource(R.raw.simple_weapons).bufferedReader().readText()
+            context.resources.openRawResource(R.raw.simple_weapons).bufferedReader().readText(),
+            false
         )
 
         //Add all the armors to items and then generate armors.
@@ -307,7 +309,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         return armor
     }
 
-    private fun generateWeapons(dataAsString: String) : List<Weapon> {
+    private fun generateWeapons(dataAsString: String, isMartial: Boolean) : List<Weapon> {
         val weapons = mutableListOf<Weapon>()
         val weaponsJson = JSONObject(dataAsString).getJSONArray("weapons")
         //TODO add support for magic items and attunment.
@@ -326,7 +328,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     damage = weaponJson.getString("damage"),
                     damageType = weaponJson.getString("damage_type"),
                     range = weaponJson.getString("range"),
-                    properties = properties
+                    properties = properties,
+                    isMartial = isMartial
                 )
             )
         }

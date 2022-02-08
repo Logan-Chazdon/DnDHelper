@@ -486,16 +486,16 @@
                     "choose": 2,
                     "from": [
                         {
-                            "name": " Animal Handling"
+                            "name": "Animal Handling"
                         },
                         {
-                            "name": " Athletics"
+                            "name": "Athletics"
                         },
                         {
-                            "name": " Intimidation"
+                            "name": "Intimidation"
                         },
                         {
-                            "name": " Nature"
+                            "name": "Nature"
                         },
                         {
                             "name": "Perception"

@@ -387,9 +387,9 @@ data class Character(
     fun calculateWeaponAttackBonus(weapon: Weapon) : Int {
         //Add support for other proficiencies like firearms.
         val proficiencyName = if(weapon.isMartial) {
-            "Martial Weapons"
+            "Martial weapons"
         } else {
-            "Simple Weapons"
+            "Simple weapons"
         }
 
         val bonusForProficiency = proficiencies.run {

@@ -232,33 +232,36 @@ fun CombatView(viewModel: CombatViewModel) {
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                Box(
-                    Modifier.width(width)
-                ) {
-                    character?.value?.let {
-                        SpellCastingView(
-                            spellSlotsOffsetForCantrips = viewModel.getSpellSlotsAndCantrips(),
-                            allSpells = viewModel.getAllSpells(),
-                            cast = { newSpell ->
-                                spell = newSpell
-                                castIsExpanded = true
-                            },
-                            refundSlot = { slot ->
-                                scope.launch(Dispatchers.IO) {
-                                    viewModel.refundSlot(slot)
+
+                if(viewModel.character?.observeAsState()?.value?.isCaster == true) {
+                    Box(
+                        Modifier.width(width)
+                    ) {
+                        character?.value?.let {
+                            SpellCastingView(
+                                spellSlotsOffsetForCantrips = viewModel.getSpellSlotsAndCantrips(),
+                                allSpells = viewModel.getAllSpells(),
+                                cast = { newSpell ->
+                                    spell = newSpell
+                                    castIsExpanded = true
+                                },
+                                refundSlot = { slot ->
+                                    scope.launch(Dispatchers.IO) {
+                                        viewModel.refundSlot(slot)
+                                    }
+                                },
+                                useSlot = { slot ->
+                                    scope.launch(Dispatchers.IO) {
+                                        viewModel.useSlot(slot)
+                                    }
+                                },
+                                togglePreparation = { spell ->
+                                    scope.launch(Dispatchers.IO) {
+                                        viewModel.togglePreparation(spell)
+                                    }
                                 }
-                            },
-                            useSlot = { slot ->
-                                scope.launch(Dispatchers.IO) {
-                                    viewModel.useSlot(slot)
-                                }
-                            },
-                            togglePreparation = { spell ->
-                                scope.launch(Dispatchers.IO) {
-                                    viewModel.togglePreparation(spell)
-                                }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
 

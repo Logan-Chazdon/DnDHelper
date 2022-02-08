@@ -384,4 +384,50 @@ data class Character(
         return result
     }
 
+    fun calculateWeaponAttackBonus(weapon: Weapon) : Int {
+        //Add support for other proficiencies like firearms.
+        val proficiencyName = if(weapon.isMartial) {
+            "Martial Weapons"
+        } else {
+            "Simple Weapons"
+        }
+
+        val bonusForProficiency = proficiencies.run {
+            var result = 0
+            for (item in this) {
+                if(item.name == proficiencyName) {
+                  result = proficiencyBonus
+                  break
+                }
+            }
+            result
+        }
+
+        val bonusFromStats = if(weapon.range != "5 ft") {
+            getStatMod("Dex")
+        } else {
+            if(
+                weapon.properties.run {
+                    var result = false
+                    this?.let {
+                        for (item in it) {
+                          if(item.name == "Finesse") {
+                              result = true
+                              break
+                          }
+                        }
+                    }
+                    result
+                }
+            ) {
+                maxOf(getStatMod("Str"), getStatMod("Dex"))
+            } else {
+                getStatMod("Str")
+            }
+        }
+
+        //TODO add support for magic items.
+        return bonusForProficiency + bonusFromStats
+    }
+
 }

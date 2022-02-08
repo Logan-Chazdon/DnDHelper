@@ -2,7 +2,6 @@ package com.example.dndhelper.ui.character
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,8 +32,17 @@ fun ItemsAndAbilitiesView(
         ) {
             items(character.backpack.allWeapons) {
                 Row {
-                    //TODO add the to hit modifier
                     Text(text = it.name!!, modifier = Modifier.width(100.dp))
+                    Text(
+                        text = character.calculateWeaponAttackBonus(it).let {
+                            if (it < 0) {
+                                "$it"
+                            } else {
+                                "+$it"
+                            }
+                        },
+                        modifier = Modifier.width(30.dp)
+                    )
                     Text(text = it.damageDesc, modifier = Modifier.width(150.dp))
                     Text(text = it.range, modifier = Modifier.width(100.dp))
                 }

@@ -321,12 +321,12 @@ class Converters {
         if (data == null) {
             return null
         }
-        val listType: Type = object : TypeToken<Shield>() {}.type
+        val listType: Type = object : TypeToken<Shield?>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun shieldToStoredString(myObjects: Shield): String? {
+    fun shieldToStoredString(myObjects: Shield?): String? {
         return gson.toJson(myObjects)
     }
 

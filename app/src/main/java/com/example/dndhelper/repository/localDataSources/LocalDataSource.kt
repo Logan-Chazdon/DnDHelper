@@ -776,7 +776,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val subClasses = mutableListOf<Subclass>()
             val levelPath = extractFeatures(classJson.getJSONArray("features"))
             val proficiencyChoices = mutableListOf<ProficiencyChoice>()
-            val proficiencies = mutableListOf<Proficiency>()
+            val proficiencies = extractProficiencies(classJson.getJSONArray("proficiencies"))
             val equipmentChoices: MutableList<ItemChoice> = mutableListOf()
             val equipment: MutableList<ItemInterface> = mutableListOf()
             extractEquipmentChoices(

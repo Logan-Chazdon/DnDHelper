@@ -190,7 +190,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         return character?.hasBaseClass ?: false
     }
 
-    fun getSpells(classIndex: Int): MediatorLiveData<MutableList<Spell>> {
+    fun getSpells(classIndex: Int): MutableList<Spell> {
         return repository.getAllSpellsByClassIndex(classIndex)
     }
 

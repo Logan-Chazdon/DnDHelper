@@ -1,9 +1,6 @@
 package com.example.dndhelper.repository
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.repository.localDataSources.LocalDataSource
@@ -134,16 +131,11 @@ class Repository @Inject constructor(
         return _items
     }
 
-    fun getAllSpellsByClassIndex(classIndex: Int): MediatorLiveData<MutableList<Spell>> {
-        val result = MediatorLiveData<MutableList<Spell>>()
-        result.addSource(_spells) {
-            it.forEach { spell ->
-                if(_classes.value?.get(classIndex)?.let {  it1 -> spell.classes.contains(it1.name.lowercase()) } == true){
-                    val newList = mutableListOf<Spell>()
-                    result.value?.let { oldValues -> newList.addAll(oldValues) }
-                    newList.add(spell)
-                    result.value = newList
-                }
+    fun getAllSpellsByClassIndex(classIndex: Int): MutableList<Spell> {
+        val result = mutableListOf<Spell>()
+        _spells.value?.forEach { spell ->
+            if(_classes.value?.get(classIndex)?.let {  it1 -> spell.classes.contains(it1.name.lowercase()) } == true){
+                result.add(spell)
             }
         }
         return result

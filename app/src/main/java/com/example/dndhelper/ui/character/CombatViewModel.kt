@@ -150,14 +150,25 @@ public class CombatViewModel @Inject constructor(
                     }
                     "all" -> {
                         //Spell casters that prepare from all of their respective class spells
-                        repository.getAllSpellsByClassIndex(
-                            repository.getClassIndex(it.value.name)
-                        ).value?.forEach { spell ->
-                            it.value.spellCasting?.prepared?.contains(spell).let { prepared ->
-                                if(spells.getOrDefault(spell.level, null) == null) {
+                        it.value.spellCasting?.known?.forEach { spell ->
+                            if(spell.level == 0) {
+                                if (spells.getOrDefault(spell.level, null) == null) {
                                     spells[spell.level] = mutableListOf()
                                 }
-                                spells[spell.level]?.add(Pair(prepared, spell))
+                                spells[spell.level]?.add(Pair(first = null, second = spell))
+                            }
+                        }
+
+                        repository.getAllSpellsByClassIndex(
+                            repository.getClassIndex(it.value.name)
+                        ).forEach { spell ->
+                            it.value.spellCasting?.prepared?.contains(spell).let { prepared ->
+                                if(spell.level != 0) {
+                                    if (spells.getOrDefault(spell.level, null) == null) {
+                                        spells[spell.level] = mutableListOf()
+                                    }
+                                    spells[spell.level]?.add(Pair(prepared, spell))
+                                }
                             }
                         }
                     }

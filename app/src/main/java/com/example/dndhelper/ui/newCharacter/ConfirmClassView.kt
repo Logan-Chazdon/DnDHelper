@@ -17,7 +17,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -426,7 +425,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             .fillMaxSize()
                             .verticalScroll(state = rememberScrollState())
                     ) {
-                        viewModel.getSpells(classIndex).observeAsState().value?.let { spells ->
+                        viewModel.getSpells(classIndex).let { spells ->
                             var lastCategory: Int = -1
                             spells.forEach {
                                 //TODO upgrade search

@@ -352,11 +352,14 @@ data class Character(
 
     val isCaster : Boolean
     get() {
-        if(totalCasterLevels != 0) {
-            return true
+        classes.values.forEach {
+            if(it.spellCasting?.type ?: 0.0 != 0.0) {
+                return true
+            }
         }
         return false
     }
+
     val allSpells: Map<Int, List<Spell>>
     get() {
         //TODO finish impl

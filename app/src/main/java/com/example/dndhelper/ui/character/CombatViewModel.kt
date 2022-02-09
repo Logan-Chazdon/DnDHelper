@@ -189,7 +189,32 @@ public class CombatViewModel @Inject constructor(
     }
 
     fun togglePreparation(spell: Spell) {
-        //TODO implement me
+        for (item in character?.value!!.classes.values) {
+            if (
+            //This class prepares spells.
+                item.spellCasting?.prepareFrom != null &&
+                //This class has access to the spell.
+                spell.classes.contains(item.name.lowercase())
+            ) {
+                //If we have the spell prepared unprepared it.
+                if (item.spellCasting.prepared.contains(spell)) {
+                    item.spellCasting.prepared.remove(spell)
+                    break
+                }
+
+                //If this class can prepare more spells.
+                if (
+                    item.spellCasting.getMaxPrepared(
+                        item.level,
+                        character!!.value?.getStatMod(item.spellCasting.castingAbility) ?: 1
+                    ) > item.spellCasting.prepared.size
+                ) {
+                    item.spellCasting.prepared.add(spell)
+                    break
+                }
+            }
+        }
+        character?.value?.let { repository.insertCharacter(it) }
     }
 
     var character : LiveData<Character>? = null

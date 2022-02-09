@@ -256,7 +256,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                     }
                                 },
                                 togglePreparation = { spell ->
-                                    scope.launch(Dispatchers.IO) {
+                                    GlobalScope.launch {
                                         viewModel.togglePreparation(spell)
                                     }
                                 }

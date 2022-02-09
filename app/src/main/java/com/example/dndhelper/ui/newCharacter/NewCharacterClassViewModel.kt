@@ -128,7 +128,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                 (subclassDropdownState?.getSelected(newClass.subClasses) as List<Subclass>).getOrNull(0)
         }
 
-        if(newClass.spellCasting?.prepareFrom != "all") {
+        if(newClass.spellCasting?.type != 0.0) {
             newClass.spellCasting?.known?.addAll(spells.toList())
         }
 
@@ -191,7 +191,14 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun getSpells(classIndex: Int): MutableList<Spell> {
-        return repository.getAllSpellsByClassIndex(classIndex)
+        return repository.getAllSpellsByClassIndex(classIndex).run {
+            if(classes.value?.get(classIndex)?.spellCasting?.prepareFrom == "all") {
+                this.removeAll {
+                    it.level != 0
+                }
+            }
+            this
+        }
     }
 
     fun toggleSpell(it: Spell) {
@@ -203,9 +210,6 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun learnsSpells(classIndex: Int): Boolean {
-        if(classes.value?.get(classIndex)?.spellCasting?.prepareFrom?.lowercase() == "all") {
-            return false
-        }
         return (classes.value?.get(classIndex)?.spellCasting?.type ?: 0) != 0
     }
 

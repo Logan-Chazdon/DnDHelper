@@ -43,7 +43,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
     Column(
         modifier = Modifier
             .fillMaxSize()
-    ){
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -60,10 +60,17 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
 
             //Add Class Button
             Button(
-                enabled = viewModel.canAffordMoreClassLevels(try {levels.value.text.toInt()} catch(e: java.lang.Exception) {0}),
+                enabled = viewModel.canAffordMoreClassLevels(
+                    try {
+                        levels.value.text.toInt()
+                    } catch (e: java.lang.Exception) {
+                        0
+                    }
+                ),
                 onClick = {
-                    GlobalScope.launch{
-                        classes.value?.get(classIndex)?.let { viewModel.addClassLevels(it, levels.value.text.toInt()) }
+                    GlobalScope.launch {
+                        classes.value?.get(classIndex)
+                            ?.let { viewModel.addClassLevels(it, levels.value.text.toInt()) }
                         //Navigate to the next step
                         Handler(mainLooper).post {
                             navController.navigate("newCharacterView/RaceView/${viewModel.id}")
@@ -89,11 +96,11 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 onValueChange = {
                     try {
-                       if(it.text.toInt() in 1..20)
-                           levels.value = it
+                        if (it.text.toInt() in 1..20)
+                            levels.value = it
 
-                    } catch (e : Exception) {
-                        if(it.text.isEmpty())
+                    } catch (e: Exception) {
+                        if (it.text.isEmpty())
                             levels.value = it
                     }
                 }
@@ -105,15 +112,30 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "Use as base class", fontSize = 20.sp)
-            Checkbox(
-                checked = viewModel.isBaseClass.value,
-                onCheckedChange = { viewModel.isBaseClass.value = it },
-                enabled = !viewModel.hasBaseClass
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(text = "Equipment", fontSize = 18.sp)
+                Switch(
+                    checked = viewModel.takeGold.value,
+                    onCheckedChange = { viewModel.takeGold.value = !viewModel.takeGold.value },
+                    enabled = viewModel.isBaseClass.value
+                )
+                Text(text = "Gold", fontSize = 18.sp)
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Text(text = "Use as base class", fontSize = 20.sp)
+                Checkbox(
+                    checked = viewModel.isBaseClass.value,
+                    onCheckedChange = { viewModel.isBaseClass.value = it },
+                    enabled = !viewModel.hasBaseClass
+                )
+            }
         }
-
-
 
         val scrollState = rememberScrollState()
         Column(
@@ -124,7 +146,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if(viewModel.learnsSpells(classIndex)) {
+            if (viewModel.learnsSpells(classIndex)) {
                 Card(
                     elevation = 5.dp,
                     modifier = Modifier
@@ -162,8 +184,9 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                 }
             }
 
-            if(viewModel.isBaseClass.value) {
-                val proficiencyChoices = viewModel.classes.observeAsState().value?.get(classIndex)?.proficiencyChoices
+            if (viewModel.isBaseClass.value) {
+                val proficiencyChoices =
+                    viewModel.classes.observeAsState().value?.get(classIndex)?.proficiencyChoices
                 proficiencyChoices?.forEach { choice ->
                     Card(
                         elevation = 5.dp,
@@ -199,8 +222,43 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     }
                 }
 
-                val equipmentChoices = viewModel.classes.observeAsState().value?.get(classIndex)?.equipmentChoices
-                equipmentChoices?.forEach { choice ->
+                if(!viewModel.takeGold.value) {
+                    val equipmentChoices =
+                        viewModel.classes.observeAsState().value?.get(classIndex)?.equipmentChoices
+                    equipmentChoices?.forEach { choice ->
+                        Card(
+                            elevation = 5.dp,
+                            modifier = Modifier
+                                .fillMaxWidth(0.95f)
+                                .background(
+                                    color = MaterialTheme.colors.surface,
+                                    shape = RoundedCornerShape(10.dp)
+                                ),
+                            backgroundColor = MaterialTheme.colors.surface
+                        ) {
+                            Column(Modifier.padding(start = 5.dp)) {
+                                Text(text = choice.name, style = MaterialTheme.typography.h6)
+
+                                //Tell the state bundle what the user can choose from.
+                                val names = mutableListOf<String>()
+                                for (item in choice.from) {
+                                    item.name?.let { names.add(it) }
+                                }
+
+
+                                val multipleChoiceState = viewModel.dropDownStates.getDropDownState(
+                                    key = choice.name,
+                                    maxSelections = choice.choose,
+                                    names = names,
+                                    choiceName = choice.name
+                                )
+
+                                //Create the view.
+                                MultipleChoiceDropdownView(state = multipleChoiceState)
+                            }
+                        }
+                    }
+                } else {
                     Card(
                         elevation = 5.dp,
                         modifier = Modifier
@@ -212,33 +270,20 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Column(Modifier.padding(start = 5.dp)) {
-                            Text(text = choice.name, style = MaterialTheme.typography.h6)
-
-                            //Tell the state bundle what the user can choose from.
-                            val names = mutableListOf<String>()
-                            for (item in choice.from) {
-                                item.name?.let { names.add(it) }
-                            }
-
-
-                            val multipleChoiceState = viewModel.dropDownStates.getDropDownState(
-                                key = choice.name,
-                                maxSelections = choice.choose,
-                                names = names,
-                                choiceName = choice.name
-                            )
-
-                            //Create the view.
-                            MultipleChoiceDropdownView(state = multipleChoiceState)
+                            //TODO add a starting gold card here.
                         }
                     }
                 }
             }
 
             //Subclass
-            if(
+            if (
                 viewModel.classes.observeAsState().value?.get(classIndex)?.subclassLevel ?: 21
-                <= try { levels.value.text.toInt() } catch(e: NumberFormatException) { 0 }
+                <= try {
+                    levels.value.text.toInt()
+                } catch (e: NumberFormatException) {
+                    0
+                }
             ) {
                 Card(
                     elevation = 5.dp,
@@ -249,7 +294,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             shape = RoundedCornerShape(10.dp)
                         ),
                 ) {
-                    Column(Modifier.padding(start = 5.dp)){
+                    Column(Modifier.padding(start = 5.dp)) {
                         Text(text = "Subclass", style = MaterialTheme.typography.h6)
                         MultipleChoiceDropdownView(
                             state = viewModel.getSubclassDropdownState(
@@ -263,9 +308,12 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             }
 
             //ASIs
-            for(
-                it in 0 until try {viewModel.getAsiNum(levels.value.text.toInt())}
-                    catch(e: NumberFormatException) { 0 }
+            for (
+            it in 0 until try {
+                viewModel.getAsiNum(levels.value.text.toInt())
+            } catch (e: NumberFormatException) {
+                0
+            }
             ) {
                 var expanded by remember { mutableStateOf(false) }
                 Card(
@@ -277,7 +325,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                             shape = RoundedCornerShape(10.dp)
                         ),
                 ) {
-                    Column (Modifier.padding(start = 5.dp)){
+                    Column(Modifier.padding(start = 5.dp)) {
                         Text(
                             text = "Feat or Ability score increase",
                             modifier = Modifier.clickable { expanded = !expanded },
@@ -334,61 +382,68 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
 
             val levelPath = viewModel.classes.observeAsState().value?.get(classIndex)?.levelPath
             if (levelPath != null) {
-                for(choice in levelPath) {
-                    if(levels.value.text.isNotBlank())
+                for (choice in levelPath) {
+                    if (levels.value.text.isNotBlank())
                         if (choice.level <= levels.value.text.toInt()) {
-                        val color = if (choice.choiceNum != 0) {
-                            MaterialTheme.colors.surface
-                        } else {
-                            MaterialTheme.colors.onBackground.copy(alpha = 0.3f).compositeOver(MaterialTheme.colors.background)
-                        }
-                        Card(
-                            elevation = 5.dp,
-                            modifier = Modifier
-                                .fillMaxWidth(0.95f)
-                                .background(color = color, shape = RoundedCornerShape(10.dp)),
-                            backgroundColor = color
-                        ) {
-                            Column(Modifier.padding(start = 5.dp)) {
-                                Text(text = choice.name, style = MaterialTheme.typography.h6)
-                                Text(text = choice.description, style = MaterialTheme.typography.caption)
-
-
-
-                                if (choice.choiceNum != 0) {
-                                    val options = choice.getAvailableOptions(
-                                        viewModel.character,
-                                        viewModel.proficiencies
+                            val color = if (choice.choiceNum != 0) {
+                                MaterialTheme.colors.surface
+                            } else {
+                                MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
+                                    .compositeOver(MaterialTheme.colors.background)
+                            }
+                            Card(
+                                elevation = 5.dp,
+                                modifier = Modifier
+                                    .fillMaxWidth(0.95f)
+                                    .background(color = color, shape = RoundedCornerShape(10.dp)),
+                                backgroundColor = color
+                            ) {
+                                Column(Modifier.padding(start = 5.dp)) {
+                                    Text(text = choice.name, style = MaterialTheme.typography.h6)
+                                    Text(
+                                        text = choice.description,
+                                        style = MaterialTheme.typography.caption
                                     )
-                                    MultipleChoiceDropdownView(
-                                        state = viewModel.dropDownStates.getDropDownState(
-                                            key = choice.name + choice.level,
-                                            choiceName = choice.name,
-                                            maxSelections = choice.choiceNum,
-                                            names = options.let { list ->
-                                                val result = mutableListOf<String>()
-                                                list.forEach {
-                                                    result.add(it.name)
-                                                }
-                                                result
-                                            }
+
+
+
+                                    if (choice.choiceNum != 0) {
+                                        val options = choice.getAvailableOptions(
+                                            viewModel.character,
+                                            viewModel.proficiencies
                                         )
-                                    )
+                                        MultipleChoiceDropdownView(
+                                            state = viewModel.dropDownStates.getDropDownState(
+                                                key = choice.name + choice.level,
+                                                choiceName = choice.name,
+                                                maxSelections = choice.choiceNum,
+                                                names = options.let { list ->
+                                                    val result = mutableListOf<String>()
+                                                    list.forEach {
+                                                        result.add(it.name)
+                                                    }
+                                                    result
+                                                }
+                                            )
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
                 }
             }
         }
     }
 
-    if(spellsExpanded) {
+    if (spellsExpanded) {
         Dialog(
             onDismissRequest = {
                 spellsExpanded = false
             },
-            properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnClickOutside = true)
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnClickOutside = true
+            )
         ) {
             Card(
                 modifier = Modifier.fillMaxSize(0.9f),
@@ -470,7 +525,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                                     MaterialTheme.colors.background
                                                 }
                                                 else -> {
-                                                    MaterialTheme.colors.onBackground.copy(0.5f).compositeOver(MaterialTheme.colors.background)
+                                                    MaterialTheme.colors.onBackground.copy(0.5f)
+                                                        .compositeOver(MaterialTheme.colors.background)
                                                 }
                                             }
                                         ) {
@@ -478,10 +534,22 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                             Row(
                                                 modifier = Modifier.padding(5.dp)
                                             ) {
-                                                Text(text = it.name, modifier = Modifier.width(100.dp))
-                                                Text(text = it.damage, modifier = Modifier.width(150.dp))
-                                                Text(text = it.range, modifier = Modifier.width(40.dp))
-                                                Text(text = it.castingTime, modifier = Modifier.width(90.dp))
+                                                Text(
+                                                    text = it.name,
+                                                    modifier = Modifier.width(100.dp)
+                                                )
+                                                Text(
+                                                    text = it.damage,
+                                                    modifier = Modifier.width(150.dp)
+                                                )
+                                                Text(
+                                                    text = it.range,
+                                                    modifier = Modifier.width(40.dp)
+                                                )
+                                                Text(
+                                                    text = it.castingTime,
+                                                    modifier = Modifier.width(90.dp)
+                                                )
                                             }
                                         }
                                     }
@@ -494,6 +562,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             }
         }
     }
-
 }
+
+
 

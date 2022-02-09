@@ -22,6 +22,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     lateinit var classes : LiveData<List<Class>>
     var id = -1
     var isBaseClass =  mutableStateOf(true)
+    var takeGold =  mutableStateOf(true)
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var character : Character?  = null
     val spells = mutableStateListOf<Spell>()

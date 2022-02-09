@@ -138,6 +138,7 @@
                     ]
                 ]
             },
+            "starting_gold_d4s" : 4,
             "hit_die": 8,
             "subclass_level": 3,
             "proficiency_choices": [
@@ -453,6 +454,7 @@
         },
         {
             "name": "Barbarian",
+            "starting_gold_d4s" : 2,
             "spell_casting": {
                 "type": 0.0
             },
@@ -597,6 +599,7 @@
         },
         {
             "name": "Bard",
+            "starting_gold_d4s" : 5,
             "spell_casting": {
                 "type": 1,
                 "casting_ability": "Cha",
@@ -991,6 +994,7 @@
         },
         {
             "name": "Cleric",
+            "starting_gold_d4s" : 5,
             "subclass_level": 1,
             "spell_casting": {
                 "type": 1,

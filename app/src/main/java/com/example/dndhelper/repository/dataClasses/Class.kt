@@ -22,7 +22,8 @@ class Class(
     var proficiencies: List<Proficiency> = emptyList(),
     var equipmentChoices: List<ItemChoice> = emptyList(),
     var equipment: List<ItemInterface> = emptyList(),
-    val spellCasting : SpellCasting? = null
+    val spellCasting : SpellCasting? = null,
+    val startingGoldD4s: Int
 ) {
     var isBaseClass: Boolean = false
     var level: Int = 1

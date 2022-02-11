@@ -20,7 +20,9 @@ data class Currency(
         if(name?.isNotEmpty() == true) {
             var it = ""
             for (s in name.split(" ")) {
-                it += s[0].lowercase()
+                if(s[0].isLetter()) {
+                    it += s[0].lowercase()
+                }
             }
             return it
         }

@@ -1200,16 +1200,22 @@
             ],
             "proficiencies": [
                 {
-                    "name": "Armor: Light armor, medium armor, shields"
+                    "name" : "Light armor"
                 },
                 {
-                    "name": "Weapons: Simple weapons"
+                    "name" : "Medium armor"
                 },
                 {
-                    "name": "Tools: None"
+                    "name" : "Shield"
                 },
                 {
-                    "name": "Saving Throws: Wisdom, Charisma"
+                    "name": "Simple weapons"
+                },
+                {
+                    "name": "Saving throw (Wisdom)"
+                },
+                {
+                    "name": "Saving throw (Charisma)"
                 }
             ],
             "equipment": [

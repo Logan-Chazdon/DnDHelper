@@ -33,6 +33,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         MutableLiveData()
      val _simpleWeapons : MutableLiveData<List<Weapon>> =
         MutableLiveData()
+    val _miscItems : MutableLiveData<List<ItemInterface>> =
+        MutableLiveData()
      val _armors: MutableLiveData<List<Armor>> =
         MutableLiveData()
      val _items: MediatorLiveData<List<ItemInterface>> =
@@ -278,6 +280,38 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         //Add all the armors to items and then generate armors.
         _items.addSource(_armors) {value -> addData(value) }
         _armors.value = generateArmor()
+
+        _items.addSource(_miscItems) {value -> addData(value) }
+        _miscItems.value = generateMiscItems()
+    }
+
+    private fun generateMiscItems() : List<ItemInterface> {
+        val dataAsString = context.resources.openRawResource(R.raw.misc_items).bufferedReader().readText()
+        val result = mutableListOf<ItemInterface>()
+        val itemsJson = JSONObject(dataAsString).getJSONArray("items")
+        for(index in 0 until itemsJson.length()) {
+            val itemJson = itemsJson.getJSONObject(index)
+            when(itemJson.getString("type")) {
+                "shield" -> {
+                    result.add(
+                        Shield(
+                            name = itemJson.getString("name"),
+                            desc = itemJson.getString("desc"),
+                            itemRarity = itemJson.getString("rarity"),
+                            cost = extractCost(itemJson.getJSONObject("cost")),
+                            weight = itemJson.getInt("weight"),
+                            acBonus = itemJson.getInt("ac_bonus"),
+                            charges = try {
+                                extractResource(itemJson.getJSONObject("charges"))
+                            } catch(e: Exception) {null},
+                            index = null
+                        )
+                    )
+                }
+            }
+        }
+
+        return result
     }
 
     private fun generateArmor(): List<Armor> {

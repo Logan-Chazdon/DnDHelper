@@ -1,0 +1,19 @@
+{
+    "items" : [
+        {
+            "type" : "shield",
+            "name" : "Shield",
+            "desc": "",
+            "rarity" : "Standard",
+            "cost": {
+                "pp": 0,
+                "gp": 10,
+                "ep": 0,
+                "sp": 0,
+                "cp": 0
+            },
+            "weight" : 6,
+            "ac_bonus" : 2
+        }
+    ]
+}

@@ -1,7 +1,5 @@
 package com.example.dndhelper.repository.dataClasses
 
-import com.example.dndhelper.repository.localDataSources.Infusion
-
 data class Feature(
     val name: String,
     val description: String,

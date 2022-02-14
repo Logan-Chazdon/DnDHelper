@@ -1,6 +1,4 @@
-package com.example.dndhelper.repository.localDataSources
-
-import com.example.dndhelper.repository.dataClasses.Resource
+package com.example.dndhelper.repository.dataClasses
 
 data class Infusion(
     val name: String,

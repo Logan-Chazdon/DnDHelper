@@ -1,13 +1,16 @@
 package com.example.dndhelper.repository.dataClasses
 
+import com.example.dndhelper.repository.localDataSources.Infusion
+
 data class Feature(
     val name: String,
     val description: String,
     val level: Int = 1,
-    val choiceNum: Int = 0,
+    val choose: Choose = Choose(0),
     val options: MutableList<Feature>?,
     val prerequisite: Prerequisite? = null,
-    val spells: List<Spell>? = null //Spells granted by this feature
+    val spells: List<Spell>? = null, //Spells granted by this feature
+    val infusion: Infusion? = null
 ) {
     var chosen : List<Feature>? = null
     var resource: Resource? = null

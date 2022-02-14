@@ -29,6 +29,8 @@ interface LocalDataSource {
 @Suppress("PropertyName")
 @RequiresApi(Build.VERSION_CODES.P)
 class LocalDataSourceImpl(val context: Context) : LocalDataSource {
+     val _infusions: MutableLiveData<List<Infusion>> =
+         MutableLiveData()
      val _martialWeapons : MutableLiveData<List<Weapon>> =
         MutableLiveData()
      val _simpleWeapons : MutableLiveData<List<Weapon>> =
@@ -68,6 +70,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Languages
             generateLanguages()
 
+            //Infusions
+            generateInfusions()
+
             //Feats
             generateFeats()
 
@@ -80,6 +85,27 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Classes
             generateClasses()
         }
+    }
+
+    private fun generateInfusions() {
+        val dataAsString = context.resources.openRawResource(R.raw.infusions).bufferedReader().readText()
+        val infusions = mutableListOf<Infusion>()
+        val infusionsJson = JSONObject(dataAsString).getJSONArray("infusions")
+        for(index in 0 until infusionsJson.length()) {
+            val infusionJson = infusionsJson.getJSONObject(index)
+            infusions.add(
+                Infusion(
+                    name = infusionJson.getString("name"),
+                    desc = infusionJson.getString("desc"),
+                    type = "", //TODO implement me
+                    charges = null, //TODO implement me
+                    atkDmgBonus = try { infusionJson.getInt("atk_dmg_bonus")} catch(e: JSONException) {null},
+                    acBonus = try { infusionJson.getInt("ac_bonus")} catch(e: JSONException) {null},
+                    attuned =  try { infusionJson.getBoolean("requires_attunement")} catch(e: JSONException) {false},
+                )
+            )
+        }
+        _infusions.value = infusions
     }
 
     private fun getItemByIndex(index : String) : ItemInterface? {
@@ -985,7 +1011,18 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         val features = mutableListOf<Feature>()
         for (featureIndex in 0 until featuresJson.length()) {
             val featureJson = featuresJson.getJSONObject(featureIndex)
-            var numOfChoices = 0
+            val choose = try{ Choose(featureJson.getInt("choose")) } catch(e: JSONException) {
+                try {
+                    val result = mutableListOf<Int>()
+                    val json = featureJson.getJSONArray("choose")
+                    for (i in 0 until json.length()) {
+                        result.add(json.getInt(i))
+                    }
+                    Choose(result)
+                } catch(e: JSONException) {
+                    Choose(0)
+                }
+            }
             val level = try {
                 featureJson.getInt("level")
             } catch (e: JSONException) { 0 }
@@ -994,6 +1031,19 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //If we have an index construct a list from that otherwise just make it normally.
             try {
                 when(featureJson.getString("index")) {
+                    "infusions" -> {
+                        _infusions.value!!.forEach {
+                            features.add(
+                                //TODO implement prerequisites
+                                Feature(
+                                    name = it.name,
+                                    description = it.desc,
+                                    infusion = it,
+                                    options = null,
+                                )
+                            )
+                        }
+                    }
                     "proficiencies" -> {
                         _abilitiesToSkills.value!!.forEach {
                             it.value.forEach { skill ->
@@ -1003,7 +1053,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                         name = skill,
                                         description = "",
                                         level = 0,
-                                        choiceNum = 0,
+                                        choose = Choose(0),
                                         options = null,
                                         prerequisite = Prerequisite(
                                             proficiency = Proficiency(
@@ -1038,14 +1088,10 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 }
 
             } catch (e: JSONException) {
-                try {
-                    numOfChoices = featureJson.getInt("choose")
-                } catch (e: JSONException) { }
-
-                options = if (numOfChoices == 0) {
-                    null
-                } else {
+                options = try {
                     extractFeatures(featureJson.getJSONArray("from"))
+                } catch(e: JSONException) {
+                    null
                 }
 
                 features.add(
@@ -1053,7 +1099,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         name = featureJson.getString("name"),
                         description = featureJson.getString("desc"),
                         level = level,
-                        choiceNum = numOfChoices,
+                        choose = choose,
                         options = options
                     )
                 )

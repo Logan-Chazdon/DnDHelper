@@ -385,7 +385,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                 for (choice in levelPath) {
                     if (levels.value.text.isNotBlank())
                         if (choice.level <= levels.value.text.toInt()) {
-                            val color = if (choice.choiceNum != 0) {
+                            val color = if (choice.choose.num(levels.value.text) != 0) {
                                 MaterialTheme.colors.surface
                             } else {
                                 MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
@@ -407,7 +407,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
 
 
 
-                                    if (choice.choiceNum != 0) {
+                                    if (choice.choose.num(levels.value.text) != 0) {
                                         val options = choice.getAvailableOptions(
                                             viewModel.character,
                                             viewModel.proficiencies
@@ -416,7 +416,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                             state = viewModel.dropDownStates.getDropDownState(
                                                 key = choice.name + choice.level,
                                                 choiceName = choice.name,
-                                                maxSelections = choice.choiceNum,
+                                                maxSelections = choice.choose.num(levels.value.text),
                                                 names = options.let { list ->
                                                     val result = mutableListOf<String>()
                                                     list.forEach {

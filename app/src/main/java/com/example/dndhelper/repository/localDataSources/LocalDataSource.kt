@@ -97,11 +97,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 Infusion(
                     name = infusionJson.getString("name"),
                     desc = infusionJson.getString("desc"),
-                    type = "", //TODO implement me
                     charges = null, //TODO implement me
                     atkDmgBonus = try { infusionJson.getInt("atk_dmg_bonus")} catch(e: JSONException) {null},
                     acBonus = try { infusionJson.getInt("ac_bonus")} catch(e: JSONException) {null},
                     attuned =  try { infusionJson.getBoolean("requires_attunement")} catch(e: JSONException) {false},
+                    type = try { infusionJson.getString("type") } catch(e: JSONException) {null}
                 )
             )
         }

@@ -1023,6 +1023,20 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     Choose(0)
                 }
             }
+
+            val maxActive = try{ Choose(featureJson.getInt("max_active")) } catch(e: JSONException) {
+                try {
+                    val result = mutableListOf<Int>()
+                    val json = featureJson.getJSONArray("max_active")
+                    for (i in 0 until json.length()) {
+                        result.add(json.getInt(i))
+                    }
+                    Choose(result)
+                } catch(e: JSONException) {
+                    Choose(0)
+                }
+            }
+
             val level = try {
                 featureJson.getInt("level")
             } catch (e: JSONException) { 0 }
@@ -1100,7 +1114,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         description = featureJson.getString("desc"),
                         level = level,
                         choose = choose,
-                        options = options
+                        options = options,
+                        maxActive = maxActive
                     )
                 )
             }

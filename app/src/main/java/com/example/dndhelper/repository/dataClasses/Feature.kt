@@ -8,7 +8,8 @@ data class Feature(
     val options: MutableList<Feature>?,
     val prerequisite: Prerequisite? = null,
     val spells: List<Spell>? = null, //Spells granted by this feature
-    val infusion: Infusion? = null
+    val infusion: Infusion? = null,
+    val maxActive: Choose = Choose(0),
 ) {
     var chosen : List<Feature>? = null
     var resource: Resource? = null
@@ -39,6 +40,17 @@ data class Feature(
         spells?.let { result.addAll(it) }
         chosen?.forEach {
             it.spells?.let { spells -> result.addAll(spells) }
+        }
+        return result
+    }
+
+    val currentActive: Int
+    get() {
+        var result = 0
+        for(item in chosen ?: listOf()) {
+            if(item.infusion?.active == true) {
+                result += 1
+            }
         }
         return result
     }

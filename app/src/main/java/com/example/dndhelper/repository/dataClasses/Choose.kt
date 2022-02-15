@@ -16,7 +16,7 @@ class Choose{
             return it
         }
         dynamicByLevel?.runCatching {
-            return this[level]
+            return this[level - 1]
         }
         return 0
     }

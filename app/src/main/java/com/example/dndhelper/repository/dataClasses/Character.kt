@@ -61,30 +61,44 @@ data class Character(
         return result
     }
 
-    val features: List<Feature>
+
+    //Returns a list of integers representing level to features
+    val features: List<Pair<Int, Feature>>
     get() {
-        val result = mutableListOf<Feature>()
-        race?.let { result.addAll(it.traits) }
+        val result = mutableListOf<Pair<Int, Feature>>()
+        race?.let { race ->
+            race.traits.forEach {
+                result.add(totalClassLevels to it)
+            }
+        }
 
         classes.values.forEach {
             it.levelPath.forEach { feature ->
                 if(feature.level <= it.level) {
-                    result.add(feature)
+                    result.add(it.level to feature)
                 }
             }
 
             it.subclass?.features?.forEach { feature ->
                 if(feature.level <= it.level) {
-                    result.add(feature)
+                    result.add(it.level to feature)
                 }
             }
         }
 
-        feats.forEach {
-            it.features?.let { features -> result.addAll(features) }
+        feats.forEach { feat ->
+            feat.features?.let { features ->
+                features.forEach {
+                    result.add(totalClassLevels to it)
+                }
+            }
         }
 
-        background?.let { result.addAll(it.features) }
+        background?.let { background ->
+            background.features.forEach {
+                result.add(totalClassLevels to it)
+            }
+        }
 
         return result
     }
@@ -251,8 +265,8 @@ data class Character(
 
     private fun checkForExpertise(it: String) : Boolean {
         features.forEach { feature ->
-            if(feature.name == "Expertise") {
-                feature.chosen?.forEach { item ->
+            if(feature.second.name == "Expertise") {
+                feature.second.chosen?.forEach { item ->
                     if(item.name == it) {
                         return true
                     }
@@ -380,8 +394,8 @@ data class Character(
     get() {
         val result = mutableListOf<Feature>()
         features.forEach {
-            if(it.resource != null) {
-                result.add(it)
+            if(it.second.resource != null) {
+                result.add(it.second)
             }
         }
         return result

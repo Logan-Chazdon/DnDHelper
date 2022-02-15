@@ -16,7 +16,7 @@ import com.example.dndhelper.repository.dataClasses.Feature
 
 @Composable
 fun FeaturesAndTraitsView(
-    features : List<Feature>,
+    features : List<Pair<Int ,Feature>>,
     modifier: Modifier
 ) {
     Card(
@@ -28,10 +28,10 @@ fun FeaturesAndTraitsView(
             modifier = Modifier.padding(8.dp),
             state = listState
         ) {
-            items(items = features) { item: Feature ->
+            items(items = features) { item: Pair<Int, Feature> ->
                 var expanded by remember { mutableStateOf(false) }
-                Text(text = item.name, modifier = Modifier.clickable { expanded = true })
-                item.chosen?.forEach {
+                Text(text = item.second.name, modifier = Modifier.clickable { expanded = true })
+                item.second.chosen?.forEach {
                     Text(text = it.name, modifier = Modifier.padding(start = 5.dp))
                 }
                 Divider(thickness = (0.5).dp, startIndent = 10.dp)
@@ -40,7 +40,7 @@ fun FeaturesAndTraitsView(
                         onDismissRequest = {expanded = false}
                     ) {
                         Card() {
-                            Text(text = item.description, modifier = Modifier.padding(4.dp))
+                            Text(text = item.second.description, modifier = Modifier.padding(4.dp))
                         }
                     }
                 }

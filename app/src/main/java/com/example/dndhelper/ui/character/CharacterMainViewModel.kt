@@ -17,7 +17,7 @@ public class CharacterMainViewModel @Inject constructor(
 ): AndroidViewModel(application) {
 
 
-    val characterFeatures: MediatorLiveData<List<Feature>> = MediatorLiveData()
+    val characterFeatures: MediatorLiveData<List<Pair<Int, Feature>>> = MediatorLiveData()
 
     var character : LiveData<Character>? = null
 

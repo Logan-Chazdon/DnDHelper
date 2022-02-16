@@ -17,8 +17,19 @@ data class Armor(
 ) : ItemInterface {
     override val type = "Armor"
 
+    val totalBaseAc : Int
+    get() {
+        var result = baseAc
+        infusions?.forEach { infusion ->
+            infusion.acBonus?.let {
+                result += it
+            }
+        }
+        return result
+    }
+
     fun getAC(dexMod: Int) : Int{
-        return baseAc + dexMod(dexMod)
+        return totalBaseAc + dexMod(dexMod)
     }
 
     private fun dexMod(dexMod: Int): Int{
@@ -32,9 +43,9 @@ data class Armor(
     val acDesc: String
     get() {
         return when {
-            dexCap == 0 -> "$baseAc"
-            dexCap < 5 -> "$baseAc+Dex mod(max $dexCap)"
-            else -> "$baseAc+Dex mod"
+            dexCap == 0 -> "$totalBaseAc"
+            dexCap < 5 -> "$totalBaseAc+Dex mod(max $dexCap)"
+            else -> "$totalBaseAc+Dex mod"
         }
     }
 

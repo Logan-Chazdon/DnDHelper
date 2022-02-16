@@ -14,6 +14,8 @@ data class Currency(
     override val desc: String? = null
     override val itemRarity: String? = null
     override val cost: Map<String, Currency>? = null
+    override val maxInfusions: Int= 0
+    override val infusions: MutableList<Infusion>? = null
 
     public val abbreviatedName : String
     get() {

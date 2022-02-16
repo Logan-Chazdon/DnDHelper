@@ -13,7 +13,9 @@ data class Weapon(
     val range: String,
     val properties : List<Property>? = null,
     val isMartial: Boolean = false,
-    override val charges: Resource? = null
+    override val charges: Resource? = null,
+    override val maxInfusions: Int? = 1,
+    override val infusions: MutableList<Infusion> = mutableListOf()
 ) : ItemInterface {
     override val type = "Weapon"
 

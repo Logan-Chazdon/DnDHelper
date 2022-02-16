@@ -138,6 +138,25 @@ class Backpack {
         return false
     }
 
+    fun applyInfusion(targetItem: ItemInterface, infusion: Infusion) {
+        val allItemLists = listOf<List<ItemInterface>>(backgroundItems, classItems, addedItems)
+
+        fun attemptInfusion(items: List<ItemInterface?>) : Boolean {
+            items.forEachIndexed { index, item ->
+                if(item == targetItem) {
+                    items[index]?.infusions?.plusAssign(infusion)
+                    return true
+                }
+            }
+            return false
+        }
+
+        allItemLists.forEach {
+            if(attemptInfusion(it))
+                return
+        }
+    }
+
     val allWeapons: List<Weapon>
     get() {
         val result = mutableListOf<Weapon>()

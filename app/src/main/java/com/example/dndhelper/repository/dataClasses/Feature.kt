@@ -11,6 +11,19 @@ data class Feature(
     val infusion: Infusion? = null,
     val maxActive: Choose = Choose(0),
 ) {
+    val grantsInfusions: Boolean
+    get() {
+        if(infusion != null) {
+            return true
+        }
+        chosen?.forEach {
+            if(it.grantsInfusions) {
+                return true
+            }
+        }
+        return false
+    }
+
     var chosen : List<Feature>? = null
     var resource: Resource? = null
 
@@ -55,4 +68,18 @@ data class Feature(
         return result
     }
 
+    fun activateInfusion(infusion: Infusion) : Boolean {
+        if(this.infusion == infusion) {
+            this.infusion.active = true
+            return true
+        } else {
+            this.chosen?.forEachIndexed { index, it ->
+                if (it.infusion == infusion) {
+                    chosen?.get(index)?.infusion?.active = true
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }

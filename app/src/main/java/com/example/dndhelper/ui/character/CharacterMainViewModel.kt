@@ -5,6 +5,8 @@ import androidx.lifecycle.*
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.Character
 import com.example.dndhelper.repository.dataClasses.Feature
+import com.example.dndhelper.repository.dataClasses.Infusion
+import com.example.dndhelper.repository.dataClasses.ItemInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -80,6 +82,29 @@ public class CharacterMainViewModel @Inject constructor(
         val newChar = character!!.value!!.copy(notes = it)
         newChar.id = character!!.value!!.id
         repository.insertCharacter(newChar)
+    }
+
+    fun infuse(targetItem: ItemInterface?, infusion: Infusion) {
+        val newChar = activateInfusion(infusion, character!!.value!!.copy())
+        if(targetItem != null) {
+            newChar?.backpack?.applyInfusion(targetItem, infusion)
+        }
+        newChar?.id = character!!.value!!.id
+        newChar?.let { character -> repository.insertCharacter(character) }
+    }
+
+    //This function just returns the character passed in with the target infusion set to active or null.
+    private fun activateInfusion(infusion: Infusion, character: Character) : Character? {
+        //TODO check for other possible sources of infusions.
+        character.classes.values.forEachIndexed { classIndex, clazz  ->
+            clazz.levelPath.forEachIndexed { index, it ->
+                if (it.grantsInfusions) {
+                    if(character.classes.values.elementAt(classIndex).levelPath[index].activateInfusion(infusion))
+                        return character
+                }
+            }
+        }
+        return null
     }
 
 

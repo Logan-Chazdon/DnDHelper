@@ -8,7 +8,9 @@ data class Shield(
     override val cost: Map<String, Currency>?,
     override val weight: Int?,
     override val charges: Resource?,
-    val acBonus: Int = 2
+    val acBonus: Int = 2,
+    override val maxInfusions: Int? = 1,
+    override val infusions: MutableList<Infusion> = mutableListOf()
 ) : ItemInterface {
     override val type = "Shield"
 }

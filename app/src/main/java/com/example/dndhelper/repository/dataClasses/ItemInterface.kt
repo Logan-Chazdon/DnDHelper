@@ -9,6 +9,8 @@ interface ItemInterface {
     val cost : Map<String, Currency>?
     val weight : Int?
     val charges: Resource?
+    val maxInfusions: Int?
+    val infusions: MutableList<Infusion>?
 
     fun costString() : String {
         var result = ""

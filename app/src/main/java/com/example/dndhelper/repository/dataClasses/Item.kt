@@ -10,6 +10,8 @@ data class Item (
     override val cost : Map<String, Currency>? = null,
     override val weight : Int? = 0,
     override val charges: Resource? = null,
+    override val maxInfusions: Int? = 1,
+    override val infusions: MutableList<Infusion> = mutableListOf()
 ) : ItemInterface{
     override val type = "Item"
 }

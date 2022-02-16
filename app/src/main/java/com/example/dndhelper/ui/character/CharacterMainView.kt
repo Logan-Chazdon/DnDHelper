@@ -162,7 +162,9 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                         .horizontalScroll(rememberScrollState()),
                                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                                 ) {
-                                    val modifier = Modifier.fillMaxHeight().width(width)
+                                    val modifier = Modifier
+                                        .fillMaxHeight()
+                                        .width(width)
                                     TextField(
                                         modifier = modifier,
                                         label = { Text("Personality Traits") },
@@ -230,7 +232,13 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                     Column() {
                         FeaturesAndTraitsView(
                             features = viewModel.characterFeatures.observeAsState(listOf()).value,
-                            modifier = Modifier.fillMaxHeight(0.5f)
+                            modifier = Modifier.fillMaxHeight(0.5f),
+                            items = viewModel.character?.observeAsState()?.value?.backpack?.allItems ?: listOf(),
+                            infuse = { infusion, item ->
+                                scope.launch(Dispatchers.IO) {
+                                    viewModel.infuse(item, infusion)
+                                }
+                            }
                         )
 
                         Spacer(Modifier.height(8.dp))

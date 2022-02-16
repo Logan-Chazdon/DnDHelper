@@ -443,8 +443,18 @@ data class Character(
             }
         }
 
+        val bonusFromInfusions = weapon.infusions.let { infusions ->
+            var total = 0
+            infusions?.forEach { infusion ->
+                infusion.atkDmgBonus?.let {
+                    total += it
+                }
+            }
+            total
+        }
+
         //TODO add support for magic items.
-        return bonusForProficiency + bonusFromStats
+        return bonusForProficiency + bonusFromStats + bonusFromInfusions
     }
 
 }

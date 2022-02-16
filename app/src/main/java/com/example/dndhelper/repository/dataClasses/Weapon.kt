@@ -21,6 +21,18 @@ data class Weapon(
 
     val damageDesc: String
     get() {
-        return "$damage $damageType"
+        val infusionBonus = infusions.let { infusions ->
+            var result = 0
+            infusions?.forEach {
+                it.atkDmgBonus?.let { bonus ->
+                    result += bonus
+                }
+            }
+            result
+        }
+        return if(infusionBonus == 0)
+            "$damage $damageType"
+        else
+            "$damage + $infusionBonus $damageType"
     }
 }

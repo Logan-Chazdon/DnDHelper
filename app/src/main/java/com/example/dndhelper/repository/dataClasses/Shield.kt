@@ -10,14 +10,14 @@ data class Shield(
     override val charges: Resource?,
     val acBonus: Int = 2,
     override val maxInfusions: Int? = 1,
-    override val infusions: MutableList<Infusion> = mutableListOf()
+    override val infusions: MutableList<Infusion>? = mutableListOf()
 ) : ItemInterface {
     override val type = "Shield"
 
      val totalAcBonus : Int
      get() {
         var result = acBonus
-        infusions.forEach { infusion ->
+        infusions?.forEach { infusion ->
             infusion.acBonus?.let {
                 result += it
             }

@@ -13,7 +13,7 @@ data class Armor(
     override val charges: Resource? = null,
     val strengthPrerequisite: Int? = null,
     override val maxInfusions: Int? = 1,
-    override val infusions: MutableList<Infusion> = mutableListOf()
+    override val infusions: MutableList<Infusion>? = mutableListOf()
 ) : ItemInterface {
     override val type = "Armor"
 

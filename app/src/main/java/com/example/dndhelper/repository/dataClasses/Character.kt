@@ -56,7 +56,7 @@ data class Character(
         //TODO implement all other sources of ac.
         var result = equippedArmor.getAC(getStatMod("Dex"))
         equippedShield?.let {
-            result += it.acBonus
+            result += it.totalAcBonus
         }
         return result
     }

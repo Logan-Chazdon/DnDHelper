@@ -113,7 +113,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                                             }
                                         }
                                         "Shield" -> {
-                                            Text(text = (item as Shield).acBonus.toString())
+                                            Text(text = (item as Shield).totalAcBonus.toString())
                                             Button(
                                                 onClick = {
                                                     GlobalScope.launch {

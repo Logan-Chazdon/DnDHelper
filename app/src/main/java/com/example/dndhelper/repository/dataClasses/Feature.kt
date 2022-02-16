@@ -3,7 +3,7 @@ package com.example.dndhelper.repository.dataClasses
 data class Feature(
     val name: String,
     val description: String,
-    val level: Int = 1,
+    val grantedAtLevel: Int = 1,
     val choose: Choose = Choose(0),
     val options: MutableList<Feature>?,
     val prerequisite: Prerequisite? = null,

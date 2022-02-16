@@ -8,5 +8,5 @@ data class Infusion(
     val acBonus: Int? = null,
     val atkDmgBonus: Int? = null,
     var active: Boolean = false,
-    val attuned: Boolean
+    val attuned: Boolean,
     )

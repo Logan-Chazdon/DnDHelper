@@ -384,7 +384,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             if (levelPath != null) {
                 for (choice in levelPath) {
                     if (levels.value.text.isNotBlank())
-                        if (choice.level <= levels.value.text.toInt()) {
+                        if (choice.grantedAtLevel <= levels.value.text.toInt()) {
                             val color = if (choice.choose.num(levels.value.text) != 0) {
                                 MaterialTheme.colors.surface
                             } else {
@@ -414,7 +414,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                         )
                                         MultipleChoiceDropdownView(
                                             state = viewModel.dropDownStates.getDropDownState(
-                                                key = choice.name + choice.level,
+                                                key = choice.name + choice.grantedAtLevel,
                                                 choiceName = choice.name,
                                                 maxSelections = choice.choose.num(levels.value.text),
                                                 names = options.let { list ->

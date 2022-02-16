@@ -1066,7 +1066,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                     features.add(Feature(
                                         name = skill,
                                         description = "",
-                                        level = 0,
+                                        grantedAtLevel = 0,
                                         choose = Choose(0),
                                         options = null,
                                         prerequisite = Prerequisite(
@@ -1112,7 +1112,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     Feature(
                         name = featureJson.getString("name"),
                         description = featureJson.getString("desc"),
-                        level = level,
+                        grantedAtLevel = level,
                         choose = choose,
                         options = options,
                         maxActive = maxActive

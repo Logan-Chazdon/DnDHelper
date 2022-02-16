@@ -42,7 +42,7 @@ class Class(
         val result = mutableListOf<Spell>()
         spellCasting?.known?.let { result.addAll(it) }
         for (it in levelPath) {
-            if(it.level > level) {
+            if(it.grantedAtLevel > level) {
                 break
             }
             result.addAll(it.getSpellsGiven())

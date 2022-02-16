@@ -74,13 +74,13 @@ data class Character(
 
         classes.values.forEach {
             it.levelPath.forEach { feature ->
-                if(feature.level <= it.level) {
+                if(feature.grantedAtLevel <= it.level) {
                     result.add(it.level to feature)
                 }
             }
 
             it.subclass?.features?.forEach { feature ->
-                if(feature.level <= it.level) {
+                if(feature.grantedAtLevel <= it.level) {
                     result.add(it.level to feature)
                 }
             }

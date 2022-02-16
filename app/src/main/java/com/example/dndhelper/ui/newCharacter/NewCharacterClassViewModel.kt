@@ -104,9 +104,9 @@ public class NewCharacterClassViewModel @Inject constructor(
             }
         }
 
-        newClass.levelPath.filter { it.level <= level }.forEach {
-            if(it.choiceNum != 0 && it.options?.isNullOrEmpty() == false) {
-                it.chosen = dropDownStates[it.name + it.level]?.getSelected(it.getAvailableOptions(character, proficiencies)) as List<Feature>
+        newClass.levelPath.filter { it.grantedAtLevel <= level }.forEach {
+            if(it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
+                it.chosen = dropDownStates[it.name + it.grantedAtLevel]?.getSelected(it.getAvailableOptions(character, proficiencies)) as List<Feature>
             }
         }
 

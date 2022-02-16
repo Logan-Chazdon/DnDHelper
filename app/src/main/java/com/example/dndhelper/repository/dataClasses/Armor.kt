@@ -21,7 +21,7 @@ data class Armor(
     get() {
         var result = baseAc
         infusions?.forEach { infusion ->
-            infusion.acBonus?.let {
+            infusion.currentAcBonus?.let {
                 result += it
             }
         }

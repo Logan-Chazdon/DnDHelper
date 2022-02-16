@@ -32,12 +32,32 @@
         {
             "name": "Enhanced Defense",
             "desc": "Item: A suit of armor or a shield. A creature gains a +1 bonus to Armor Class while wearing (armor) or wielding (shield) the infused item. The bonus increases to +2 when you reach 10th level in this class.",
-            "type" : "Armor or Shield"
+            "type" : "Armor or Shield",
+            "ac_bonus" : [
+                {
+                    "prerequisite" : 0,
+                    "bonus" : 1
+                },
+                {
+                    "prerequisite" : 10,
+                    "bonus" : 2
+                }
+            ]
         },
         {
             "name": "Enhanced Weapon",
             "desc": "Item: A simple or martial weapon. This magic weapon grants a +1 bonus to attack and damage rolls made with it. The bonus increases to +2 when you reach 10th level in this class.",
-            "type" : "Weapon"
+            "type" : "Weapon",
+            "atk_dmg_bonus" : [
+                {
+                    "prerequisite" : 0,
+                    "bonus" : 1
+                },
+                {
+                    "prerequisite" : 10,
+                    "bonus" : 2
+                }
+            ]
         },
         {
             "name": "Helm of Awareness",
@@ -61,7 +81,13 @@
         {
             "name": "Repeating Shot",
             "type" : "Weapon",
-            "desc": "Item: A simple or martial weapon with the ammunition property (requires attunement). This magic weapon grants a + 1 bonus to attack and damage rolls made with it when it's used to make a ranged attack, and it ignores the loading property if it has it. If you load no ammunition in the weapon, it produces its own, automatically creating one piece of magic ammunition when you make a ranged attack with it. The ammunition created by the weapon vanishes the instant after it hits or misses a target."
+            "desc": "Item: A simple or martial weapon with the ammunition property (requires attunement). This magic weapon grants a + 1 bonus to attack and damage rolls made with it when it's used to make a ranged attack, and it ignores the loading property if it has it. If you load no ammunition in the weapon, it produces its own, automatically creating one piece of magic ammunition when you make a ranged attack with it. The ammunition created by the weapon vanishes the instant after it hits or misses a target.",
+            "atk_dmg_bonus" : [
+                {
+                    "prerequisite" : 0,
+                    "bonus" : 1
+                }
+            ]
         },
         {
             "name": "Replicate Magic Item",
@@ -349,7 +375,13 @@
             "level": 1,
             "desc": "Item: A simple or martial weapon with the thrown property. This magic weapon grants a +1 bonus to attack and damage rolls made with it, and it returns to the wielder’s hand immediately after it is used to make a ranged attack.",
             "requires_attunement": 0,
-            "type" : "Weapon"
+            "type" : "Weapon",
+            "atk_dmg_bonus" : [
+                {
+                    "prerequisite" : 0,
+                    "bonus" : 1
+                }
+            ]
         },
         {
             "name": "Spell-Refueling Ring",

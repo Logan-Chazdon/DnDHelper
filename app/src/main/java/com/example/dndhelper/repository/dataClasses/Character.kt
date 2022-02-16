@@ -446,7 +446,7 @@ data class Character(
         val bonusFromInfusions = weapon.infusions.let { infusions ->
             var total = 0
             infusions?.forEach { infusion ->
-                infusion.atkDmgBonus?.let {
+                infusion.currentAtkDmgBonus?.let {
                     total += it
                 }
             }

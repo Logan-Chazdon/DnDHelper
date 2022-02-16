@@ -136,6 +136,7 @@ fun FeaturesAndTraitsView(
 
                                             Button({
                                                 feature.infusion?.let {
+                                                    it.level = item.first
                                                     infuse(
                                                         it,
                                                         targetItems.elementAtOrNull(targetItemIndex)

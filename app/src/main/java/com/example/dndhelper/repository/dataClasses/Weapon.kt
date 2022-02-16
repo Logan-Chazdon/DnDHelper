@@ -24,7 +24,7 @@ data class Weapon(
         val infusionBonus = infusions.let { infusions ->
             var result = 0
             infusions?.forEach {
-                it.atkDmgBonus?.let { bonus ->
+                it.currentAtkDmgBonus?.let { bonus ->
                     result += bonus
                 }
             }

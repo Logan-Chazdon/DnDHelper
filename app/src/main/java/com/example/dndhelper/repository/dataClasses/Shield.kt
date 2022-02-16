@@ -18,7 +18,7 @@ data class Shield(
      get() {
         var result = acBonus
         infusions?.forEach { infusion ->
-            infusion.acBonus?.let {
+            infusion.currentAcBonus?.let {
                 result += it
             }
         }

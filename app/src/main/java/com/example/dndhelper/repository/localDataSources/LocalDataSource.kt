@@ -98,14 +98,27 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     name = infusionJson.getString("name"),
                     desc = infusionJson.getString("desc"),
                     charges = null, //TODO implement me
-                    atkDmgBonus = try { infusionJson.getInt("atk_dmg_bonus")} catch(e: JSONException) {null},
-                    acBonus = try { infusionJson.getInt("ac_bonus")} catch(e: JSONException) {null},
+                    atkDmgBonus = try {
+                        extractScalingBonus(infusionJson.getJSONArray("atk_dmg_bonus"))
+                    } catch(e: JSONException) {null},
+                    acBonus = try {
+                        extractScalingBonus(infusionJson.getJSONArray("ac_bonus"))
+                    } catch(e: JSONException) {null},
                     attuned =  try { infusionJson.getBoolean("requires_attunement")} catch(e: JSONException) {false},
                     type = try { infusionJson.getString("type") } catch(e: JSONException) {null}
                 )
             )
         }
         _infusions.value = infusions
+    }
+
+    private fun extractScalingBonus(json: JSONArray) : ScalingBonus {
+        val bonuses = mutableMapOf<Int, Int>()
+        for(index in 0 until json.length()) {
+            val bonusJson = json.getJSONObject(index)
+            bonuses[bonusJson.getInt("prerequisite")] = bonusJson.getInt("bonus")
+        }
+        return ScalingBonus(bonuses = bonuses)
     }
 
     private fun getItemByIndex(index : String) : ItemInterface? {

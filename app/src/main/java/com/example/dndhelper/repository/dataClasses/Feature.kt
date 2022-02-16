@@ -82,4 +82,19 @@ data class Feature(
         }
         return false
     }
+
+    fun deactivateInfusion(infusion: Infusion): Boolean {
+        if(this.infusion == infusion) {
+            this.infusion.active = false
+            return true
+        } else {
+            this.chosen?.forEachIndexed { index, it ->
+                if (it.infusion == infusion) {
+                    chosen?.get(index)?.infusion?.active = false
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }

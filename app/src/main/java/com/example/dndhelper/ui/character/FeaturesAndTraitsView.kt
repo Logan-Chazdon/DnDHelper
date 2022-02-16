@@ -18,10 +18,11 @@ import com.example.dndhelper.repository.dataClasses.ItemInterface
 
 @Composable
 fun FeaturesAndTraitsView(
-    features : List<Pair<Int ,Feature>>,
+    features: List<Pair<Int, Feature>>,
     modifier: Modifier,
     items: List<ItemInterface>,
-    infuse : (Infusion, ItemInterface?) -> Unit
+    infuse: (Infusion, ItemInterface?) -> Unit,
+    disableInfusion: (Infusion) -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -39,69 +40,111 @@ fun FeaturesAndTraitsView(
                 item.second.chosen?.forEach { feature ->
                     var activationExpanded by remember { mutableStateOf(false) }
 
-                    if(activationExpanded) {
+                    if (activationExpanded) {
                         Dialog(
-                            onDismissRequest = {activationExpanded = false}
+                            onDismissRequest = { activationExpanded = false }
                         ) {
                             Card {
                                 Column {
-                                    Text(text = feature.description, modifier = Modifier.padding(4.dp))
-
-                                    val targetItems: List<ItemInterface> = when(feature.infusion?.type) {
-                                        //TODO try to refactor this to be automatic
-                                        "Weapon" -> {
-                                            items.partition { it.type == "Weapon" }.first
-                                        }
-                                        "Armor or Shield" -> {
-                                            items.partition { it.type == "Shield" || it.type == "Armor" }.first
-                                        }
-                                        "Shield" -> {
-                                            items.partition { it.type == "Shield" }.first
-                                        }
-                                        "Armor" -> {
-                                            items.partition { it.type == "Armor" }.first
-                                        }
-                                        else -> {listOf()}
-                                    }
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceEvenly,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        var targetItemIndex by remember { mutableStateOf(-1) }
-                                        if(feature.infusion?.type != null) {
-                                            var dropDownExpanded by remember { mutableStateOf(false) }
-                                            Card(
-                                                backgroundColor = MaterialTheme.colors.primary,
-                                                modifier = Modifier.clickable {
-                                                    dropDownExpanded = true
-                                                }
-                                            ) {
-                                                Text(
-                                                    text = "Item: ${if(targetItemIndex < 0) { "None" } else { targetItems[targetItemIndex].name }}",
-                                                    modifier = Modifier.padding(8.dp),
-                                                    style = MaterialTheme.typography.button
-                                                )
+                                    Text(
+                                        text = feature.description,
+                                        modifier = Modifier.padding(4.dp)
+                                    )
+                                    if (feature.infusion?.active == true) {
+                                        //UI to disable the infusion
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            Button({
+                                                disableInfusion(feature.infusion)
+                                                activationExpanded = false
+                                            }) {
+                                                Text("Disable infusion")
                                             }
-                                            DropdownMenu(
-                                                expanded = dropDownExpanded,
-                                                onDismissRequest = { dropDownExpanded = false }) {
-                                                DropdownMenuItem(onClick = { targetItemIndex = -1 }) {
-                                                    Text("None")
+                                        }
+                                    } else {
+                                        //UI to enable the infusion
+                                        val targetItems: List<ItemInterface> =
+                                            when (feature.infusion?.type) {
+                                                //TODO try to refactor this to be automatic
+                                                "Weapon" -> {
+                                                    items.partition { it.type == "Weapon" }.first
                                                 }
-                                                targetItems.forEachIndexed { index, it ->
-                                                    DropdownMenuItem(onClick = { targetItemIndex = index}) {
-                                                        Text(it.name.toString())
+                                                "Armor or Shield" -> {
+                                                    items.partition { it.type == "Shield" || it.type == "Armor" }.first
+                                                }
+                                                "Shield" -> {
+                                                    items.partition { it.type == "Shield" }.first
+                                                }
+                                                "Armor" -> {
+                                                    items.partition { it.type == "Armor" }.first
+                                                }
+                                                else -> {
+                                                    listOf()
+                                                }
+                                            }
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceEvenly,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            var targetItemIndex by remember { mutableStateOf(-1) }
+                                            if (feature.infusion?.type != null) {
+                                                var dropDownExpanded by remember {
+                                                    mutableStateOf(
+                                                        false
+                                                    )
+                                                }
+                                                Card(
+                                                    backgroundColor = MaterialTheme.colors.primary,
+                                                    modifier = Modifier.clickable {
+                                                        dropDownExpanded = true
+                                                    }
+                                                ) {
+                                                    Text(
+                                                        text = "Item: ${
+                                                            if (targetItemIndex < 0) {
+                                                                "None"
+                                                            } else {
+                                                                targetItems[targetItemIndex].name
+                                                            }
+                                                        }",
+                                                        modifier = Modifier.padding(8.dp),
+                                                        style = MaterialTheme.typography.button
+                                                    )
+                                                }
+                                                DropdownMenu(
+                                                    expanded = dropDownExpanded,
+                                                    onDismissRequest = {
+                                                        dropDownExpanded = false
+                                                    }) {
+                                                    DropdownMenuItem(onClick = {
+                                                        targetItemIndex = -1
+                                                    }) {
+                                                        Text("None")
+                                                    }
+                                                    targetItems.forEachIndexed { index, it ->
+                                                        DropdownMenuItem(onClick = {
+                                                            targetItemIndex = index
+                                                        }) {
+                                                            Text(it.name.toString())
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
 
-                                        Button({
-                                            feature.infusion?.let { infuse(it, targetItems.elementAtOrNull(targetItemIndex)) }
-                                            activationExpanded = false
-                                        }) {
-                                            Text("Activate infusion")
+                                            Button({
+                                                feature.infusion?.let {
+                                                    infuse(
+                                                        it,
+                                                        targetItems.elementAtOrNull(targetItemIndex)
+                                                    )
+                                                }
+                                                activationExpanded = false
+                                            }) {
+                                                Text("Activate infusion")
+                                            }
                                         }
                                     }
                                 }
@@ -109,8 +152,8 @@ fun FeaturesAndTraitsView(
                         }
                     }
 
-                    val color = if(maxActive != 0) {
-                        if(feature.infusion?.active == true) {
+                    val color = if (maxActive != 0) {
+                        if (feature.infusion?.active == true) {
                             MaterialTheme.colors.onBackground
                         } else {
                             MaterialTheme.colors.onBackground.copy(alpha = 0.5f)
@@ -134,9 +177,9 @@ fun FeaturesAndTraitsView(
 
                 }
                 Divider(thickness = (0.5).dp, startIndent = 10.dp)
-                if(expanded) {
+                if (expanded) {
                     Dialog(
-                        onDismissRequest = {expanded = false}
+                        onDismissRequest = { expanded = false }
                     ) {
                         Card {
                             Text(text = item.second.description, modifier = Modifier.padding(4.dp))

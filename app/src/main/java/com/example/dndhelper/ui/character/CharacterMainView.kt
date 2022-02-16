@@ -238,6 +238,11 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                 scope.launch(Dispatchers.IO) {
                                     viewModel.infuse(item, infusion)
                                 }
+                            },
+                            disableInfusion = { infusion ->
+                                scope.launch(Dispatchers.IO) {
+                                    viewModel.disableInfusion(infusion)
+                                }
                             }
                         )
 

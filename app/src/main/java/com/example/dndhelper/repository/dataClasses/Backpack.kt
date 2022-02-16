@@ -157,6 +157,25 @@ class Backpack {
         }
     }
 
+    fun removeInfusion(infusion: Infusion) {
+        val allItemLists = listOf<List<ItemInterface>>(backgroundItems, classItems, addedItems)
+
+        fun attemptDeinfusion(items: List<ItemInterface>): Boolean {
+            items.forEachIndexed { index, item ->
+                if(item.infusions?.contains(infusion) == true) {
+                    items[index].infusions?.remove(infusion)
+                    return true
+                }
+            }
+            return false
+        }
+
+        allItemLists.forEach {
+            if(attemptDeinfusion(it))
+                return
+        }
+    }
+
     val allWeapons: List<Weapon>
     get() {
         val result = mutableListOf<Weapon>()

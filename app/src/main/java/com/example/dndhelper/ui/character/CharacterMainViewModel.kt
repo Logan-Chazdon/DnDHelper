@@ -93,6 +93,13 @@ public class CharacterMainViewModel @Inject constructor(
         newChar?.let { character -> repository.insertCharacter(character) }
     }
 
+    fun disableInfusion(infusion: Infusion) {
+        val newChar = deactivateInfusion(infusion, character!!.value!!.copy())
+        newChar?.backpack?.removeInfusion(infusion)
+        newChar?.id = character!!.value!!.id
+        newChar?.let { character -> repository.insertCharacter(character) }
+    }
+
     //This function just returns the character passed in with the target infusion set to active or null.
     private fun activateInfusion(infusion: Infusion, character: Character) : Character? {
         //TODO check for other possible sources of infusions.
@@ -100,6 +107,20 @@ public class CharacterMainViewModel @Inject constructor(
             clazz.levelPath.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
                     if(character.classes.values.elementAt(classIndex).levelPath[index].activateInfusion(infusion))
+                        return character
+                }
+            }
+        }
+        return null
+    }
+
+    //Attempt to find an active infusion equal to the one passed and disable it.
+    fun deactivateInfusion(infusion: Infusion, character: Character): Character? {
+        //TODO check for other possible sources of infusions.
+        character.classes.values.forEachIndexed { classIndex, clazz  ->
+            clazz.levelPath.forEachIndexed { index, it ->
+                if (it.grantsInfusions) {
+                    if(character.classes.values.elementAt(classIndex).levelPath[index].deactivateInfusion(infusion))
                         return character
                 }
             }

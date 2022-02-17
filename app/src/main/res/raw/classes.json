@@ -1314,7 +1314,91 @@
                     "desc" : "Beginning at 10th level, you can call on your deity to intervene on your behalf when your need is great.\n\nImploring your deity's aid requires you to use your action. Describe the assistance you seek, and roll percentile dice. If you roll a number equal to or lower than your cleric level, your deity intervenes. The DM chooses the nature of the intervention; the effect of any cleric spell or cleric domain spell would be appropriate. If your deity intervenes, you can't use this feature again for 7 days. Otherwise, you can use it again after you finish a long rest.\n\nAt 20th level, your call for intervention succeeds automatically, no roll required."
                 }
             ],
-            "subclasses": []
+            "subclasses": [
+                {
+                    "name" : "Arcana Domain",
+                    "spells" : [
+                        {
+                            "name" : "Detect Magic",
+                            "index" : "detect_magic",
+                            "level" : 1
+                        },
+                        {
+                            "name" : "Magic Missile",
+                            "index" : "magic_missile",
+                            "level" : 1
+                        },
+                        {
+                            "name" : "Magic Weapon",
+                            "index" : "magic_weapon",
+                            "level": 3
+                        },
+                        {
+                            "name" : "Nystul's Magic Aura",
+                            "index" : "nystuls_magic_aura",
+                            "level" : 3
+                        },
+                        {
+                            "name" : "Dispel Magic",
+                            "index" : "dispel_magic",
+                            "level" : 5
+                        },
+                        {
+                            "name" : "Magic Circle",
+                            "index" : "magic_circle",
+                            "level" : 5
+                        },
+                        {
+                            "name" : "Arcane Eye",
+                            "index" : "arcane_eye",
+                            "level" : 7
+                        },
+                        {
+                            "name" : "Leomund's Secret Chest",
+                            "index" : "leomunds_secret_chest",
+                            "level" : 7
+                        },
+                        {
+                            "name" : "Planar Binding",
+                            "index" : "planar_binding",
+                            "level" : 7
+                        },
+                        {
+                            "name" : "Teleportation Circle",
+                            "index" : "teleportation_circle",
+                            "level" : 9
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Arcane Initiate",
+                            "desc" : "When you choose this domain at 1st level, you gain proficiency in the Arcana skill, and you gain two cantrips of your choice from the wizard spell list. For you, these cantrips count as cleric cantrips",
+                            "level" : 1
+                        },
+                        {
+                            "name" : "Channel Divinity: Arcane Abjuration",
+                            "desc" : "Starting at 2nd level, you can use your Channel Divinity to abjure otherworldly creatures.\n\nAs an action, you present your holy symbol, and one celestial, elemental, fey, or fiend of your choice that is within 30 feet of you must make a Wisdom saving throw, provided that the creature can see or hear you. If the creature fails its saving throw, it is turned for 1 minute or until it takes any damage.\n\nA turned creature must spend its turns trying to move as far away from you as it can, and it can't willingly end its move in a space within 30 feet of you. It also can't take reactions. For its action, it can only use the Dash action or try to escape from an effect that prevents it from moving. If there's nowhere to move, the creature can use the Dodge action.\n\nAfter you reach 5th level, when a creature fails its saving throw against your Arcane Abjuration feature, the creature is banished for 1 minute (as in the Banishment spell, no concentration required) if it isn't on its plane of origin and its challenge rating is at or below a certain threshold, as shown on the Arcane Banishment table.",
+                            "comment" : "TODO add this table",
+                            "level" : 2
+                        },
+                        {
+                            "name" : "Spell Breaker",
+                            "level" : 6,
+                            "desc" : "Starting at 6th level, when you restore hit points to an ally with a spell of 1st level or higher, you can also end one spell of your choice on that creature. The level of the spell you end must be equal to or lower than the level of the spell slot you use to cast the healing spell."
+                        },
+                        {
+                            "name" : "Potent Spellcasting",
+                            "level" : 8,
+                            "desc" : "Starting at 8th level, you add your Wisdom modifier to the damage you deal with any cleric cantrip."
+                        },
+                        {
+                            "name" : "Arcane Mastery",
+                            "level" : 17,
+                            "desc" : "At 17th level, you choose four spells from the wizard spell list, one from each of the following levels: 6th, 7th, 8th, and 9th. You add them to your list of domain spells. Like your other domain spells, they are always prepared and count as cleric spells for you."
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

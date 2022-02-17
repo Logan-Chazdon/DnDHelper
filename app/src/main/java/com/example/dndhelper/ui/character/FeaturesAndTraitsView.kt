@@ -65,32 +65,19 @@ fun FeaturesAndTraitsView(
                                         }
                                     } else {
                                         //UI to enable the infusion
-                                        val targetItems: List<ItemInterface> =
-                                            when (feature.infusion?.type) {
-                                                //TODO try to refactor this to be automatic
-                                                "Weapon" -> {
-                                                    items.partition { it.type == "Weapon" }.first
-                                                }
-                                                "Armor or Shield" -> {
-                                                    items.partition { it.type == "Shield" || it.type == "Armor" }.first
-                                                }
-                                                "Shield" -> {
-                                                    items.partition { it.type == "Shield" }.first
-                                                }
-                                                "Armor" -> {
-                                                    items.partition { it.type == "Armor" }.first
-                                                }
-                                                else -> {
-                                                    listOf()
-                                                }
-                                            }
+                                        //Create a list of all the ItemInterfaces that meet pass the filter.
+                                        val targetItems: List<ItemInterface> =items.partition {
+                                            feature.infusion?.targetItemFilter
+                                            ?.calculate(it) ?: true
+                                        }.first
+
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
                                             horizontalArrangement = Arrangement.SpaceEvenly,
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             var targetItemIndex by remember { mutableStateOf(-1) }
-                                            if (feature.infusion?.type != null) {
+                                            if (feature.infusion?.targetItemFilter != null) {
                                                 var dropDownExpanded by remember {
                                                     mutableStateOf(
                                                         false

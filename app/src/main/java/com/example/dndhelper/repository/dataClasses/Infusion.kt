@@ -3,7 +3,7 @@ package com.example.dndhelper.repository.dataClasses
 data class Infusion(
     val name: String,
     val desc: String,
-    val type: String?,
+    val targetItemFilter: TargetItemFilter?,
     val charges: Resource? = null,
     val acBonus: ScalingBonus? = null,
     val atkDmgBonus: ScalingBonus? = null,

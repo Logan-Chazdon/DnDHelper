@@ -105,11 +105,42 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         extractScalingBonus(infusionJson.getJSONArray("ac_bonus"))
                     } catch(e: JSONException) {null},
                     attuned =  try { infusionJson.getBoolean("requires_attunement")} catch(e: JSONException) {false},
-                    type = try { infusionJson.getString("type") } catch(e: JSONException) {null}
+                    targetItemFilter = try { extractTargetItemFilter(infusionJson.getJSONObject("target_item_filter")) } catch(e: JSONException) {null}
                 )
             )
         }
         _infusions.value = infusions
+    }
+
+    private fun extractTargetItemFilter(json: JSONObject) : TargetItemFilter {
+        val types = try {
+            val typesJson = json.getJSONArray("types")
+            val result = mutableListOf<String>()
+            for(index in 0 until typesJson.length()) {
+                result.add(typesJson.getString(index))
+            }
+            result
+        } catch (e : JSONException) {
+            null
+        }
+
+        val properties = try {
+            extractProperties(json.getJSONArray("properties"))
+        } catch (e : JSONException) {
+            null
+        }
+
+        val minimumCost = try {
+            extractCost(json.getJSONObject("cost"))
+        } catch (e: JSONException) {
+            null
+        }
+
+        return TargetItemFilter(
+            itemTypes = types,
+            minimumCost = minimumCost,
+            properties = properties
+        )
     }
 
     private fun extractScalingBonus(json: JSONArray) : ScalingBonus {

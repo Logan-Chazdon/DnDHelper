@@ -1293,6 +1293,26 @@
                 }
             ],
             "features": [
+                {
+                    "name" : "Harness Divine Power (Optional)",
+                    "level" : 2,
+                    "desc" : "At 2nd level, you can expend a use of your Channel Divinity to fuel your spells. As a bonus action, you touch your holy symbol, utter a prayer, and regain one expended spell slot, the level of which can be no higher than half your proficiency bonus (rounded up). The number of times you can use this feature is based on the level you've reached in this class: 2nd level, once; 6th level, twice; and 18th level, thrice. You regain all expended uses when you finish a long rest."
+                },
+                {
+                    "name" : "Destroy Undead",
+                    "level" : 5,
+                    "desc" :"Starting at 5th level, when an undead fails its saving throw against your Turn Undead feature, the creature is instantly destroyed if its challenge rating is at or below a certain threshold, as shown in the Cleric table above."
+                },
+                {
+                    "name" : "Blessed Strikes (Optional)",
+                    "level": 8,
+                    "desc" : "Replaces the Divine Strike or Potent Spellcasting feature\n\nWhen you reach 8th level, you are blessed with divine might in battle. When a creature takes damage from one of your cantrips or weapon attacks, you can also deal 1d8 radiant damage to that creature. Once you deal this damage, you can't use this feature again until the start of your next turn."
+                },
+                {
+                    "name" : "Divine Intervention",
+                    "level" : 10,
+                    "desc" : "Beginning at 10th level, you can call on your deity to intervene on your behalf when your need is great.\n\nImploring your deity's aid requires you to use your action. Describe the assistance you seek, and roll percentile dice. If you roll a number equal to or lower than your cleric level, your deity intervenes. The DM chooses the nature of the intervention; the effect of any cleric spell or cleric domain spell would be appropriate. If your deity intervenes, you can't use this feature again for 7 days. Otherwise, you can use it again after you finish a long rest.\n\nAt 20th level, your call for intervention succeeds automatically, no roll required."
+                }
             ],
             "subclasses": []
         }

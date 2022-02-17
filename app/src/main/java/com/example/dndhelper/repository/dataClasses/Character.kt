@@ -192,7 +192,7 @@ data class Character(
             }
         } else {
             //Get the spell slots from the class itself
-            spellSlots = newClass.spellCasting?.spellSlotsByLevel?.get(newClass.level) ?: listOf()
+            spellSlots = newClass.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1) ?: listOf()
         }
 
     }

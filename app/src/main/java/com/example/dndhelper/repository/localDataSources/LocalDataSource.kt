@@ -95,6 +95,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val infusionJson = infusionsJson.getJSONObject(index)
             infusions.add(
                 Infusion(
+                    grantedAtLevel = try {infusionJson.getInt("level") } catch(e: JSONException) { 0 },
                     name = infusionJson.getString("name"),
                     desc = infusionJson.getString("desc"),
                     charges = null, //TODO implement me
@@ -1092,8 +1093,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     "infusions" -> {
                         _infusions.value!!.forEach {
                             features.add(
-                                //TODO implement prerequisites
                                 Feature(
+                                    grantedAtLevel = it.grantedAtLevel,
                                     name = it.name,
                                     description = it.desc,
                                     infusion = it,

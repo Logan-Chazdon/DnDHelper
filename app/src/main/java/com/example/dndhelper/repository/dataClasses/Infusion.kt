@@ -9,7 +9,8 @@ data class Infusion(
     val atkDmgBonus: ScalingBonus? = null,
     var active: Boolean = false,
     val attuned: Boolean,
-    var level: Int = 0
+    var level: Int = 0,
+    val grantedAtLevel: Int
 ) {
     val currentAcBonus: Int?
     get() {

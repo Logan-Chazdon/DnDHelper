@@ -1397,6 +1397,64 @@
                             "desc" : "At 17th level, you choose four spells from the wizard spell list, one from each of the following levels: 6th, 7th, 8th, and 9th. You add them to your list of domain spells. Like your other domain spells, they are always prepared and count as cleric spells for you."
                         }
                     ]
+                },
+                {
+                    "name" : "Death Domain",
+                    "spells" : [
+                        {
+                            "name" : "False Life",
+                            "level" : 1,
+                            "index" : "false_life"
+                        },
+                        {
+                            "name" : "Ray of Sickness",
+                            "level" : 1,
+                            "index" : "ray_of_sickness"
+                        },
+                        {
+                            "name" : "Blindness/Deafness",
+                            "index" : "blindness/deafness",
+                            "level": 3
+                        },
+                        {
+                            "name" : "Ray of Enfeeblement",
+                            "index": "ray_of_enfeeblement",
+                            "level" : 3
+                        },
+                        {
+                            "name" : "Animate Dead",
+                            "index" : "animate_dead",
+                            "level" : 5
+                        },
+                        {
+                            "name" : "Vampiric Touch",
+                            "index" : "vampiric_touch",
+                            "level" : 5
+                        },
+                        {
+                            "name" : "Blight",
+                            "index" : "blight",
+                            "level" : 7
+                        },
+                        {
+                            "name" : "Death Ward",
+                            "index" : "death_ward",
+                            "level" : 7
+                        },
+                        {
+                            "name" : "Antilife shell",
+                            "index" : "antilife_shell",
+                            "level" : 9
+                        },
+                        {
+                            "name" : "Cloudkill",
+                            "index" : "cloudkill",
+                            "level" : 9
+                        }
+                    ],
+                    "features" : [
+
+                    ]
                 }
             ]
         }

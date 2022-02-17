@@ -11,9 +11,7 @@ data class Feature(
     val infusion: Infusion? = null,
     val maxActive: Choose = Choose(0),
 ) {
-    //This represents the current level of the class granting the feature or the level it is intended to be processed at by another source.
-    //It allows the feature to scale itself.
-    val level: Int = 0
+
     var chosen : List<Feature>? = null
     var resource: Resource? = null
 

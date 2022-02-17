@@ -46,6 +46,21 @@ fun FeaturesAndTraitsView(
                         ) {
                             Card {
                                 Column {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = feature.name,
+                                            style = MaterialTheme.typography.subtitle1,
+                                            modifier = Modifier.padding(4.dp)
+                                        )
+                                        Text(
+                                            style = MaterialTheme.typography.subtitle2,
+                                            text = "${item.second.currentActive}/${item.second.maxActive.num(item.first)}"
+                                        )
+                                    }
                                     Text(
                                         text = feature.description,
                                         modifier = Modifier.padding(4.dp)
@@ -121,7 +136,9 @@ fun FeaturesAndTraitsView(
                                                 }
                                             }
 
-                                            Button({
+                                            Button(
+                                                enabled = item.second.currentActive < item.second.maxActive.num(item.first),
+                                                onClick ={
                                                 feature.infusion?.let {
                                                     it.level = item.first
                                                     infuse(

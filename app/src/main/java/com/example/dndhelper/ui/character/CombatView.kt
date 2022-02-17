@@ -290,6 +290,14 @@ fun CombatView(viewModel: CombatViewModel) {
                                     Text(it.school)
                                     Text(it.castingTime)
                                 }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(it.range)
+                                    Text(it.duration)
+                                    Text(it.area)
+                                }
                                 Text(it.desc)
                                 var expanded by remember { mutableStateOf(false) }
                                 var level by remember { mutableStateOf(it.level) }

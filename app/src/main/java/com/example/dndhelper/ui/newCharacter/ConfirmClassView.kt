@@ -410,7 +410,8 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                                     if (choice.choose.num(levels.value.text) != 0) {
                                         val options = choice.getAvailableOptions(
                                             viewModel.character,
-                                            viewModel.proficiencies
+                                            viewModel.proficiencies,
+                                            levels.value.text
                                         )
                                         MultipleChoiceDropdownView(
                                             state = viewModel.dropDownStates.getDropDownState(

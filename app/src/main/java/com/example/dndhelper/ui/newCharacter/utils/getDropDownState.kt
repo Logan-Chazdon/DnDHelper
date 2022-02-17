@@ -1,10 +1,8 @@
 package com.example.dndhelper.ui.newCharacter.utils
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.dndhelper.ui.newCharacter.MultipleChoiceDropdownState
-import kotlin.math.max
 
 
 fun SnapshotStateMap<String, MultipleChoiceDropdownState>.getDropDownState (
@@ -16,6 +14,7 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownState>.getDropDownState (
 ) : MultipleChoiceDropdownState {
 
     val state : MultipleChoiceDropdownState =  if(this.containsKey(key)) {
+        this[key]!!.names = names
         this[key]!!
     } else {
         generateDefault(

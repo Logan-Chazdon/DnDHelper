@@ -5699,6 +5699,39 @@
       ],
 
       "damage" : "1d6 psychic"
+    },
+    {
+      "name": "Zephyr Strike",
+      "level" : 1,
+      "casting_time" : "1 Bonus Action",
+      "range" : "Self",
+      "school" : "Transmutation",
+      "desc" : "You move like the wind. Until the spell ends, your movement doesn’t provoke opportunity attacks. Once before the spell ends, you can give yourself advantage on one weapon attack roll on your turn. That attack deals an extra 1d8 force damage on a hit. Whether you hit or miss, your walking speed increases by 30 feet until the end of that turn.",
+      "area" : "-",
+
+
+      "components" : [
+        {
+          "name" : "Verbal"
+        }
+
+      ],
+
+      "item_components" : [
+      ],
+
+
+
+      "duration" : "Concentration 1 Minute",
+
+      "classes" : [
+        {
+          "name" : "ranger",
+          "index": "ranger"
+        }
+      ],
+
+      "damage" : "1d8 force"
     }
 
 

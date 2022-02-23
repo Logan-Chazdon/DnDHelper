@@ -44,7 +44,7 @@ fun ItemsAndAbilitiesView(
                         modifier = Modifier.width(30.dp)
                     )
                     Text(text = it.damageDesc, modifier = Modifier.width(150.dp))
-                    Text(text = it.range, modifier = Modifier.width(100.dp))
+                    it.range?.let { it1 -> Text(text = it1, modifier = Modifier.width(100.dp)) }
                 }
                 Divider(thickness = 1.dp)
             }

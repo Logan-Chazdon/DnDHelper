@@ -10,7 +10,7 @@ data class Weapon(
     override val cost : Map<String, Currency>? = null,
     val damage : String,
     val damageType: String,
-    val range: String,
+    val range: String?,
     val properties : List<Property>? = null,
     val isMartial: Boolean = false,
     override val charges: Resource? = null,

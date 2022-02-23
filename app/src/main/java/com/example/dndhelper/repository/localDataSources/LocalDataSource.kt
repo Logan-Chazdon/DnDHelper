@@ -2,6 +2,7 @@ package com.example.dndhelper.repository.localDataSources
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -362,23 +363,88 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         val itemsJson = JSONObject(dataAsString).getJSONArray("items")
         for(index in 0 until itemsJson.length()) {
             val itemJson = itemsJson.getJSONObject(index)
-            when(itemJson.getString("type")) {
-                "shield" -> {
-                    result.add(
-                        Shield(
-                            name = itemJson.getString("name"),
-                            desc = itemJson.getString("desc"),
-                            itemRarity = itemJson.getString("rarity"),
-                            cost = extractCost(itemJson.getJSONObject("cost")),
-                            weight = itemJson.getInt("weight"),
-                            acBonus = itemJson.getInt("ac_bonus"),
-                            charges = try {
-                                extractResource(itemJson.getJSONObject("charges"))
-                            } catch(e: Exception) {null},
-                            index = null
-                        )
-                    )
+            //Try to log the item causing an issue.
+            //Just rethrows the exception after logging.
+            try {
+                val cost = try {
+                    extractCost(itemJson.getJSONObject("cost"))
+                } catch (e: JSONException) {
+                    null
                 }
+
+                val weight = try {
+                    itemJson.getInt("weight")
+                } catch (e: JSONException) {
+                    null
+                }
+
+                val itemRarity = try {
+                    itemJson.getString("item_rarity")
+                } catch (e: JSONException) {
+                    null
+                }
+
+                val name = itemJson.getString("name")
+                val desc = itemJson.getString("desc")
+                when (itemJson.getString("type")) {
+                    "shield" -> {
+                        result.add(
+                            Shield(
+                                name = name,
+                                desc = desc,
+                                itemRarity = itemRarity,
+                                cost = cost,
+                                weight = weight,
+                                acBonus = itemJson.getInt("ac_bonus"),
+                                charges = try {
+                                    extractResource(itemJson.getJSONObject("charges"))
+                                } catch (e: Exception) {
+                                    null
+                                },
+                                index = null
+                            )
+                        )
+                    }
+                    "weapon" -> {
+                        val properties = try {
+                            extractProperties(itemJson.getJSONArray("properties"))
+                        } catch (e: JSONException) {
+                            listOf()
+                        }
+                        val range = try {
+                            itemJson.getString("range")
+                        } catch (e: JSONException) {
+                            null
+                        }
+                        result.add(
+                            Weapon(
+                                name = name,
+                                desc = desc,
+                                itemRarity = itemRarity,
+                                cost = cost,
+                                weight = weight,
+                                damage = itemJson.getString("damage"),
+                                damageType = itemJson.getString("damage_type"),
+                                range = range,
+                                properties = properties,
+                                isMartial = false //TODO,
+                            )
+                        )
+                    }
+                    "item" -> {
+                        result.add(
+                            Item(
+                                name = name,
+                                desc = desc,
+                                weight = weight,
+                                cost = cost
+                            )
+                        )
+                    }
+                }
+            } catch (e: JSONException) {
+                Log.e("Error", "generateMiscItems: $itemJson")
+                throw e
             }
         }
 
@@ -432,7 +498,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     cost = cost,
                     damage = weaponJson.getString("damage"),
                     damageType = weaponJson.getString("damage_type"),
-                    range = weaponJson.getString("range"),
+                    range = try{ weaponJson.getString("range") } catch (e : JSONException) { null },
                     properties = properties,
                     isMartial = isMartial
                 )

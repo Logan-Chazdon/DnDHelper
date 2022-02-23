@@ -164,6 +164,7 @@
             "damage": "6d8",
             "weight" : 10,
             "range" : "120/360",
+            "proficiency" : "Firearms",
             "properties": [
                 {
                     "name": "Two-Handed.",
@@ -275,6 +276,7 @@
             "desc" : "Firearms are a new and volatile technology, and as such bring their own unique set of weapon properties. Some properties are followed by a number, and this number signifies an element of that property (outlined below). These properties replace the optional ones presented in the Dungeon Master’s Guide. Firearms are ranged weapons.",
             "weight" : 25,
             "damage_type" : "Piercing",
+            "proficiency" : "Firearms",
             "damage" : "2d12",
             "properties" : [
                 {
@@ -593,6 +595,7 @@
             "name" : "Blunderbuss (Exandria)",
             "desc": "Firearms are a new and volatile technology, and as such bring their own unique set of weapon properties. Some properties are followed by a number, and this number signifies an element of that property (outlined below). These properties replace the optional ones presented in the Dungeon Master’s Guide. Firearms are ranged weapons.",
             "damage" : "2d8",
+            "proficiency" : "Firearms",
             "damage_type" : "piercing",
             "weight" : 10,
             "cost": {
@@ -1710,6 +1713,7 @@
             "desc" : "Firearms are a new and volatile technology, and as such bring their own unique set of weapon properties. Some properties are followed by a number, and this number signifies an element of that property (outlined below). These properties replace the optional ones presented in the Dungeon Master’s Guide. Firearms are ranged weapons.",
             "damage_type" : "fire",
             "damage" : "2d8",
+            "proficiency" : "Firearms",
             "weight" : 10,
             "properties" : [
                 {
@@ -2058,6 +2062,7 @@
             "damage_type" : "radiant",
             "weight" : 2,
             "range" : "40/120ft",
+            "proficiency" : "Firearms",
             "properties" : [
                 {
                     "name" : "Ammunition",
@@ -2077,6 +2082,7 @@
             "damage" : "3d8",
             "damage_type" : "radiant",
             "weight" : 7,
+            "proficiency" : "Firearms",
             "range" : "100/300ft",
             "properties" : [
                 {
@@ -2360,6 +2366,7 @@
             "desc" : "It’s up to you to decide whether a character has proficiency with a firearm. Characters in most D&D worlds wouldn’t have such proficiency. During their downtime, characters can use the training rules in the Player’s Handbook to acquire proficiency, assuming that they have enough ammunition to keep the weapons working while mastering their use",
             "damage" : "1d12",
             "damage_type" : "piercing",
+            "proficiency" : "Firearms",
             "weight" : 10,
             "cost": {
                 "pp": 0,
@@ -2396,6 +2403,7 @@
                 "sp": 0,
                 "cp": 0
             },
+            "proficiency" : "Firearms",
             "range" : "40/120ft",
             "weight" : 10,
             "damage" : "1d12",
@@ -2573,6 +2581,7 @@
             },
             "weight" : 1,
             "damage" : "1d8",
+            "proficiency" : "Firearms",
             "damage_type" : "piercing",
             "properties" : [
                 {
@@ -2743,6 +2752,7 @@
                 "sp": 0,
                 "cp": 0
             },
+            "proficiency" : "Firearms",
             "weight" : 3,
             "damage" : "1d10",
             "damage_type" : "piercing",
@@ -3071,6 +3081,7 @@
             "damage" : "2d8",
             "damage_type" : "piercing",
             "weight": 3,
+            "proficiency" : "Firearms",
             "properties" : [
                 {
                     "name" : "Ammunition",
@@ -3115,6 +3126,7 @@
             "damage_type" : "piercing",
             "weight" : 8,
             "range" : "80/240",
+            "proficiency" : "Firearms",
             "properties" : [
                 {
                     "name" : "Ammunition",
@@ -3141,6 +3153,7 @@
             "damage" : "2d10",
             "damage_type" : "piercing",
             "weight" : 8,
+            "proficiency" : "Firearms",
             "properties" : [
                 {
                     "name" : "Ammunition",
@@ -3406,6 +3419,7 @@
             "damage" : "2d8",
             "damage_type" : "piercing",
             "weight" : 7,
+            "proficiency" : "Firearms",
             "properties": [
                 {
                     "name": "Two-Handed.",

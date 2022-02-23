@@ -1,5 +1,6 @@
 package com.example.dndhelper.ui.character
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -316,7 +317,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                             var maxAcFromDex by remember { mutableStateOf("") }
                             var customItemName by remember { mutableStateOf("") }
                             var stealth by remember { mutableStateOf(false) }
-
+                            var proficiency by remember {mutableStateOf("") }
 
                             TextField(
                                 value = customItemName,
@@ -400,7 +401,8 @@ fun ItemsView(viewModel: ItemViewModel) {
                                 }
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.Bottom
                                 ) {
                                     OutlinedTextField(
                                         value = customWeaponRange,
@@ -412,6 +414,37 @@ fun ItemsView(viewModel: ItemViewModel) {
                                         },
                                         modifier = Modifier.width(textFieldSize)
                                     )
+                                    var dropdownExpanded by remember {mutableStateOf(false)}
+                                    var selectedProficiency by remember {mutableStateOf(0)}
+                                    val proficiencyTypes = listOf(
+                                        "Martial" to "Martial weapons",
+                                        "Simple" to "Simple weapons",
+                                        "Firearm" to "Firearms"
+                                    )
+                                    Card(
+                                        elevation = 0.dp,
+                                        border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)),
+                                        shape = MaterialTheme.shapes.small,
+                                        modifier = Modifier.width(textFieldSize)
+                                    ) {
+                                        Text(
+                                            text = proficiencyTypes[selectedProficiency].first,
+                                            modifier = Modifier.clickable {
+                                                dropdownExpanded = true
+                                            }.padding(start = 16.dp, bottom = 16.dp, end = 16.dp, top = 19.dp)
+                                        )
+                                    }
+                                    DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
+                                        proficiencyTypes.forEachIndexed { i, it ->
+                                            DropdownMenuItem(onClick = {
+                                                selectedProficiency = i
+                                                proficiency = proficiencyTypes[selectedProficiency].second
+                                                dropdownExpanded = false
+                                            }) {
+                                                Text(it.first)
+                                            }
+                                        }
+                                    }
                                     //TODO find a way to to properties
                                 }
                             }
@@ -465,7 +498,8 @@ fun ItemsView(viewModel: ItemViewModel) {
                                                             name = customItemName,
                                                             damage = customWeaponDamage,
                                                             range = customWeaponRange,
-                                                            damageType = customWeaponDamageType
+                                                            damageType = customWeaponDamageType,
+                                                            proficiency = proficiency
                                                             //TODO properties
                                                         )
                                                     }

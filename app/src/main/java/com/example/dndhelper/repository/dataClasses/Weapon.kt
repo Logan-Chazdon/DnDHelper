@@ -12,7 +12,7 @@ data class Weapon(
     val damageType: String,
     val range: String?,
     val properties : List<Property>? = null,
-    val isMartial: Boolean = false,
+    val proficiency : String,
     override val charges: Resource? = null,
     override val maxInfusions: Int? = 1,
     override val infusions: MutableList<Infusion>? = mutableListOf()

@@ -427,7 +427,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 damageType = itemJson.getString("damage_type"),
                                 range = range,
                                 properties = properties,
-                                isMartial = false //TODO,
+                                proficiency = try { itemJson.getString("proficiency") } catch (e: JSONException) { "Improvised weapons" }
                             )
                         )
                     }
@@ -500,7 +500,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     damageType = weaponJson.getString("damage_type"),
                     range = try{ weaponJson.getString("range") } catch (e : JSONException) { null },
                     properties = properties,
-                    isMartial = isMartial
+                    proficiency = if(isMartial) { "Martial weapons" } else { "Simple weapons" }
                 )
             )
         }

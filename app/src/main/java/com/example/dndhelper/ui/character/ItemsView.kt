@@ -1,8 +1,11 @@
 package com.example.dndhelper.ui.character
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -218,7 +221,6 @@ fun ItemsView(viewModel: ItemViewModel) {
                         val allItems = viewModel.allItems?.observeAsState()
                         Column {
                             var selected by remember { mutableStateOf(-1) }
-                            val scrollState = rememberScrollState()
                             var search by remember { mutableStateOf("") }
                             Row(
                                 Modifier
@@ -244,12 +246,12 @@ fun ItemsView(viewModel: ItemViewModel) {
                                 )
                             }
 
-                            Column(
+                            LazyColumn(
                                 modifier = Modifier
-                                    .fillMaxHeight(0.55f)
-                                    .verticalScroll(scrollState)
+                                    .fillMaxHeight(0.55f),
+                                state= rememberLazyListState(),
                             ) {
-                                allItems?.value?.forEachIndexed { i, item ->
+                                itemsIndexed(allItems?.value ?: listOf()) {  i, item ->
                                     //TODO upgrade search
                                     if (
                                         search == "" ||

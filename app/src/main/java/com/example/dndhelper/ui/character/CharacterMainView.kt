@@ -1,23 +1,22 @@
 package com.example.dndhelper.ui.character
 
 import android.content.res.Configuration
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import com.example.dndhelper.dataStore
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +28,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CharacterMainView( viewModel: CharacterMainViewModel) {
     val scope = rememberCoroutineScope()
+    val isVertical =
+        LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -42,14 +43,17 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                     Column(
                         modifier = Modifier.fillMaxWidth(0.6f)
                     ) {
-                        TextField(
-                            value = viewModel.character?.observeAsState()?.value?.name ?: "",
-                            onValueChange = {
-                                scope.launch(Dispatchers.IO) {
-                                    viewModel.setName(it)
-                                }
-                            },
-                        )
+                        Row {
+                            TextField(
+                                value = viewModel.character?.observeAsState()?.value?.name ?: "",
+                                onValueChange = {
+                                    scope.launch(Dispatchers.IO) {
+                                        viewModel.setName(it)
+                                    }
+                                },
+                            )
+                            if(!isVertical) RestButton(viewModel = viewModel)
+                        }
                         val gridNotRowFlow: Flow<Boolean> = LocalContext.current.dataStore.data.let {
                             remember {
                                 it.map { preferences ->
@@ -57,8 +61,6 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                 }
                             }
                         }
-                        val isVertical =
-                            LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
 
                         if (!gridNotRowFlow.collectAsState(false).value) {
                             val topModifier = if (isVertical) {
@@ -230,6 +232,8 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
 
 
                     Column() {
+                        if(isVertical) RestButton(viewModel = viewModel)
+
                         FeaturesAndTraitsView(
                             features = viewModel.characterFeatures.observeAsState(listOf()).value,
                             modifier = Modifier.fillMaxHeight(0.5f),
@@ -253,6 +257,105 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                             proficiencies = viewModel.character?.observeAsState()?.value?.proficiencies ?: listOf(),
                             modifier = Modifier.fillMaxHeight()
                         )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun RestButton(viewModel: CharacterMainViewModel) {
+    var expanded by remember { mutableStateOf(false) }
+    val restTypes = listOf("Long rest", "Short rest")
+    var selectedRestType by remember { mutableStateOf(0) }
+    var typeDropDownExpanded by remember { mutableStateOf(false) }
+    Button(
+        onClick = { expanded = true },
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Rest", modifier = Modifier.padding(top = 11.dp, bottom = 11.dp))
+    }
+
+    if(expanded) {
+        Dialog(onDismissRequest = { expanded = false }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxHeight(0.6f)
+                    .fillMaxWidth(0.9f)
+            ) {
+                Column{
+                    Column(horizontalAlignment = Alignment.Start, modifier = Modifier.fillMaxHeight(0.8f)) {
+                        Box {
+                            Card(
+                                modifier = Modifier
+                                    .padding(top = 8.dp, start = 8.dp)
+                                    .clickable { typeDropDownExpanded = true }
+                            ) {
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    Text(
+                                        text = restTypes[selectedRestType],
+                                        style = MaterialTheme.typography.h5
+                                    )
+
+                                    Icon(Icons.Default.ArrowDropDown, "Drop down")
+                                }
+                            }
+                            DropdownMenu(
+                                expanded = typeDropDownExpanded,
+                                onDismissRequest = { typeDropDownExpanded = false }) {
+                                restTypes.forEachIndexed { index, text ->
+                                    DropdownMenuItem(onClick = {
+                                        typeDropDownExpanded = false
+                                        selectedRestType = index
+                                    }) {
+                                        Text(text)
+                                    }
+                                }
+                            }
+                        }
+
+                        //TODO implement me
+                        //Short rest
+                        if(selectedRestType == 1) {
+                            //Hit die
+
+                        }
+
+
+                    }
+                    val scope = rememberCoroutineScope { Dispatchers.IO }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                       Button(onClick = { expanded = false }) {
+                           Text("Cancel")
+                       }
+
+                       Button(onClick = {
+                              when(selectedRestType) {
+                                  //Long rest
+                                  0 -> {
+                                      scope.launch {
+                                          viewModel.longRest()
+                                      }
+                                  }
+                                  //Short rest
+                                  1 -> {
+                                      scope.launch {
+                                          viewModel.shortRest() //TODO pass in hit die data
+                                      }
+                                  }
+                              }
+                           expanded = false
+                       }) {
+                           Text("Rest")
+                       }
                     }
                 }
             }

@@ -839,13 +839,25 @@
             ],
             "proficiencies": [
                 {
-                    "name": "Armor: Light armor"
+                    "name": "Light armor"
                 },
                 {
-                    "name": "Weapons: Simple weapons, hand crossbows, longswords, rapiers, shortswords"
+                    "name": "Simple weapons"
                 },
                 {
-                    "name": "Tools: Three musical instruments of your choice",
+                    "name" : "Hand crossbows"
+                },
+                {
+                    "name" : "Longswords"
+                },
+                {
+                    "name" : "Rapiers"
+                },
+                {
+                    "name" : "Shortswords"
+                },
+                {
+                    "name": "Three musical instruments of your choice",
                     "choose": 3,
                     "from": [
                         {
@@ -854,10 +866,10 @@
                     ]
                 },
                 {
-                    "name": "Saving Throws: Dexterity, Charisma"
+                    "name" : "Saving throw (Dexterity)"
                 },
                 {
-                    "name": "Saving Throws: Strength, Constitution"
+                    "name" : "Saving throw (Charisma)"
                 },
                 {
                     "name": "Survival"

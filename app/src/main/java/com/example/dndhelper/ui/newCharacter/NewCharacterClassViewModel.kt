@@ -22,7 +22,8 @@ public class NewCharacterClassViewModel @Inject constructor(
     lateinit var classes : LiveData<List<Class>>
     var id = -1
     var isBaseClass =  mutableStateOf(true)
-    var takeGold =  mutableStateOf(true)
+    var takeGold =  mutableStateOf(false)
+    var goldRolled = mutableStateOf("6")
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var character : Character?  = null
     val spells = mutableStateListOf<Spell>()
@@ -133,7 +134,7 @@ public class NewCharacterClassViewModel @Inject constructor(
             newClass.spellCasting?.known?.addAll(spells.toList())
         }
 
-        character!!.addClass(newClass)
+        character!!.addClass(newClass, takeGold.value, goldRolled.value.toInt() * 10)
         character.let { repository.insertCharacter(it) }
     }
 

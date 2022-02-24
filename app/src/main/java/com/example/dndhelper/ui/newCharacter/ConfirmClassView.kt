@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -270,7 +271,22 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                         backgroundColor = MaterialTheme.colors.surface
                     ) {
                         Column(Modifier.padding(start = 5.dp)) {
-                            //TODO add a starting gold card here.
+                            Text(text = "Starting gold", style = MaterialTheme.typography.h6)
+                            Text(text = "${classes.value?.get(classIndex)?.startingGoldD4s}d4 * 10", style = MaterialTheme.typography.subtitle1)
+                            Row {
+                                //TODO validate
+                                BasicTextField(
+                                    modifier = Modifier.width(IntrinsicSize.Min),
+                                    value = viewModel.goldRolled.value,
+                                    onValueChange = {
+                                        viewModel.goldRolled.value = it
+                                    },
+                                    textStyle = MaterialTheme.typography.h6,
+                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                                    singleLine = true
+                                )
+                                Text(text = " * 10", style = MaterialTheme.typography.h6)
+                            }
                         }
                     }
                 }

@@ -153,18 +153,22 @@ data class Character(
         return result
     }
 
-    fun addClass(newClass: Class) {
+    fun addClass(newClass: Class, takeGold: Boolean, goldRolled: Int) {
         backpack.classCurrency = Currency.getEmptyCurrencyMap()
         backpack.classItems = mutableListOf()
         if(newClass.isBaseClass) {
-            newClass.equipment.let { items ->
-                for (itemInterface in items) {
-                    backpack.addClassItems(listOf(itemInterface))
+            if(takeGold) {
+                backpack.classCurrency["gp"]?.amount = (backpack.classCurrency["gp"]?.amount ?: 0) + goldRolled
+            } else {
+                newClass.equipment.let { items ->
+                    for (itemInterface in items) {
+                        backpack.addClassItems(listOf(itemInterface))
+                    }
                 }
-            }
 
-            newClass.equipmentChoices.forEach {
-                it.chosen?.let { items -> backpack.classItems.addAll(items) }
+                newClass.equipmentChoices.forEach {
+                    it.chosen?.let { items -> backpack.classItems.addAll(items) }
+                }
             }
         }
         val alreadyHasCasterClass = classes.run {

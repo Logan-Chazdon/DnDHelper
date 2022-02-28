@@ -33,7 +33,11 @@ import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavController, classIndex: Int) {
+fun ConfirmClassView(
+    viewModel: NewCharacterClassViewModel,
+    navController: NavController,
+    classIndex: Int
+) {
     viewModel.classIndex = classIndex
     val classes = viewModel.classes.observeAsState()
     val mainLooper = Looper.getMainLooper()
@@ -128,7 +132,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Text(text = "Use as base class", fontSize = 20.sp)
                 Checkbox(
                     checked = viewModel.isBaseClass.value,
@@ -223,7 +227,7 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     }
                 }
 
-                if(!viewModel.takeGold.value) {
+                if (!viewModel.takeGold.value) {
                     val equipmentChoices =
                         viewModel.classes.observeAsState().value?.get(classIndex)?.equipmentChoices
                     equipmentChoices?.forEach { choice ->
@@ -272,7 +276,10 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
                     ) {
                         Column(Modifier.padding(start = 5.dp)) {
                             Text(text = "Starting gold", style = MaterialTheme.typography.h6)
-                            Text(text = "${classes.value?.get(classIndex)?.startingGoldD4s}d4 * 10", style = MaterialTheme.typography.subtitle1)
+                            Text(
+                                text = "${classes.value?.get(classIndex)?.startingGoldD4s}d4 * 10",
+                                style = MaterialTheme.typography.subtitle1
+                            )
                             Row {
                                 //TODO validate
                                 BasicTextField(
@@ -399,187 +406,152 @@ fun ConfirmClassView(viewModel: NewCharacterClassViewModel, navController: NavCo
             val levelPath = viewModel.classes.observeAsState().value?.get(classIndex)?.levelPath
             if (levelPath != null) {
                 for (choice in levelPath) {
-                    if (levels.value.text.isNotBlank())
+                    if (levels.value.text.isNotBlank()) {
                         if (choice.grantedAtLevel <= levels.value.text.toInt()) {
-                            val color = if (choice.choose.num(levels.value.text) != 0) {
-                                MaterialTheme.colors.surface
-                            } else {
-                                MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
-                                    .compositeOver(MaterialTheme.colors.background)
-                            }
-                            Card(
-                                elevation = 5.dp,
-                                modifier = Modifier
-                                    .fillMaxWidth(0.95f)
-                                    .background(color = color, shape = RoundedCornerShape(10.dp)),
-                                backgroundColor = color
-                            ) {
-                                Column(Modifier.padding(start = 5.dp)) {
-                                    Text(text = choice.name, style = MaterialTheme.typography.h6)
-                                    Text(
-                                        text = choice.description,
-                                        style = MaterialTheme.typography.caption
-                                    )
-
-
-
-                                    if (choice.choose.num(levels.value.text) != 0) {
-                                        val options = choice.getAvailableOptions(
-                                            viewModel.character,
-                                            viewModel.proficiencies,
-                                            levels.value.text
-                                        )
-                                        MultipleChoiceDropdownView(
-                                            state = viewModel.dropDownStates.getDropDownState(
-                                                key = choice.name + choice.grantedAtLevel,
-                                                choiceName = choice.name,
-                                                maxSelections = choice.choose.num(levels.value.text),
-                                                names = options.let { list ->
-                                                    val result = mutableListOf<String>()
-                                                    list.forEach {
-                                                        result.add(it.name)
-                                                    }
-                                                    result
-                                                }
-                                            )
-                                        )
-                                    }
-                                }
-                            }
+                            FeatureView(
+                                feature = choice,
+                                level = try {
+                                    levels.value.text.toInt()
+                                } catch (e: java.lang.NumberFormatException) {
+                                    0
+                                },
+                                character = viewModel.character,
+                                proficiencies = viewModel.proficiencies,
+                                dropDownStates = viewModel.dropDownStates
+                            )
                         }
+                    }
+
                 }
             }
         }
-    }
 
-    if (spellsExpanded) {
-        Dialog(
-            onDismissRequest = {
-                spellsExpanded = false
-            },
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false,
-                dismissOnClickOutside = true
-            )
-        ) {
-            Card(
-                modifier = Modifier.fillMaxSize(0.9f),
-                shape = RoundedCornerShape(10.dp),
-                elevation = 10.dp
+        if (spellsExpanded) {
+            Dialog(
+                onDismissRequest = {
+                    spellsExpanded = false
+                },
+                properties = DialogProperties(
+                    usePlatformDefaultWidth = false,
+                    dismissOnClickOutside = true
+                )
             ) {
-                Column {
-                    var search by remember { mutableStateOf("") }
-                    Row(
-                        Modifier
-                            .fillMaxWidth(),
-                    ) {
-                        TextField(
-                            value = search,
-                            label = {
-                                Text("Search")
-                            },
-                            onValueChange = {
-                                search = it
-                            },
-                            singleLine = true,
-                            textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-                            modifier = Modifier.fillMaxWidth(),
-                            trailingIcon = {
-                                Icon(
-                                    Icons.Default.Search,
-                                    "Search"
-                                )
-                            }
-                        )
-                    }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .verticalScroll(state = rememberScrollState())
-                    ) {
-                        viewModel.getSpells(classIndex).let { spells ->
-                            var lastCategory: Int = -1
-                            spells.forEach {
-                                //TODO upgrade search
-                                if (search == "" || it.name.lowercase()
-                                        .contains(search.lowercase())
-                                ) {
-                                    Column {
-                                        if (lastCategory != it.level) {
-                                            lastCategory = it.level
-                                            Text(
-                                                text = it.levelName,
-                                                style = MaterialTheme.typography.h5
-                                            )
-                                        }
-                                        Card(
-                                            shape = RoundedCornerShape(5.dp),
-                                            elevation = 2.dp,
-                                            modifier = Modifier
-                                                //TODO long clickable for detail view
-                                                .clickable {
-                                                    if (
-                                                        viewModel.canAffordSpellOfLevel(
-                                                            it.level,
-                                                            classIndex,
-                                                            levels.value.text.toInt()
-                                                        )
-                                                        || viewModel.spells.contains(it)
-                                                    ) {
-                                                        viewModel.toggleSpell(it)
+                Card(
+                    modifier = Modifier.fillMaxSize(0.9f),
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 10.dp
+                ) {
+                    Column {
+                        var search by remember { mutableStateOf("") }
+                        Row(
+                            Modifier
+                                .fillMaxWidth(),
+                        ) {
+                            TextField(
+                                value = search,
+                                label = {
+                                    Text("Search")
+                                },
+                                onValueChange = {
+                                    search = it
+                                },
+                                singleLine = true,
+                                textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+                                modifier = Modifier.fillMaxWidth(),
+                                trailingIcon = {
+                                    Icon(
+                                        Icons.Default.Search,
+                                        "Search"
+                                    )
+                                }
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(state = rememberScrollState())
+                        ) {
+                            viewModel.getSpells(classIndex).let { spells ->
+                                var lastCategory: Int = -1
+                                spells.forEach {
+                                    //TODO upgrade search
+                                    if (search == "" || it.name.lowercase()
+                                            .contains(search.lowercase())
+                                    ) {
+                                        Column {
+                                            if (lastCategory != it.level) {
+                                                lastCategory = it.level
+                                                Text(
+                                                    text = it.levelName,
+                                                    style = MaterialTheme.typography.h5
+                                                )
+                                            }
+                                            Card(
+                                                shape = RoundedCornerShape(5.dp),
+                                                elevation = 2.dp,
+                                                modifier = Modifier
+                                                    //TODO long clickable for detail view
+                                                    .clickable {
+                                                        if (
+                                                            viewModel.canAffordSpellOfLevel(
+                                                                it.level,
+                                                                classIndex,
+                                                                levels.value.text.toInt()
+                                                            )
+                                                            || viewModel.spells.contains(it)
+                                                        ) {
+                                                            viewModel.toggleSpell(it)
+                                                        }
+                                                    }
+                                                    .fillMaxWidth(),
+                                                backgroundColor = when {
+                                                    viewModel.spells.contains(it) -> {
+                                                        MaterialTheme.colors.primary
+                                                    }
+                                                    viewModel.canAffordSpellOfLevel(
+                                                        it.level,
+                                                        classIndex,
+                                                        levels.value.text.toInt()
+                                                    ) -> {
+                                                        MaterialTheme.colors.background
+                                                    }
+                                                    else -> {
+                                                        MaterialTheme.colors.onBackground.copy(0.5f)
+                                                            .compositeOver(MaterialTheme.colors.background)
                                                     }
                                                 }
-                                                .fillMaxWidth(),
-                                            backgroundColor = when {
-                                                viewModel.spells.contains(it) -> {
-                                                    MaterialTheme.colors.primary
-                                                }
-                                                viewModel.canAffordSpellOfLevel(
-                                                    it.level,
-                                                    classIndex,
-                                                    levels.value.text.toInt()
-                                                ) -> {
-                                                    MaterialTheme.colors.background
-                                                }
-                                                else -> {
-                                                    MaterialTheme.colors.onBackground.copy(0.5f)
-                                                        .compositeOver(MaterialTheme.colors.background)
-                                                }
-                                            }
-                                        ) {
-                                            //TODO add more data here
-                                            Row(
-                                                modifier = Modifier.padding(5.dp)
                                             ) {
-                                                Text(
-                                                    text = it.name,
-                                                    modifier = Modifier.width(100.dp)
-                                                )
-                                                Text(
-                                                    text = it.damage,
-                                                    modifier = Modifier.width(150.dp)
-                                                )
-                                                Text(
-                                                    text = it.range,
-                                                    modifier = Modifier.width(40.dp)
-                                                )
-                                                Text(
-                                                    text = it.castingTime,
-                                                    modifier = Modifier.width(90.dp)
-                                                )
+                                                //TODO add more data here
+                                                Row(
+                                                    modifier = Modifier.padding(5.dp)
+                                                ) {
+                                                    Text(
+                                                        text = it.name,
+                                                        modifier = Modifier.width(100.dp)
+                                                    )
+                                                    Text(
+                                                        text = it.damage,
+                                                        modifier = Modifier.width(150.dp)
+                                                    )
+                                                    Text(
+                                                        text = it.range,
+                                                        modifier = Modifier.width(40.dp)
+                                                    )
+                                                    Text(
+                                                        text = it.castingTime,
+                                                        modifier = Modifier.width(90.dp)
+                                                    )
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
 
+                        }
                     }
                 }
             }
         }
     }
 }
-
-
-

@@ -117,7 +117,7 @@ class Repository @Inject constructor(
         return dao?.findCharacterById(id)
     }
 
-    suspend fun getLiveCharacterById(id: Int) : LiveData<Character>? {
+    fun getLiveCharacterById(id: Int) : LiveData<Character>? {
         return dao?.findLiveCharacterById(id)
     }
 

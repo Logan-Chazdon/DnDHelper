@@ -158,7 +158,22 @@ class Converters {
     }
 
     @TypeConverter
-    fun storedStringToSubrace(data: String?): List<Subrace>? {
+    fun storedStringToLanguageChoices(data: String?): List<LanguageChoice>? {
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<List<LanguageChoice>?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun languageChoicesToStoredString(myObjects: List<LanguageChoice>?): String? {
+        return gson.toJson(myObjects)
+    }
+
+
+    @TypeConverter
+    fun storedStringToSubraces(data: String?): List<Subrace>? {
         if (data == null) {
             return null
         }
@@ -167,7 +182,21 @@ class Converters {
     }
 
     @TypeConverter
-    fun subraceToStoredString(myObjects: List<Subrace>): String? {
+    fun subracesToStoredString(myObjects: List<Subrace>): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToSubrace(data: String?): Subrace? {
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<Subrace>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun subraceToStoredString(myObjects: Subrace): String? {
         return gson.toJson(myObjects)
     }
 

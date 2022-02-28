@@ -55,8 +55,7 @@ fun RaceView(
                     Column {
 
                         Text(text = "Languages", style = MaterialTheme.typography.subtitle1)
-                        Row()
-                        {
+                        Row {
                             for (language in race.languages) {
                                 Text(text = language.name.toString(), modifier = Modifier.padding(start = 5.dp))
                                 Spacer(modifier = Modifier.width(10.dp))
@@ -72,7 +71,7 @@ fun RaceView(
                         Row()
                         {
                             Column() {
-                            for(abilityBonus in race.abilityBonuses) {
+                                race.abilityBonuses?.forEach { abilityBonus ->
                                     Text(text = abilityBonus.toString())
                                 }
                             }

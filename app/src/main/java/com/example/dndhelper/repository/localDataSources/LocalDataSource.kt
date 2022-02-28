@@ -822,17 +822,19 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val raceJson = racesJson.getJSONObject(raceIndex)
             val name = raceJson.getString("name")
             val groundSpeed = raceJson.getInt("ground_speed")
-            val abilityBonuses = extractLocalAbilityBonuses(raceJson.getJSONArray("ability_bonuses"))
-            val alignment = raceJson.getString("alignment")
+            val abilityBonuses = try { extractLocalAbilityBonuses(raceJson.getJSONArray("ability_bonuses")) }
+            catch(e: JSONException) { null }
+            val alignment = try { raceJson.getString("alignment") } catch (e: JSONException) {null}
             val age = raceJson.getString("age")
             val size = raceJson.getString("size")
             val sizeDesc = raceJson.getString("size_desc")
             val startingProficiencies = extractProficiencies(raceJson.getJSONArray("proficiencies"))
-            val languages = extractLangs(raceJson.getJSONArray("languages"))
             val languageDesc = raceJson.getString("language_desc")
             val traits = extractFeatures(raceJson.getJSONArray("features"))
-            val subraces = mutableListOf<Subrace>() //TODO
-
+            val subraces = try { extractSubraces(raceJson.getJSONArray("subraces")) }  catch (e: JSONException) { null }
+            val languages = mutableListOf<Language>()
+            val languageChoices = mutableListOf<LanguageChoice>()
+            extractLangs(raceJson.getJSONArray("languages"), languages, languageChoices)
 
             races.add(
                 Race(
@@ -845,26 +847,94 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     sizeDesc = sizeDesc,
                     startingProficiencies = startingProficiencies,
                     languages = languages,
+                    languageChoices = languageChoices,
                     languageDesc = languageDesc,
                     traits = traits,
-                    subraces = subraces.toList()
+                    subraces = subraces
                 )
             )
         }
         _races.value = races
     }
 
-    private fun extractLangs(languagesJson : JSONArray) : List<Language> {
-        val langs = mutableListOf<Language>()
-        for(langIndex in 0 until languagesJson.length()) {
-            val langJson = languagesJson.getJSONObject(langIndex)
-            langs.add(
-                Language(
-                    name = langJson.getString("name")
+    private fun extractSubraces(jsonArray: JSONArray)  : List<Subrace> {
+        val subraces = mutableListOf<Subrace>()
+        for(index in 0 until jsonArray.length()) {
+            val subraceJson = jsonArray.getJSONObject(index)
+            val languages = mutableListOf<Language>()
+            val languageChoices = mutableListOf<LanguageChoice>()
+            try {
+                extractLangs(subraceJson.getJSONArray("languages"), languages, languageChoices)
+            } catch (e : JSONException) {
+
+            }
+            subraces.add(
+                Subrace(
+                    name = subraceJson.getString("name"),
+                    abilityBonuses = try { extractLocalAbilityBonuses(subraceJson.getJSONArray("ability_bonuses")) }
+                    catch (e: JSONException) { null },
+                    startingProficiencies = try { extractProficiencies(subraceJson.getJSONArray("proficiencies")) }
+                    catch (e: JSONException) { null },
+                    languages = languages,
+                    languageChoices = languageChoices,
+                    traits = try { extractFeatures(subraceJson.getJSONArray("features")) } catch (e: JSONException) { listOf() },
+                    size = try { subraceJson.getString("size") } catch (e: JSONException) { null },
+                    groundSpeed =  try { subraceJson.getInt("ground_speed") } catch (e: JSONException) { null },
                 )
             )
         }
-        return langs
+        return subraces
+    }
+
+
+
+    private fun extractLangs(languagesJson : JSONArray, languages: MutableList<Language>, languageChoices: MutableList<LanguageChoice>) {
+        for(langIndex in 0 until languagesJson.length()) {
+            val langJson = languagesJson.getJSONObject(langIndex)
+            var choose = 0
+            try {
+                choose = langJson.getInt("choose")
+            } catch (e : JSONException) { }
+
+            if(choose == 0) {
+                languages.add(Language(langJson.getString("name")))
+            } else {
+                val from = mutableListOf<Language>()
+                var index : String? = null
+                var langName : String? = null
+                val languageChoicesJson = langJson.getJSONArray("from")
+                for(langChoiceIndex in 0 until languageChoicesJson.length()) {
+                    val choiceJson = languageChoicesJson.getJSONObject(langChoiceIndex)
+
+                    try {
+                        index = choiceJson.getString("index")
+                        if(index == "all_languages") { //If we add more language indexes this may need to be moved into a function
+                            _languages.value?.let { from.addAll(it) }
+                        }
+                    } catch (e: JSONException) {
+
+                        try {
+                            langName = choiceJson.getString("name")
+                        } catch (e: JSONException) {
+                        }
+
+                        from.add(
+                            Language(
+                                name = langName,
+                                index = index
+                            )
+                        )
+                    }
+                }
+                languageChoices.add(
+                    LanguageChoice(
+                        name = langJson.getString("name"),
+                        choose = choose,
+                        from = from
+                    )
+                )
+            }
+        }
     }
 
 

@@ -67,7 +67,7 @@ data class Character(
     get() {
         val result = mutableListOf<Pair<Int, Feature>>()
         race?.let { race ->
-            race.traits.forEach {
+            race.getAllTraits().forEach {
                 result.add(totalClassLevels to it)
             }
         }

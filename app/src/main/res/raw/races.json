@@ -1,157 +1,222 @@
 {
-  "races" : [
-    {
-      "name" : "Aarakocra",
-      "ability_bonuses" : [
+    "races": [
         {
-          "name" : "Dexterity",
-          "bonus" : 2
+            "name": "Aarakocra",
+            "ability_bonuses": [
+                {
+                    "name": "Dexterity",
+                    "bonus": 2
+                },
+                {
+                    "name": "Wisdom",
+                    "bonus": 1
+                }
+            ],
+            "age": "Aarakocra reach maturity by age 3. Compared to humans, aarakocra don’t usually live longer than 30 years.",
+            "alignment": "Most aarakocra are good and rarely choose sides when it comes to law and chaos. Tribal leaders and warriors might be lawful, while explorers and adventurers might tend toward chaotic",
+            "size": "Medium",
+            "size_desc": "Aarakocra are about 5 feet tall. They have thin, lightweight bodies that weigh between 80 and 100 pounds. Your size is Medium.",
+            "ground_speed": 25,
+            "air_speed": 50,
+            "air_speed_desc": "You have a flying speed of 50 feet. To use this speed, you can’t be wearing medium or heavy armor.",
+            "languages": [
+                {
+                    "name": "Common"
+                },
+                {
+                    "name": "Aarakocra"
+                },
+                {
+                    "name": "Auran"
+                }
+            ],
+            "language_desc": "You can speak, read, and write Common, Aarakocra, and Auran.",
+            "features": [
+                {
+                    "name": "Talons",
+                    "desc": "Your talons are natural weapons, which you can use to make unarmed strikes. If you hit with them, you deal slashing damage equal to 1d4 + your Strength modifier, instead of the bludgeoning damage normal for an unarmed strike.",
+                    "level": 0,
+                    "choose": 0
+                }
+            ],
+            "proficiencies": [
+            ],
+            "subraces": [
+            ]
         },
         {
-          "name" : "Wisdom",
-          "bonus" : 1
+            "name": "Dragonborn",
+            "age": "Young dragonborn grow quickly. They walk hours after hatching, attain the size and development of a 10-year-old human child by the age of 3, and reach adulthood by 15. They live to be around 80.",
+            "size": "Medium",
+            "size_desc": "Dragonborn are taller and heavier than humans, standing well over 6 feet tall and averaging almost 250 pounds. Your size is Medium.",
+            "ground_speed": 30,
+            "languages": [
+                {
+                    "name": "Common"
+                },
+                {
+                    "name": "Draconic"
+                }
+            ],
+            "language_desc": "You can speak, read, and write Common and Draconic. Draconic is thought to be one of the oldest languages and is often used in the study of magic. The language sounds harsh to most other creatures and includes numerous hard consonants and sibilants.",
+            "features": [
+                {
+                    "name": "Draconic Ancestry",
+                    "desc": "You have draconic ancestry. Choose one type of dragon from the Draconic Ancestry table. Your breath weapon and damage resistance are determined by the dragon type, as shown in the table.",
+                    "level": 0,
+                    "choose": 1,
+                    "index" : "Draconic Ancestry",
+                    "from": [
+                        {
+                            "name": "Black",
+                            "desc": "You deal acid damage in 5 by 30 ft. line (Dex. save)"
+                        },
+                        {
+                            "name": "Blue",
+                            "desc": "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+                        },
+                        {
+                            "name": "Brass",
+                            "desc": "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+                        },
+                        {
+                            "name": "Bronze",
+                            "desc": "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+                        },
+                        {
+                            "name": "Copper",
+                            "desc": "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
+                        },
+                        {
+                            "name": "Gold",
+                            "desc": "You deal Lightning damage in 15 ft. cone (Dex. save)"
+                        },
+                        {
+                            "name": "Green",
+                            "desc": "You deal Lightning damage in 15 ft. cone (Dex. save)"
+                        },
+                        {
+                            "name": "Red",
+                            "desc": "You deal Lightning damage in 15 ft. cone (Dex. save)"
+                        },
+                        {
+                            "name": "Silver",
+                            "desc": "You deal Lightning damage in 15 ft. cone (Dex. save)"
+                        },
+                        {
+                            "name": "White",
+                            "desc": "You deal Lightning damage in 15 ft. cone (Dex. save)"
+                        }
+                    ]
+                }
+            ],
+            "proficiencies": [
+            ],
+            "subraces": [
+                {
+                    "name": "Standard Dragonborn",
+                    "ability_bonuses": [
+                        {
+                            "name": "Strength",
+                            "bonus": 2
+                        },
+                        {
+                            "name": "Charisma",
+                            "bonus": 1
+                        }
+                    ],
+                    "features": [
+                        {
+                            "name": "Damage Resistance",
+                            "desc": "You have resistance to the damage type associated with your ancestry."
+                        }
+                    ]
+                },
+                {
+                    "name": "Draconblood",
+                    "ability_bonuses": [
+                        {
+                            "name": "Intelligence",
+                            "bonus": 2
+                        },
+                        {
+                            "name": "Charisma",
+                            "bonus": 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Darkvision",
+                            "desc" : "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                        },
+                        {
+                            "name" : "Forceful Presence",
+                            "desc" : "When you make a Intimidation or Persuasion check, you can do so with advantage once per long rest.",
+                            "comment" : "TODO implement resource here"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Ravenite",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Strength",
+                            "bonus" : 2
+                        },
+                        {
+                            "name" : "Constitution",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Darkvision",
+                            "desc" : "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                        },
+                        {
+                            "name" : "Vengeful Assault",
+                            "desc" : "When you take damage from a creature in range of a weapon you are wielding, you can use your reaction to make an attack against that creature. You can do this once per short or long rest."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Chromatic Dragonborn",
+                    "comment" : "Find a way to do ability bonuses here",
+                    "size" : "Medium",
+                    "ground_speed" : 30,
+                    "features" : [
+                        {
+                            "name" : "Chromatic Ancestry",
+                            "desc" : "You trace your ancestry to a chromatic dragon, granting you a special magical affinity. Choose one type of dragon from the Chromatic Ancestry table. This determines the damage type for your other traits as shown in the table.",
+                            "index" : "Draconic Ancestry",
+                            "choose" : 1,
+                            "level": 0,
+                            "from" : [
+                                {
+                                    "name" : "Black",
+                                    "desc" : "Acid"
+                                },
+                                {
+                                    "name" : "Blue",
+                                    "desc" : "Lightning"
+                                },
+                                {
+                                    "name" : "Green",
+                                    "desc" : "Poison"
+                                },
+                                {
+                                    "name" : "Red",
+                                    "desc" : "Fire"
+                                },
+                                {
+                                    "name" : "White",
+                                    "desc" : "Cold"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
-      ],
-
-      "age" : "Aarakocra reach maturity by age 3. Compared to humans, aarakocra don’t usually live longer than 30 years.",
-      "alignment": "Most aarakocra are good and rarely choose sides when it comes to law and chaos. Tribal leaders and warriors might be lawful, while explorers and adventurers might tend toward chaotic",
-      "size" : "Medium",
-      "size_desc" : "Aarakocra are about 5 feet tall. They have thin, lightweight bodies that weigh between 80 and 100 pounds. Your size is Medium.",
-      "ground_speed" :  25,
-      "air_speed" : 50,
-      "air_speed_desc"  : "You have a flying speed of 50 feet. To use this speed, you can’t be wearing medium or heavy armor.",
-
-      "languages" : [
-        {
-          "name" : "Common"
-        },
-        {
-          "name" : "Aarakocra"
-        },
-        {
-          "name" : "Auran"
-        }
-
-      ],
-
-      "language_desc" : "You can speak, read, and write Common, Aarakocra, and Auran.",
-
-      "features" : [
-        {
-          "name" : "Talons",
-          "desc" : "Your talons are natural weapons, which you can use to make unarmed strikes. If you hit with them, you deal slashing damage equal to 1d4 + your Strength modifier, instead of the bludgeoning damage normal for an unarmed strike.",
-          "level" : 0,
-          "choose" : 0
-        }
-      ],
-
-      "proficiencies" : [
-
-      ],
-
-      "subraces" : [
-
-      ]
-
-    },
-    {
-      "name" : "Dragonborn",
-      "ability_bonuses" : [
-        {
-          "name" : "Strength",
-          "bonus" : 2
-        },
-        {
-          "name" : "Charisma",
-          "bonus" : 1
-        }
-      ],
-
-      "age" : "Young dragonborn grow quickly. They walk hours after hatching, attain the size and development of a 10-year-old human child by the age of 3, and reach adulthood by 15. They live to be around 80.",
-      "alignment": "Most aarakocra are good and rarely choose sides when it comes to law and chaos. Tribal leaders and warriors might be lawful, while explorers and adventurers might tend toward chaotic",
-      "size" : "Medium",
-      "size_desc" : "Dragonborn are taller and heavier than humans, standing well over 6 feet tall and averaging almost 250 pounds. Your size is Medium.",
-      "ground_speed" :  30,
-      "languages" : [
-        {
-          "name" : "Common"
-        },
-        {
-          "name" : "Draconic"
-        }
-
-      ],
-
-      "language_desc" : "You can speak, read, and write Common and Draconic. Draconic is thought to be one of the oldest languages and is often used in the study of magic. The language sounds harsh to most other creatures and includes numerous hard consonants and sibilants.",
-
-      "features" : [
-        {
-          "name" : "Draconic Ancestry",
-          "desc" : "You have draconic ancestry. Choose one type of dragon from the Draconic Ancestry table. Your breath weapon and damage resistance are determined by the dragon type, as shown in the table.",
-          "level" : 0,
-          "choose" : 1,
-          "from" : [
-            {
-              "name" : "Black",
-              "desc" : "You deal acid damage in 5 by 30 ft. line (Dex. save)"
-            },
-            {
-              "name" : "Blue",
-              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
-            },
-            {
-              "name" : "Brass",
-              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
-            },
-            {
-              "name" : "Bronze",
-              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
-            },
-            {
-              "name" : "Copper",
-              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
-            },
-             {
-              "name" : "Bronze",
-              "desc" : "You deal Lightning damage in 5 by 30 ft. line (Dex. save)"
-            },
-             {
-              "name" : "Gold",
-              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
-            },
-             {
-              "name" : "Green",
-              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
-            },
-             {
-              "name" : "Red",
-              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
-            },
-             {
-              "name" : "Silver",
-              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
-            },
-              {
-              "name" : "White",
-              "desc" : "You deal Lightning damage in 15 ft. cone (Dex. save)"
-            }
-          ]
-        }
-      ],
-
-      "proficiencies" : [
-
-      ],
-
-      "subraces" : [
-        {
-          "name": "Chromatic Dragonborn TODO"
-
-        }
-
-      ]
-
-    }
-
-  ]
+    ]
 }

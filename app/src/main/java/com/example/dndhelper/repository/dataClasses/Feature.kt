@@ -38,13 +38,13 @@ data class Feature(
     fun getAvailableOptions(
         character: Character?,
         assumedProficiencies: List<Proficiency>,
-        level: String
+        level: Int
     ): MutableList<Feature> {
         val result = mutableListOf<Feature>()
 
         options?.forEach {
             if(
-                try {level.toInt() >= it.grantedAtLevel} catch(e: NumberFormatException) {false} &&
+                try {level >= it.grantedAtLevel} catch(e: NumberFormatException) {false} &&
                 it.prerequisite?.check(character, assumedProficiencies) != false
             ) {
                 result.add(it)

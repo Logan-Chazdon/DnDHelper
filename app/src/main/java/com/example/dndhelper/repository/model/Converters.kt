@@ -128,6 +128,19 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToAbilityBonusChoice(data: String?): AbilityBonusChoice? {
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<AbilityBonusChoice?>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun abilityBonusChoiceToStoredString(myObjects: AbilityBonusChoice?): String? {
+        return gson.toJson(myObjects)
+    }
 
     @TypeConverter
     fun storedStringToProficiency(data: String?): List<Proficiency>? {

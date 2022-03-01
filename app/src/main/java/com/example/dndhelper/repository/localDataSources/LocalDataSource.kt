@@ -822,8 +822,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val raceJson = racesJson.getJSONObject(raceIndex)
             val name = raceJson.getString("name")
             val groundSpeed = raceJson.getInt("ground_speed")
-            val abilityBonuses = try { extractLocalAbilityBonuses(raceJson.getJSONArray("ability_bonuses")) }
-            catch(e: JSONException) { null }
             val alignment = try { raceJson.getString("alignment") } catch (e: JSONException) {null}
             val age = raceJson.getString("age")
             val size = raceJson.getString("size")
@@ -836,11 +834,19 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val languageChoices = mutableListOf<LanguageChoice>()
             extractLangs(raceJson.getJSONArray("languages"), languages, languageChoices)
 
+
+            val abilityBonuses = mutableListOf<AbilityBonus>()
+            var abilityBonusChoice: AbilityBonusChoice? = null
+            try {
+                abilityBonusChoice =  extractAbilityBonuses(raceJson.getJSONArray("ability_bonuses"), abilityBonuses)
+            } catch (e: JSONException) {}
+
             races.add(
                 Race(
                     name = name,
                     groundSpeed = groundSpeed,
                     abilityBonuses = abilityBonuses,
+                    abilityBonusChoice = abilityBonusChoice,
                     alignment = alignment,
                     age = age,
                     size = size,
@@ -868,11 +874,17 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             } catch (e : JSONException) {
 
             }
+            val abilityBonuses = mutableListOf<AbilityBonus>()
+            var abilityBonusChoice : AbilityBonusChoice? = null
+            try {
+                abilityBonusChoice = extractAbilityBonuses(subraceJson.getJSONArray("ability_bonuses"), abilityBonuses)
+            } catch (e: JSONException) {}
+
             subraces.add(
                 Subrace(
                     name = subraceJson.getString("name"),
-                    abilityBonuses = try { extractLocalAbilityBonuses(subraceJson.getJSONArray("ability_bonuses")) }
-                    catch (e: JSONException) { null },
+                    abilityBonuses = abilityBonuses,
+                    abilityBonusChoice = abilityBonusChoice,
                     startingProficiencies = try { extractProficiencies(subraceJson.getJSONArray("proficiencies")) }
                     catch (e: JSONException) { null },
                     languages = languages,
@@ -972,18 +984,30 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         return proficiencies
     }
 
-    private fun extractLocalAbilityBonuses(abilityBonusesJson: JSONArray) : List<AbilityBonus> {
-        val abilityBonuses = mutableListOf<AbilityBonus>()
+    private fun extractAbilityBonuses(abilityBonusesJson: JSONArray, abilityBonuses: MutableList<AbilityBonus>): AbilityBonusChoice? {
+        var abilityBonusChoice : AbilityBonusChoice? = null
         for(abilityBonusIndex in 0 until abilityBonusesJson.length()) {
             val abilityBonusJson = abilityBonusesJson.getJSONObject(abilityBonusIndex)
-            abilityBonuses.add(
-                AbilityBonus(
-                    ability = abilityBonusJson.getString("name"),
-                    bonus = abilityBonusJson.getInt("bonus")
+            try {
+                when(abilityBonusJson.getString("index")) {
+                    "any" -> {
+                        abilityBonusChoice = AbilityBonusChoice(
+                                from = AbilityBonusChoice.allStatsArray,
+                                choose=  abilityBonusJson.getInt("total"),
+                                maxOccurrencesOfAbility = abilityBonusJson.getInt("max_same")
+                            )
+                    }
+                }
+            } catch (e: JSONException) {
+                abilityBonuses.add(
+                    AbilityBonus(
+                        ability = abilityBonusJson.getString("name"),
+                        bonus = abilityBonusJson.getInt("bonus")
+                    )
                 )
-            )
+            }
         }
-        return abilityBonuses
+        return abilityBonusChoice
     }
 
     private fun extractProficienciesChoices(

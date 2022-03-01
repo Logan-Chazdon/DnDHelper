@@ -181,9 +181,13 @@
                 },
                 {
                     "name" : "Chromatic Dragonborn",
-                    "comment" : "Find a way to do ability bonuses here",
-                    "size" : "Medium",
-                    "ground_speed" : 30,
+                    "ability_bonuses" : [
+                        {
+                            "index" : "any",
+                            "total" : 3,
+                            "max_same" : 2
+                        }
+                    ],
                     "features" : [
                         {
                             "name" : "Chromatic Ancestry",

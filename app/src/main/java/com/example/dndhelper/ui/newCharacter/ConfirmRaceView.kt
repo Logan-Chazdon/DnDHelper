@@ -79,7 +79,14 @@ fun ConfirmRaceView(
         races.value?.get(raceIndex)
             ?.let { Text(text = it.sizeDesc, Modifier.padding(start = 5.dp, top = 5.dp)) }
         races.value?.get(raceIndex)
-            ?.let { it.alignment?.let { it1 -> Text(text = it1, Modifier.padding(start = 5.dp, top = 5.dp)) } }
+            ?.let {
+                it.alignment?.let { it1 ->
+                    Text(
+                        text = it1,
+                        Modifier.padding(start = 5.dp, top = 5.dp)
+                    )
+                }
+            }
         races.value?.get(raceIndex)?.let {
             Text(
                 text = "Speed: ${it.groundSpeed}",
@@ -94,86 +101,114 @@ fun ConfirmRaceView(
         ) {
             RaceContentCard("Languages") {
                 races.value?.get(raceIndex)?.languageDesc?.let { Text(text = it) }
-                if(!races.value?.get(raceIndex)?.languageChoices.isNullOrEmpty()) {
+                if (!races.value?.get(raceIndex)?.languageChoices.isNullOrEmpty()) {
                     //TODO
                 }
             }
 
             races.value?.get(raceIndex)?.abilityBonuses?.let { bonuses ->
-                RaceContentCard("Ability bonuses") {
+                if (bonuses.isNotEmpty())
+                    RaceContentCard("Ability bonuses") {
                         Row {
                             bonuses.forEach {
                                 Text(text = "${it.ability} +${it.bonus}  ")
                             }
                         }
-                }
+                    }
             }
 
             races.value?.get(raceIndex)?.let { race ->
-                    RaceFeaturesView(
-                        character = viewModel.character.observeAsState().value,
-                        features = viewModel.filterRaceFeatures(race),
-                        dropDownStates = viewModel.raceFeaturesDropdownStates,
-                        proficiencies = viewModel.proficiencies
-                    )
+                RaceFeaturesView(
+                    character = viewModel.character.observeAsState().value,
+                    features = viewModel.filterRaceFeatures(race),
+                    dropDownStates = viewModel.raceFeaturesDropdownStates,
+                    proficiencies = viewModel.proficiencies
+                )
             }
 
             races.value?.get(raceIndex)?.subraces?.let { subraces ->
                 if (races.value?.get(raceIndex)?.subraces?.isNotEmpty() == true) {
                     RaceContentCard("Subrace") {
-                            subraces[viewModel.subraceIndex.value].let { subrace ->
-                                Box {
-                                    var expanded by remember { mutableStateOf(false) }
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(5.dp),
-                                        modifier = Modifier.clickable { expanded = true }
-                                    ) {
-                                        Text(
-                                            text = subrace.name,
-                                            style = MaterialTheme.typography.body1,
-                                        )
-                                        Icon(
-                                            Icons.Default.ArrowDropDown,
-                                            "Drop down"
-                                        )
-                                    }
-                                    DropdownMenu(
-                                        expanded = expanded,
-                                        onDismissRequest = { expanded = false }
-                                    ) {
-                                        races.value?.get(raceIndex)?.subraces!!.forEachIndexed { index, item ->
-                                            DropdownMenuItem(onClick = {
-                                                viewModel.subraceIndex.value = index
-                                                expanded = false
-                                            }) {
-                                                Text(text = item.name)
-                                            }
-
-                                        }
-                                    }
-                                }
+                        subraces[viewModel.subraceIndex.value].let { subrace ->
+                            Box {
+                                var expanded by remember { mutableStateOf(false) }
                                 Row(
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                    modifier = Modifier.clickable { expanded = true }
                                 ) {
-                                    subrace.size?.let {
-                                        Text(it)
-                                    }
-                                    subrace.groundSpeed?.let {
-                                        Text("${it}ft")
+                                    Text(
+                                        text = subrace.name,
+                                        style = MaterialTheme.typography.body1,
+                                    )
+                                    Icon(
+                                        Icons.Default.ArrowDropDown,
+                                        "Drop down"
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    races.value?.get(raceIndex)?.subraces!!.forEachIndexed { index, item ->
+                                        DropdownMenuItem(onClick = {
+                                            viewModel.subraceIndex.value = index
+                                            expanded = false
+                                        }) {
+                                            Text(text = item.name)
+                                        }
+
                                     }
                                 }
                             }
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                subrace.size?.let {
+                                    Text(it)
+                                }
+                                subrace.groundSpeed?.let {
+                                    Text("${it}ft")
+                                }
+                            }
+                        }
                     }
 
                     subraces[viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
                         RaceContentCard("Ability bonuses") {
+                            if (bonuses.isNotEmpty())
                                 Row {
                                     bonuses.forEach {
                                         Text(text = "${it.ability} +${it.bonus}  ")
                                     }
                                 }
+                        }
+                    }
+
+                    subraces[viewModel.subraceIndex.value].abilityBonusChoice?.let { choice ->
+                        RaceContentCard("Ability bonuses") {
+                            val state = viewModel.subraceASIDropdownState.value.let {
+                                if (it == null) {
+                                    val newState = MultipleChoiceDropdownState()
+                                    newState.names = choice.from.let { list ->
+                                        val names = mutableListOf<String>()
+                                        list.forEach {
+                                            names.add(it.ability)
+                                        }
+                                        names
+                                    }
+
+                                    newState.maxSameSelections = choice.maxOccurrencesOfAbility
+                                    newState.choiceName = "Ability bonuses"
+                                    newState.maxSelections = choice.choose
+                                    viewModel.subraceASIDropdownState.value = newState
+                                    newState
+                                } else {
+                                    it
+                                }
                             }
+                            MultipleChoiceDropdownView(state = state)
+                        }
                     }
 
                     RaceFeaturesView(
@@ -209,9 +244,9 @@ private fun RaceContentCard(
 @Composable
 private fun RaceFeaturesView(
     character: Character?,
-    features : List<Feature>,
+    features: List<Feature>,
     dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>,
-    proficiencies : List<Proficiency>
+    proficiencies: List<Proficiency>
 ) {
     features.forEach { feature ->
         FeatureView(

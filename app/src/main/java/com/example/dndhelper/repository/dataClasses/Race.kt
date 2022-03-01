@@ -16,6 +16,7 @@ data class Race (
     val name : String,
     val groundSpeed: Int,
     val abilityBonuses: List<AbilityBonus>?,
+    val abilityBonusChoice: AbilityBonusChoice?,
     val alignment: String?,
     val age : String,
     val size: String,

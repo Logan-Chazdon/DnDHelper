@@ -26,6 +26,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
     lateinit var character: LiveData<Character>
     var raceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var subraceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
+    var subraceASIDropdownState = mutableStateOf<MultipleChoiceDropdownState?>(null)
     lateinit var races: LiveData<List<Race>>
     var id by Delegates.notNull<Int>()
     var raceIndex = 0

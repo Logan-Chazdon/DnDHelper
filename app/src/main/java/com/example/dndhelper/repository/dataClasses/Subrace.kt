@@ -12,4 +12,18 @@ data class Subrace(
     val traits: List<Feature>,
     val size: String?,
     val groundSpeed: Int?
-)
+) {
+    val allSubracesLanguages: List<Language>
+    get() {
+        val result = mutableListOf<Language>()
+        result.addAll(languages)
+        result.addAll(languageChoices.let { languageChoices ->
+            val langs = mutableListOf<Language>()
+            languageChoices.forEach {
+                it.chosen?.let { chosen -> langs.addAll(chosen) }
+            }
+            langs
+        })
+        return result
+    }
+}

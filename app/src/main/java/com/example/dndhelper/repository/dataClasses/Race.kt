@@ -29,6 +29,20 @@ data class Race (
     val subraces: List<Subrace>?,
     var subrace: Subrace? = null
 ) {
+    private val allRaceLanguages: List<Language>
+    get() {
+        val result = mutableListOf<Language>()
+        result.addAll(languages)
+        result.addAll(languageChoices.let { languageChoices ->
+            val langs = mutableListOf<Language>()
+            languageChoices.forEach {
+                it.chosen?.let { chosen -> langs.addAll(chosen) }
+            }
+            langs
+        })
+        return result
+    }
+
     fun longRest() {
         traits.forEach {
             it.recharge(1)
@@ -47,6 +61,15 @@ data class Race (
         return traits.filter { feature ->
             subrace?.traits?.none { it.index == feature.index }
                 ?: true
+        }
+    }
+
+    fun getAllLanguages(): List<Language> {
+        return if(!(subrace?.languages.isNullOrEmpty() &&
+                    subrace?.languageChoices.isNullOrEmpty())) {
+            subrace!!.allSubracesLanguages
+        } else {
+            allRaceLanguages
         }
     }
 }

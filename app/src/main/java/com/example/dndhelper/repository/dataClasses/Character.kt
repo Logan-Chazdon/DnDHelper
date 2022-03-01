@@ -344,7 +344,7 @@ data class Character(
     val languages: List<Language>
     get() {
         val result = mutableListOf<Language>()
-        race?.languages?.let { result.addAll(it) }
+        race?.getAllLanguages()?.let { result.addAll(it) }
         background?.languages?.let {result.addAll(it) }
         background?.languageChoices?.forEach { choice ->
             choice.chosen?.let { result.addAll(it) }

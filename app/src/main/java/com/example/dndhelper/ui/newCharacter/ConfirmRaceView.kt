@@ -18,9 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.dndhelper.repository.dataClasses.Character
-import com.example.dndhelper.repository.dataClasses.Feature
-import com.example.dndhelper.repository.dataClasses.Proficiency
+import com.example.dndhelper.repository.dataClasses.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -99,12 +97,14 @@ fun ConfirmRaceView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            RaceContentCard("Languages") {
-                races.value?.get(raceIndex)?.languageDesc?.let { Text(text = it) }
-                if (!races.value?.get(raceIndex)?.languageChoices.isNullOrEmpty()) {
-                    //TODO
-                }
-            }
+            if (races.value?.getOrNull(raceIndex)?.subraces?.get(viewModel.subraceIndex.value)?.languages.isNullOrEmpty() &&
+                races.value?.getOrNull(raceIndex)?.subraces?.get(viewModel.subraceIndex.value)?.languageChoices.isNullOrEmpty()
+            )
+                RaceLanguagesView(
+                    languageDesc = races.value?.get(raceIndex)?.languageDesc,
+                    languages = races.value?.get(raceIndex)?.languages,
+                    languageChoices = races.value?.get(raceIndex)?.languageChoices
+                )
 
             races.value?.get(raceIndex)?.abilityBonuses?.let { bonuses ->
                 if (bonuses.isNotEmpty())
@@ -174,15 +174,24 @@ fun ConfirmRaceView(
                         }
                     }
 
+                    if (!(subraces[viewModel.subraceIndex.value].languages.isNullOrEmpty() &&
+                                subraces[viewModel.subraceIndex.value].languageChoices.isNullOrEmpty())
+                    )
+                        RaceLanguagesView(
+                            languageDesc = null,
+                            languages = subraces[viewModel.subraceIndex.value].languages,
+                            languageChoices = subraces[viewModel.subraceIndex.value].languageChoices
+                        )
+
                     subraces[viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
-                        RaceContentCard("Ability bonuses") {
-                            if (bonuses.isNotEmpty())
+                        if (bonuses.isNotEmpty())
+                            RaceContentCard("Ability bonuses") {
                                 Row {
                                     bonuses.forEach {
                                         Text(text = "${it.ability} +${it.bonus}  ")
                                     }
                                 }
-                        }
+                            }
                     }
 
                     subraces[viewModel.subraceIndex.value].abilityBonusChoice?.let { choice ->
@@ -259,3 +268,42 @@ private fun RaceFeaturesView(
     }
 }
 
+@Composable
+private fun RaceLanguagesView(
+    languageDesc: String?,
+    languages: List<Language>?,
+    languageChoices: List<LanguageChoice>?
+) {
+    RaceContentCard("Languages") {
+        Text(
+            languageDesc ?: (languages.let { langs ->
+                val names = mutableListOf<String>()
+                langs?.forEach {
+                    it.name?.let { name -> names.add(name) }
+                }
+                names
+            }.plus(languageChoices?.let {
+                val names = mutableListOf<String>()
+                it.forEach { lang ->
+                    names.add(lang.name)
+                }
+                names
+            } ?: listOf())).let {
+                var string = ""
+                it.forEachIndexed { index, item ->
+                    string += when (index) {
+                        it.size - 1 -> {
+                            "and $item."
+                        }
+                        it.size -> {
+                            item
+                        }
+                        else -> {
+                            "${item}, "
+                        }
+                    }
+                }
+                string
+            })
+    }
+}

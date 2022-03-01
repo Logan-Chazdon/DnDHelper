@@ -8,10 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.dataClasses.Character
-import com.example.dndhelper.repository.dataClasses.Feature
-import com.example.dndhelper.repository.dataClasses.Proficiency
-import com.example.dndhelper.repository.dataClasses.Race
+import com.example.dndhelper.repository.dataClasses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +24,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
     var raceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var subraceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var subraceASIDropdownState = mutableStateOf<MultipleChoiceDropdownState?>(null)
+    val languageDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     lateinit var races: LiveData<List<Race>>
     var id by Delegates.notNull<Int>()
     var raceIndex = 0
@@ -59,6 +57,14 @@ public class NewCharacterRaceViewModel @Inject constructor(
             }
         }
 
+        if (newRace.subrace?.languages.isNullOrEmpty() &&
+            newRace.subrace?.languageChoices.isNullOrEmpty()
+        )
+        newRace.languageChoices.forEach {
+            it.chosen = languageDropdownStates[it.name]
+                ?.getSelected(it.from) as List<Language>
+        }
+
         if(!newRace.subraces.isNullOrEmpty()) {
             newRace.subrace = newRace.subraces[subraceIndex.value].run {
                 this.traits.forEach {
@@ -68,6 +74,12 @@ public class NewCharacterRaceViewModel @Inject constructor(
                                 as List<Feature>
                     }
                 }
+
+                this.languageChoices.forEach {
+                    it.chosen = languageDropdownStates[it.name]
+                        ?.getSelected(it.from) as List<Language>
+                }
+
                 this
             }
         }

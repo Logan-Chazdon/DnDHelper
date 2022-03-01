@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.dndhelper.repository.dataClasses.*
+import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -103,7 +104,8 @@ fun ConfirmRaceView(
                 RaceLanguagesView(
                     languageDesc = races.value?.get(raceIndex)?.languageDesc,
                     languages = races.value?.get(raceIndex)?.languages,
-                    languageChoices = races.value?.get(raceIndex)?.languageChoices
+                    languageChoices = races.value?.get(raceIndex)?.languageChoices,
+                    dropDownStates = viewModel.languageDropdownStates
                 )
 
             races.value?.get(raceIndex)?.abilityBonuses?.let { bonuses ->
@@ -180,7 +182,8 @@ fun ConfirmRaceView(
                         RaceLanguagesView(
                             languageDesc = null,
                             languages = subraces[viewModel.subraceIndex.value].languages,
-                            languageChoices = subraces[viewModel.subraceIndex.value].languageChoices
+                            languageChoices = subraces[viewModel.subraceIndex.value].languageChoices,
+                            dropDownStates = viewModel.languageDropdownStates
                         )
 
                     subraces[viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
@@ -272,7 +275,8 @@ private fun RaceFeaturesView(
 private fun RaceLanguagesView(
     languageDesc: String?,
     languages: List<Language>?,
-    languageChoices: List<LanguageChoice>?
+    languageChoices: List<LanguageChoice>?,
+    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>
 ) {
     RaceContentCard("Languages") {
         Text(
@@ -305,5 +309,22 @@ private fun RaceLanguagesView(
                 }
                 string
             })
+        languageChoices?.let { choice ->
+            choice.forEach {
+                MultipleChoiceDropdownView(state = dropDownStates.getDropDownState(
+                    key = it.name,
+                    maxSelections = it.choose,
+                    maxOfSameSelection = 1,
+                    choiceName = it.name,
+                    names = it.from.let { from ->
+                        val names = mutableListOf<String>()
+                        from.forEach { lang ->
+                            names.add(lang.name.toString())
+                        }
+                        names
+                    }
+                ))
+            }
+        }
     }
 }

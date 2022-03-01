@@ -13,6 +13,14 @@ data class Subrace(
     val size: String?,
     val groundSpeed: Int?
 ) {
+    val totalAbilityBonuses: List<AbilityBonus>
+    get() {
+        val result = mutableListOf<AbilityBonus>()
+        abilityBonuses?.let { result.addAll(it) }
+        abilityBonusChoice?.chosen?.let {result.addAll(it)}
+        return result
+    }
+
     val allSubracesLanguages: List<Language>
     get() {
         val result = mutableListOf<Language>()

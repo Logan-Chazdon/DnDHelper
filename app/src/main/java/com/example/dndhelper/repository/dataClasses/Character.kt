@@ -124,8 +124,8 @@ data class Character(
         }
 
         //Races
-        race?.abilityBonuses?.forEach {
-            stats[it.ability] = stats[it.ability]?.plus(it.bonus) ?: 0
+        race?.getAllAbilityScoreBonuses()?.forEach {
+            stats[it.ability.substring(0, 3)] = stats[it.ability.substring(0, 3)]?.plus(it.bonus) ?: 0
         }
 
         return stats

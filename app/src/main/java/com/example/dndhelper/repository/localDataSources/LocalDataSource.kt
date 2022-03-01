@@ -1296,7 +1296,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         grantedAtLevel = level,
                         choose = choose,
                         options = options,
-                        maxActive = maxActive
+                        maxActive = maxActive,
+                        index = try { featureJson.getString("index") } catch(e: JSONException) { null }
                     )
                 )
             }

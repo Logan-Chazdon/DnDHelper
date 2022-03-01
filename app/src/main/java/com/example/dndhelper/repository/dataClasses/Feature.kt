@@ -3,6 +3,7 @@ package com.example.dndhelper.repository.dataClasses
 data class Feature(
     val name: String,
     val description: String,
+    val index : String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.
     val grantedAtLevel: Int = 1,
     val choose: Choose = Choose(0),
     val options: MutableList<Feature>?,

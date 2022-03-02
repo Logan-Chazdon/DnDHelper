@@ -11,6 +11,7 @@ data class Feature(
     val spells: List<Spell>? = null, //Spells granted by this feature
     val infusion: Infusion? = null,
     val maxActive: Choose = Choose(0),
+    val hpBonusPerLevel: Int? = null
 ) {
 
     var chosen : List<Feature>? = null

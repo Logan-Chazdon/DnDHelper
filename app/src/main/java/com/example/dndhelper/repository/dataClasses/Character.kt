@@ -141,6 +141,9 @@ data class Character(
                 (((item.hitDie / 2) + 1) + getStatMod("Con")) * item.level
             }
         }
+        features.forEach { feature ->
+            feature.second.hpBonusPerLevel?.let {newMax += (it * totalClassLevels)}
+        }
         return newMax
     }
 

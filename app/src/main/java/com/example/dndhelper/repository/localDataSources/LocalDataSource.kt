@@ -1325,12 +1325,17 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     null
                 }
 
+                val hpBonusPerLevel = try {
+                    featureJson.getInt("hp_bonus_per_level")
+                } catch (e: JSONException) { null }
+
                 features.add(
                     Feature(
                         name = featureJson.getString("name"),
                         description = featureJson.getString("desc"),
                         grantedAtLevel = level,
                         choose = choose,
+                        hpBonusPerLevel = hpBonusPerLevel,
                         options = options,
                         maxActive = maxActive,
                         index = try { featureJson.getString("index") } catch(e: JSONException) { null }

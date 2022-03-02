@@ -411,7 +411,7 @@ data class Character(
         val bonusForProficiency = proficiencies.run {
             var result = 0
             for (item in this) {
-                if(item.name == proficiencyName) {
+                if(item.name == proficiencyName || item.index?.lowercase() == weapon.name?.lowercase()) {
                   result = proficiencyBonus
                   break
                 }

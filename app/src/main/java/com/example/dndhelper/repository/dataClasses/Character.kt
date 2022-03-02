@@ -363,7 +363,7 @@ data class Character(
                 choice.chosen?.let { chosen -> result.addAll(chosen) }
             }
         }
-        race?.startingProficiencies?.let { result.addAll(it) }
+        race?.getAllProficiencies()?.let { result.addAll(it) }
         result.addAll(addedProficiencies)
         return result
     }

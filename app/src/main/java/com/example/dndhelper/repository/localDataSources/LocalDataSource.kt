@@ -827,6 +827,10 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val size = raceJson.getString("size")
             val sizeDesc = raceJson.getString("size_desc")
             val startingProficiencies = extractProficiencies(raceJson.getJSONArray("proficiencies"))
+            val proficiencyChoices = mutableListOf<ProficiencyChoice>()
+            try {
+                extractProficienciesChoices(raceJson.getJSONArray("proficiency_choices"), proficiencyChoices)
+            } catch (e: JSONException) {}
             val languageDesc = raceJson.getString("language_desc")
             val traits = extractFeatures(raceJson.getJSONArray("features"))
             val subraces = try { extractSubraces(raceJson.getJSONArray("subraces")) }  catch (e: JSONException) { null }
@@ -847,6 +851,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     groundSpeed = groundSpeed,
                     abilityBonuses = abilityBonuses,
                     abilityBonusChoice = abilityBonusChoice,
+                    proficiencyChoices = proficiencyChoices,
                     alignment = alignment,
                     age = age,
                     size = size,

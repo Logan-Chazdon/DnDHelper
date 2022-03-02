@@ -22,6 +22,7 @@ data class Race (
     val size: String,
     val sizeDesc: String,
     val startingProficiencies: List<Proficiency>,
+    val proficiencyChoices : List<ProficiencyChoice>,
     val languages: List<Language>,
     val languageChoices: List<LanguageChoice>,
     val languageDesc: String,
@@ -83,5 +84,14 @@ data class Race (
             abilityBonusChoice?.chosen?.let {result.addAll(it)}
             result
         }
+    }
+
+    fun getAllProficiencies(): List<Proficiency> {
+        val result = mutableListOf<Proficiency>()
+        result.addAll(startingProficiencies)
+        proficiencyChoices.forEach {
+            it.chosen?.let { chosen -> result.addAll(chosen) }
+        }
+        return result
     }
 }

@@ -22,6 +22,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     lateinit var character: LiveData<Character>
     var raceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
+    val raceProficiencyChoiceDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var subraceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var subraceASIDropdownState = mutableStateOf<MultipleChoiceDropdownState?>(null)
     val languageDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
@@ -63,6 +64,11 @@ public class NewCharacterRaceViewModel @Inject constructor(
         newRace.languageChoices.forEach {
             it.chosen = languageDropdownStates[it.name]
                 ?.getSelected(it.from) as List<Language>
+        }
+
+        newRace.proficiencyChoices.forEach {
+            it.chosen = raceProficiencyChoiceDropdownStates[it.name]
+                ?.getSelected(it.from) as List<Proficiency>
         }
 
         if(!newRace.subraces.isNullOrEmpty()) {

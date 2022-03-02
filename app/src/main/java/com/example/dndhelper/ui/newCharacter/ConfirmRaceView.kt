@@ -126,7 +126,40 @@ fun ConfirmRaceView(
                     dropDownStates = viewModel.raceFeaturesDropdownStates,
                     proficiencies = viewModel.proficiencies
                 )
+
+                if(!(race.proficiencyChoices.isNullOrEmpty() && race.startingProficiencies.isNullOrEmpty())) {
+                    RaceContentCard(title = "Proficiencies") {
+                        Text(race.startingProficiencies.let {
+                            var string = ""
+                            it.forEachIndexed { index, prof ->
+                                string += prof.name
+                                if(index != it.size - 1){
+                                    string += ", "
+                                }
+                            }
+                            "$string."
+                        })
+
+                        race.proficiencyChoices.forEach { proficiencyChoice ->
+                            MultipleChoiceDropdownView(state = viewModel.raceProficiencyChoiceDropdownStates.getDropDownState(
+                                key = proficiencyChoice.name,
+                                maxSelections = proficiencyChoice.choose,
+                                names = proficiencyChoice.from.let { proficiencyChoices ->
+                                    val names = mutableListOf<String>()
+                                    proficiencyChoices.forEach {
+                                        it.name?.let { name -> names.add(name) }
+                                    }
+                                    names
+                                },
+                                maxOfSameSelection = 1,
+                                choiceName = proficiencyChoice.name
+                            ))
+                        }
+                    }
+                }
             }
+
+
 
             races.value?.get(raceIndex)?.subraces?.let { subraces ->
                 if (races.value?.get(raceIndex)?.subraces?.isNotEmpty() == true) {

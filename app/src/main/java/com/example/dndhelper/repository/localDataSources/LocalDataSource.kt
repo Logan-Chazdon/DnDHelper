@@ -955,7 +955,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         for(profIndex in 0 until proficienciesJson.length()) {
             val profJson = proficienciesJson.getJSONObject(profIndex)
             var index: String? = null
-            val any = try {
+            try {
                 index = profJson.getString("index")
                 when (index) {
                     "skill_proficiencies" -> {
@@ -972,16 +972,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         }
                     }
                     else -> {
-                        proficiencies.add(
-                            Proficiency(
-                                name = try {
-                                    profJson.getString("name")
-                                } catch (e: JSONException) {
-                                    null
-                                },
-                                index = index
-                            )
-                        )
+                        throw JSONException("Unknown index")
                     }
                 }
             } catch (e: JSONException) {

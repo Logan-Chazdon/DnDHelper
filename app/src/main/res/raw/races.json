@@ -388,6 +388,160 @@
                     ]
                 }
             ]
+        },
+        {
+            "name" : "Dwarf",
+            "age" : "Dwarves mature at the same rate as humans, but they're considered young until they reach the age of 50. On average, they live about 350 years.",
+            "alignment" : "",
+            "proficiencies": [
+                {
+                    "name" : "Battleaxes",
+                    "index" : "battleaxe"
+                },
+                {
+                    "name" : "handaxes",
+                    "index" : "handaxe"
+                },
+                {
+                    "name" : "light hammers",
+                    "index" : "light hammer"
+                },
+                {
+                    "name" : "warhammers",
+                    "index" : "warhammer"
+                }
+            ],
+            "proficiency_choices" : [
+                {
+                    "name" : "You gain proficiency with the artisan's tools of your choice: smith's tools, brewer's supplies, or mason's tools.",
+                    "choose" : 1,
+                    "from" : [
+                        {"name" : "Smith's tools"},
+                        {"name" : "Brewer's supplies"},
+                        {"name" : "Mason's tools"}
+                    ]
+                }
+            ],
+            "ability_bonuses": [
+                {
+                    "name": "Constitution",
+                    "bonus": 2
+                }
+            ],
+            "size" : "Medium",
+            "size_desc" : "Dwarves stand between 4 and 5 feet tall and average about 150 pounds. Your size is Medium.",
+            "ground_speed": 25,
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "Darkvision. Accustomed to life underground, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Dwarven Resilience",
+                    "desc" : "You have advantage on saving throws against poison, and you have resistance against poison damage."
+                },
+                {
+                    "name" : "Stonecunning",
+                    "desc" : "Whenever you make an Intelligence (History) check related to the origin of stonework, you are considered proficient in the History skill and add double your proficiency bonus to the check, instead of your normal proficiency bonus."
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Dwarvish. Dwarvish is full of hard consonants and guttural sounds, and those characteristics spill over into whatever other language a dwarf might speak.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Dwarvish"
+                }
+            ],
+            "subraces" : [
+                {
+                    "name" : "Hill Dwarf",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Wisdom",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Dwarven Toughness",
+                            "desc": "Your hit point maximum increases by 1, and it increases by 1 every time you gain a level.",
+                            "hp_bonus_per_level" : 1
+                        }
+                    ]
+                },
+                {
+                    "name": "Mountain Dwarf",
+                    "ability_bonuses": [
+                        {
+                            "name": "Strength",
+                            "bonus": 2
+                        }
+                    ],
+                    "proficiencies": [
+                        {
+                            "name": "Light armor"
+                        },
+                        {
+                            "name": "Medium armor"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Duergar (Gray Dwarf)",
+                    "ability_bonuses": [
+                        {
+                            "name": "Strength",
+                            "bonus": 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Superior Darkvision",
+                            "desc" : "You can see in dim light within 120 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                        },
+                        {
+                            "name" : "Duergar Resilience",
+                            "desc" : "You have advantage on saving throws against illusions and against being charmed or paralyzed."
+                        },
+                        {
+                            "name" : "Duergar Magic",
+                            "desc" : "When you reach 3rd level, you can cast the Enlarge/Reduce spell on yourself once with this trait, using only the spell's enlarge option. When you reach 5th level, you can cast the Invisibility spell on yourself once with this trait. You don't need material components for either spell, and you can't cast them while you're in direct sunlight, although sunlight has no effect on them once cast. You regain the ability to cast these spells with this trait when you finish a long rest. Intelligence is your spellcasting ability for these spells.",
+                            "level" : 3
+                        },
+                        {
+                            "name" : "Sunlight Sensitivity",
+                            "desc" : "You have disadvantage on Attack rolls and Wisdom (Perception) checks that rely on sight when you, the target of your attack, or whatever you are trying to perceive is in direct sunlight"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Mark of Warding Dwarf",
+                    "ability_bonuses": [
+                        {
+                            "name": "Intelligence",
+                            "bonus": 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Warder's Intuition",
+                            "desc" : "Whenever you make an Intelligence (Investigation) check or an Ability Check involving Thieve's Tools, you can roll a d4 and add the number rolled to the total ability check."
+                        },
+                        {
+                            "name" : "Wards and Seals",
+                            "desc" : "You can cast the Alarm and Mage Armor spells with this trait. Starting at 3rd level, you can also cast the Arcane Lock spell with it. Once you cast either spell with this trait, you can't cast that spell again until you finish a Long Rest. Intelligence is your Spellcasting Ability for these spells, and you don't require material components when you cast them with this trait.",
+                            "level" : 3
+                        },
+                        {
+                            "name" : "Spells of the Mark",
+                            "desc" : " If you have the Spellcasting or Pact Magic class feature, the spells on the Mark of Warding Spells table are added to the spell list of your Spellcasting class.",
+                            "comment" : "TODO Add the spells"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

@@ -824,7 +824,7 @@
             ]
         },
         {
-            "name" : "gnome",
+            "name" : "Gnome",
             "ability_bonuses": [
                 {
                     "name": "Intelligence",

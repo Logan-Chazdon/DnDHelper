@@ -211,7 +211,7 @@ fun ConfirmClassView(
                             //Tell the state bundle what the user can choose from.
                             val names = mutableListOf<String>()
                             for (item in choice.from) {
-                                item.name?.let { names.add(it) }
+                                names.add(item.name.toString())
                             }
 
                             val multipleChoiceState = viewModel.dropDownStates.getDropDownState(

@@ -202,6 +202,7 @@ data class Character(
             spellSlots = newClass.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1) ?: listOf()
         }
 
+        this.longRest()
     }
 
 

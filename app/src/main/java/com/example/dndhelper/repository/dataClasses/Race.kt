@@ -74,16 +74,12 @@ data class Race (
         }
     }
 
-    fun getAllAbilityScoreBonuses() : List<AbilityBonus>? {
-        return if(!(subrace?.abilityBonuses.isNullOrEmpty() &&
-                    subrace?.abilityBonusChoice == null)) {
-            subrace?.totalAbilityBonuses
-        } else {
-            val result = mutableListOf<AbilityBonus>()
-            abilityBonuses?.let { result.addAll(it) }
-            abilityBonusChoice?.chosen?.let {result.addAll(it)}
-            result
-        }
+    fun getAllAbilityScoreBonuses() : List<AbilityBonus> {
+        val result = mutableListOf<AbilityBonus>()
+        abilityBonuses?.let { result.addAll(it) }
+        subrace?.totalAbilityBonuses?.let { result.addAll(it) }
+        abilityBonusChoice?.chosen?.let {result.addAll(it)}
+        return result
     }
 
     fun getAllProficiencies(): List<Proficiency> {

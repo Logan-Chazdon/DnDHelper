@@ -836,6 +836,7 @@
             "size" : "Small",
             "ground_speed" : 25,
             "proficiencies" : [],
+            "language_desc" : "You can read, speak, and write Common and Gnomish.",
             "languages" : [
                 {
                     "name" : "Common"

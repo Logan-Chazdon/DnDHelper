@@ -955,27 +955,43 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         for(profIndex in 0 until proficienciesJson.length()) {
             val profJson = proficienciesJson.getJSONObject(profIndex)
             var index: String? = null
-            try {
+            val any = try {
                 index = profJson.getString("index")
-                if(index == "skill_proficiencies") {
-                    generateSkills().values.forEach {
-                        it.forEach{ item ->
-                            if(!item.contains("Saving")) {
-                                proficiencies.add(
-                                    Proficiency(
-                                        name = item
+                when (index) {
+                    "skill_proficiencies" -> {
+                        generateSkills().values.forEach {
+                            it.forEach { item ->
+                                if (!item.contains("Saving")) {
+                                    proficiencies.add(
+                                        Proficiency(
+                                            name = item
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }
+                    else -> {
+                        proficiencies.add(
+                            Proficiency(
+                                name = try {
+                                    profJson.getString("name")
+                                } catch (e: JSONException) {
+                                    null
+                                },
+                                index = index
+                            )
+                        )
+                    }
                 }
-            }
-            catch(e : JSONException) {
+            } catch (e: JSONException) {
                 proficiencies.add(
                     Proficiency(
-                        name = try {profJson.getString("name")}
-                        catch(e : JSONException) {null},
+                        name = try {
+                            profJson.getString("name")
+                        } catch (e: JSONException) {
+                            null
+                        },
                         index = index
                     )
                 )

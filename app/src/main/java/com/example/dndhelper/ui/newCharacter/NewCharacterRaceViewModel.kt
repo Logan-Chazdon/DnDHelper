@@ -80,6 +80,29 @@ public class NewCharacterRaceViewModel @Inject constructor(
                         ?.getSelected(it.from) as List<Language>
                 }
 
+                subraceASIDropdownState.value?.getSelected(
+                    newRace.subraces[subraceIndex.value]
+                        ?.abilityBonusChoice?.from.let { from ->
+                    val names = mutableListOf<String>()
+                    from?.forEach { it ->
+                        names.add(it.ability)
+                    }
+                    names
+                })?.let { result ->
+                    result as List<Pair<String, Int>>
+                    val chosen = mutableListOf<AbilityBonus>()
+                    result.forEach {
+                        chosen.add(
+                            AbilityBonus(
+                                ability = it.first,
+                                bonus= it.second
+                            )
+                        )
+                    }
+                    this.abilityBonusChoice?.chosen = chosen
+                }
+
+
                 this
             }
         }

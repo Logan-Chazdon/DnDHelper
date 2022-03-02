@@ -822,6 +822,38 @@
                     ]
                 }
             ]
+        },
+        {
+            "name" : "gnome",
+            "ability_bonuses": [
+                {
+                    "name": "Intelligence",
+                    "bonus": 2
+                }
+            ],
+            "age" : "Gnomes mature at the same rate as humans, and most are expected to settle into adult life around the age of 40. They can live to 350 years on average, but it's not too uncommon for them to reach 500 years of age.",
+            "size_desc" : "Gnomes are between 3 and 4 feet tall and weigh around 40 pounds. Your size is Small.",
+            "size" : "Small",
+            "ground_speed" : 25,
+            "proficiencies" : [],
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Gnomish"
+                }
+            ],
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "Accustomed to life underground, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Gnome Cunning",
+                    "desc" : "You have advantage on all Intelligence, Wisdom, and Charisma saves against magic."
+                }
+            ]
         }
     ]
 }

@@ -9,6 +9,8 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.example.dndhelper.repository.dataClasses.Language
 import com.example.dndhelper.repository.dataClasses.Proficiency
@@ -29,12 +31,12 @@ fun LanguagesAndProficienciesView(
             state = listState
         ) {
             items(items = languages) { item: Language ->
-                item.name?.let { Text(text = it) }
+                item.name?.let { Text(text = it.capitalize(Locale.current)) }
                 Divider(thickness = (0.5).dp, startIndent = 10.dp)
             }
 
             items(items = proficiencies) { item: Proficiency ->
-                item.name?.let { Text(text = it) }
+                item.name?.let { Text(text = it.capitalize(Locale.current)) }
                 Divider(thickness = (0.5).dp, startIndent = 10.dp)
             }
         }

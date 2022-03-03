@@ -1007,7 +1007,7 @@
                     ]
                 }
             ],
-            "languages_desc" : "You can read, speak, and write Common, Elven, and one language of your choice.",
+            "language_desc" : "You can read, speak, and write Common, Elven, and one language of your choice.",
             "languages" : [
                 {
                     "name" : "Common"
@@ -1039,7 +1039,388 @@
         {
             "name" : "Half-Orc",
             "age": "Half-orcs mature a little faster than humans, reaching adulthood around age 14. They age noticeably faster and rarely live longer than 75 years.",
-
+            "ability_bonuses": [
+                {
+                    "name": "Strength ",
+                    "bonus": 2
+                },
+                {
+                    "name": "Constitution ",
+                    "bonus": 1
+                }
+            ],
+            "proficiencies" : [
+                {
+                    "name" : "Intimidation"
+                }
+            ],
+            "ground_speed" : 30,
+            "size" : "Medium",
+            "size_desc": "Half-orcs are somewhat larger and bulkier than humans, and they range from 5 to well over 6 feet tall. Your size is Medium.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Orc"
+                }
+            ],
+            "language_desc" :"You can speak, read, and write Common and Orc. Orc is a harsh, grating language with hard consonants. It has no script of its own but is written in the Dwarvish script.",
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "Thanks to your orc blood, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Relentless Endurance",
+                    "desc" : "When you are reduced to 0 hit points but not killed outright, you can drop to 1 hit point instead. You can't use this feature again until you finish a long rest."
+                },
+                {
+                    "name" : "Savage Attacks",
+                    "desc" : "When you score a critical hit with a melee weapon attack, you can roll one of the weapon's damage dice one additional time and add it to the extra damage of the critical hit."
+                }
+            ]
+        },
+        {
+            "name": "Halfing",
+            "age" : " A halfling reaches adulthood at the age of 20 and generally lives into the middle of his or her second century.",
+            "size" : "Small",
+            "size_desc" : "Halflings average about 3 feet tall and weigh about 40 pounds. Your size is small.",
+            "language_desc" :"You can speak, read, and write Common and Halfling.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Halfling"
+                }
+            ],
+            "ability_bonuses" : [
+                {
+                    "name" : "Dexterity",
+                    "bonus" : 2
+                }
+            ],
+            "ground_speed": 25,
+            "proficiencies" : [],
+            "features" : [
+                {
+                    "name" : "Lucky",
+                    "desc" : "When you roll a 1 on an attack roll, ability check, or saving throw, you can reroll the die. You must use the new result, even if it is a 1."
+                },
+                {
+                    "name" : "Brave",
+                    "desc" : "You have advantage on saving throws against being frightened."
+                },
+                {
+                    "name" : "Nimble",
+                    "desc" : "You can move through the space of any creature that is of a size larger than yours."
+                }
+            ],
+            "subraces" : [
+                {
+                    "name" : "Lightfoot Halfling",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Charisma",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Naturally Stealthy",
+                            "desc" : "You can attempt to hide even when you are only obscured by a creature that is at least one size larger than you."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Stout Halfling",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Constitution",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Stout Resilience",
+                            "desc" : "You have advantage on saving throws against poison, and you have resistance to poison damage."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Lotusden Halfling",
+                    "ability_bonuses" : [
+                        {
+                            "name": "Wisdom",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Children of the Woods",
+                            "desc" : "You know the Druidcraft Cantrip. At 3rd level, you can cast the Entangle spell once per long rest. At 5th level, you can cast Spike Growth spell once per long rest. These spells don't require the material components normally required. Wisdom is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {"index": "Druidcraft"}
+                            ]
+                        },
+                        {
+                            "name" : "Timberwalk",
+                            "desc": "Ability checks made to track you are at disadvantage and you can move through difficult terrain made of non-magical plants and overgrowth without expending extra movement."
+                        }
+                    ]
+                },
+                {
+                    "name": "Mark of Hospitality Halfling",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Charisma",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Ever Hospitable",
+                            "desc": "Whenever you roll a Charisma (Persuasion) check or an ability check involving Brewer's Tools or Cook's Utensils, roll a d4 and add the number rolled to the total ability check."
+                        },
+                        {
+                            "name" : "Innkeeper's Magic",
+                            "desc" : "You know the Prestidigitation cantrip. You can also cast Purify Food and Drink and Unseen Servant with this trait. Once you cast either spell with this trait, you can't cast that spell again until you finish a long rest. Charisma is your Spellcasting Ability for these spells.",
+                            "spells" : [
+                                {"index" : "Prestidigitation"}
+                            ]
+                        },
+                        {
+                            "name" : "Spells of the Mark",
+                            "desc" : "If you have the Spellcasting or Pact Magic class features, the spells on the Mark of Hospitality Spells table are added to the spell list of your spellcasting class.",
+                            "spells" : [
+                                {"index" : "Goodberry"},
+                                {"index" : "Sleep"},
+                                {"index" : "Aid"},
+                                {"index" : "Clam Emotions"},
+                                {"index" : "Create Food and Water"},
+                                {"index" : "Leomund's Tiny Hut"},
+                                {"index" : "Aura of Purity"},
+                                {"index" : "Mordenkainen's Private Sanctum"},
+                                {"index" : "Hallow"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Mark of Healing Halfing",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Wisdom",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Medical Intuition",
+                            "desc" : "Whenever you roll a Wisdom (Medicine) check or an ability check involving an Herbalism Kit, roll a d4 and add the number rolled to the total ability check."
+                        },
+                        {
+                            "name" : "Healing Touch",
+                            "desc" : "You can cast the Cure Wounds spell with this trait. Beginning at 3rd level, you can also cast the Lesser Restoration spell with this trait. Once you cast either spell with this trait, you can't cast that spell again until you finish a long rest. Wisdom is your Spellcasting Ability for these spells."
+                        },
+                        {
+                            "name" : "Spells of the Mark",
+                            "desc" : "If you have the Spellcasting or Pact Magic class features, the spells on the Mark of Healing Spells table are added to the spell list of your spellcasting class",
+                            "spells" : [
+                                {"index":  "Cure Wounds"},
+                                {"index":  "Healing Word"},
+                                {"index":  "Lesser Restoration"},
+                                {"index":  "Prayer of Healing"},
+                                {"index":  "Aura of Vitality"},
+                                {"index":  "Mass Healing Word"},
+                                {"index":  "Aura of Purity"},
+                                {"index":  "Aura of Life"},
+                                {"index":  "Greater Restoration"}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name" : "Human",
+            "age" : "Humans reach adulthood in their late teens and live less than a century.",
+            "size" : "Medium",
+            "size_desc" : "Humans vary widely in height and build, from barely 5 feet to well over 6 feet tall. Regardless of your position in that range, your size is Medium.",
+            "language_desc" : "You can speak, read, and write Common and one extra language of your choice. Humans typically learn the languages of other peoples they deal with, including obscure dialects. They are fond of sprinkling their speech with words borrowed from other tongues: Orc curses, Elvish musical expressions, Dwarvish military phrases, and so on.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "one extra language of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                }
+            ],
+            "proficiencies" : [],
+            "comment": "TODO Subraces",
+            "ground_speed" : 30,
+            "features" : []
+        },
+        {
+            "name" : "Tiefling",
+            "age" : "Tieflings mature at the same rate as humans but live a few years longer.",
+            "size" : "Medium",
+            "size_desc" : "Tieflings are about the same size and build as humans. Your size is Medium.",
+            "ground_speed" : 30,
+            "languages" : [
+                {
+                    "name": "Common"
+                },
+                {
+                    "name" : "Infernal"
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Infernal.",
+            "ability_bonuses" : [
+                {
+                    "name" : "Charisma",
+                    "bonus" : 2
+                }
+            ],
+            "proficiencies" : [],
+            "features" : [],
+            "subraces" : [
+                {
+                    "name" : "Bloodline of Asmodeus",
+                    "ability_bonuses" : [
+                        {
+                            "name": "Intelligence",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Infernal Legacy",
+                            "desc" : "You know the Thaumaturgy cantrip. Once you reach 3rd level, you can cast the Hellish Rebuke spell once as a 2nd-level spell. Once you reach 5th level, you can also cast the Darkness spell once. You must finish a long rest to cast these spells again with this trait. Charisma is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {"index" : "Thaumaturgy"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Bloodline of Baalzebul",
+                    "ability_bonuses" : [
+                        {
+                            "name": "Intelligence",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Leagacy of Maladomini",
+                            "desc" : "You know the Thaumaturgy cantrip. Once you reach 3rd level, you can cast the Ray of Sickness spell once as a 2nd-level spell with this trait and regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast cast the Crown of Madness spell once with this trait and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {"index" : "Thaumaturgy"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Bloodline of Dispater",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Dexterity",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Legacy of Phlegethos",
+                            "desc" : "You know the Friends cantrip. When you reach 3rd level, you can cast the Charm Person spell as a 2nd-level spell once with this trait and regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast the Suggestion spell once with this trait and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {"index" : "Friends"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Bloodline of Levistus",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Constitution",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Legacy of Stygia",
+                            "desc" : "You know the Ray of Frost cantrip. When you reach 3rd level, you can cast the Armor of Agathys spell as a 2nd-level spell once with this trait and regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast the Darkness spell once with this trait and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {
+                                    "index" : "Ray of Frost"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Bloodline of Mammon",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Intelligence",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Legacy of Minauros",
+                            "desc" : "You know the Mage Hand cantrip. When you reach 3rd level, you can cast the Tenser's Floating Disk spell once with this trait and regain the ability to do so when you finish a short or long rest. When you reach 5th level, you can cast the Arcane Lock spell once with this trait, requiring no material component, and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {"index" : "Mage Hand"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Bloodline of Mephistopheles",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Intelligence",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Legacy of Cania",
+                            "desc" : "You know the Mage Hand cantrip. When you reach 3rd level, you can cast the Burning Hands spell as a 2nd-level spell once with this trait and regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast the Flame Blade spell once with this trait and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {"index": "Mage Hand"}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Bloodline of Zariel",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Strength",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Legacy of Avernus",
+                            "desc" : "You know the Thaumaturgy cantrip. When you reach 3rd level, you can cast the Searing Smite spell as a 2nd-level spell once with this trait and regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast the Branding Smite spell once with this trait and regain the ability to do so when you finish a long rest. Charisma is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {"index" : "Thaumaturgy"}
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

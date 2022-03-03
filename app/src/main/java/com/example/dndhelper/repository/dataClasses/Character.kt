@@ -51,6 +51,10 @@ data class Character(
     val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
     val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
 ){
+    val groundSpeed: Int?
+    get() {
+        return race?.totalGroundSpeed
+    }
     val armorClass: Int
     get() {
         //TODO implement all other sources of ac.

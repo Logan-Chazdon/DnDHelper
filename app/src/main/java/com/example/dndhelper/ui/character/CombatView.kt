@@ -172,10 +172,32 @@ fun CombatView(viewModel: CombatViewModel) {
                     }
                 }
 
-                CombatListView(
-                    name = "Conditions",
-                    list = viewModel.character?.observeAsState()?.value?.conditions
-                )
+                Card(
+                    modifier = Modifier.size(100.dp),
+                    elevation = 10.dp,
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Speed"
+                        )
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                Modifier.size(75.dp)
+                            )
+                            Text(
+                                text = character?.value?.groundSpeed.toString(),
+                                modifier = Modifier.padding(bottom = 5.dp),
+                                style = MaterialTheme.typography.h5
+                            )
+                        }
+                    }
+                }
 
                 CombatListView(
                     name = "Resistance",

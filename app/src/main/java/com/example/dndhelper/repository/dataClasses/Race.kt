@@ -30,6 +30,11 @@ data class Race (
     val subraces: List<Subrace>?,
     var subrace: Subrace? = null
 ) {
+    val totalGroundSpeed: Int?
+    get() {
+        return maxOf(groundSpeed, subrace?.groundSpeed ?: 0)
+    }
+
     private val allRaceLanguages: List<Language>
     get() {
         val result = mutableListOf<Language>()

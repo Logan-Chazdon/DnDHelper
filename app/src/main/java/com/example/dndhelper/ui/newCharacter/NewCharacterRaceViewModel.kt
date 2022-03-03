@@ -129,7 +129,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
         race: Race,
     ): List<Feature> {
         val tempRace = race.copy()
-        tempRace.subrace = tempRace.subraces?.get(subraceIndex.value)
+        tempRace.subrace = tempRace.subraces?.getOrNull(subraceIndex.value)
         return tempRace.filterRaceFeatures()
     }
 }

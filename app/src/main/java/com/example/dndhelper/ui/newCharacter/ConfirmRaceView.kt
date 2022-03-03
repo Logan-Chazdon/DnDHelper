@@ -98,8 +98,8 @@ fun ConfirmRaceView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (races.value?.getOrNull(raceIndex)?.subraces?.get(viewModel.subraceIndex.value)?.languages.isNullOrEmpty() &&
-                races.value?.getOrNull(raceIndex)?.subraces?.get(viewModel.subraceIndex.value)?.languageChoices.isNullOrEmpty()
+            if (races.value?.getOrNull(raceIndex)?.subraces?.getOrNull(viewModel.subraceIndex.value)?.languages.isNullOrEmpty() &&
+                races.value?.getOrNull(raceIndex)?.subraces?.getOrNull(viewModel.subraceIndex.value)?.languageChoices.isNullOrEmpty()
             )
                 RaceLanguagesView(
                     languageDesc = races.value?.get(raceIndex)?.languageDesc,

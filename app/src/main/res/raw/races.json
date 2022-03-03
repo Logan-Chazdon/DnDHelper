@@ -1430,7 +1430,13 @@
                     "bonus": 2
                 },
                 {
-                    "comment" : "TODO one other"
+                    "name" : "One other language",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index": "all_languages"
+                        }
+                    ]
                 }
             ],
             "age" : "Changelings mature slightly faster than humans but share a similar lifespan — typically a century or less. While a changeling can transform to conceal their age, the effects of aging affect them similarly to humans.",
@@ -1470,7 +1476,13 @@
                     "name" : "Common"
                 },
                 {
-                    "name" : "todo two other languages of your choice"
+                    "name" : "Two other language",
+                    "choose" : 2,
+                    "from" : [
+                        {
+                            "index": "all_languages"
+                        }
+                    ]
                 }
             ]
         },
@@ -1515,7 +1527,13 @@
                     "name" : "Common"
                 },
                 {
-                    "name": "One other of your choice TODO"
+                    "name" : "One other language",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index": "all_languages"
+                        }
+                    ]
                 }
             ],
             "proficiencies" : []

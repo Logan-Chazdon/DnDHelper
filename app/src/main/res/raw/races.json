@@ -833,7 +833,17 @@
                         {
                             "name" : "Spells of the Mark",
                             "desc" : "If you have the Spellcasting or Pact Magic class features, the spells on the Mark of Shadow Spells table are added to the spell list of your spellcasting class.",
-                            "comment" : "TODO add spells"
+                            "spells" : [
+                                {"index" :  "Disguise Self"},
+                                {"index" :  "Silent Image"},
+                                {"index" :  "Darkness"},
+                                {"index" :  "Pass Without Trace"},
+                                {"index" :  "Clairvoyance"},
+                                {"index" :  "Major Image"},
+                                {"index" :  "Greater Invisibility"},
+                                {"index" :  "Hallucinatory Terrain"},
+                                {"index" :  "Mislead"}
+                            ]
                         }
                     ]
                 }

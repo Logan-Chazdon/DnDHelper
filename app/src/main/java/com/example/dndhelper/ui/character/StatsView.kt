@@ -32,7 +32,7 @@ fun StatsView(viewModel: StatsViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
         //Stats
         val stats = character?.value?.getStats()
@@ -112,7 +112,6 @@ fun StatsView(viewModel: StatsViewModel) {
 
         }
 
-        Spacer(Modifier.height(20.dp))
 
         viewModel.skills?.value?.let {
             for (item in 0..5) {

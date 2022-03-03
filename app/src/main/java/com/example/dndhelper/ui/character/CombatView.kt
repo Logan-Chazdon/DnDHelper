@@ -165,7 +165,8 @@ fun CombatView(viewModel: CombatViewModel) {
                             val ac = character?.value?.armorClass
                             Text(
                                 text = "$ac",
-                                modifier = Modifier.padding(bottom = 5.dp)
+                                modifier = Modifier.padding(bottom = 5.dp),
+                                style = MaterialTheme.typography.h6
                             )
                         }
                     }

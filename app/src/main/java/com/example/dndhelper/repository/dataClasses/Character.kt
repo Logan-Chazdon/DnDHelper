@@ -382,20 +382,20 @@ data class Character(
         return false
     }
 
-    val allSpells: Map<Int, List<Spell>>
+    //Gets spells granted by features, feats etc.
+    val additionalSpells: MutableMap<Int, MutableList<Pair<Boolean?, Spell>>>
     get() {
-        //TODO finish impl
-        val result = mutableMapOf<Int, MutableList<Spell>>()
-
-        classes.forEach {
-            it.value.getAvailableSpells().forEach { spell ->
-                val oldVal: MutableList<Spell> = result.getOrDefault(spell.level, mutableListOf())
-                oldVal.add(spell)
-                result[spell.level] = oldVal
+        val spells: MutableMap<Int, MutableList<Pair<Boolean?, Spell>>> = mutableMapOf()
+        features.forEach {
+            it.second.getSpellsGiven().forEach { spell ->
+                if(!spells.containsKey(spell.level)) {
+                    spells[spell.level] = mutableListOf()
+                }
+                spells[spell.level]?.add(Pair(first = null, second = spell))
             }
         }
-
-        return result
+        //TODO feats
+        return spells
     }
 
     val combatFeatures: List<Feature>

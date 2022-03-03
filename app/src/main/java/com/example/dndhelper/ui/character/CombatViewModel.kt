@@ -185,6 +185,10 @@ public class CombatViewModel @Inject constructor(
                     }
                 }
         }
+
+        character?.value?.additionalSpells?.forEach {
+            spells[it.key]?.addAll(it.value)
+        }
         return spells
     }
 

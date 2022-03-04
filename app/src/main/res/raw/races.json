@@ -1642,6 +1642,81 @@
                     ]
                 }
             ]
+        },
+        {
+            "name" : "Warforged",
+            "ability_bonuses" : [
+                {
+                    "name" : "Constitution",
+                    "bonus": 2
+                },
+                {
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "Strength",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Dexterity",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Intelligence",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Wisdom",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Charisma",
+                            "bonus" : 1
+                        }
+                    ]
+                }
+            ],
+            "size" : "Medium",
+            "size_desc": "Your size is Medium. To set your height and weight randomly, start with rolling a size modifier.Size modifier = 2d6 Height = 5 feet + 10 inches + your size modifier in inches Weight in pounds = 270 + (4 x your size modifier)",
+            "age" : "A typical warforged is between two and thirty years old. The maximum lifespan of the warforged remains a mystery; so far, warforged have shown no signs of deterioration due to age. You are immune to magical aging effects.",
+            "alignment" : "Most warforged take comfort in order and discipline, tending toward law and neutrality. But some have absorbed the morality – or lack thereof – of the beings with which they served.",
+            "ground_speed" : 30,
+            "proficiencies" : [
+                {
+                    "name" : "You gain one skill proficiency of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {"index" : "all_skills"}
+                    ]
+                },
+                {
+                    "name" : "You gain one tool proficiency of your choice.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "tools"
+                        }
+                    ]
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and one other language of your choice.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "One other language of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                }
+            ],
+            "features" : [
+
+            ]
         }
     ]
 }

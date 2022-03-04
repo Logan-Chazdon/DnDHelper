@@ -1100,12 +1100,23 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     }
                 }
             } catch (e: JSONException) {
-                abilityBonuses.add(
-                    AbilityBonus(
-                        ability = abilityBonusJson.getString("name"),
-                        bonus = abilityBonusJson.getInt("bonus")
+                try {
+                    val from = mutableListOf<AbilityBonus>()
+                    extractAbilityBonuses(abilityBonusJson.getJSONArray("from"), from)
+                    abilityBonusChoice = AbilityBonusChoice(
+                        choose=  abilityBonusJson.getInt("choose"),
+                        from = from,
+                        maxOccurrencesOfAbility = try {abilityBonusJson.getInt("max_same") }
+                        catch (e:JSONException) { 1 }
                     )
-                )
+                } catch (e: JSONException) {
+                    abilityBonuses.add(
+                        AbilityBonus(
+                            ability = abilityBonusJson.getString("name"),
+                            bonus = abilityBonusJson.getInt("bonus")
+                        )
+                    )
+                }
             }
         }
         return abilityBonusChoice

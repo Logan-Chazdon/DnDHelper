@@ -1537,6 +1537,111 @@
                 }
             ],
             "proficiencies" : []
+        },
+        {
+            "name": "Shifter",
+            "ability_bonuses" : [
+                {
+                    "name" : "Dexterity",
+                    "bonus" : 1
+                }
+            ],
+            "age" : "Shifters are quick to mature both physically and emotionally, reaching young adulthood at age 10. They rarely live to be more than 70 years old.",
+            "alignment" : "Shifters tend toward neutrality, being more focused on survival than concepts of good and evil. A love of personal freedom can drive shifters toward chaotic alignments.",
+            "size_desc" : "Shifters range from 5 to almost 7 feet tall, depending on their subrace. Your size is Medium.",
+            "size" : "Medium",
+            "ground_speed" : 30,
+            "proficiencies" : [
+                {
+                    "name" : "Perception"
+                }
+            ],
+            "language_desc" : "You can read and write Common, Quori, and one other language of your choice.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Quori"
+                },
+                {
+                    "name" : "One other language of your choice.",
+                    "choose" : 1,
+                    "from" : [
+                        { "index" : "all_languages"}
+                    ]
+                }
+            ],
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "You have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Shifting",
+                    "desc" : "As a bonus action, you can assume a more bestial appearance. This transformation lasts for 1 minute, until you die, or until you revert to your normal appearance as a bonus action. When you shift, you gain temporary hit points equal to your level + your Constitution modifier (minimum of 1 temporary hit point). You also gain benefits that depend on your shifter subrace, described below. Once you shift, you can’t do so again until you finish a short or long rest."
+                }
+            ],
+            "subraces" : [
+                {
+                    "name" : "Beasthide",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Constitution",
+                            "bonus" : 2
+                        }
+                    ],
+                    "proficiencies" : [
+                        {"name" : "Athletics"}
+                    ],
+                    "features" : [
+                        {
+                            "name": "Shifting",
+                            "desc" : "Whenever you shift, you gain 1d6 additional temporary hit points, and while shifted, you have a +1 bonus to your AC."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Longtooth",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Strength",
+                            "bonus" : 2
+                        }
+                    ],
+                    "proficiencies" : [
+                        {"name" : "Intimidation"}
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Shifting",
+                            "desc" : "While shifted, you can use your elongated fangs to make an unarmed strike as a bonus action. If you hit with your fangs, you can deal piercing damage equal to 1d6 + your Strength modifier, instead of the bludgeoning damage normal for an unarmed strike."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Swiftstride",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Dexterity",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Charisma",
+                            "bonus" : 1
+                        }
+                    ],
+                    "proficiencies" : [
+                        {"name" : "Acrobatics"}
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Shifting",
+                            "desc" : "While shifted, your walking speed increases by an additional 5 feet. Additionally, you can move up to 10 feet as a reaction when an enemy ends its turn within 5 feet of you. This movement doesn’t provoke opportunity attacks."
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

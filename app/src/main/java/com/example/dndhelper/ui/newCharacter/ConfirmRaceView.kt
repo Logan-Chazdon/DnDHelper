@@ -129,7 +129,7 @@ fun ConfirmRaceView(
 
                 if(!(race.proficiencyChoices.isNullOrEmpty() && race.startingProficiencies.isNullOrEmpty())) {
                     RaceContentCard(title = "Proficiencies") {
-                        Text(race.startingProficiencies.let {
+                        race.startingProficiencies.let {
                             var string = ""
                             it.forEachIndexed { index, prof ->
                                 string += prof.name
@@ -137,8 +137,14 @@ fun ConfirmRaceView(
                                     string += ", "
                                 }
                             }
-                            "$string."
-                        })
+                            if(string.isNotEmpty()) {
+                                "$string."
+                            } else {
+                                null
+                            }
+                        }?.let {
+                            Text(it)
+                        }
 
                         race.proficiencyChoices.forEach { proficiencyChoice ->
                             MultipleChoiceDropdownView(state = viewModel.raceProficiencyChoiceDropdownStates.getDropDownState(

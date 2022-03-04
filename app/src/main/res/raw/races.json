@@ -1686,7 +1686,7 @@
             ],
             "proficiency_choices" : [
                 {
-                    "name" : "You gain one skill proficiency of your choice",
+                    "name" : "You gain one skill proficiency of your choice.",
                     "choose" : 1,
                     "from" : [
                         {"index" : "skill_proficiencies"}
@@ -1708,7 +1708,7 @@
                     "name" : "Common"
                 },
                 {
-                    "name" : "One other language of your choice",
+                    "name" : "One other language of your choice.",
                     "choose" : 1,
                     "from" : [
                         {

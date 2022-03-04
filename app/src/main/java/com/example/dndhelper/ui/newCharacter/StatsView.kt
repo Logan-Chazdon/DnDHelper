@@ -12,13 +12,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.dndhelper.ui.utils.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun StatsView(
     viewModel: NewCharacterStatsViewModel,
-    characterId: Int
+    navController: NavController
 ) {
+    val scope = rememberCoroutineScope()
+    Scaffold(
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = { Text("DONE") },
+                onClick = {
+                    scope.launch(Dispatchers.IO) {
+                        viewModel.longRest()
+                    }
+                    navController.navigate("characterView/MainView/${viewModel.id}")
+                })
+        }
+    ) {
     Column {
         var statGenDropdownExpanded by remember { mutableStateOf(false) }
         val selectedIndexStatGen = viewModel.currentStateGenTypeIndex.observeAsState()
@@ -35,19 +51,21 @@ fun StatsView(
         )
 
         val pointsRemaining = viewModel.pointsRemaining.observeAsState()
-        if(selectedIndexStatGen.value == 0) {
+        if (selectedIndexStatGen.value == 0) {
             Text(
                 text = "Points Remaining: ${pointsRemaining.value}"
             )
         }
 
-        DropdownMenu(expanded = statGenDropdownExpanded , onDismissRequest = { statGenDropdownExpanded=false }) {
+        DropdownMenu(
+            expanded = statGenDropdownExpanded,
+            onDismissRequest = { statGenDropdownExpanded = false }) {
             statGenOptions.forEachIndexed { index, item ->
                 DropdownMenuItem(onClick = {
                     viewModel.setCurrentStatGenTypeIndex(index)
                     statGenDropdownExpanded = false
                 }) {
-                        Text(text = item, fontSize = 20.sp)
+                    Text(text = item, fontSize = 20.sp)
                 }
             }
         }
@@ -71,11 +89,11 @@ fun StatsView(
         ) {
             for (row in 0 until rows) {
                 Column(
-                    modifier =  Modifier
+                    modifier = Modifier
                         .mediaQuery(
                             Dimensions.Height lessThan 500.dp,
-                             Modifier.width(screenWidth.times(0.48f))
-                          )
+                            Modifier.width(screenWidth.times(0.48f))
+                        )
                         .mediaQuery(
                             Dimensions.Height greaterThan 500.dp,
                             Modifier.fillMaxWidth(0.9f)
@@ -130,7 +148,10 @@ fun StatsView(
                                     onDismissRequest = { statChoiceExpanded = false }) {
                                     statsOptions.value?.forEachIndexed { index, item ->
                                         DropdownMenuItem(onClick = {
-                                            viewModel.selectedStatByIndex((column * rows) + row, index)
+                                            viewModel.selectedStatByIndex(
+                                                (column * rows) + row,
+                                                index
+                                            )
                                             statChoiceExpanded = false
                                         }) {
                                             Text(text = item.toString(), fontSize = 20.sp)
@@ -144,6 +165,6 @@ fun StatsView(
                 }
             }
         }
-
+    }
     }
 }

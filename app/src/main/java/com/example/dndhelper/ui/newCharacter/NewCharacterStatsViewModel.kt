@@ -210,5 +210,14 @@ public class NewCharacterStatsViewModel @Inject constructor(
     fun setCurrentStatGenTypeIndex(index: Int) {
         currentStateGenTypeIndex.postValue(index)
     }
+
+    fun longRest() {
+        val tempChar = character?.copy()
+        tempChar?.id = character?.id!!
+        tempChar?.longRest()
+        if (tempChar != null) {
+            repository.insertCharacter(tempChar)
+        }
+    }
 }
 

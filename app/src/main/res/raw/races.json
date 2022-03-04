@@ -1682,11 +1682,14 @@
             "alignment" : "Most warforged take comfort in order and discipline, tending toward law and neutrality. But some have absorbed the morality – or lack thereof – of the beings with which they served.",
             "ground_speed" : 30,
             "proficiencies" : [
+
+            ],
+            "proficiency_choices" : [
                 {
                     "name" : "You gain one skill proficiency of your choice",
                     "choose" : 1,
                     "from" : [
-                        {"index" : "all_skills"}
+                        {"index" : "skill_proficiencies"}
                     ]
                 },
                 {

@@ -1,6 +1,7 @@
 package com.example.dndhelper.ui.character
 
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.util.DisplayMetrics
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -15,7 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -26,6 +27,7 @@ import com.example.dndhelper.repository.dataClasses.Spell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+
 
 @ExperimentalFoundationApi
 @Composable
@@ -305,21 +307,21 @@ fun CombatView(viewModel: CombatViewModel) {
                                 Modifier.padding(15.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
+                                val textModifier = Modifier.width((300 / 3).dp)
+
                                 Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Text(it.name)
-                                    Text(it.school)
-                                    Text(it.castingTime)
+                                    Text(it.name, textModifier)
+                                    Text(it.school, textModifier)
+                                    Text(it.castingTime, textModifier)
                                 }
                                 Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Text(it.range)
-                                    Text(it.duration)
-                                    Text(it.area)
+                                    Text(it.range, textModifier)
+                                    Text(it.duration, textModifier)
+                                    Text(it.area, textModifier)
                                 }
                                 Text(it.desc)
                                 var expanded by remember { mutableStateOf(false) }

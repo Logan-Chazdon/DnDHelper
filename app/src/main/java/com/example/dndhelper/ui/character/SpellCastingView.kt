@@ -130,11 +130,7 @@ fun SpellCastingView(
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f)
                                 .clickable {
-                                    if(spell.level == 0 ) {
-                                        //TODO add something for cantrips
-                                    } else {
-                                        cast(spell)
-                                    }
+                                    cast(spell)
                                 },
                             elevation = 2.dp
                         ) {

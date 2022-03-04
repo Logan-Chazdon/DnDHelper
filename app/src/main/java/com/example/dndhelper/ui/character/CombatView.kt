@@ -324,52 +324,54 @@ fun CombatView(viewModel: CombatViewModel) {
                                     Text(it.area, textModifier)
                                 }
                                 Text(it.desc)
-                                var expanded by remember { mutableStateOf(false) }
-                                var level by remember { mutableStateOf(it.level) }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Card {
-                                        Row(
-                                            modifier = Modifier
-                                                .padding(5.dp)
-                                                .fillMaxWidth(0.5f)
-                                                .clickable { expanded = true },
-                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                        ) {
-                                            Text(
-                                                text = allSpellLevels[level - 1].second,
-                                                style = MaterialTheme.typography.h6
-                                            )
-                                            Icon(
-                                                Icons.Default.ArrowDropDown,
-                                                "Select spell Level"
-                                            )
-                                        }
-                                    }
-                                    DropdownMenu(
-                                        expanded = expanded,
-                                        onDismissRequest = { expanded = false }
+                                if (spell?.level != 0) {
+                                    var expanded by remember { mutableStateOf(false) }
+                                    var level by remember { mutableStateOf(it.level) }
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        viewModel.getCastingOptions(it).forEach {
-                                            DropdownMenuItem(onClick = {
-                                                expanded = false
-                                                level = it.first
-                                            }) {
-                                                Text(it.second)
+                                        Card {
+                                            Row(
+                                                modifier = Modifier
+                                                    .padding(5.dp)
+                                                    .fillMaxWidth(0.5f)
+                                                    .clickable { expanded = true },
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                            ) {
+                                                Text(
+                                                    text = allSpellLevels[level - 1].second,
+                                                    style = MaterialTheme.typography.h6
+                                                )
+                                                Icon(
+                                                    Icons.Default.ArrowDropDown,
+                                                    "Select spell Level"
+                                                )
                                             }
                                         }
-                                    }
-
-                                    Button(onClick = {
-                                        GlobalScope.launch {
-                                            viewModel.cast(spell!!, level)
+                                        DropdownMenu(
+                                            expanded = expanded,
+                                            onDismissRequest = { expanded = false }
+                                        ) {
+                                            viewModel.getCastingOptions(it).forEach {
+                                                DropdownMenuItem(onClick = {
+                                                    expanded = false
+                                                    level = it.first
+                                                }) {
+                                                    Text(it.second)
+                                                }
+                                            }
                                         }
-                                        castIsExpanded = false
-                                    }) {
-                                        Text("CAST")
+
+                                        Button(onClick = {
+                                            GlobalScope.launch {
+                                                viewModel.cast(spell!!, level)
+                                            }
+                                            castIsExpanded = false
+                                        }) {
+                                            Text("CAST")
+                                        }
                                     }
                                 }
                             }

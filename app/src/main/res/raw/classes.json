@@ -2825,6 +2825,37 @@
             "starting_gold_d4s" : 4,
             "subclass_level" : 1,
             "hit_die" : 8,
+            "pact_magic" : {
+                "casting_ability" : "Cha",
+                "cantrips_known" : [
+                    2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4
+                ],
+                "spells_known" : [
+                    2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15
+                ],
+                "pact_slots" : [
+                    {"level" : 1, "amount" : 1},
+                    {"level" : 1, "amount" : 2},
+                    {"level" : 2, "amount" : 2},
+                    {"level" : 2, "amount" : 2},
+                    {"level" : 3, "amount" : 2},
+                    {"level" : 3, "amount" : 2},
+                    {"level" : 4, "amount" : 2},
+                    {"level" : 4, "amount" : 2},
+                    {"level" : 5, "amount" : 2},
+                    {"level" : 5, "amount" : 2},
+                    {"level" : 5, "amount" : 3},
+                    {"level" : 5, "amount" : 3},
+                    {"level" : 5, "amount" : 3},
+                    {"level" : 5, "amount" : 3},
+                    {"level" : 5, "amount" : 3},
+                    {"level" : 5, "amount" : 3},
+                    {"level" : 5, "amount" : 4},
+                    {"level" : 5, "amount" : 4},
+                    {"level" : 5, "amount" : 4},
+                    {"level" : 5, "amount" : 4}
+                ]
+            },
             "spell_casting" : {"type" : 0.0},
             "comment" : "TODO add pact magic",
             "proficiency_choices": [

@@ -32,6 +32,8 @@ interface LocalDataSource {
 class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     val _infusions: MutableLiveData<List<Infusion>> =
         MutableLiveData()
+    val _invocations: MutableLiveData<List<Invocation>> =
+        MutableLiveData()
     val _martialWeapons: MutableLiveData<List<Weapon>> =
         MutableLiveData()
     val _simpleWeapons: MutableLiveData<List<Weapon>> =
@@ -74,6 +76,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Infusions
             generateInfusions()
 
+            //Invocations
+            generateInvocations()
+
             //Feats
             generateFeats()
 
@@ -86,6 +91,52 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Classes
             generateClasses()
         }
+    }
+
+    private fun generateInvocations() {
+        val dataAsString =
+            context.resources.openRawResource(R.raw.invocations).bufferedReader().readText()
+        val invocations = mutableListOf<Invocation>()
+        val invocationsJson = JSONObject(dataAsString).getJSONArray("invocations")
+        for(index in 0 until invocationsJson.length()) {
+            val invocationJson = invocationsJson.getJSONObject(index)
+            invocations.add(
+                Invocation(
+                    name = invocationJson.getString("name"),
+                    desc = invocationJson.getString("desc"),
+                    prerequisite = try {
+                        extractPrerequisite(invocationJson.getJSONObject("prerequisite"))
+                    } catch (e : JSONException) { null }
+                )
+            )
+        }
+        _invocations.value = invocations
+    }
+
+    private fun extractPrerequisite(jsonObject: JSONObject): Prerequisite {
+        val level = try {
+            jsonObject.getInt("level")
+        } catch (e : JSONException) {
+            null
+        }
+
+        val feature = try {
+            jsonObject.getString("feature")
+        } catch (e : JSONException) {
+            null
+        }
+
+        val spell = try {
+            jsonObject.getString("spell")
+        } catch (e : JSONException) {
+            null
+        }
+
+        return Prerequisite(
+            level = level,
+            feature = feature,
+            spell = spell
+        )
     }
 
     private fun generateInfusions() {
@@ -1372,6 +1423,18 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //If we have an index construct a list from that otherwise just make it normally.
             try {
                 when (featureJson.getString("index")) {
+                    "invocations" -> {
+                        _invocations.value!!.forEach {
+                            features.add(
+                                Feature(
+                                    name = it.name,
+                                    prerequisite = it.prerequisite,
+                                    description = it.desc,
+                                    options = null
+                                )
+                            )
+                        }
+                    }
                     "infusions" -> {
                         _infusions.value!!.forEach {
                             features.add(

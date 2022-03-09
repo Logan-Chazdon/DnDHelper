@@ -1,7 +1,6 @@
 package com.example.dndhelper.ui.character
 
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
-import android.util.DisplayMetrics
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -16,7 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.*
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -201,10 +200,33 @@ fun CombatView(viewModel: CombatViewModel) {
                     }
                 }
 
-                CombatListView(
-                    name = "Resistance",
-                    list = viewModel.character?.observeAsState()?.value?.resistances
-                )
+                Card(
+                    modifier = Modifier.size(100.dp),
+                    elevation = 10.dp,
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Hit dice"
+                        )
+                        //TODO implement
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                Modifier.size(75.dp)
+                            )
+                            Text(
+                                text = "3d6",
+                                modifier = Modifier.padding(bottom = 5.dp),
+                                style = MaterialTheme.typography.h5
+                            )
+                        }
+                    }
+                }
 
             }
 

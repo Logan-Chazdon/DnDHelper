@@ -62,6 +62,9 @@ data class Character(
         equippedShield?.let {
             result += it.totalAcBonus
         }
+        features.forEach {
+            it.second.acBonus?.let { acBonus -> result += acBonus}
+        }
         return result
     }
 

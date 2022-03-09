@@ -1718,7 +1718,19 @@
                 }
             ],
             "features" : [
-
+                {
+                    "name" : "Constructed Resilience",
+                    "desc" : "You were created to have remarkable fortitude, represented by the following benefits:\nYou have advantage on saving throws against being poisoned, and you have resistance to poison damage.\nYou don’t need to eat, drink, or breathe.\nYou are immune to disease.\nYou don't need to sleep, and magic can't put you to sleep."
+                },
+                {
+                    "name" : "Sentry's Rest",
+                    "desc" : "When you take a long rest, you must spend at least six hours in an inactive, motionless state, rather than sleeping. In this state, you appear inert, but it doesn’t render you unconscious, and you can see and hear as normal."
+                },
+                {
+                    "name" : "Integrated Protection",
+                    "desc" : "Your body has built-in defensive layers, which can be enhanced with armor.\nYou gain a +1 bonus to Armor Class.\nYou can don only armor with which you have proficiency. To don armor, you must incorporate it into your body over the course of 1 hour, during which you must remain in contact with the armor. To doff armor, you must spend 1 hour removing it. You can rest while donning or doffing armor in this way.\nWhile you live, your armor can't be removed from your body against your will.",
+                    "ac_bonus" : 1
+                }
             ]
         }
     ]

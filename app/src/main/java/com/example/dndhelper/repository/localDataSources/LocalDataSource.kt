@@ -1530,7 +1530,10 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         } catch (e: JSONException) {
                             null
                         },
-                        spells = spells
+                        spells = spells,
+                        acBonus = try {
+                            featureJson.getInt("ac_bonus")
+                        } catch (e: JSONException) { null }
                     )
                 )
             }

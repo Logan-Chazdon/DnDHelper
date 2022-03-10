@@ -2857,7 +2857,6 @@
                 ]
             },
             "spell_casting" : {"type" : 0.0},
-            "comment" : "TODO add pact magic",
             "proficiency_choices": [
                 {
                     "name": "Choose two from Arcana, Deception, History, Intimidation, Investigation, Nature, and Religion.",

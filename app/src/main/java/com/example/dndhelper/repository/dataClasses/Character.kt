@@ -642,7 +642,7 @@ data class Character(
                     slots[level].rechargeAmountType = newAmount.toString()
                 } else {
                     slots.add(
-                        level,
+                        level - 1,
                         Resource(
                             name = Repository.allSpellLevels[level - 1].second,
                             currentAmount = amount,

@@ -633,21 +633,20 @@ data class Character(
         slots.addAll(spellSlots)
         classes.forEach { (_, clazz) ->
             clazz.pactMagic?.pactSlots?.let {
-                val level = it[clazz.level].name.toInt()
-                val amount = it[clazz.level].maxAmountType.toInt()
+                val level = it[clazz.level - 1].name.toInt()
+                val maxAmount = it[clazz.level - 1].maxAmountType.toInt()
+                val amount = it[clazz.level - 1].currentAmount
                 if(slots.size  == level + 1) {
-                    val newAmount = slots[level].currentAmount + amount
-                    slots[level].currentAmount = newAmount
-                    slots[level].maxAmountType = newAmount.toString()
-                    slots[level].rechargeAmountType = newAmount.toString()
+                    slots[level].currentAmount = slots[level].currentAmount + amount
+                    slots[level].maxAmountType = maxAmount.toString()
+                    slots[level].rechargeAmountType = maxAmount.toString()
                 } else {
                     slots.add(
-                        level - 1,
                         Resource(
                             name = Repository.allSpellLevels[level - 1].second,
                             currentAmount = amount,
-                            maxAmountType = amount.toString(),
-                            rechargeAmountType = amount.toString()
+                            maxAmountType = maxAmount.toString(),
+                            rechargeAmountType = maxAmount.toString()
                         )
                     )
                 }

@@ -80,14 +80,12 @@ public class CombatViewModel @Inject constructor(
     }
 
     fun getCastingOptions(spell: Spell): List<Pair<Int, String>> {
-        return allSpellLevels.subList(
-            spell.level - 1,
-            character!!.value!!.spellSlots.lastIndex + 1
-        ).let { levels ->
+        return allSpellLevels.let { levels ->
             val result = mutableListOf<Pair<Int, String>>()
-            levels.forEach {
-                if(character!!.value!!.spellSlots[it.first - 1].currentAmount != 0) {
-                    result.add(it)
+            levels.forEach { level ->
+                val slot = character!!.value!!.getAllSpellSlots().findLast { it.name == level.second }
+                if(slot?.currentAmount ?: 0 != 0 && spell.level <= level.first) {
+                    result.add(level)
                 }
             }
             result
@@ -95,30 +93,57 @@ public class CombatViewModel @Inject constructor(
     }
 
     fun cast(spell: Spell, level: Int) {
-        val newSlots = character!!.value!!.spellSlots
-        newSlots[level-1].currentAmount -= 1
-        val tempChar : Character =
-            character!!.value!!.
-            copy(spellSlots = newSlots)
-        repository.insertCharacter(tempChar)
+        repository.insertCharacter(getCharacterMinusSlot(level))
     }
 
     fun refundSlot(slot: Int) {
-        val newSlots = character!!.value!!.spellSlots
-        newSlots[slot-1].currentAmount += 1
-        val tempChar : Character =
-            character!!.value!!.
-            copy(spellSlots = newSlots)
-        repository.insertCharacter(tempChar)
+        repository.insertCharacter(getCharacterPlusSlot(slot))
     }
 
     fun useSlot(slot: Int) {
+        repository.insertCharacter(getCharacterMinusSlot(slot))
+    }
+
+    private fun getCharacterMinusSlot(slot: Int): Character {
+        var result : Character? = null
         val newSlots = character!!.value!!.spellSlots
-        newSlots[slot-1].currentAmount -= 1
-        val tempChar : Character =
-            character!!.value!!.
-            copy(spellSlots = newSlots)
-        repository.insertCharacter(tempChar)
+        if(newSlots.getOrNull(slot - 1)?.currentAmount ?: 0 != 0) {
+            newSlots[slot - 1].currentAmount -= 1
+            result =  character!!.value!!.copy(spellSlots = newSlots, id = character!!.value!!.id)
+        } else {
+            for ((_, clazz) in character!!.value!!.classes) {
+                if(clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount != 0) {
+                    clazz.pactMagic?.pactSlots!![clazz.level - 1].currentAmount -= 1
+                    result = character!!.value!!.copy(id = character!!.value!!.id)
+                    break
+                }
+            }
+        }
+        return result!!
+    }
+
+    private fun getCharacterPlusSlot(slot: Int): Character {
+        var result : Character? = null
+        val newSlots = character!!.value!!.spellSlots
+        if(
+            newSlots.getOrNull(slot - 1)?.currentAmount ?: 0
+            != (newSlots.getOrNull(slot - 1)?.maxAmountType ?: "0").toInt()
+        ) {
+            newSlots[slot - 1].currentAmount += 1
+            result =  character!!.value!!.copy(spellSlots = newSlots, id = character!!.value!!.id)
+        } else {
+            for ((_, clazz) in character!!.value!!.classes) {
+                if(
+                    clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount !=
+                    clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.maxAmountType?.toInt()
+                ) {
+                    clazz.pactMagic?.pactSlots!![clazz.level - 1].currentAmount += 1
+                    result = character!!.value!!.copy(id = character!!.value!!.id)
+                    break
+                }
+            }
+        }
+        return result!!
     }
 
     fun getSpellSlotsAndCantrips(): MutableList<Resource> {

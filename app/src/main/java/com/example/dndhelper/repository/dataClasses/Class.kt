@@ -34,6 +34,6 @@ class Class(
         levelPath.forEach{
             it.recharge(level)
         }
-        pactMagic?.pactSlots?.get(level)?.recharge(level)
+        pactMagic?.pactSlots?.get(level - 1)?.recharge(level)
     }
 }

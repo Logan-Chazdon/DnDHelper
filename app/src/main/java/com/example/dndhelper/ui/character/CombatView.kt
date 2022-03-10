@@ -21,7 +21,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.dndhelper.R
-import com.example.dndhelper.repository.Repository.Companion.allSpellLevels
 import com.example.dndhelper.repository.dataClasses.Spell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -364,7 +363,8 @@ fun CombatView(viewModel: CombatViewModel) {
                                                 horizontalArrangement = Arrangement.SpaceBetween,
                                             ) {
                                                 Text(
-                                                    text = allSpellLevels[level - 1].second,
+                                                    text = viewModel.getCastingOptions(it).findLast { it.first == level }?.second
+                                                        ?: viewModel.getCastingOptions(it).findLast { it.first >= level }!!.second,
                                                     style = MaterialTheme.typography.h6
                                                 )
                                                 Icon(

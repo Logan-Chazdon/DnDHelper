@@ -1249,7 +1249,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
                 val pactSlotsJson = pactMagicJson.getJSONArray("pact_slots")
                 val pactSlots : MutableList<Resource> = mutableListOf()
-                for(i in 0 until pactMagicJson.length()) {
+                for(i in 0 until pactSlotsJson.length()) {
                     val pactSlotJson = pactSlotsJson.getJSONObject(i)
                     val amount = pactSlotJson.getInt("amount")
                     pactSlots.add(

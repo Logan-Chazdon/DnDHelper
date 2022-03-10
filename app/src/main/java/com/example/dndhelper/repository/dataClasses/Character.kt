@@ -6,6 +6,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.model.Converters
 import kotlin.math.floor
 
@@ -51,6 +52,16 @@ data class Character(
     val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
     val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
 ){
+    val hasPactMagic: Boolean
+    get() {
+        classes.forEach {
+            if(it.value.pactMagic != null) {
+                return true
+            }
+        }
+        return false
+    }
+
     val groundSpeed: Int?
     get() {
         return race?.totalGroundSpeed
@@ -615,6 +626,34 @@ data class Character(
 
         //TODO add support for magic items.
         return bonusForProficiency + bonusFromStats + bonusFromInfusions
+    }
+
+    fun getAllSpellSlots(): List<Resource> {
+        val slots = mutableListOf<Resource>()
+        slots.addAll(spellSlots)
+        classes.forEach { (_, clazz) ->
+            clazz.pactMagic?.pactSlots?.let {
+                val level = it[clazz.level].name.toInt()
+                val amount = it[clazz.level].maxAmountType.toInt()
+                if(slots.size  == level + 1) {
+                    val newAmount = slots[level].currentAmount + amount
+                    slots[level].currentAmount = newAmount
+                    slots[level].maxAmountType = newAmount.toString()
+                    slots[level].rechargeAmountType = newAmount.toString()
+                } else {
+                    slots.add(
+                        level,
+                        Resource(
+                            name = Repository.allSpellLevels[level - 1].second,
+                            currentAmount = amount,
+                            maxAmountType = amount.toString(),
+                            rechargeAmountType = amount.toString()
+                        )
+                    )
+                }
+            }
+        }
+        return slots
     }
 
 }

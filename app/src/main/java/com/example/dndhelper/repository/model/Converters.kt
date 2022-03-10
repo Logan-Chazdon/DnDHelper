@@ -81,6 +81,19 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+    @TypeConverter
+    fun storedStringToPactMagic(data: String?): PactMagic? {
+        if (data == null) {
+            return null
+        }
+        val listType: Type = object : TypeToken<PactMagic?>() {}.getType()
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun pactMagicToStoredString(myObjects: PactMagic?): String? {
+        return gson.toJson(myObjects)
+    }
 
     @TypeConverter
     fun storedStringToSubClassList(data: String?): MutableList<Subclass> {

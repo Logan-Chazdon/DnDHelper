@@ -125,7 +125,7 @@ public class CombatViewModel @Inject constructor(
         val spellSlotsOffsetForCantrips = mutableListOf(
             Resource("Cantrip", 0, "0", "0")
         )
-        character?.value?.spellSlots?.let { spellSlotsOffsetForCantrips.addAll(it) }
+        character?.value?.getAllSpellSlots()?.let { spellSlotsOffsetForCantrips.addAll(it) }
         return spellSlotsOffsetForCantrips
     }
 
@@ -188,6 +188,17 @@ public class CombatViewModel @Inject constructor(
 
         character?.value?.additionalSpells?.forEach {
             spells[it.key]?.addAll(it.value)
+        }
+
+        character?.value?.classes?.forEach { clazz ->
+            clazz.value.pactMagic?.known?.let { known ->
+                known.forEach {
+                    if(spells.getOrDefault(it.level, null) == null) {
+                        spells[it.level] = mutableListOf()
+                    }
+                    spells[it.level]?.add(Pair(null, it))
+                }
+            }
         }
         return spells
     }

@@ -1233,6 +1233,45 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 )
             }
 
+            val pactMagic = try {
+                val pactMagicJson = classJson.getJSONObject("pact_magic")
+                val spellsKnownJson = pactMagicJson.getJSONArray("spells_known")
+                val spellsKnown = mutableListOf<Int>()
+                for (i in 0 until spellsKnownJson.length()) {
+                    spellsKnown.add(spellsKnownJson.getInt(i))
+                }
+
+                val cantripsKnownJson = pactMagicJson.getJSONArray("cantrips_known")
+                val cantripsKnown = mutableListOf<Int>()
+                for (i in 0 until cantripsKnownJson.length()) {
+                    cantripsKnown.add(cantripsKnownJson.getInt(i))
+                }
+
+                val pactSlotsJson = pactMagicJson.getJSONArray("pact_slots")
+                val pactSlots : MutableList<Resource> = mutableListOf()
+                for(i in 0 until pactMagicJson.length()) {
+                    val pactSlotJson = pactSlotsJson.getJSONObject(i)
+                    val amount = pactSlotJson.getInt("amount")
+                    pactSlots.add(
+                        Resource(
+                            name = pactSlotJson.getInt("level").toString(),
+                            rechargeAmountType = amount.toString(),
+                            currentAmount = amount,
+                            maxAmountType = amount.toString()
+                        )
+                    )
+                }
+
+                PactMagic(
+                    spellsKnown = spellsKnown,
+                    castingAbility = pactMagicJson.getString("casting_ability"),
+                    cantripsKnown = cantripsKnown,
+                    pactSlots = pactSlots
+                )
+            } catch (e: JSONException) {
+                null
+            }
+
 
             val spellCastingJson = classJson.getJSONObject("spell_casting")
             val spellCastingType = spellCastingJson.getDouble("type")
@@ -1306,6 +1345,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     equipmentChoices = equipmentChoices,
                     equipment = equipment,
                     spellCasting = spellCasting,
+                    pactMagic = pactMagic,
                     subclassLevel = classJson.getInt("subclass_level"),
                     startingGoldD4s = classJson.getInt("starting_gold_d4s")
                 )

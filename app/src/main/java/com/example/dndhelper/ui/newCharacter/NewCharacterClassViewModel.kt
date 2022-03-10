@@ -11,6 +11,7 @@ import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -134,6 +135,8 @@ public class NewCharacterClassViewModel @Inject constructor(
             newClass.spellCasting?.known?.addAll(spells.toList())
         }
 
+        newClass.pactMagic?.known?.addAll(spells.toList())
+
         character!!.addClass(newClass, takeGold.value, goldRolled.value.toInt() * 10)
         character.let { repository.insertCharacter(it) }
     }
@@ -212,14 +215,23 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun learnsSpells(classIndex: Int): Boolean {
-        return (classes.value?.get(classIndex)?.spellCasting?.type ?: 0) != 0
+        return ((classes.value?.get(classIndex)?.spellCasting?.type ?: 0) != 0
+                || classes.value?.get(classIndex)?.pactMagic != null)
     }
 
     fun canAffordSpellOfLevel(level: Int, classIndex: Int, classLevel: Int): Boolean {
-        return if(level == 0) {
-            classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel - 1] > spells.count { it.level == level }
-        } else {
-            classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel - 1] > spells.count { it.level == level }
+        return try {
+            if(level == 0) {
+                classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel - 1] > spells.count { it.level == level }
+            } else {
+                classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel - 1] > spells.count { it.level == level }
+            }
+        } catch(e: NullPointerException) {
+            if(level == 0) {
+                classes.value!![classIndex].pactMagic!!.cantripsKnown[classLevel - 1] > spells.count { it.level == level }
+            } else {
+                classes.value!![classIndex].pactMagic!!.spellsKnown[classLevel - 1] > spells.count { it.level == level }
+            }
         }
     }
 
@@ -227,7 +239,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         return try {
             classes.value?.getOrNull(classIndex)?.spellCasting?.spellsKnown?.getOrNull(
                 level.value.text.toInt() - 1
-            ) ?: 0
+            ) ?: classes.value?.getOrNull(classIndex)!!.pactMagic!!.spellsKnown[level.value.text.toInt() - 1]
         } catch (e: NumberFormatException) {
             0
         }
@@ -237,14 +249,18 @@ public class NewCharacterClassViewModel @Inject constructor(
         return try {
             classes.value?.getOrNull(classIndex)?.spellCasting?.cantripsKnown?.getOrNull(
                 level.value.text.toInt() - 1
-            ) ?: 0
+            ) ?: classes.value?.getOrNull(classIndex)!!.pactMagic!!.cantripsKnown[level.value.text.toInt() - 1]
         } catch (e: NumberFormatException) {
             0
         }
     }
 
     fun getCastingMod(classIndex: Int): String {
-        return abilityNames[shortAbilityNames.indexOf(classes.value?.getOrNull(classIndex)?.spellCasting?.castingAbility)]
+        return try {
+            abilityNames[shortAbilityNames.indexOf(classes.value?.getOrNull(classIndex)?.spellCasting?.castingAbility)]
+        } catch (e : ArrayIndexOutOfBoundsException) {
+            abilityNames[shortAbilityNames.indexOf(classes.value?.getOrNull(classIndex)?.pactMagic?.castingAbility)]
+        }
     }
 
 

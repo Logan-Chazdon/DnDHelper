@@ -280,7 +280,8 @@ fun CombatView(viewModel: CombatViewModel) {
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
 
-                if(viewModel.character?.observeAsState()?.value?.isCaster == true) {
+                if(viewModel.character?.observeAsState()?.value?.isCaster == true
+                    || character?.value?.hasPactMagic == true) {
                     Box(
                         Modifier.width(width)
                     ) {

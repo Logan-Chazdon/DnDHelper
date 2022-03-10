@@ -23,6 +23,7 @@ class Class(
     var equipmentChoices: List<ItemChoice> = emptyList(),
     var equipment: List<ItemInterface> = emptyList(),
     val spellCasting : SpellCasting? = null,
+    val pactMagic: PactMagic? = null,
     val startingGoldD4s: Int
 ) {
     var isBaseClass: Boolean = false
@@ -33,5 +34,6 @@ class Class(
         levelPath.forEach{
             it.recharge(level)
         }
+        pactMagic?.pactSlots?.get(level)?.recharge(level)
     }
 }

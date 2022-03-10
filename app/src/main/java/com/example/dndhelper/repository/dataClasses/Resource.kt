@@ -3,8 +3,8 @@ package com.example.dndhelper.repository.dataClasses
 class Resource(
     val name: String,
     var currentAmount: Int = 0,
-    val maxAmountType: String,
-    val rechargeAmountType: String,
+    var maxAmountType: String,
+    var rechargeAmountType: String,
 ) {
     fun maxAmount(maxAmountBasis: Int? = null) : Int {
         return when(maxAmountType) {

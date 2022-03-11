@@ -471,7 +471,7 @@ fun ConfirmClassView(
                                 .fillMaxSize()
                                 .verticalScroll(state = rememberScrollState())
                         ) {
-                            viewModel.getSpells(classIndex).let { spells ->
+                            viewModel.getLearnableSpells(classIndex, levels).let { spells ->
                                 var lastCategory: Int = -1
                                 spells.forEach {
                                     //TODO upgrade search

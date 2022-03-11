@@ -11,7 +11,6 @@ import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.lang.NullPointerException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -195,13 +194,27 @@ public class NewCharacterClassViewModel @Inject constructor(
         return character?.hasBaseClass ?: false
     }
 
-    fun getSpells(classIndex: Int): MutableList<Spell> {
+    fun getLearnableSpells(classIndex: Int, level: MutableState<TextFieldValue>): MutableList<Spell> {
         return repository.getAllSpellsByClassIndex(classIndex).run {
             if(classes.value?.get(classIndex)?.spellCasting?.prepareFrom == "all") {
                 this.removeAll {
                     it.level != 0
                 }
             }
+
+            try {
+                val classLevel = level.value.text.toInt()
+                val maxLevel = classes.value?.get(classIndex)?.spellCasting?.spellSlotsByLevel?.get(classLevel)?.size
+                    ?: classes.value?.get(classIndex)?.pactMagic?.pactSlots?.get(classLevel)!!.name.toInt()
+                this.removeAll {
+                    it.level > maxLevel
+                }
+            } catch(e : NumberFormatException) {
+                this.removeAll {
+                    true
+                }
+            }
+
             this
         }
     }
@@ -224,13 +237,13 @@ public class NewCharacterClassViewModel @Inject constructor(
             if(level == 0) {
                 classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel - 1] > spells.count { it.level == level }
             } else {
-                classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel - 1] > spells.count { it.level == level }
+                classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel - 1] > spells.count { it.level != 0 }
             }
         } catch(e: NullPointerException) {
             if(level == 0) {
                 classes.value!![classIndex].pactMagic!!.cantripsKnown[classLevel - 1] > spells.count { it.level == level }
             } else {
-                classes.value!![classIndex].pactMagic!!.spellsKnown[classLevel - 1] > spells.count { it.level == level }
+                classes.value!![classIndex].pactMagic!!.spellsKnown[classLevel - 1] > spells.count { it.level != 0 }
             }
         }
     }

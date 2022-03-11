@@ -224,7 +224,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
     private fun getItemByIndex(index: String): ItemInterface? {
         _items.value?.forEach {
-            if (index == it.name) {
+            if (index.lowercase() == it.name?.lowercase()) {
                 return it
             }
         }
@@ -271,7 +271,19 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 weapons
             }
 
-            else -> null
+            else -> {
+                var result : List<Weapon>? = null
+                val weapons = mutableListOf<Weapon>()
+                _martialWeapons.value?.let {weapons.addAll(it)}
+                _simpleWeapons.value?.let {weapons.addAll(it)}
+                for(item in weapons) {
+                    if(item.name?.lowercase() == index.lowercase()) {
+                        result = listOf(item)
+                        break
+                    }
+                }
+                result
+            }
         }
     }
 
@@ -285,7 +297,16 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun getArmorByIndex(index: String): List<Armor>? {
         return when (index) {
             "all_armor" -> _armors.value
-            else -> null
+            else -> {
+                var result : List<Armor>? = null
+                for(item in _armors.value!!) {
+                    if(item.name?.lowercase() == index.lowercase()) {
+                        result = listOf(item)
+                        break
+                    }
+                }
+                result
+            }
         }
     }
 
@@ -432,6 +453,12 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
         _items.addSource(_miscItems) { value -> addData(value) }
         _miscItems.value = generateMiscItems()
+
+        //This is needed because if _items is not observed its data will not be directly accessible until it is.
+        //So in order to check it for item indexes we need an empty observer.
+        _items.observeForever {
+
+        }
     }
 
     private fun generateMiscItems(): List<ItemInterface> {

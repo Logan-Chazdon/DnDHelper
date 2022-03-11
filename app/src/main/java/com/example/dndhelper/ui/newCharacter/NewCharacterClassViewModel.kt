@@ -136,7 +136,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 
         newClass.pactMagic?.known?.addAll(spells.toList())
 
-        character!!.addClass(newClass, takeGold.value, goldRolled.value.toInt() * 10)
+        character!!.addClass(newClass, takeGold.value, goldRolled.value.toInt() * newClass.startingGoldMultiplier)
         character.let { repository.insertCharacter(it) }
     }
 

@@ -277,7 +277,7 @@ fun ConfirmClassView(
                         Column(Modifier.padding(start = 5.dp)) {
                             Text(text = "Starting gold", style = MaterialTheme.typography.h6)
                             Text(
-                                text = "${classes.value?.get(classIndex)?.startingGoldD4s}d4 * 10",
+                                text = "${classes.value?.get(classIndex)?.startingGoldD4s}d4 * ${classes.value?.get(classIndex)?.startingGoldMultiplier}",
                                 style = MaterialTheme.typography.subtitle1
                             )
                             Row {
@@ -292,7 +292,7 @@ fun ConfirmClassView(
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                                     singleLine = true
                                 )
-                                Text(text = " * 10", style = MaterialTheme.typography.h6)
+                                Text(text = " * ${classes.value?.get(classIndex)?.startingGoldMultiplier}", style = MaterialTheme.typography.h6)
                             }
                         }
                     }

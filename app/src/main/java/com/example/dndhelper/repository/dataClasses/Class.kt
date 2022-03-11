@@ -24,7 +24,8 @@ class Class(
     var equipment: List<ItemInterface> = emptyList(),
     val spellCasting : SpellCasting? = null,
     val pactMagic: PactMagic? = null,
-    val startingGoldD4s: Int
+    val startingGoldD4s: Int,
+    val startingGoldMultiplier : Int = 10
 ) {
     var isBaseClass: Boolean = false
     var level: Int = 1

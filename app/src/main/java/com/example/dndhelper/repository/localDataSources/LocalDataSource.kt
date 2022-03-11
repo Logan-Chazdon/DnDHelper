@@ -1374,7 +1374,12 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     spellCasting = spellCasting,
                     pactMagic = pactMagic,
                     subclassLevel = classJson.getInt("subclass_level"),
-                    startingGoldD4s = classJson.getInt("starting_gold_d4s")
+                    startingGoldD4s = classJson.getInt("starting_gold_d4s"),
+                    startingGoldMultiplier = try {
+                        classJson.getInt("staring_gold_multiplier")
+                    } catch(e: JSONException) {
+                        10
+                    }
                 )
             )
         }

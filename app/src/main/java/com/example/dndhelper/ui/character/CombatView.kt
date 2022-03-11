@@ -346,9 +346,12 @@ fun CombatView(viewModel: CombatViewModel) {
                                     Text(it.area, textModifier)
                                 }
                                 Text(it.desc)
-                                if (spell?.level != 0) {
+                                var level by remember { mutableStateOf(it.level) }
+                                val levelText = viewModel.getCastingOptions(it).findLast { it.first == level }?.second
+                                    ?: viewModel.getCastingOptions(it).findLast { it.first >= level }?.second
+                                if (spell?.level != 0 && levelText != null) {
                                     var expanded by remember { mutableStateOf(false) }
-                                    var level by remember { mutableStateOf(it.level) }
+
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -363,8 +366,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                                 horizontalArrangement = Arrangement.SpaceBetween,
                                             ) {
                                                 Text(
-                                                    text = viewModel.getCastingOptions(it).findLast { it.first == level }?.second
-                                                        ?: viewModel.getCastingOptions(it).findLast { it.first >= level }!!.second,
+                                                    text = levelText,
                                                     style = MaterialTheme.typography.h6
                                                 )
                                                 Icon(

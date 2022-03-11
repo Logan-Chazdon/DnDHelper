@@ -204,8 +204,8 @@ public class NewCharacterClassViewModel @Inject constructor(
 
             try {
                 val classLevel = level.value.text.toInt()
-                val maxLevel = classes.value?.get(classIndex)?.spellCasting?.spellSlotsByLevel?.get(classLevel)?.size
-                    ?: classes.value?.get(classIndex)?.pactMagic?.pactSlots?.get(classLevel)!!.name.toInt()
+                val maxLevel = classes.value?.get(classIndex)?.spellCasting?.spellSlotsByLevel?.get(classLevel - 1)?.size
+                    ?: classes.value?.get(classIndex)?.pactMagic?.pactSlots?.get(classLevel - 1)!!.name.toInt()
                 this.removeAll {
                     it.level > maxLevel
                 }
@@ -255,6 +255,8 @@ public class NewCharacterClassViewModel @Inject constructor(
             ) ?: classes.value?.getOrNull(classIndex)!!.pactMagic!!.spellsKnown[level.value.text.toInt() - 1]
         } catch (e: NumberFormatException) {
             0
+        } catch (e: NullPointerException) {
+            0
         }
     }
 
@@ -264,6 +266,8 @@ public class NewCharacterClassViewModel @Inject constructor(
                 level.value.text.toInt() - 1
             ) ?: classes.value?.getOrNull(classIndex)!!.pactMagic!!.cantripsKnown[level.value.text.toInt() - 1]
         } catch (e: NumberFormatException) {
+            0
+        } catch (e: NullPointerException) {
             0
         }
     }

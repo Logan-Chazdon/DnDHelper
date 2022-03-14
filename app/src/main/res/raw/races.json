@@ -281,6 +281,7 @@
                         {
                             "name" : "Gem Ancestry",
                             "index" : "Draconic Ancestry",
+                            "desc" : "You trace your ancestry to a Gem dragon, granting you a special magical affinity. Choose one type of dragon from the Gem Ancestry table. This determines the damage type for your other traits as shown in the table.",
                             "choose" : 1,
                             "from" : [
                                 {
@@ -351,6 +352,7 @@
                         {
                             "name" : "Metallic Ancestry",
                             "index" : "Draconic Ancestry",
+                            "desc" :"You trace your ancestry to a metallic dragon, granting you a special magical affinity. Choose one type of dragon from the Metallic Ancestry table. This determines the damage type for your other traits as shown in the table.",
                             "choose" : 1,
                             "from" : [
                                 {

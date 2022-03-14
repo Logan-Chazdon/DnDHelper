@@ -1,5 +1,7 @@
 package com.example.dndhelper.ui.newCharacter
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +25,7 @@ fun StatsView(
     navController: NavController
 ) {
     val scope = rememberCoroutineScope()
+    val mainLooper = Looper.getMainLooper()
     Scaffold(
         floatingActionButton = {
             ExtendedFloatingActionButton(
@@ -30,8 +33,10 @@ fun StatsView(
                 onClick = {
                     scope.launch(Dispatchers.IO) {
                         viewModel.longRest()
+                        Handler(mainLooper).post {
+                            navController.navigate("characterView/MainView/${viewModel.id}")
+                        }
                     }
-                    navController.navigate("characterView/MainView/${viewModel.id}")
                 })
         }
     ) {

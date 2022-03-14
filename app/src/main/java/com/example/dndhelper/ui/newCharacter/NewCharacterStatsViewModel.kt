@@ -33,11 +33,11 @@ public class NewCharacterStatsViewModel @Inject constructor(
     private suspend fun updateStats() {
         if(id == -1)
             id = repository.createDefaultCharacter()!!
-        val character = repository.getCharacterById(id)
+        character = repository.getCharacterById(id)
         character!!.baseStats = generateStatMap()
-        character.statGenerationMethodIndex = currentStateGenTypeIndex.value!!
-        if(character.baseStats.isNotEmpty())
-            repository.insertCharacter(character)
+        character!!.statGenerationMethodIndex = currentStateGenTypeIndex.value!!
+        if(character!!.baseStats.isNotEmpty())
+            repository.insertCharacter(character!!)
     }
 
     private fun generateStatMap() : MutableMap<String, Int> {
@@ -211,7 +211,8 @@ public class NewCharacterStatsViewModel @Inject constructor(
         currentStateGenTypeIndex.postValue(index)
     }
 
-    fun longRest() {
+    suspend fun longRest() {
+        updateStats()
         val tempChar = character?.copy()
         tempChar?.id = character?.id!!
         tempChar?.longRest()

@@ -14,12 +14,14 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.example.dndhelper.R
 import com.example.dndhelper.repository.dataClasses.Spell
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +29,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @ExperimentalFoundationApi
 @Composable
 fun CombatView(viewModel: CombatViewModel) {
@@ -322,9 +325,14 @@ fun CombatView(viewModel: CombatViewModel) {
             }
 
             if (castIsExpanded) {
-                Dialog(onDismissRequest = { castIsExpanded = false }) {
+                Dialog(
+                    onDismissRequest = { castIsExpanded = false },
+                    properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true, usePlatformDefaultWidth = false)
+                ) {
                     spell?.let {
-                        Card {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(0.9f)
+                        ) {
                             Column(
                                 Modifier.padding(15.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)

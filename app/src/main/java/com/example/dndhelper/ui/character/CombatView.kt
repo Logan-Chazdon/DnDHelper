@@ -337,23 +337,27 @@ fun CombatView(viewModel: CombatViewModel) {
                                 Modifier.padding(15.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                val textModifier = Modifier.width((300 / 3).dp)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text(it.name)
+                                        Text(it.castingTime)
+                                    }
+                                    Column {
+                                        Text(it.school)
+                                        Text(it.duration)
+                                    }
+                                    Column {
+                                        Text(it.range)
+                                        Text(it.area)
+                                    }
+                                }
 
-                                Row(
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text(it.name, textModifier)
-                                    Text(it.school, textModifier)
-                                    Text(it.castingTime, textModifier)
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text(it.range, textModifier)
-                                    Text(it.duration, textModifier)
-                                    Text(it.area, textModifier)
-                                }
                                 Text(it.desc)
+
+
                                 var level by remember { mutableStateOf(it.level) }
                                 val levelText = viewModel.getCastingOptions(it).findLast { it.first == level }?.second
                                     ?: viewModel.getCastingOptions(it).findLast { it.first >= level }?.second

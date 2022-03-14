@@ -655,4 +655,12 @@ data class Character(
         return slots
     }
 
+    val maxHitDice: String
+    get() {
+        var result = ""
+        classes.forEach { _, clazz ->
+            result += "${clazz.level}d${clazz.hitDie}"
+        }
+        return result
+    }
 }

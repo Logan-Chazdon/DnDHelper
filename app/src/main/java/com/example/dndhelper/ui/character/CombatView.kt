@@ -214,7 +214,6 @@ fun CombatView(viewModel: CombatViewModel) {
                         Text(
                             text = "Hit dice"
                         )
-                        //TODO implement
                         Box(
                             contentAlignment = Alignment.Center
                         ) {
@@ -222,7 +221,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 Modifier.size(75.dp)
                             )
                             Text(
-                                text = "3d6",
+                                text = character?.value?.maxHitDice ?: "",
                                 modifier = Modifier.padding(bottom = 5.dp),
                                 style = MaterialTheme.typography.h5
                             )

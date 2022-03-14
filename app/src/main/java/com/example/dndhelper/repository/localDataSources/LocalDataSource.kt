@@ -1453,162 +1453,171 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
     private fun extractFeatures(featuresJson: JSONArray): MutableList<Feature> {
         val features = mutableListOf<Feature>()
-        for (featureIndex in 0 until featuresJson.length()) {
-            val featureJson = featuresJson.getJSONObject(featureIndex)
-            val choose = try {
-                Choose(featureJson.getInt("choose"))
-            } catch (e: JSONException) {
-                try {
-                    val result = mutableListOf<Int>()
-                    val json = featureJson.getJSONArray("choose")
-                    for (i in 0 until json.length()) {
-                        result.add(json.getInt(i))
-                    }
-                    Choose(result)
+        try {
+            for (featureIndex in 0 until featuresJson.length()) {
+                val featureJson = featuresJson.getJSONObject(featureIndex)
+                val choose = try {
+                    Choose(featureJson.getInt("choose"))
                 } catch (e: JSONException) {
-                    Choose(0)
-                }
-            }
-
-            val maxActive = try {
-                Choose(featureJson.getInt("max_active"))
-            } catch (e: JSONException) {
-                try {
-                    val result = mutableListOf<Int>()
-                    val json = featureJson.getJSONArray("max_active")
-                    for (i in 0 until json.length()) {
-                        result.add(json.getInt(i))
+                    try {
+                        val result = mutableListOf<Int>()
+                        val json = featureJson.getJSONArray("choose")
+                        for (i in 0 until json.length()) {
+                            result.add(json.getInt(i))
+                        }
+                        Choose(result)
+                    } catch (e: JSONException) {
+                        Choose(0)
                     }
-                    Choose(result)
+                }
+
+                val maxActive = try {
+                    Choose(featureJson.getInt("max_active"))
                 } catch (e: JSONException) {
-                    Choose(0)
+                    try {
+                        val result = mutableListOf<Int>()
+                        val json = featureJson.getJSONArray("max_active")
+                        for (i in 0 until json.length()) {
+                            result.add(json.getInt(i))
+                        }
+                        Choose(result)
+                    } catch (e: JSONException) {
+                        Choose(0)
+                    }
                 }
-            }
 
-            val level = try {
-                featureJson.getInt("level")
-            } catch (e: JSONException) {
-                0
-            }
+                val level = try {
+                    featureJson.getInt("level")
+                } catch (e: JSONException) {
+                    0
+                }
 
-            var options: MutableList<Feature>? = null
-            //If we have an index construct a list from that otherwise just make it normally.
-            try {
-                when (featureJson.getString("index")) {
-                    "invocations" -> {
-                        _invocations.value!!.forEach {
-                            features.add(
-                                Feature(
-                                    name = it.name,
-                                    prerequisite = it.prerequisite,
-                                    description = it.desc,
-                                    options = null
-                                )
-                            )
-                        }
-                    }
-                    "infusions" -> {
-                        _infusions.value!!.forEach {
-                            features.add(
-                                Feature(
-                                    grantedAtLevel = it.grantedAtLevel,
-                                    name = it.name,
-                                    description = it.desc,
-                                    infusion = it,
-                                    options = null,
-                                )
-                            )
-                        }
-                    }
-                    "proficiencies" -> {
-                        _abilitiesToSkills.value!!.forEach {
-                            it.value.forEach { skill ->
-                                //Don't add saving throws
-                                if (!skill.lowercase().contains("throw")) {
-                                    features.add(
-                                        Feature(
-                                            name = skill,
-                                            description = "",
-                                            grantedAtLevel = 0,
-                                            choose = Choose(0),
-                                            options = null,
-                                            prerequisite = Prerequisite(
-                                                proficiency = Proficiency(
-                                                    name = skill
-                                                )
-                                            )
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    "all_spells" -> {
-                        val bound = try {
-                            featureJson.getInt("bound")
-                        } catch (e: JSONException) {
-                            null
-                        }
-                        _spells.value?.forEach { spell ->
-                            if (spell.level <= bound ?: 10) {
+                var options: MutableList<Feature>? = null
+                //If we have an index construct a list from that otherwise just make it normally.
+                try {
+                    when (featureJson.getString("index")) {
+                        "invocations" -> {
+                            _invocations.value!!.forEach {
                                 features.add(
                                     Feature(
-                                        name = spell.name,
-                                        spells = listOf(spell),
-                                        description = "",
+                                        name = it.name,
+                                        prerequisite = it.prerequisite,
+                                        description = it.desc,
+                                        options = null
+                                    )
+                                )
+                            }
+                        }
+                        "infusions" -> {
+                            _infusions.value!!.forEach {
+                                features.add(
+                                    Feature(
+                                        grantedAtLevel = it.grantedAtLevel,
+                                        name = it.name,
+                                        description = it.desc,
+                                        infusion = it,
                                         options = null,
                                     )
                                 )
                             }
                         }
+                        "proficiencies" -> {
+                            _abilitiesToSkills.value!!.forEach {
+                                it.value.forEach { skill ->
+                                    //Don't add saving throws
+                                    if (!skill.lowercase().contains("throw")) {
+                                        features.add(
+                                            Feature(
+                                                name = skill,
+                                                description = "",
+                                                grantedAtLevel = 0,
+                                                choose = Choose(0),
+                                                options = null,
+                                                prerequisite = Prerequisite(
+                                                    proficiency = Proficiency(
+                                                        name = skill
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        "all_spells" -> {
+                            val bound = try {
+                                featureJson.getInt("bound")
+                            } catch (e: JSONException) {
+                                null
+                            }
+                            _spells.value?.forEach { spell ->
+                                if (spell.level <= bound ?: 10) {
+                                    features.add(
+                                        Feature(
+                                            name = spell.name,
+                                            spells = listOf(spell),
+                                            description = "",
+                                            options = null,
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                        "maneuvers" -> {
+                            //TODO
+                        }
+                        else -> throw JSONException("Invalid index")
                     }
-                    else -> throw JSONException("Invalid index")
-                }
 
-            } catch (e: JSONException) {
-                options = try {
-                    extractFeatures(featureJson.getJSONArray("from"))
                 } catch (e: JSONException) {
-                    null
-                }
+                    options = try {
+                        extractFeatures(featureJson.getJSONArray("from"))
+                    } catch (e: JSONException) {
+                        null
+                    }
 
-                val hpBonusPerLevel = try {
-                    featureJson.getInt("hp_bonus_per_level")
-                } catch (e: JSONException) {
-                    null
-                }
+                    val hpBonusPerLevel = try {
+                        featureJson.getInt("hp_bonus_per_level")
+                    } catch (e: JSONException) {
+                        null
+                    }
 
-                //This is for spells granted by the feature.
-                //Not for choosing what spells you get.
-                //For that create sub features with the spells you
-                //Need the user to choose from.
-                val spells = try {
-                    extractSpells(featureJson.getJSONArray("spells"))
-                } catch (e: JSONException) {
-                    null
-                }
+                    //This is for spells granted by the feature.
+                    //Not for choosing what spells you get.
+                    //For that create sub features with the spells you
+                    //Need the user to choose from.
+                    val spells = try {
+                        extractSpells(featureJson.getJSONArray("spells"))
+                    } catch (e: JSONException) {
+                        null
+                    }
 
-                features.add(
-                    Feature(
-                        name = featureJson.getString("name"),
-                        description = featureJson.getString("desc"),
-                        grantedAtLevel = level,
-                        choose = choose,
-                        hpBonusPerLevel = hpBonusPerLevel,
-                        options = options,
-                        maxActive = maxActive,
-                        index = try {
-                            featureJson.getString("index")
-                        } catch (e: JSONException) {
-                            null
-                        },
-                        spells = spells,
-                        acBonus = try {
-                            featureJson.getInt("ac_bonus")
-                        } catch (e: JSONException) { null }
+                    features.add(
+                        Feature(
+                            name = featureJson.getString("name"),
+                            description = try { featureJson.getString("desc")} catch(e: JSONException) { "" },
+                            grantedAtLevel = level,
+                            choose = choose,
+                            hpBonusPerLevel = hpBonusPerLevel,
+                            options = options,
+                            maxActive = maxActive,
+                            index = try {
+                                featureJson.getString("index")
+                            } catch (e: JSONException) {
+                                null
+                            },
+                            spells = spells,
+                            acBonus = try {
+                                featureJson.getInt("ac_bonus")
+                            } catch (e: JSONException) {
+                                null
+                            }
+                        )
                     )
-                )
+                }
             }
+        } catch (e: JSONException) {
+            throw e
         }
         return features
     }

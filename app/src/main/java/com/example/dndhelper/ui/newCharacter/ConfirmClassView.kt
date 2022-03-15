@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.dndhelper.repository.dataClasses.Subclass
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -299,36 +300,7 @@ fun ConfirmClassView(
                 }
             }
 
-            //Subclass
-            if (
-                viewModel.classes.observeAsState().value?.get(classIndex)?.subclassLevel ?: 21
-                <= try {
-                    levels.value.text.toInt()
-                } catch (e: NumberFormatException) {
-                    0
-                }
-            ) {
-                Card(
-                    elevation = 5.dp,
-                    modifier = Modifier
-                        .fillMaxWidth(0.95f)
-                        .background(
-                            color = MaterialTheme.colors.surface,
-                            shape = RoundedCornerShape(10.dp)
-                        ),
-                ) {
-                    Column(Modifier.padding(start = 5.dp)) {
-                        Text(text = "Subclass", style = MaterialTheme.typography.h6)
-                        MultipleChoiceDropdownView(
-                            state = viewModel.getSubclassDropdownState(
-                                viewModel.classes.observeAsState().value?.get(
-                                    classIndex
-                                )!!
-                            )
-                        )
-                    }
-                }
-            }
+
 
             //ASIs
             for (
@@ -424,6 +396,67 @@ fun ConfirmClassView(
 
                 }
             }
+
+
+            //Subclass
+            if (
+                viewModel.classes.observeAsState().value?.get(classIndex)?.subclassLevel ?: 21
+                <= try {
+                    levels.value.text.toInt()
+                } catch (e: NumberFormatException) {
+                    0
+                }
+            ) {
+                Card(
+                    elevation = 5.dp,
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .background(
+                            color = MaterialTheme.colors.surface,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                ) {
+                    Column(Modifier.padding(start = 5.dp)) {
+                        Text(text = "Subclass", style = MaterialTheme.typography.h6)
+                        MultipleChoiceDropdownView(
+                            state = viewModel.getSubclassDropdownState(
+                                viewModel.classes.observeAsState().value?.get(
+                                    classIndex
+                                )!!
+                            )
+                        )
+                    }
+                }
+
+
+                viewModel.classes.observeAsState().value?.get(
+                    classIndex
+                )?.let {
+                    (viewModel.getSubclassDropdownState(
+                        it
+                    ).getSelected(it.subClasses) as List<Subclass>)
+                        .getOrNull(0)
+                }?.let { subclass ->
+                    subclass.features.forEach {
+                        if (levels.value.text.isNotBlank()) {
+                            if (it.grantedAtLevel <= levels.value.text.toInt()) {
+                                FeatureView(
+                                    feature = it,
+                                    level = try {
+                                        levels.value.text.toInt()
+                                    } catch (e: java.lang.NumberFormatException) {
+                                        0
+                                    },
+                                    character = viewModel.character,
+                                    proficiencies = viewModel.proficiencies,
+                                    dropDownStates = viewModel.dropDownStates
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
         if (spellsExpanded) {

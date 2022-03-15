@@ -39,7 +39,7 @@ fun FeaturesAndTraitsView(
                 Text(text = item.second.name, modifier = Modifier.clickable { expanded = true })
                 item.second.chosen?.forEach { feature ->
                     var activationExpanded by remember { mutableStateOf(false) }
-
+                    var descExpanded by remember { mutableStateOf(false) }
                     if (activationExpanded) {
                         Dialog(
                             onDismissRequest = { activationExpanded = false }
@@ -174,11 +174,21 @@ fun FeaturesAndTraitsView(
                             if (maxActive != 0) {
                                 this.clickable { activationExpanded = true }
                             } else {
-                                this
+                                this.clickable { descExpanded = true}
                             }
                         },
                         color = color
                     )
+
+                    if (descExpanded) {
+                        Dialog(
+                            onDismissRequest = { descExpanded = false }
+                        ) {
+                            Card {
+                                Text(text = feature.description, modifier = Modifier.padding(4.dp))
+                            }
+                        }
+                    }
 
                 }
                 Divider(thickness = (0.5).dp, startIndent = 10.dp)

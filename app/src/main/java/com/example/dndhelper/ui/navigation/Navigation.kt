@@ -36,9 +36,6 @@ fun Navigation(navController: NavHostController) {
             CharacterMainView(viewModel)
         }
 
-        composable("characterView/AbilitiesView/{characterId}") { backStackEntry ->
-            AbilitiesView(hiltViewModel())
-        }
 
         composable("characterView/CombatView/{characterId}") { backStackEntry ->
             CombatView(hiltViewModel())

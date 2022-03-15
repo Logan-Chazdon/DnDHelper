@@ -114,12 +114,6 @@ fun RootView() {
                                 icon = Icons.Default.Home
                             ),
                             NavItem(
-                                name = "Abilities",
-                                route = "$route/AbilitiesView/$id",
-                                baseRoute = "$route/AbilitiesView",
-                                painter = painterResource(R.drawable.ic_abilities_icon)
-                            ),
-                            NavItem(
                                 name = "Stats",
                                 route = "$route/StatsView/$id",
                                 baseRoute = "$route/StatsView",

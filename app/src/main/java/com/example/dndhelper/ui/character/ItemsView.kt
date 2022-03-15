@@ -8,18 +8,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -150,51 +153,72 @@ fun ItemsView(viewModel: ItemViewModel) {
             verticalArrangement = Arrangement.Bottom
         ) {
             Column(
-                Modifier.absoluteOffset(y = (-20).dp, x = 8.dp)
+                Modifier.absoluteOffset(y = (-20).dp, x = 0.dp),
+                horizontalAlignment = Alignment.Start
             ) {
-                val character = viewModel.character?.observeAsState()
-                val currencies = character?.value?.backpack?.allCurrency
-
-                currencies?.forEach { (i, it) ->
-                    Card(
-                        shape = RoundedCornerShape(20.dp),
-                        modifier = Modifier
-                            .height(40.dp)
-                            .width(90.dp),
-                        elevation = 5.dp
-                    ) {
-                        val text = remember { mutableStateOf(it.amount.toString()) }
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Text("${it.abbreviatedName}: ", Modifier.padding(start = 4.dp))
-                            BasicTextField(
-                                value = it.amount.toString(),
-                                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                                singleLine = true,
-                                textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-                                onValueChange = { string ->
-                                    text.value = string
-                                    if (string.isNotEmpty())
-                                        GlobalScope.launch {
-                                            viewModel.addCurrency(
-                                                it.abbreviatedName,
-                                                string.toInt()
-                                            )
-                                        }
-                                    else
-                                        GlobalScope.launch {
-                                            viewModel.addCurrency(it.abbreviatedName, 0)
-                                        }
-                                }
-                            )
-                        }
+                var isHidden by remember { mutableStateOf(false) }
+                Card(
+                    shape = CircleShape,
+                    elevation = 5.dp,
+                    modifier = Modifier.size(40.dp).absoluteOffset(x = (-4).dp)
+                ) {
+                    IconButton(onClick = { isHidden = !isHidden }) {
+                        Icon(
+                            Icons.Default.ArrowDropDown,
+                            if(isHidden) {"Show currencies"} else {"Hide currencies"},
+                            Modifier.rotate(if(isHidden) {-90f } else {90f})
+                        )
                     }
-                    Spacer(Modifier.height(10.dp))
                 }
+                Spacer(Modifier.height(8.dp))
+                Column(
+                    Modifier.absoluteOffset(x = if(isHidden) {
+                        (-50).dp
+                    } else {0.dp})
+                ) {
+                    val character = viewModel.character?.observeAsState()
+                    val currencies = character?.value?.backpack?.allCurrency
 
+                    currencies?.forEach { (i, it) ->
+                        Card(
+                            shape = RoundedCornerShape(20.dp),
+                            modifier = Modifier
+                                .height(40.dp)
+                                .width(90.dp),
+                            elevation = 5.dp
+                        ) {
+                            val text = remember { mutableStateOf(it.amount.toString()) }
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                Text("${it.abbreviatedName}: ", Modifier.padding(start = 4.dp))
+                                BasicTextField(
+                                    value = it.amount.toString(),
+                                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                                    singleLine = true,
+                                    textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                                    onValueChange = { string ->
+                                        text.value = string
+                                        if (string.isNotEmpty())
+                                            GlobalScope.launch {
+                                                viewModel.addCurrency(
+                                                    it.abbreviatedName,
+                                                    string.toInt()
+                                                )
+                                            }
+                                        else
+                                            GlobalScope.launch {
+                                                viewModel.addCurrency(it.abbreviatedName, 0)
+                                            }
+                                    }
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(10.dp))
+                    }
+                }
             }
         }
 
@@ -429,9 +453,16 @@ fun ItemsView(viewModel: ItemViewModel) {
                                     ) {
                                         Text(
                                             text = proficiencyTypes[selectedProficiency].first,
-                                            modifier = Modifier.clickable {
-                                                dropdownExpanded = true
-                                            }.padding(start = 16.dp, bottom = 16.dp, end = 16.dp, top = 19.dp)
+                                            modifier = Modifier
+                                                .clickable {
+                                                    dropdownExpanded = true
+                                                }
+                                                .padding(
+                                                    start = 16.dp,
+                                                    bottom = 16.dp,
+                                                    end = 16.dp,
+                                                    top = 19.dp
+                                                )
                                         )
                                     }
                                     DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {

@@ -9,7 +9,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.Composable
@@ -56,67 +59,69 @@ fun SpellCastingView(
                 val spells = allSpells[slotLevel]
 
                 item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(0.95f)
-                            .padding(5.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
-                    ) {
+                    if(spells?.isNotEmpty() == true) {
                         Row(
-                            modifier = Modifier.clickable {
-                                spellLevelsExpanded[slotLevel] = !spellLevelsExpanded[slotLevel]
-                            }
+                            modifier = Modifier
+                                .fillMaxWidth(0.95f)
+                                .padding(5.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.Start)
                         ) {
-                            val angle: Float by animateFloatAsState(
-                                targetValue = if (spellLevelsExpanded[slotLevel]) 0F else -90F,
-                                animationSpec = tween(
-                                    durationMillis = 150, // duration
-                                    easing = FastOutSlowInEasing
+                            Row(
+                                modifier = Modifier.clickable {
+                                    spellLevelsExpanded[slotLevel] = !spellLevelsExpanded[slotLevel]
+                                }
+                            ) {
+                                val angle: Float by animateFloatAsState(
+                                    targetValue = if (spellLevelsExpanded[slotLevel]) 0F else -90F,
+                                    animationSpec = tween(
+                                        durationMillis = 150, // duration
+                                        easing = FastOutSlowInEasing
+                                    )
                                 )
-                            )
 
-                            Text(text = slots.name)
-                            Icon(
-                                Icons.Default.ArrowDropDown, "Drop down",
-                                Modifier.rotate(angle)
-                            )
+                                Text(text = slots.name)
+                                Icon(
+                                    Icons.Default.ArrowDropDown, "Drop down",
+                                    Modifier.rotate(angle)
+                                )
 
-                        }
+                            }
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End)
-                        ) {
-                            val selected = Color.Gray
-                            val onPrimary = MaterialTheme.colors.onSurface
-                            val surface = MaterialTheme.colors.surface
-                            for (index in (0 until slots.maxAmount()).reversed()) {
-                                Canvas(
-                                    modifier = Modifier
-                                        .size(20.dp)
-                                        .clickable {
-                                            if (slots.currentAmount > index) {
-                                                useSlot(slotLevel)
-                                            } else {
-                                                refundSlot(slotLevel)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.End)
+                            ) {
+                                val selected = Color.Gray
+                                val onPrimary = MaterialTheme.colors.onSurface
+                                val surface = MaterialTheme.colors.surface
+                                for (index in (0 until slots.maxAmount()).reversed()) {
+                                    Canvas(
+                                        modifier = Modifier
+                                            .size(20.dp)
+                                            .clickable {
+                                                if (slots.currentAmount > index) {
+                                                    useSlot(slotLevel)
+                                                } else {
+                                                    refundSlot(slotLevel)
+                                                }
                                             }
-                                        }
-                                ) {
-                                    drawCircle(
-                                        color = if (slots.currentAmount > index) {
-                                            surface
-                                        } else {
-                                            selected
-                                        },
-                                        center = this.center,
-                                        style = Fill
-                                    )
+                                    ) {
+                                        drawCircle(
+                                            color = if (slots.currentAmount > index) {
+                                                surface
+                                            } else {
+                                                selected
+                                            },
+                                            center = this.center,
+                                            style = Fill
+                                        )
 
-                                    drawCircle(
-                                        color = onPrimary,
-                                        center = this.center,
-                                        style = Stroke(2f)
-                                    )
+                                        drawCircle(
+                                            color = onPrimary,
+                                            center = this.center,
+                                            style = Stroke(2f)
+                                        )
+                                    }
                                 }
                             }
                         }

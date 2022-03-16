@@ -1,11 +1,9 @@
 package com.example.dndhelper.ui.newCharacter
 
 import android.app.Application
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.*
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
@@ -26,7 +24,8 @@ public class NewCharacterClassViewModel @Inject constructor(
     var goldRolled = mutableStateOf("6")
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var character : Character?  = null
-    val spells = mutableStateListOf<Spell>()
+    val classSpells = mutableStateListOf<Spell>()
+    val subclassSpells = mutableStateListOf<Spell>()
 
     //ASIs
     private val shortAbilityNames  = mutableListOf(
@@ -131,10 +130,10 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
 
         if(newClass.spellCasting?.type != 0.0) {
-            newClass.spellCasting?.known?.addAll(spells.toList())
+            newClass.spellCasting?.known?.addAll(classSpells.toList())
         }
 
-        newClass.pactMagic?.known?.addAll(spells.toList())
+        newClass.pactMagic?.known?.addAll(classSpells.toList())
 
         character!!.addClass(newClass, takeGold.value, goldRolled.value.toInt() * newClass.startingGoldMultiplier)
         character.let { repository.insertCharacter(it) }
@@ -194,18 +193,16 @@ public class NewCharacterClassViewModel @Inject constructor(
         return character?.hasBaseClass ?: false
     }
 
-    fun getLearnableSpells(classIndex: Int, level: MutableState<TextFieldValue>): MutableList<Spell> {
+    fun getLearnableSpells(level: Int): MutableList<Spell> {
         return repository.getAllSpellsByClassIndex(classIndex).run {
             if(classes.value?.get(classIndex)?.spellCasting?.prepareFrom == "all") {
                 this.removeAll {
                     it.level != 0
                 }
             }
-
             try {
-                val classLevel = level.value.text.toInt()
-                val maxLevel = classes.value?.get(classIndex)?.spellCasting?.spellSlotsByLevel?.get(classLevel - 1)?.size
-                    ?: classes.value?.get(classIndex)?.pactMagic?.pactSlots?.get(classLevel - 1)!!.name.toInt()
+                val maxLevel = classes.value?.get(classIndex)?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
+                    ?: classes.value?.get(classIndex)?.pactMagic?.pactSlots?.get(level - 1)!!.name.toInt()
                 this.removeAll {
                     it.level > maxLevel
                 }
@@ -214,20 +211,19 @@ public class NewCharacterClassViewModel @Inject constructor(
                     true
                 }
             }
-
             this
         }
     }
 
     fun toggleSpell(it: Spell) {
-        if(spells.contains(it)) {
-            spells.remove(it)
+        if(classSpells.contains(it)) {
+            classSpells.remove(it)
         } else {
-            spells.add(it)
+            classSpells.add(it)
         }
     }
 
-    fun learnsSpells(classIndex: Int): Boolean {
+    fun classLearnsSpells(classIndex: Int): Boolean {
         return ((classes.value?.get(classIndex)?.spellCasting?.type ?: 0) != 0
                 || classes.value?.get(classIndex)?.pactMagic != null)
     }
@@ -235,51 +231,17 @@ public class NewCharacterClassViewModel @Inject constructor(
     fun canAffordSpellOfLevel(level: Int, classIndex: Int, classLevel: Int): Boolean {
         return try {
             if(level == 0) {
-                classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel - 1] > spells.count { it.level == level }
+                classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel - 1] > classSpells.count { it.level == level }
             } else {
-                classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel - 1] > spells.count { it.level != 0 }
+                classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel - 1] > classSpells.count { it.level != 0 }
             }
         } catch(e: NullPointerException) {
             if(level == 0) {
-                classes.value!![classIndex].pactMagic!!.cantripsKnown[classLevel - 1] > spells.count { it.level == level }
+                classes.value!![classIndex].pactMagic!!.cantripsKnown[classLevel - 1] > classSpells.count { it.level == level }
             } else {
-                classes.value!![classIndex].pactMagic!!.spellsKnown[classLevel - 1] > spells.count { it.level != 0 }
+                classes.value!![classIndex].pactMagic!!.spellsKnown[classLevel - 1] > classSpells.count { it.level != 0 }
             }
         }
     }
-
-    fun totalSpells(classIndex: Int, level: MutableState<TextFieldValue>): Int {
-        return try {
-            classes.value?.getOrNull(classIndex)?.spellCasting?.spellsKnown?.getOrNull(
-                level.value.text.toInt() - 1
-            ) ?: classes.value?.getOrNull(classIndex)!!.pactMagic!!.spellsKnown[level.value.text.toInt() - 1]
-        } catch (e: NumberFormatException) {
-            0
-        } catch (e: NullPointerException) {
-            0
-        }
-    }
-
-    fun totalCantrips(classIndex: Int, level: MutableState<TextFieldValue>): Int {
-        return try {
-            classes.value?.getOrNull(classIndex)?.spellCasting?.cantripsKnown?.getOrNull(
-                level.value.text.toInt() - 1
-            ) ?: classes.value?.getOrNull(classIndex)!!.pactMagic!!.cantripsKnown[level.value.text.toInt() - 1]
-        } catch (e: NumberFormatException) {
-            0
-        } catch (e: NullPointerException) {
-            0
-        }
-    }
-
-    fun getCastingMod(classIndex: Int): String {
-        return try {
-            abilityNames[shortAbilityNames.indexOf(classes.value?.getOrNull(classIndex)?.spellCasting?.castingAbility)]
-        } catch (e : ArrayIndexOutOfBoundsException) {
-            abilityNames[shortAbilityNames.indexOf(classes.value?.getOrNull(classIndex)?.pactMagic?.castingAbility)]
-        }
-    }
-
-
 }
 

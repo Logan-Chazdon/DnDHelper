@@ -102,26 +102,47 @@ fun ItemsView(viewModel: ItemViewModel) {
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    //Display item name
-                                    item.name?.let { string -> Text(text = string) }
+                                    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                    ) {
+                                        //Display item name
+                                        item.name?.let { string ->
+                                            Text(
+                                                text = string,
+                                                modifier = Modifier.width(screenWidth / 4)
+                                            )
+                                        }
 
-                                    //If the item is armor or a weapon display its stats
+                                        //Display data  specific to the time type.
+                                        when (item.type) {
+                                            "Armor" -> {
+                                                Text(
+                                                    text = (item as Armor).acDesc
+                                                )
+                                            }
+                                            "Shield" -> {
+                                                Text(
+                                                    text = (item as Shield).totalAcBonus.toString()
+                                                )
+                                            }
+                                            "Weapon" -> {
+                                                Text(
+                                                    text = (item as Weapon).damageDesc
+                                                )
+                                            }
+                                        }
+                                    }
+                                    //Display options  specific to the time type.
                                     when (item.type) {
                                         "Armor" -> {
-                                            Text(text = (item as Armor).acDesc)
                                             EquipButton(viewModel, item)
                                         }
                                         "Shield" -> {
-                                            Text(text = (item as Shield).totalAcBonus.toString())
                                             EquipButton(viewModel, item)
                                         }
-                                        "Weapon" -> {
-                                            Text(text = (item as Weapon).damageDesc)
-                                        }
                                     }
-
                                 }
-
                             }
                         }
                     }

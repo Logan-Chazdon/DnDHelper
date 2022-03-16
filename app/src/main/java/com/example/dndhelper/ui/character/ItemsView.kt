@@ -99,7 +99,8 @@ fun ItemsView(viewModel: ItemViewModel) {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(2.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     //Display item name
                                     item.name?.let { string -> Text(text = string) }
@@ -108,29 +109,11 @@ fun ItemsView(viewModel: ItemViewModel) {
                                     when (item.type) {
                                         "Armor" -> {
                                             Text(text = (item as Armor).acDesc)
-                                            Button(
-                                                onClick = {
-                                                    GlobalScope.launch {
-                                                        viewModel.equip(item)
-                                                    }
-                                                }
-                                            ) {
-                                                //TODO maybe add a feature to stop the user from equiping an already equiped item.
-                                                Text(text = "Equip")
-                                            }
+                                            EquipButton(viewModel, item)
                                         }
                                         "Shield" -> {
                                             Text(text = (item as Shield).totalAcBonus.toString())
-                                            Button(
-                                                onClick = {
-                                                    GlobalScope.launch {
-                                                        viewModel.equip(item)
-                                                    }
-                                                }
-                                            ) {
-                                                //TODO maybe add a feature to stop the user from equiping an already equiped item.
-                                                Text(text = "Equip")
-                                            }
+                                            EquipButton(viewModel, item)
                                         }
                                         "Weapon" -> {
                                             Text(text = (item as Weapon).damageDesc)
@@ -160,7 +143,9 @@ fun ItemsView(viewModel: ItemViewModel) {
                 Card(
                     shape = CircleShape,
                     elevation = 5.dp,
-                    modifier = Modifier.size(40.dp).absoluteOffset(x = (-4).dp)
+                    modifier = Modifier
+                        .size(40.dp)
+                        .absoluteOffset(x = (-4).dp)
                 ) {
                     IconButton(onClick = { isHidden = !isHidden }) {
                         Icon(
@@ -616,4 +601,27 @@ fun ItemsView(viewModel: ItemViewModel) {
             })
     }
 }
+}
+
+
+@Composable
+fun EquipButton(viewModel: ItemViewModel, item: ItemInterface) {
+    Card(
+        backgroundColor = MaterialTheme.colors.primary,
+        elevation = 0.dp,
+        modifier = Modifier.clickable {
+            GlobalScope.launch {
+                when(item) {
+                    is Shield  -> {
+                        viewModel.equip(item)
+                    }
+                    is Armor -> {
+                        viewModel.equip(item)
+                    }
+                }
+            }
+        }
+    ) {
+        Text(text = "Equip", modifier = Modifier.padding(4.dp))
+    }
 }

@@ -68,20 +68,14 @@ public class ItemViewModel @Inject constructor(
         }
     }
 
-    suspend fun equip(armor: Armor): Boolean {
-        return if (character?.value?.getStat("Str") ?: 0 >= armor.strengthPrerequisite ?: 0) {
-            character?.value?.equippedArmor = armor
-            repository.insertCharacter(character?.value!!)
-            true
-        } else {
-            false
-        }
+     fun equip(armor: Armor) {
+        character?.value?.equippedArmor = armor
+        repository.insertCharacter(character?.value!!)
     }
 
-    suspend fun equip(shield: Shield): Boolean {
+    fun equip(shield: Shield) {
         character?.value?.equippedShield = shield
         repository.insertCharacter(character?.value!!)
-        return true
     }
 
     suspend fun deleteItemAt(itemToDeleteIndex: Int) {

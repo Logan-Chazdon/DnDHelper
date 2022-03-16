@@ -62,9 +62,13 @@ data class Character(
         return false
     }
 
-    val groundSpeed: Int?
+    val groundSpeed: Int
     get() {
-        return race?.totalGroundSpeed
+        var result = race?.totalGroundSpeed ?: 30
+        if(equippedArmor.strengthPrerequisite ?: 0 > realStats["Str"] ?: 0) {
+            result -= 10
+        }
+        return result
     }
     val armorClass: Int
     get() {

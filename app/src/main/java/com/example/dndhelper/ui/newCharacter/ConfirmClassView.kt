@@ -40,15 +40,7 @@ fun ConfirmClassView(
     val levels = remember {
         mutableStateOf(TextFieldValue("1"))
     }
-    val levelAsNumber by remember {
-        mutableStateOf(
-            try {
-                levels.value.text.toInt()
-            } catch (e: NumberFormatException) {
-                1
-            }
-        )
-    }
+
     classes.value?.get(classIndex)?.let { clazz ->
         Column(
             modifier = Modifier
@@ -160,9 +152,9 @@ fun ConfirmClassView(
                     SpellSelectionView(
                         spells = viewModel.classSpells,
                         pactMagic = pactMagic,
-                        level = levelAsNumber,
-                        learnableSpells = viewModel.getLearnableSpells(levelAsNumber),
-                        toggleSpell = { viewModel.toggleSpell(it) }
+                        level = toNumber(levels),
+                        learnableSpells = viewModel.getLearnableSpells(toNumber(levels)),
+                        toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
                 }
 
@@ -171,9 +163,9 @@ fun ConfirmClassView(
                     SpellSelectionView(
                         spells = viewModel.classSpells,
                         spellCasting = spellCasting,
-                        level = levelAsNumber,
-                        learnableSpells = viewModel.getLearnableSpells(levelAsNumber),
-                        toggleSpell = { viewModel.toggleSpell(it) }
+                        level = toNumber(levels),
+                        learnableSpells = viewModel.getLearnableSpells(toNumber(levels)),
+                        toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
                 }
 
@@ -445,6 +437,16 @@ fun ConfirmClassView(
                                 }
                             }
                         }
+
+                        subclass.spellCasting?.let { spellCasting ->
+                            SpellSelectionView(
+                                spellCasting = spellCasting,
+                                spells = viewModel.subclassSpells,
+                                level = toNumber(levels),
+                                learnableSpells = viewModel.getLearnableSpells(subclass, toNumber(levels)),
+                                toggleSpell = { viewModel.toggleSubclassSpell(it) }
+                            )
+                        }
                     }
                 }
             }
@@ -452,3 +454,10 @@ fun ConfirmClassView(
     }
 }
 
+private fun toNumber(textFieldValue: MutableState<TextFieldValue>) : Int {
+    return try {
+        textFieldValue.value.text.toInt()
+    } catch (e: NumberFormatException) {
+        1
+    }
+}

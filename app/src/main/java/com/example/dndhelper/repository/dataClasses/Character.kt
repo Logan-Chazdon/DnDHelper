@@ -209,7 +209,7 @@ data class Character(
         classes[newClass.name] = newClass
 
 
-        if(alreadyHasCasterClass && newClass.spellCasting?.type ?: 0.0 != 0.0) {
+        if(alreadyHasCasterClass && (newClass.spellCasting?.type ?: 0.0 != 0.0  || newClass.subclass?.spellCasting?.type != 0.0)) {
             //Use the spells slots from the multiclass table
             spellSlots = when(totalCasterLevels) {
                 1 -> {
@@ -371,7 +371,10 @@ data class Character(
             }
         } else {
             //Get the spell slots from the class itself
-            spellSlots = newClass.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1) ?: listOf()
+            spellSlots =
+                newClass.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1)
+                    ?: newClass.subclass?.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1)
+                            ?: listOf()
         }
 
         this.longRest()
@@ -481,6 +484,7 @@ data class Character(
         var result = 0
         classes.values.forEach{
             result += floor(it.level.toDouble() * (it.spellCasting?.type ?: 0.0)).toInt()
+            result += floor(it.level.toDouble() * (it.subclass?.spellCasting?.type ?: 0.0)).toInt()
         }
         return result
     }

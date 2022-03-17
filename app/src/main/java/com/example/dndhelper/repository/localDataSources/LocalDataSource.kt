@@ -1255,10 +1255,15 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     Subclass(
                         name = subclassJson.getString("name"),
                         features = extractFeatures(subclassJson.getJSONArray("features")),
+                        spellCasting = try { extractSpellCasting(subclassJson.getJSONObject("spell_casting")) }
+                        catch (e: JSONException) { null },
                         spells = listOf() //TODO fill out this list
                     )
                 )
             }
+
+            val spellCastingJson = classJson.getJSONObject("spell_casting")
+            val spellCasting = extractSpellCasting(spellCastingJson)
 
             val pactMagic = try {
                 val pactMagicJson = classJson.getJSONObject("pact_magic")
@@ -1300,66 +1305,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             }
 
 
-            val spellCastingJson = classJson.getJSONObject("spell_casting")
-            val spellCastingType = spellCastingJson.getDouble("type")
-            val spellCasting: SpellCasting? = if (spellCastingType == 0.0) {
-                null
-            } else {
-                SpellCasting(
-                    type = spellCastingType,
-                    castingAbility = spellCastingJson.getString("casting_ability"),
-                    preparationModMultiplier = try {
-                        spellCastingJson.getDouble("preparation_mod_multiplier")
-                    } catch (e: JSONException) {
-                        null
-                    },
-                    prepareFrom = try {
-                        spellCastingJson.getString("prepare_from")
-                    } catch (e: JSONException) {
-                        null
-                    },
-                    spellsKnown = try {
-                        val spellsKnownJson = spellCastingJson.getJSONArray("spells_known")
-                        val result = mutableListOf<Int>()
-                        for (i in 0 until spellsKnownJson.length()) {
-                            result.add(spellsKnownJson.getInt(i))
-                        }
-                        result
-                    } catch (e: JSONException) {
-                        null
-                    },
-                    cantripsKnown = try {
-                        val spellsKnownJson = spellCastingJson.getJSONArray("cantrips_known")
-                        val result = mutableListOf<Int>()
-                        for (i in 0 until spellsKnownJson.length()) {
-                            result.add(spellsKnownJson.getInt(i))
-                        }
-                        result
-                    } catch (e: JSONException) {
-                        null
-                    },
-                    spellSlotsByLevel = spellCastingJson.getJSONArray("spell_slots").let {
-                        val result = mutableListOf<List<Resource>>()
-                        for (levelIndex in 0 until it.length()) {
-                            val level = mutableListOf<Resource>()
-                            val levelJson = it.getJSONArray(levelIndex)
-                            for (slotIndex in 0 until levelJson.length()) {
-                                val slot = levelJson.getInt(slotIndex)
-                                level.add(
-                                    Resource(
-                                        name = allSpellLevels[slotIndex].second,
-                                        currentAmount = slot,
-                                        maxAmountType = slot.toString(),
-                                        rechargeAmountType = "full"
-                                    )
-                                )
-                            }
-                            result.add(level.toList())
-                        }
-                        result
-                    }
-                )
-            }
 
             classes.add(
                 Class(
@@ -1384,6 +1329,84 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             )
         }
         _classes.value = classes
+    }
+
+
+    private fun extractSpellCasting(spellCastingJson : JSONObject) : SpellCasting?{
+        val spellCastingType = spellCastingJson.getDouble("type")
+        return if (spellCastingType == 0.0) {
+            null
+        } else {
+            val learnFrom = try {
+                val learnFromJson = spellCastingJson.getJSONObject("learn_spells_from")
+                val listsJson = learnFromJson.getJSONArray("lists")
+                val result = mutableListOf<String>()
+                for(index in 0 until listsJson.length()) {
+                    result.add(
+                        listsJson.getString(index)
+                    )
+                }
+                result
+            } catch(e: JSONException) {
+                null
+            }
+
+            SpellCasting(
+                type = spellCastingType,
+                castingAbility = spellCastingJson.getString("casting_ability"),
+                preparationModMultiplier = try {
+                    spellCastingJson.getDouble("preparation_mod_multiplier")
+                } catch (e: JSONException) {
+                    null
+                },
+                prepareFrom = try {
+                    spellCastingJson.getString("prepare_from")
+                } catch (e: JSONException) {
+                    null
+                },
+                spellsKnown = try {
+                    val spellsKnownJson = spellCastingJson.getJSONArray("spells_known")
+                    val result = mutableListOf<Int>()
+                    for (i in 0 until spellsKnownJson.length()) {
+                        result.add(spellsKnownJson.getInt(i))
+                    }
+                    result
+                } catch (e: JSONException) {
+                    null
+                },
+                cantripsKnown = try {
+                    val spellsKnownJson = spellCastingJson.getJSONArray("cantrips_known")
+                    val result = mutableListOf<Int>()
+                    for (i in 0 until spellsKnownJson.length()) {
+                        result.add(spellsKnownJson.getInt(i))
+                    }
+                    result
+                } catch (e: JSONException) {
+                    null
+                },
+                spellSlotsByLevel = spellCastingJson.getJSONArray("spell_slots").let {
+                    val result = mutableListOf<List<Resource>>()
+                    for (levelIndex in 0 until it.length()) {
+                        val level = mutableListOf<Resource>()
+                        val levelJson = it.getJSONArray(levelIndex)
+                        for (slotIndex in 0 until levelJson.length()) {
+                            val slot = levelJson.getInt(slotIndex)
+                            level.add(
+                                Resource(
+                                    name = allSpellLevels[slotIndex].second,
+                                    currentAmount = slot,
+                                    maxAmountType = slot.toString(),
+                                    rechargeAmountType = "full"
+                                )
+                            )
+                        }
+                        result.add(level.toList())
+                    }
+                    result
+                },
+                learnFrom = learnFrom
+            )
+        }
     }
 
     private fun extractEquipmentChoices(

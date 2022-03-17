@@ -141,6 +141,10 @@ class Repository @Inject constructor(
         return result
     }
 
+    fun getAllSpells() : List<Spell> {
+        return _spells.value ?: listOf()
+    }
+
     companion object {
         val allSpellLevels = listOf(
             Pair(1, "First Level"),

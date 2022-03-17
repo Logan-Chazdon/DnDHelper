@@ -124,9 +124,14 @@ public class NewCharacterClassViewModel @Inject constructor(
                 )
             }
         }
-        if(newClass.level > newClass.subclassLevel) {
+        if(newClass.level >= newClass.subclassLevel) {
             newClass.subclass =
-                (subclassDropdownState?.getSelected(newClass.subClasses) as List<Subclass>).getOrNull(0)
+                (subclassDropdownState?.getSelected(newClass.subClasses) as List<Subclass>).getOrNull(0).run {
+                    if(this?.spellCasting != null) {
+                        this.spellCasting?.known?.addAll(subclassSpells)
+                    }
+                    this
+                }
         }
 
         if(newClass.spellCasting?.type != 0.0) {
@@ -215,11 +220,53 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
     }
 
-    fun toggleSpell(it: Spell) {
+    fun getLearnableSpells(subclass: Subclass, level: Int): List<Spell> {
+        val result = mutableListOf<Spell>()
+        val getClassIndexByName = fun(name: String): Int {
+            classes.value?.forEachIndexed { index, clazz ->
+                if (name.lowercase() == clazz.name.lowercase()) {
+                    return index
+                }
+            }
+            return 0 //TODO make custom exception
+        }
+
+        val maxLevel = subclass.spellCasting?.spellSlotsByLevel?.get(level - 1)!!.size
+
+        subclass.spellCasting?.learnFrom?.forEach {
+            result.addAll(
+                repository.getAllSpellsByClassIndex(
+                    getClassIndexByName(it)
+                )
+            )
+        }
+
+        if(subclass.spellCasting?.prepareFrom == "all") {
+            result.removeAll {
+                it.level != 0
+            }
+        }
+
+        result.removeAll {
+            it.level > maxLevel
+        }
+
+        return result
+    }
+
+    fun toggleClassSpell(it: Spell) {
         if(classSpells.contains(it)) {
             classSpells.remove(it)
         } else {
             classSpells.add(it)
+        }
+    }
+
+    fun toggleSubclassSpell(it: Spell) {
+        if(subclassSpells.contains(it)) {
+            subclassSpells.remove(it)
+        } else {
+            subclassSpells.add(it)
         }
     }
 

@@ -10,6 +10,7 @@ import com.example.dndhelper.repository.Repository.Companion.allSpellLevels
 import com.example.dndhelper.repository.dataClasses.Character
 import com.example.dndhelper.repository.dataClasses.Resource
 import com.example.dndhelper.repository.dataClasses.Spell
+import com.example.dndhelper.repository.dataClasses.SpellCasting
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -157,58 +158,13 @@ public class CombatViewModel @Inject constructor(
     //Returns a list of booleans to spells
     //If the boolean is null the spell does not require preparation.
     //Else the boolean represents whether or not the spell is prepared.
-    //TODO this entire function is garbage dear lord please fix this.
     fun getAllSpells(): Map<Int, List<Pair<Boolean?, Spell>>> {
         val spells: MutableMap<Int, MutableList<Pair<Boolean?, Spell>>> = mutableMapOf()
         character?.value?.classes?.forEach {
-                //Preparation casters
-                //TODO the time complexity here is really bad. Refactor this
-                when(it.value.spellCasting?.prepareFrom) {
-                    null -> {
-                        //Non preparation casters
-                        it.value.spellCasting?.known?.forEach { spell ->
-                            if(spells.getOrDefault(spell.level, null) == null) {
-                                spells[spell.level] = mutableListOf()
-                            }
-                            spells[spell.level]?.add(Pair(first = null, second = spell))
-                        }
-                    }
-                    "all" -> {
-                        //Spell casters that prepare from all of their respective class spells
-                        it.value.spellCasting?.known?.forEach { spell ->
-                            if(spell.level == 0) {
-                                if (spells.getOrDefault(spell.level, null) == null) {
-                                    spells[spell.level] = mutableListOf()
-                                }
-                                spells[spell.level]?.add(Pair(first = null, second = spell))
-                            }
-                        }
-
-                        repository.getAllSpellsByClassIndex(
-                            repository.getClassIndex(it.value.name)
-                        ).forEach { spell ->
-                            it.value.spellCasting?.prepared?.contains(spell).let { prepared ->
-                                if(spell.level != 0) {
-                                    if (spells.getOrDefault(spell.level, null) == null) {
-                                        spells[spell.level] = mutableListOf()
-                                    }
-                                    spells[spell.level]?.add(Pair(prepared, spell))
-                                }
-                            }
-                        }
-                    }
-                    "known" -> {
-                        //Spell casters that prepare from known spells
-                        it.value.spellCasting?.known?.forEach { spell ->
-                            it.value.spellCasting?.prepared?.contains(spell).let { prepared ->
-                                if(spells.getOrDefault(spell.level, null) == null) {
-                                    spells[spell.level] = mutableListOf()
-                                }
-                                spells[spell.level]?.add(Pair(prepared, spell))
-                            }
-                        }
-                    }
-                }
+            addSpellsFromSpellCasting(it.value.spellCasting, listOf(it.value.name), spells)
+            it.value.subclass?.spellCasting?.let { spellCasting ->
+                addSpellsFromSpellCasting(spellCasting, spellCasting.learnFrom, spells)
+            }
         }
 
         character?.value?.additionalSpells?.forEach {
@@ -226,6 +182,73 @@ public class CombatViewModel @Inject constructor(
             }
         }
         return spells
+    }
+
+    private fun addSpellsFromSpellCasting(
+        spellCasting: SpellCasting?,
+        lists: List<String>?,
+        spells: MutableMap<Int, MutableList<Pair<Boolean?, Spell>>>
+    ) {
+        //Preparation casters
+        //TODO the time complexity here is really bad. Refactor this
+        when(spellCasting?.prepareFrom) {
+            null -> {
+                //Non preparation casters
+                spellCasting?.known?.forEach { spell ->
+                    if(spells.getOrDefault(spell.level, null) == null) {
+                        spells[spell.level] = mutableListOf()
+                    }
+                    spells[spell.level]?.add(Pair(first = null, second = spell))
+                }
+            }
+            "all" -> {
+                //Spell casters that prepare from all of their respective class spells
+                spellCasting.known.forEach { spell ->
+                    if(spell.level == 0) {
+                        if (spells.getOrDefault(spell.level, null) == null) {
+                            spells[spell.level] = mutableListOf()
+                        }
+                        spells[spell.level]?.add(Pair(first = null, second = spell))
+                    }
+                }
+
+                val listsToCheck = mutableListOf<String>()
+
+                lists?.let {
+                    listsToCheck.addAll(it)
+                }
+                spellCasting.learnFrom?.let {
+                    listsToCheck.addAll(it)
+                }
+
+                listsToCheck.forEach {
+                    repository.getAllSpellsByClassIndex(
+                        repository.getClassIndex(it)
+                    ).forEach { spell ->
+                        spellCasting.prepared.contains(spell).let { prepared ->
+                            if (spell.level != 0) {
+                                if (spells.getOrDefault(spell.level, null) == null) {
+                                    spells[spell.level] = mutableListOf()
+                                }
+                                spells[spell.level]?.add(Pair(prepared, spell))
+                            }
+                        }
+                    }
+                }
+            }
+            "known" -> {
+                //Spell casters that prepare from known spells
+                spellCasting.known.forEach { spell ->
+                    spellCasting.prepared.contains(spell).let { prepared ->
+                        if(spells.getOrDefault(spell.level, null) == null) {
+                            spells[spell.level] = mutableListOf()
+                        }
+                        spells[spell.level]?.add(Pair(prepared, spell))
+                    }
+                }
+            }
+        }
+
     }
 
     fun togglePreparation(spell: Spell) {

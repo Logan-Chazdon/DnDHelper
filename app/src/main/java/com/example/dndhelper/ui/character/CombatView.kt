@@ -280,16 +280,15 @@ fun CombatView(viewModel: CombatViewModel) {
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-
-                if(viewModel.character?.observeAsState()?.value?.isCaster == true
-                    || character?.value?.hasPactMagic == true) {
+                val allSpells =viewModel.getAllSpells()
+                if(allSpells.isNotEmpty()) {
                     Box(
                         Modifier.width(width)
                     ) {
                         character?.value?.let {
                             SpellCastingView(
                                 spellSlotsOffsetForCantrips = viewModel.getSpellSlotsAndCantrips(),
-                                allSpells = viewModel.getAllSpells(),
+                                allSpells = allSpells,
                                 cast = { newSpell ->
                                     spell = newSpell
                                     castIsExpanded = true

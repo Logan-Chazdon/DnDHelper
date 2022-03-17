@@ -1350,7 +1350,21 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             } catch(e: JSONException) {
                 null
             }
-
+            val schoolRestriction = try {
+                val restrictionJson = spellCastingJson.getJSONObject("school_restriction")
+                SchoolRestriction(
+                    schools = restrictionJson.getJSONArray("schools").let {
+                        val result = mutableListOf<String>()
+                        for(index in 0 until it.length()) {
+                            result.add(it.getString(index))
+                        }
+                        result
+                    },
+                    amount = restrictionJson.getInt("minimum")
+                )
+            } catch (e: JSONException) {
+                null
+            }
             SpellCasting(
                 type = spellCastingType,
                 castingAbility = spellCastingJson.getString("casting_ability"),
@@ -1404,7 +1418,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     }
                     result
                 },
-                learnFrom = learnFrom
+                learnFrom = learnFrom,
+                schoolRestriction = schoolRestriction
             )
         }
     }

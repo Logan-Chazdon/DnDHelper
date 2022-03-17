@@ -13,6 +13,7 @@ data class SpellCasting (
     val known: MutableList<Spell> = mutableListOf(),
     val spellSlotsByLevel: List<List<Resource>>? = null,
     val learnFrom: List<String>? = null, //Only used when the list of spells to present is not implied.
+    val schoolRestriction : SchoolRestriction? = null
 ) {
     fun getMaxPrepared(classLevel: Int, castingMod: Int) : Int {
         return castingMod +  floor((classLevel.toDouble() * preparationModMultiplier!!)).toInt()

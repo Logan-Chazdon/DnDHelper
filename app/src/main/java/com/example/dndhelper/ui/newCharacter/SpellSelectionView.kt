@@ -90,13 +90,18 @@ private fun SpellSelectionView(
 
     //Function to determine if we can take a certain spell.
     val canTakeSpell = fun (spell: Spell): Boolean {
-        return if(spell.level == 0) {
+        val enoughSpellsRemaining =  if(spell.level == 0) {
             //For cantrips.
             spells.count { it.level == 0} < totalCantrips
         } else {
             //For non cantrips.
             spells.count { it.level != 0} < totalSpells
         }
+        if(enoughSpellsRemaining && spellCasting?.schoolRestriction != null) {
+            return spellCasting.schoolRestriction.isMet(spells)
+                    || spellCasting.schoolRestriction.schools.contains(spell.school)
+        }
+        return enoughSpellsRemaining
     }
 
     //The card to render where this is called.

@@ -4170,7 +4170,51 @@
                 },
                 {
                     "name" : "Eldritch Knight",
-                    "comment" : "TODO IMPL,",
+                    "spell_casting" : {
+                        "type" : 0.5,
+                        "cantrips_known" : [
+                            0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+                        ],
+                        "casting_ability" : "Int",
+                        "spells_known" : [
+                            0, 0, 3, 4, 4, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11, 11, 11, 12, 13
+                        ],
+                        "spell_slots" : [
+                            [],
+                            [],
+                            [2],
+                            [3],
+                            [3],
+                            [4, 2],
+                            [4, 2],
+                            [4, 2],
+                            [4, 3],
+                            [4, 3],
+                            [4, 3],
+                            [4, 3, 2],
+                            [4, 3, 2],
+                            [4, 3, 2],
+                            [4, 3, 3],
+                            [4, 3, 3],
+                            [4, 3, 3],
+                            [4, 3, 3, 1],
+                            [4, 3, 3, 1]
+                        ],
+                        "learn_spells_from" : {
+                            "lists" : [
+                                {
+                                    "name" : "wizard"
+                                }
+                            ]
+                        },
+                        "school_restriction" : {
+                            "minimum": 2,
+                            "schools" : [
+                                "Evocation",
+                                "Abjuration"
+                            ]
+                        }
+                    },
                     "features" : [
                         {
                             "name" : "Weapon Bond",

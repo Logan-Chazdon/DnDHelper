@@ -97,8 +97,8 @@ private fun SpellSelectionView(
             //For non cantrips.
             spells.count { it.level != 0} < totalSpells
         }
-        if(enoughSpellsRemaining && spellCasting?.schoolRestriction != null) {
-            return spellCasting.schoolRestriction.isMet(spells)
+        if(enoughSpellsRemaining && spellCasting?.schoolRestriction != null && spell.level != 0) {
+            return spellCasting.schoolRestriction.isMet(spells.filter { it.level != 0})
                     || spellCasting.schoolRestriction.schools.contains(spell.school)
         }
         return enoughSpellsRemaining

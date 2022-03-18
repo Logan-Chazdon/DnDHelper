@@ -121,6 +121,18 @@ private fun SpellSelectionView(
         ) {
             Text(text = "Spell casting", style = MaterialTheme.typography.h6)
             Text("You may choose $totalSpells spells and $totalCantrips cantrips.")
+            spellCasting?.schoolRestriction?.let { schoolRestriction ->
+                var schools = ""
+                schoolRestriction.schools.forEachIndexed { index, it ->
+                    schools += it
+                    if(index < schoolRestriction.schools.size - 2) {
+                        schools += ", "
+                    } else if(index == schoolRestriction.schools.size - 2){
+                        schools += " or "
+                    }
+                }
+                Text("At least ${schoolRestriction.amount} spells must be from $schools.")
+            }
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,

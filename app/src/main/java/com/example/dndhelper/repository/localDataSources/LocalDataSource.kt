@@ -58,7 +58,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         MutableLiveData()
     val _classes: MutableLiveData<List<Class>> =
         MutableLiveData()
-
+    val _metamagics: MutableLiveData<List<Metamagic>> =
+        MutableLiveData()
     init {
         context.mainExecutor.execute {
             //Items
@@ -79,6 +80,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Invocations
             generateInvocations()
 
+            //Metamagic
+            generateMetaMagic()
+
             //Feats
             generateFeats()
 
@@ -91,6 +95,23 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Classes
             generateClasses()
         }
+    }
+
+    private fun generateMetaMagic() {
+        val metamagic = mutableListOf<Metamagic>()
+        val dataAsString =
+            context.resources.openRawResource(R.raw.metamagic).bufferedReader().readText()
+        val metamagicsJson = JSONObject(dataAsString).getJSONArray("metamagic")
+        for(index in 0 until metamagicsJson.length()) {
+            val metamagicJson = metamagicsJson.getJSONObject(index)
+            metamagic.add(
+                Metamagic(
+                    name = metamagicJson.getString("name"),
+                    desc = metamagicJson.getString("desc")
+                )
+            )
+        }
+        _metamagics.value = metamagic
     }
 
     private fun generateInvocations() {
@@ -1603,6 +1624,17 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         }
                         "maneuvers" -> {
                             //TODO
+                        }
+                        "metamagic" -> {
+                            _metamagics.value?.forEach {
+                                features.add(
+                                    Feature(
+                                        name = it.name,
+                                        description = it.desc,
+                                        options = null
+                                    )
+                                )
+                            }
                         }
                         else -> throw JSONException("Invalid index")
                     }

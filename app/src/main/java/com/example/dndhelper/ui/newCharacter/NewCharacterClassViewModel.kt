@@ -57,7 +57,11 @@ public class NewCharacterClassViewModel @Inject constructor(
         val profs : MutableList<Proficiency> = mutableListOf()
         classes.value?.get(classIndex)?.proficiencies?.let { profs.addAll(it) }
         classes.value?.get(classIndex)?.proficiencyChoices?.forEach {
-            profs.addAll(dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>)
+            (dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>?)?.let { it1 ->
+                profs.addAll(
+                    it1
+                )
+            }
         }
         return profs
     }

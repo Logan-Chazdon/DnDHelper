@@ -142,7 +142,26 @@ public class NewCharacterClassViewModel @Inject constructor(
             newClass.spellCasting?.known?.addAll(classSpells.toList())
         }
 
+
+
         newClass.pactMagic?.known?.addAll(classSpells.toList())
+        //TODO return to the level system.
+        if(newClass.subclass?.spellAreFree == true) {
+            val spellsGrantedBySubclass = newClass.subclass?.spells?.let {
+                val result = mutableListOf<Spell>()
+                it.forEach { (level, spell) ->
+                    if(level >= newClass.level) {
+                        result.add(spell)
+                    }
+                }
+                result
+            }
+
+            spellsGrantedBySubclass?.let {
+                newClass.pactMagic?.known?.addAll(it)
+                newClass.spellCasting?.known?.addAll(it)
+            }
+        }
 
         character!!.addClass(newClass, takeGold.value, goldRolled.value.toInt() * newClass.startingGoldMultiplier)
         character.let { repository.insertCharacter(it) }
@@ -202,8 +221,19 @@ public class NewCharacterClassViewModel @Inject constructor(
         return character?.hasBaseClass ?: false
     }
 
-    fun getLearnableSpells(level: Int): MutableList<Spell> {
+    fun getLearnableSpells(level: Int, subclass: Subclass?): MutableList<Spell> {
         return repository.getAllSpellsByClassIndex(classIndex).run {
+            subclass?.let {
+                //If the spells for the subclass arnt free add them to the selection.
+                if(!it.spellAreFree) {
+                    val spells = mutableListOf<Spell>()
+                    it.spells?.forEach { (_, spell) ->
+                        spells.add(spell)
+                    }
+                    this.addAll(spells)
+                }
+            }
+
             if(classes.value?.get(classIndex)?.spellCasting?.prepareFrom == "all") {
                 this.removeAll {
                     it.level != 0

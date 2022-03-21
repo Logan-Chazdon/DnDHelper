@@ -147,13 +147,20 @@ fun ConfirmClassView(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                val subclass = clazz.let {
+                    (viewModel.getSubclassDropdownState(
+                        it
+                    ).getSelected(it.subClasses) as List<Subclass>)
+                        .getOrNull(0)
+                }
+
                 //Choices for pactMagic.
                 clazz.pactMagic?.let { pactMagic ->
                     SpellSelectionView(
                         spells = viewModel.classSpells,
                         pactMagic = pactMagic,
                         level = toNumber(levels),
-                        learnableSpells = viewModel.getLearnableSpells(toNumber(levels)),
+                        learnableSpells = viewModel.getLearnableSpells(toNumber(levels),  subclass),
                         toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
                 }
@@ -164,7 +171,7 @@ fun ConfirmClassView(
                         spells = viewModel.classSpells,
                         spellCasting = spellCasting,
                         level = toNumber(levels),
-                        learnableSpells = viewModel.getLearnableSpells(toNumber(levels)),
+                        learnableSpells = viewModel.getLearnableSpells(toNumber(levels),  subclass),
                         toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
                 }

@@ -317,6 +317,7 @@
                             "desc": "You have been exposed to so many chemicals that they pose little risk to you, and you can use them to quickly end certain ailments: You gain resistance to acid damage and poison damage, and you are immune to the poisoned condition. You can cast greater restoration and heal without expending a spell slot, without preparing the spell, and without material components, provided you use alchemist’s supplies as the spellcasting focus. Once you cast either spell with this feature, you can’t cast that spell with it again until you finish a long rest."
                         }
                     ],
+                    "spells_are_free" : true,
                     "spells": [
                         {
                             "level": 3,
@@ -408,6 +409,7 @@
                             "desc": "Your Arcane Armor gains additional benefits based on its model, as shown below. Guardian. When a Huge or smaller creature you can see ends its turn within 30 feet of you, you can use your reaction to magically force it to make a Strength saving throw against your spell save DC. On a failed save, you pull the creature up to 25 feet directly to an unoccupied space. If you pull the target to a space within 5 feet of you, you can make a melee weapon attack against it as part of this reaction. You can use this reaction a number of times equal to your proficiency bonus, and you regain all expended uses of it when you finish a long rest. Infiltrator. Any creature that takes lightning damage from your Lightning Launcher glimmers with magical light until the start of your next turn. The glimmering creature sheds dim light in a 5-foot radius, and it has disadvantage on attack rolls against you, as the light jolts it if it attacks you. In addition, the next attack roll against it has advantage, and if that attack hits, the target takes an extra 1d6 lightning damage."
                         }
                     ],
+                    "spells_are_free" : true,
                     "spells": [
                         {
                             "level": 3,
@@ -491,6 +493,7 @@
                             "level" : 15
                         }
                     ],
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Shield",
@@ -578,6 +581,7 @@
                             "level" : 17
                         }
                     ],
+                    "spells_are_free" : true,
                     "features" : [
                         {
                             "name" : "Tool Proficiency",
@@ -1923,6 +1927,7 @@
             "subclasses": [
                 {
                     "name" : "Arcana Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Detect Magic",
@@ -2006,6 +2011,7 @@
                 },
                 {
                     "name" : "Death Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "False Life",
@@ -2095,6 +2101,7 @@
                 },
                 {
                     "name" : "Forge Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Identify",
@@ -2174,6 +2181,7 @@
                 },
                 {
                     "name" : "Grave Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Bane",
@@ -2252,6 +2260,7 @@
                 },
                 {
                     "name" : "Knowledge Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Command",
@@ -2324,6 +2333,7 @@
                 },
                 {
                     "name" : "Life Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Bless",
@@ -2402,6 +2412,7 @@
                 },
                 {
                     "name" : "Light Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Burning Hands",
@@ -2484,6 +2495,7 @@
                 },
                 {
                     "name" : "Nature Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Animal Friendship",
@@ -2563,6 +2575,7 @@
                 },
                 {
                     "name" : "Order Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Command",
@@ -2641,6 +2654,7 @@
                 },
                 {
                     "name" : "Peace Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Heroism",
@@ -2719,6 +2733,7 @@
                 },
                 {
                     "name" : "Tempest Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Fog Cloud",
@@ -2797,6 +2812,7 @@
                 },
                 {
                     "name" : "Trickery Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Charm Person",
@@ -2865,6 +2881,7 @@
                 },
                 {
                     "name" : "Twilight Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Faerie Fire",
@@ -2948,6 +2965,7 @@
                 },
                 {
                     "name" : "War Domain",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Divine Favor",
@@ -3026,6 +3044,7 @@
                 },
                 {
                     "name" : "Ambition Domain (Amonkhet)",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Bane",
@@ -3098,6 +3117,7 @@
                 },
                 {
                     "name" : "Solidarity Domain (Amonkhet)",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Bless",
@@ -3176,6 +3196,7 @@
                 },
                 {
                     "name" : "Strength Domain (Amonkhet)",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Divine Favor",
@@ -3255,6 +3276,7 @@
                 },
                 {
                     "name" : "Zeal Domain (Amonkhet)",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Searing Smite",
@@ -4968,6 +4990,7 @@
                             "level" : 17
                         }
                     ],
+                    "spells_are_free" : true,
                     "features" : [
                         {
                             "name" : "Channel Divinity",
@@ -4993,6 +5016,7 @@
                 },
                 {
                     "name" : "Oath of Conquest",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Armor of Agathys",
@@ -5060,6 +5084,7 @@
                 },
                 {
                     "name" : "Oath of the Crown",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Command",
@@ -5127,6 +5152,7 @@
                 },
                 {
                     "name" : "Oath of Devotion",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Protection from Evil and Good",
@@ -5190,6 +5216,7 @@
                 },
                 {
                     "name" : "Oath of Glory",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Guiding Bolt",
@@ -5249,6 +5276,7 @@
                 },
                 {
                     "name" : "Oath of Redemption",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Sanctuary",
@@ -5316,6 +5344,7 @@
                 },
                 {
                     "name" : "Oath of Vengeance",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Bane",
@@ -5383,6 +5412,7 @@
                 },
                 {
                     "name" : "Oath of the Watchers",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name": "Alarm",
@@ -5450,6 +5480,7 @@
                 },
                 {
                     "name" : "Oathbreaker",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name": "Hellish Rebuke",
@@ -6142,6 +6173,7 @@
                 {
                     "name" : "Aberrant Mind",
                     "comment" : "TODO Whenever you gain a sorcerer level, you can replace one spell you gained from this feature with another spell of the same level. The new spell must be a divination or an enchantment spell from the sorcerer, warlock, or wizard spell list.",
+                    "spells_are_free" : true,
                     "spells" : [
                         {
                             "name" : "Arms of Hadar",
@@ -6218,6 +6250,7 @@
                 },
                 {
                     "name" : "Clockwork Magic",
+                    "spells_are_free" : true,
                     "comment" : "Whenever you gain a sorcerer level, you can replace one spell you gained from this feature with another spell of the same level. The new spell must be an abjuration or a transmutation spell from the sorcerer, warlock, or wizard spell list.",
                     "spells" : [
                         {
@@ -6731,6 +6764,7 @@
             "subclasses" : [
                 {
                     "name" : "The Archfey",
+                    "spells_are_free" : false,
                     "spells" : [
                         {
                             "name" : "Faerie Fire",
@@ -6798,6 +6832,7 @@
                 },
                 {
                     "name" : "The Celestial",
+                    "spells_are_free" : false,
                     "spells" : [
                         {
                             "name" : "Cure Wounds",
@@ -6877,6 +6912,7 @@
                 },
                 {
                     "name" : "The Fathomless",
+                    "spells_are_free" : false,
                     "spells" : [
                         {
                             "name" : "Create of Destroy Water",
@@ -6959,6 +6995,7 @@
                 },
                 {
                     "name" : "The Fiend",
+                    "spells_are_free" : false,
                     "spells" : [
                         {
                             "name" : "Burning Hands",
@@ -7052,6 +7089,7 @@
                 },
                 {
                     "name" : "The Great Old One",
+                    "spells_are_free" : false,
                     "spells" : [
                         {
                             "name" : "Dissonant Whispers",
@@ -7119,6 +7157,7 @@
                 },
                 {
                     "name" : "The Hexblade",
+                    "spells_are_free" : false,
                     "spells" : [
                         {
                             "name" : "Shield",
@@ -7192,6 +7231,7 @@
                 },
                 {
                     "name" : "The Undead",
+                    "spells_are_free" : false,
                     "spells" : [
                         {
                             "name" : "Bane",
@@ -7255,6 +7295,7 @@
                 },
                 {
                     "name" : "The Undying",
+                    "spells_are_free" : false,
                     "spells" : [
                         {
                             "name" : "False Life",

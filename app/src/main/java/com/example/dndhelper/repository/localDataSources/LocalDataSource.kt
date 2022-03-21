@@ -1272,13 +1272,42 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val subclassesJson = classJson.getJSONArray("subclasses")
             for (subclassIndex in 0 until subclassesJson.length()) {
                 val subclassJson = subclassesJson.getJSONObject(subclassIndex)
+                val spellsAreFree = try {
+                    subclassJson.getBoolean("spells_are_free")
+                } catch (e: JSONException) {
+                    false
+                }
+                val subclassSpells = try {
+                    val result = mutableListOf<Pair<Int, Spell>>()
+                    val subclassSpellJson = subclassJson.getJSONArray("spells")
+                    for (index in 0 until subclassSpellJson.length()) {
+                        val spellJson = subclassSpellJson.getJSONObject(index)
+                        val level = spellJson.getInt("level")
+                        val spell = getSpellsByIndex(spellJson.getString("name"))
+                        //TODO once all the spells are added put an exception here if the sell lists is not exactly one item.
+                        spell?.getOrNull(0)?.let {
+                            result.add(
+                                Pair(
+                                    level,
+                                    it
+                                )
+                            )
+                        }
+                    }
+                    result
+                } catch (e : JSONException) {
+                    null
+                }
+
+
                 subClasses.add(
                     Subclass(
                         name = subclassJson.getString("name"),
                         features = extractFeatures(subclassJson.getJSONArray("features")),
                         spellCasting = try { extractSpellCasting(subclassJson.getJSONObject("spell_casting")) }
                         catch (e: JSONException) { null },
-                        spells = listOf() //TODO fill out this list
+                        spells = subclassSpells,
+                        spellAreFree = spellsAreFree
                     )
                 )
             }

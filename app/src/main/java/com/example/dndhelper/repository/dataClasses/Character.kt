@@ -571,6 +571,25 @@ data class Character(
             }
         }
         //TODO feats
+
+        classes.forEach { (_, clazz) ->
+            if(clazz.subclass?.spellAreFree == true) {
+                val prepared = clazz.spellCasting?.let {
+                    if (it.prepareFrom != null) {
+                        true
+                    } else {
+                        null
+                    }
+                }
+                clazz.subclass?.spells?.forEach { (_, spell) ->
+                    if(!spells.containsKey(spell.level)) {
+                        spells[spell.level] = mutableListOf()
+                    }
+                    spells[spell.level]?.add(Pair(first = prepared, second = spell))
+                }
+
+            }
+        }
         return spells
     }
 

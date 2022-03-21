@@ -303,26 +303,5 @@ public class NewCharacterClassViewModel @Inject constructor(
             subclassSpells.add(it)
         }
     }
-
-    fun classLearnsSpells(classIndex: Int): Boolean {
-        return ((classes.value?.get(classIndex)?.spellCasting?.type ?: 0) != 0
-                || classes.value?.get(classIndex)?.pactMagic != null)
-    }
-
-    fun canAffordSpellOfLevel(level: Int, classIndex: Int, classLevel: Int): Boolean {
-        return try {
-            if(level == 0) {
-                classes.value!![classIndex].spellCasting!!.cantripsKnown!![classLevel - 1] > classSpells.count { it.level == level }
-            } else {
-                classes.value!![classIndex].spellCasting!!.spellsKnown!![classLevel - 1] > classSpells.count { it.level != 0 }
-            }
-        } catch(e: NullPointerException) {
-            if(level == 0) {
-                classes.value!![classIndex].pactMagic!!.cantripsKnown[classLevel - 1] > classSpells.count { it.level == level }
-            } else {
-                classes.value!![classIndex].pactMagic!!.spellsKnown[classLevel - 1] > classSpells.count { it.level != 0 }
-            }
-        }
-    }
 }
 

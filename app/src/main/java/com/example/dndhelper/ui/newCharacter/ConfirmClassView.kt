@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.dndhelper.repository.dataClasses.Subclass
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
+import com.example.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -237,7 +238,7 @@ fun ConfirmClassView(
                                     //Tell the state bundle what the user can choose from.
                                     val names = mutableListOf<String>()
                                     for (item in choice.from) {
-                                        item.name?.let { names.add(it) }
+                                        item.allNames.let { names.add(it) }
                                     }
 
 

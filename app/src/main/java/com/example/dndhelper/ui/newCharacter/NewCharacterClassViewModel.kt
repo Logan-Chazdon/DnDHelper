@@ -101,7 +101,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         if(isBaseClass.value) {
             newClass.isBaseClass = isBaseClass.value
             newClass.equipmentChoices.forEach {
-                it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Item>
+                it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
             }
             newClass.proficiencyChoices.forEach {
                 it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>

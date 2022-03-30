@@ -192,7 +192,7 @@ data class Character(
                 }
 
                 newClass.equipmentChoices.forEach {
-                    it.chosen?.let { items -> backpack.classItems.addAll(items) }
+                    it.chosen?.let { items -> backpack.classItems.addAll(items.flatten()) }
                 }
             }
         }
@@ -393,7 +393,7 @@ data class Character(
             it.chosen?.let { chosen ->
                 for (item in chosen) {
                     if(it.chosen != null) {
-                        backpack.addBackgroundItems(it.chosen!!)
+                        backpack.addBackgroundItems(it.chosen!!.flatten())
                     }
                 }
             }

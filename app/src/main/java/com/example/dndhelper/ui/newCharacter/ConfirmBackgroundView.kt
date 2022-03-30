@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
+import com.example.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -124,7 +125,7 @@ fun ConfirmBackgroundView(
                                 //Tell the state bundle what the user can choose from.
                                 val names = mutableListOf<String>()
                                 for (item in choice.from) {
-                                    item.name?.let { names.add(it) }
+                                    item.allNames.let { names.add(it) }
                                 }
 
                                 val multipleChoiceState = viewModel.dropDownStates.getDropDownState(

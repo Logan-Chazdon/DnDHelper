@@ -1881,11 +1881,16 @@
                     "name": "A light crossbow and 20 bolts or any simple weapon",
                     "choose": 1,
                     "from": [
+                        [
+                            {
+                                "name": "A Light crossbow"
+                            },
+                            {
+                                "name" : "20 bolts"
+                            }
+                        ],
                         {
                             "index": "simple_weapons"
-                        },
-                        {
-                            "name": "light crossbow"
                         }
                     ]
                 },
@@ -3860,9 +3865,14 @@
                             "name" : "Chain mail",
                             "index" : "chain mail"
                         },
-                        {
-                            "name" : "TODO"
-                        }
+                        [
+                            {
+                                "name" : "Longbow"
+                            },
+                            {
+                                "name" : "20 arrows"
+                            }
+                        ]
                     ]
                 },
                 {
@@ -3882,12 +3892,17 @@
                     "name" : "A light crossbow and 20 bolts or two handaxes",
                     "choose" : 1,
                     "from": [
+                        [
+                            {
+                                "name" : "A Light crossbow",
+                                "index" : "light crossbow"
+                            },
+                            {
+                                "name" : "20 bolts"
+                            }
+                        ],
                         {
-                            "name" : "A Light crossbow",
-                            "index" : "light crossbow"
-                        },
-                        {
-                            "name" : "TODO"
+                            "name" : "Two handaxes"
                         }
                     ]
                 },
@@ -5917,10 +5932,14 @@
                     "name" : "A shortbow and quiver of 20 arrows or a shortsword",
                     "choose" : 1,
                     "from" : [
-                        {
-                            "name" : "A shortbow and quiver of 20 arrows",
-                            "comment" : "TODO"
-                        },
+                        [
+                            {
+                                "name" : "A shortbow"
+                            },
+                            {
+                                "name" : "A quiver of 20 arrows"
+                            }
+                        ],
                         {
                             "name" : "Shortsword",
                             "index" : "shortsword"
@@ -6129,10 +6148,14 @@
                     "name" : "A light crossbow and 20 bolts or any simple weapon",
                     "choose" : 1,
                     "from" : [
-                        {
-                            "name" : "A light crossbow and 20 bolts",
-                            "comment" : "TODO"
-                        },
+                        [
+                            {
+                                "name" : "A light crossbow"
+                            },
+                            {
+                                "name" : "20 bolts"
+                            }
+                        ],
                         {
                             "index" : "simple_weapons"
                         }
@@ -6709,10 +6732,14 @@
                     "name" : "A light crossbow and 20 bolts or any simple weapon",
                     "choose" : 1,
                     "from" : [
-                        {
-                            "name" : "A light crossbow and 20 bolts",
-                            "comment" : "TODO fix"
-                        },
+                        [
+                            {
+                                "name" : "A light crossbow"
+                            },
+                            {
+                                "name" : "20 bolts"
+                            }
+                        ],
                         {
                             "index" : "simple_weapons"
                         }

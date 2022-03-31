@@ -1883,7 +1883,8 @@
                     "from": [
                         [
                             {
-                                "name": "A Light crossbow"
+                                "name": "A Light crossbow",
+                                "index" : "Crossbow, Light"
                             },
                             {
                                 "name" : "20 bolts"
@@ -3867,7 +3868,8 @@
                         },
                         [
                             {
-                                "name" : "Longbow"
+                                "name" : "Longbow",
+                                "index" : "longbow"
                             },
                             {
                                 "name" : "20 arrows"
@@ -3901,9 +3903,16 @@
                                 "name" : "20 bolts"
                             }
                         ],
-                        {
-                            "name" : "Two handaxes"
-                        }
+                        [
+                            {
+                                "name" : "Handaxe",
+                                "index" : "Handaxe"
+                            },
+                            {
+                                "name" : "Handaxe",
+                                "index" : "Handaxe"
+                            }
+                        ]
                     ]
                 },
                 {
@@ -5747,10 +5756,16 @@
                     "name" : "Two shortswords or two simple melee weapons",
                     "choose" : 1,
                     "from" : [
-                        {
-                            "name" : "Two shortswords",
-                            "comment" : "TODO"
-                        },
+                        [
+                            {
+                                "name" :"Shortsword",
+                                "index" :"Shortsword"
+                            },
+                            {
+                                "name": "Shortsword",
+                                "index": "Shortsword"
+                            }
+                        ],
                         {
                             "name" : "two simple melee weapons",
                             "comment" : "TODO"
@@ -5934,7 +5949,8 @@
                     "from" : [
                         [
                             {
-                                "name" : "A shortbow"
+                                "name" : "A shortbow",
+                                "index": "Shortbow"
                             },
                             {
                                 "name" : "A quiver of 20 arrows"
@@ -5962,13 +5978,16 @@
                     ]
                 },
                 {
-                    "name" : "Leather armor"
+                    "name" : "Leather armor",
+                    "index": "Leather"
                 },
                 {
-                    "name" : "Dagger"
+                    "name" : "Dagger",
+                    "index" : "dagger"
                 },
                 {
-                    "name" : "Dagger"
+                    "name" : "Dagger",
+                    "index" : "dagger"
                 },
                 {
                     "name" : "Thieves' tools"
@@ -6150,7 +6169,8 @@
                     "from" : [
                         [
                             {
-                                "name" : "A light crossbow"
+                                "name" : "A light crossbow",
+                                "index" : "Crossbow, Light"
                             },
                             {
                                 "name" : "20 bolts"
@@ -6734,7 +6754,8 @@
                     "from" : [
                         [
                             {
-                                "name" : "A light crossbow"
+                                "name" : "A light crossbow",
+                                "index" : "Crossbow, Light"
                             },
                             {
                                 "name" : "20 bolts"

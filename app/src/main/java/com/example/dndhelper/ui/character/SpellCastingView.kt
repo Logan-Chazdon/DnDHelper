@@ -59,7 +59,7 @@ fun SpellCastingView(
                 val spells = allSpells[slotLevel]
 
                 item {
-                    if(spells?.isNotEmpty() == true) {
+                    if(spells?.isNotEmpty() == true || slotLevel != 0) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(0.95f)

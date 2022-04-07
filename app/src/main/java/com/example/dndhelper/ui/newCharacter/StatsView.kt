@@ -95,6 +95,7 @@ fun StatsView(
             for (row in 0 until rows) {
                 Column(
                     modifier = Modifier
+                        .fillMaxHeight()
                         .mediaQuery(
                             Dimensions.Height lessThan 500.dp,
                             Modifier.width(screenWidth.times(0.48f))
@@ -103,7 +104,8 @@ fun StatsView(
                             Dimensions.Height greaterThan 500.dp,
                             Modifier.fillMaxWidth(0.9f)
                         ),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top)
                 ) {
                     val selectedIndexes = viewModel.selectedStatIndexes.observeAsState()
                     for (column in 0 until columns) {
@@ -165,7 +167,6 @@ fun StatsView(
                                 }
                             }
                         }
-                        Spacer(Modifier.height(10.dp))
                     }
                 }
             }

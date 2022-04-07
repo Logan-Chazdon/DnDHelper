@@ -78,9 +78,15 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                         verticalAlignment = Alignment.Top,
                                         arrangement = Arrangement.spacedBy(0.dp)
                                     ) {
-                                        Column {
+                                        Column(
+                                            modifier = if(isVertical) {
+                                                Modifier.fillMaxHeight(0.5f)
+                                            } else {
+                                                Modifier
+                                            }
+                                        ) {
                                             CharacterTextView(
-                                                modifier = topModifier,
+                                                modifier = topModifier.fillMaxHeight(0.5f),
                                                 name = "Personality Traits",
                                                 value = viewModel.character?.observeAsState()?.value?.personalityTraits
                                                     ?: "",
@@ -92,7 +98,7 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                             )
 
                                             CharacterTextView(
-                                                modifier = topModifier,
+                                                modifier = topModifier.fillMaxHeight(),
                                                 name = "Ideals",
                                                 value = viewModel.character?.observeAsState()?.value?.ideals
                                                     ?: "",
@@ -109,7 +115,7 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
 
                                         Column {
                                             CharacterTextView(
-                                                modifier = Modifier.fillMaxWidth(),
+                                                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f),
                                                 name = "Bonds",
                                                 value = viewModel.character?.observeAsState()?.value?.bonds
                                                     ?: "",
@@ -121,7 +127,7 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                             )
 
                                             CharacterTextView(
-                                                modifier = Modifier.fillMaxWidth(),
+                                                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
                                                 name = "Flaws",
                                                 value = viewModel.character?.observeAsState()?.value?.flaws
                                                     ?: "",

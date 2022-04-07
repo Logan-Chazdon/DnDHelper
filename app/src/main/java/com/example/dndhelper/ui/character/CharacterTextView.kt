@@ -1,5 +1,7 @@
 package com.example.dndhelper.ui.character
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -14,11 +16,15 @@ fun CharacterTextView(
     onChange: (String) -> Unit,
     modifier : Modifier = Modifier
 ) {
-    Text(text = name)
-    TextField(
-        value = value,
-        onValueChange = onChange,
-        modifier = modifier,
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
-    )
+    Column(
+        modifier = modifier
+    ) {
+        Text(text = name)
+        TextField(
+            value = value,
+            onValueChange = onChange,
+            modifier = Modifier.fillMaxSize(),
+            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+        )
+    }
 }

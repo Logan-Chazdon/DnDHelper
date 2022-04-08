@@ -19,7 +19,7 @@
             ],
             "languages": [
                 {
-                    "name": "Two of your choice",
+                    "name": "Two languages of your choice",
                     "choose": 2,
                     "from": [
                         {
@@ -80,7 +80,7 @@
             ],
             "languages": [
                 {
-                    "name": "Two of your choice",
+                    "name": "Two languages of your choice",
                     "choose": 2,
                     "from": [
                         {
@@ -133,7 +133,7 @@
             ],
             "languages": [
                 {
-                    "name": "Two of your choice",
+                    "name": "Two languages of your choice",
                     "choose": 2,
                     "from": [
                         {
@@ -199,7 +199,7 @@
             ],
             "languages": [
                 {
-                    "name": "One of your choice",
+                    "name": "One language of your choice",
                     "choose": 1,
                     "from": [
                         {
@@ -252,7 +252,7 @@
             ],
             "languages": [
                 {
-                    "name": "Two of your choice",
+                    "name": "Two languages of your choice",
                     "choose": 2,
                     "from": [
                         {
@@ -264,7 +264,7 @@
             "spells": [
                 {
                     "name": "friends",
-                    "index": "spell/friends TODO"
+                    "index": "friends"
                 }
             ],
             "equipment": [
@@ -347,7 +347,7 @@
             "spells": [
                 {
                     "name": "freinds",
-                    "index": "spell/freinds TODO"
+                    "index": "freinds"
                 }
             ],
             "equipment": [
@@ -459,7 +459,7 @@
             ],
             "languages": [
                 {
-                    "name": "Two of your choice",
+                    "name": "Two languages of your choice",
                     "choose": 2,
                     "from": [
                         {
@@ -514,7 +514,7 @@
             ],
             "languages": [
                 {
-                    "name": "TODO Dwarvish or one other of your choice if you already speak Dwarvish",
+                    "name": "Dwarvish or one other of your choice if you already speak Dwarvish",
                     "choose": 2,
                     "from": [
                         {
@@ -565,7 +565,7 @@
             ],
             "languages": [
                 {
-                    "name": "Two of your choice",
+                    "name": "Two languages of your choice",
                     "choose": 2,
                     "from": [
                         {

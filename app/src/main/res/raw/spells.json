@@ -7427,7 +7427,7 @@
             "name": "Summon Beast",
             "level": 2,
             "casting_time": "1 Action",
-            "range": "60",
+            "range": "60 feet",
             "school": "Conjuration",
             "desc": "TODO please do this ne for me, thanks!",
             "area": "-",

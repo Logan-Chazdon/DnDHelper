@@ -50,7 +50,7 @@ fun CombatView(viewModel: CombatViewModel) {
                             Text("Add temporary HP")
                             onClick = {
                                 hpPopUpExpanded = false
-                                GlobalScope.launch() {
+                                scope.launch(Dispatchers.IO) {
                                     viewModel.addTemp(temp)
                                 }
                             }
@@ -59,7 +59,7 @@ fun CombatView(viewModel: CombatViewModel) {
                             Text("Heal")
                             onClick = {
                                 hpPopUpExpanded = false
-                                GlobalScope.launch() {
+                                scope.launch(Dispatchers.IO) {
                                     viewModel.heal(temp)
                                 }
                             }
@@ -68,7 +68,7 @@ fun CombatView(viewModel: CombatViewModel) {
                             Text("Damage")
                             onClick = {
                                 hpPopUpExpanded = false
-                                GlobalScope.launch() {
+                                scope.launch(Dispatchers.IO) {
                                     viewModel.damage(temp)
                                 }
                             }

@@ -1,11 +1,8 @@
 package com.example.dndhelper.ui.newCharacter
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -21,6 +18,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.dndhelper.repository.dataClasses.PactMagic
 import com.example.dndhelper.repository.dataClasses.Spell
 import com.example.dndhelper.repository.dataClasses.SpellCasting
+import com.example.dndhelper.ui.SpellDetailsView
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -60,7 +58,7 @@ fun SpellSelectionView(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun SpellSelectionView(
     pactMagic: PactMagic?,
@@ -149,7 +147,14 @@ private fun SpellSelectionView(
         }
     }
 
-
+    //Set in the dialog to choose spells.
+    //Used in the spell details dialog.
+    var spellDetailsIsExpanded by remember {
+        mutableStateOf(false)
+    }
+    var spellToShowDetailsOf : Spell? by remember {
+        mutableStateOf(null)
+    }
     //Dialog to choose spells and cantrips.
     if (spellsExpanded) {
         Dialog(
@@ -213,12 +218,17 @@ private fun SpellSelectionView(
                                         shape = RoundedCornerShape(5.dp),
                                         elevation = 2.dp,
                                         modifier = Modifier
-                                            //TODO long clickable for detail view
-                                            .clickable {
-                                                if (canTakeSpell(spell) || spells.contains(spell)) {
-                                                    toggleSpell(spell)
+                                            .combinedClickable(
+                                                onLongClick = {
+                                                    spellToShowDetailsOf = spell
+                                                    spellDetailsIsExpanded = true
+                                                },
+                                                onClick = {
+                                                    if (canTakeSpell(spell) || spells.contains(spell)) {
+                                                        toggleSpell(spell)
+                                                    }
                                                 }
-                                            }
+                                            )
                                             .fillMaxWidth(),
                                         backgroundColor = when {
                                             spells.contains(spell) -> {
@@ -260,6 +270,23 @@ private fun SpellSelectionView(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    //Spell Details
+    if(spellDetailsIsExpanded){
+        Dialog(
+            onDismissRequest = {
+                spellDetailsIsExpanded = false
+            },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnClickOutside = true
+            )
+        ) {
+            Card {
+                spellToShowDetailsOf?.let { SpellDetailsView(spell = it) }
             }
         }
     }

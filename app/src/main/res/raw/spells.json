@@ -1714,7 +1714,7 @@
                     "index": "wizard"
                 }
             ],
-            "damage": "1d6 damage of the triggering type"
+            "damage": "1d6"
         },
         {
             "name": "Alarm",

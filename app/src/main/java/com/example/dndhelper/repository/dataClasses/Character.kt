@@ -183,7 +183,10 @@ data class Character(
             }
         }
         features.forEach { feature ->
-            feature.second.hpBonusPerLevel?.let {newMax += (it * totalClassLevels)}
+            feature.second.hpBonusPerLevel?.let {
+                newMax += (
+                        it * ((feature.first - feature.second.grantedAtLevel) + 1))
+            }
         }
         return newMax
     }

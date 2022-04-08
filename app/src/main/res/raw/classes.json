@@ -6739,7 +6739,7 @@
                             "name" : "Draconic Resilience",
                             "level" : 1,
                             "desc" : "As magic flows through your body, it causes physical traits of your dragon ancestors to emerge. At 1st level, your hit point maximum increases by 1 and increases by 1 again whenever you gain a level in this class.\n\nAdditionally, parts of your skin are covered by a thin sheen of dragon-like scales. When you aren't wearing armor, your AC equals 13 + your Dexterity modifier.",
-                            "comment" : "TODO IMPL",
+                            "hp_bonus_per_level" : 1,
                             "ac" : {
                                 "base" : 13,
                                 "dex" : 10,

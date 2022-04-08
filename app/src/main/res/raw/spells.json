@@ -6270,10 +6270,10 @@
             "damage": "-"
         },
         {
-            "name": " Locate Animals or Plants",
+            "name": "Locate Animals or Plants",
             "level": 2,
             "casting_time": "1 Action",
-            "range": "self",
+            "range": "Self",
             "school": "Divination",
             "desc": "Describe or name a specific kind of beast or plant. Concentrating on the voice of nature in your surroundings, you learn the direction and distance to the closest creature or plant of that kind within 5 miles, if any are present.",
             "area": "-",

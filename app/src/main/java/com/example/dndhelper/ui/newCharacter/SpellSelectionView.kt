@@ -80,7 +80,8 @@ private fun SpellSelectionView(
     } else { 0 }
     val totalCantrips =
         spellCasting?.cantripsKnown?.getOrNull(level)
-            ?: pactMagic!!.cantripsKnown[level]
+            ?: pactMagic?.cantripsKnown?.get(level)
+            ?: 0
 
     val castingAbility =
         spellCasting?.castingAbility

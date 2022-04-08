@@ -180,7 +180,7 @@ fun ConfirmClassView(
 
                 if (viewModel.isBaseClass.value) {
                     val proficiencyChoices = clazz.proficiencyChoices
-                    proficiencyChoices?.forEach { choice ->
+                    proficiencyChoices.forEach { choice ->
                         Card(
                             elevation = 5.dp,
                             modifier = Modifier
@@ -218,7 +218,7 @@ fun ConfirmClassView(
 
                     if (!viewModel.takeGold.value) {
                         val equipmentChoices = clazz.equipmentChoices
-                        equipmentChoices?.forEach { choice ->
+                        equipmentChoices.forEach { choice ->
                             Card(
                                 elevation = 5.dp,
                                 modifier = Modifier

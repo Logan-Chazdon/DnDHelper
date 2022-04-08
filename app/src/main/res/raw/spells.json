@@ -4432,7 +4432,7 @@
             "name": "Witch Bolt",
             "level": 1,
             "casting_time": "1 Action",
-            "range": "60",
+            "range": "60 feet",
             "school": "1 Action",
             "desc": "1 Action",
             "area": "-",

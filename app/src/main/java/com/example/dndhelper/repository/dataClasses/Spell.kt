@@ -22,8 +22,7 @@ data class Spell(
             1 -> "1st level"
             2 -> "2nd level"
             3 -> "3rd level"
-            4 -> "${level}th level"
-            else -> level.toString()
+            else -> "${level}th level"
         }
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.dndhelper.R
 import com.example.dndhelper.repository.dataClasses.Spell
+import com.example.dndhelper.ui.SpellDetailsView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -335,25 +336,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 Modifier.padding(15.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Column {
-                                        Text(it.name)
-                                        Text(it.castingTime)
-                                    }
-                                    Column {
-                                        Text(it.school)
-                                        Text(it.duration)
-                                    }
-                                    Column {
-                                        Text(it.range)
-                                        Text(it.area)
-                                    }
-                                }
-
-                                Text(it.desc)
+                                SpellDetailsView(spell = it)
 
 
                                 var level by remember { mutableStateOf(it.level) }

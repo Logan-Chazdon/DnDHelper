@@ -3820,7 +3820,7 @@
             "name": "Purify Food and Drink",
             "level": 1,
             "casting_time": "1 Action Ritual",
-            "range": 10,
+            "range": "10 feet",
             "school": "Transmutation",
             "desc": "All nonmagical food and drink within a 5-foot-radius sphere centered on a point of your choice within range is purified and rendered free of poison and disease.",
             "area": "5f sphere",

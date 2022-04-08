@@ -3580,7 +3580,7 @@
                     "index": "wizard"
                 }
             ],
-            "damage": "2d4 force or 5d4 force"
+            "damage": "2d4 force"
         },
         {
             "name": "Jump",

@@ -110,7 +110,11 @@ fun ItemsView(viewModel: ItemViewModel) {
                                         item.name?.let { string ->
                                             Text(
                                                 text = string,
-                                                modifier = Modifier.width(screenWidth / 4)
+                                                modifier = if(item.type == "Item") {
+                                                    Modifier
+                                                } else {
+                                                    Modifier.width(screenWidth / 4)
+                                                }
                                             )
                                         }
 

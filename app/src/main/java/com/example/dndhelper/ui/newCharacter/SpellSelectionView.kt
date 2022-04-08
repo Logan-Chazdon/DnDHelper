@@ -77,9 +77,7 @@ private fun SpellSelectionView(
     val totalSpells = if(preparationType != "all") {
         spellCasting?.spellsKnown?.getOrNull(level)
             ?: pactMagic!!.spellsKnown[level]
-    } else if(spellCasting.hasSpellBook == true) {
-        Int.MAX_VALUE
-    } else { 0 }
+    } else{ 0 }
     val totalCantrips =
         spellCasting?.cantripsKnown?.getOrNull(level)
             ?: pactMagic?.cantripsKnown?.get(level)
@@ -96,7 +94,11 @@ private fun SpellSelectionView(
             spells.count { it.level == 0} < totalCantrips
         } else {
             //For non cantrips.
-            spells.count { it.level != 0} < totalSpells
+            if(spellCasting?.hasSpellBook == true) {
+                true
+            } else {
+                spells.count { it.level != 0 } < totalSpells
+            }
         }
         if(enoughSpellsRemaining && spellCasting?.schoolRestriction != null && spell.level != 0) {
             return spellCasting.schoolRestriction.isMet(spells.filter { it.level != 0})

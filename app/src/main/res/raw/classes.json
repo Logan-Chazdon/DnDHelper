@@ -7834,7 +7834,6 @@
                     44
                 ],
                 "prepare_from" : "known",
-                "comment" : "Implement spell book",
                 "spell_slots" : [
                     [2],
                     [3],

@@ -1397,6 +1397,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             }
             SpellCasting(
                 type = spellCastingType,
+                hasSpellBook = try {
+                    spellCastingJson.getBoolean("has_spell_book")
+                } catch (e: JSONException) {
+                    false
+                },
                 castingAbility = spellCastingJson.getString("casting_ability"),
                 preparationModMultiplier = try {
                     spellCastingJson.getDouble("preparation_mod_multiplier")

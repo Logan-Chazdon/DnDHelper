@@ -77,6 +77,8 @@ private fun SpellSelectionView(
     val totalSpells = if(preparationType != "all") {
         spellCasting?.spellsKnown?.getOrNull(level)
             ?: pactMagic!!.spellsKnown[level]
+    } else if(spellCasting.hasSpellBook == true) {
+        Int.MAX_VALUE
     } else { 0 }
     val totalCantrips =
         spellCasting?.cantripsKnown?.getOrNull(level)

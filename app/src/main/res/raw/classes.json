@@ -7806,6 +7806,7 @@
             "hit_die" : 6,
             "spell_casting" : {
                 "type" : 1.0,
+                "has_spell_book" : true,
                 "casting_ability" : "Int",
                 "cantrips_known" : [
                     3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5

@@ -700,7 +700,13 @@
                 {
                     "name": "Unarmored Defense",
                     "desc": "While you are not wearing any armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.",
-                    "level": 1
+                    "level": 1,
+                    "ac" : {
+                        "base" : 10,
+                        "dex" : 10,
+                        "con" : 10,
+                        "wis" : 0
+                    }
                 },
                 {
                     "name": "Reckless Attack",
@@ -4746,7 +4752,13 @@
                 {
                     "name" : "Unarmored Defense",
                     "desc" : "Beginning at 1st level, while you are wearing no armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Wisdom modifier.",
-                    "level" : 1
+                    "level" : 1,
+                    "ac" : {
+                        "base" : 10,
+                        "dex" : 10,
+                        "con" : 0,
+                        "wis" : 10
+                    }
                 },
                 {
                     "name" : "Martial Arts",
@@ -6727,7 +6739,13 @@
                             "name" : "Draconic Resilience",
                             "level" : 1,
                             "desc" : "As magic flows through your body, it causes physical traits of your dragon ancestors to emerge. At 1st level, your hit point maximum increases by 1 and increases by 1 again whenever you gain a level in this class.\n\nAdditionally, parts of your skin are covered by a thin sheen of dragon-like scales. When you aren't wearing armor, your AC equals 13 + your Dexterity modifier.",
-                            "comment" : "TODO IMPL"
+                            "comment" : "TODO IMPL",
+                            "ac" : {
+                                "base" : 13,
+                                "dex" : 10,
+                                "con" : 0,
+                                "wis" : 0
+                            }
                         },
                         {
                             "name" : "Elemental Affinity",

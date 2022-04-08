@@ -74,6 +74,25 @@ data class Character(
     get() {
         //TODO implement all other sources of ac.
         var result = equippedArmor.getAC(getStatMod("Dex"))
+        //Check for a feature with a higher ac than the armor.
+        //If one is found replace the current ac.
+        if(equippedArmor == Armor.none ) {
+            features.forEach {
+                it.second.ac?.let { armorClass: ArmorClass ->
+                    armorClass.calculate(
+                        dex = getStatMod("Dex"),
+                        con = getStatMod("Con"),
+                        wis = getStatMod("Wis")
+                    ).let { value ->
+                        if (value > result) {
+                            result = value
+                        }
+
+                    }
+                }
+            }
+        }
+
         equippedShield?.let {
             result += it.totalAcBonus
         }

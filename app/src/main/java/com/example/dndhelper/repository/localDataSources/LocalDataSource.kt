@@ -1688,6 +1688,18 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         null
                     }
 
+                    val ac = try {
+                        val acJson = featureJson.getJSONObject("ac")
+                        ArmorClass(
+                            base = acJson.getInt("base"),
+                            dexMax = acJson.getInt("dex"),
+                            conMax = acJson.getInt("con"),
+                            wisMax = acJson.getInt("wis")
+                        )
+                    } catch(e: JSONException) {
+                        null
+                    }
+
                     features.add(
                         Feature(
                             name = featureJson.getString("name"),
@@ -1711,7 +1723,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 featureJson.getInt("ac_bonus")
                             } catch (e: JSONException) {
                                 null
-                            }
+                            },
+                            ac = ac
                         )
                     )
                 }

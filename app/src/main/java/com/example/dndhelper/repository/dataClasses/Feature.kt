@@ -12,7 +12,8 @@ data class Feature(
     val infusion: Infusion? = null,
     val maxActive: Choose = Choose(0),
     val hpBonusPerLevel: Int? = null,
-    val acBonus: Int? = null
+    val acBonus: Int? = null,
+    val ac: ArmorClass? = null //This will only be applied when not wearing armor.
 ) {
 
     var chosen : List<Feature>? = null

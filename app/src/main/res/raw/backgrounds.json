@@ -602,6 +602,317 @@
                     "choose": 0
                 }
             ]
+        },
+        {
+            "name": "Courtier",
+            "desc": "In your earlier days, you were a personage of some significance in a noble court or a bureaucratic organization. You might or might not come from an upper-class family; your talents, rather than the circumstances of your birth, could have secured you this position.\n\nYou might have been one of the many functionaries, attendants, and other hangers-on in the Court of Silverymoon, or perhaps you traveled in Waterdeep's baroque and sometimes cutthroat conglomeration of guilds, nobles, adventurers, and secret societies. You might have been one of the behind-the-scenes law-keepers or functionaries in Baldur's Gate or Neverwinter, or you might have grown up in and around the castle of Daggerford.\n\nEven if you are no longer a full-fledged member of the group that gave you your start in life, your relationships with your former fellows can be an advantage for you and your adventuring comrades. You might undertake missions with your new companions that further the interest of the organization that gave you your start in life. In any event, the abilities that you honed while serving as a courtier will stand you in good stead as an adventurer.",
+            "features": [
+                {
+                    "name" : "Court Functionary",
+                    "desc" : "Your knowledge of how bureaucracies function lets you gain access to the records and inner workings of any noble court or government you encounter. You know who the movers and shakers are, whom to go to for the favors you seek, and what the current intrigues of interest in the group are."
+                }
+            ],
+            "equipment": [
+                {
+                    "name" : "A set of fine clothes"
+                },
+                {
+                    "name" : "A pouch containing 5gp",
+                    "index" : "gold",
+                    "amount" : 5
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name" : "Insight"
+                },
+                {
+                    "name" : "Persuasion"
+                }
+            ],
+            "tool_proficiencies": [
+            ],
+            "languages": [
+                {
+                    "name" : "Two languages of your choice",
+                    "choose" : 2,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Criminal",
+            "desc": "You are an experienced criminal with a history of breaking the law. You have spent a lot of time among other criminals and still have contacts within the criminal underworld. You're far closer than most people to the world of murder, theft, and violence that pervades the underbelly of civilization, and you have survived up to this point by flouting the rules and regulations of society.",
+            "features": [
+                {
+                    "name" : "Criminal Specialty",
+                    "desc" : "There are many kinds of criminals, and within a thieves' guild or similar criminal organization, individual members have particular specialties. Even criminals who operate outside of such organizations have strong preferences for certain kinds of crimes over others. Choose the role you played in your criminal life, or roll on the table below.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "Blackmailer"
+                        },
+                        {
+                            "name" : "Burglar"
+                        },
+                        {
+                            "name" : "Enforcer"
+                        },
+                        {
+                            "name" : "Fence"
+                        },
+                        {
+                            "name": "Highway robber"
+                        },
+                        {
+                            "name" : "Hired killer"
+                        },
+                        {
+                            "name" : "Pickpocket"
+                        },
+                        {
+                            "name" : "Smuggler"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Criminal Contact",
+                    "desc" : "You have a reliable and trustworthy contact who acts as your liaison to a network of other criminals. You know how to get messages to and from your contact, even over great distances; specifically, you know the local messengers, corrupt caravan masters, and seedy sailors who can deliver messages for you."
+                }
+            ],
+            "equipment": [
+                {
+                    "name" : "A crowbar"
+                },
+                {
+                    "name" : "A set of dark common clothes including a hood"
+                },
+                {
+                    "name" : "A pouch containing 15gp",
+                    "index" : "gold",
+                    "amount" : 15
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name" : "Deception"
+                },
+                {
+                    "name" : "Stealth"
+                }
+            ],
+            "tool_proficiencies": [
+                {
+                    "name" : "One type of gaming set",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "gaming_sets"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Thieves' tools"
+                }
+            ],
+            "languages": [
+            ]
+        },
+        {
+            "name": "Entertainer",
+            "desc": "You thrive in front of an audience. You know how to entrance them, entertain them, and even inspire them. Your poetics can stir the hearts of those who hear you, awakening grief or joy, laughter or anger. Your music raises their spirits or captures their sorrow. Your dance steps captivate, your humor cuts to the quick. Whatever techniques you use, your art is your life.",
+            "features": [
+                {
+                    "name" : "Entertainer Routines",
+                    "desc" : "A good entertainer is versatile, spicing up every performance with a variety of different routines. Choose one to three routines or roll on the table below to define your expertise as an entertainer.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "Actor"
+                        },
+                        {
+                            "name" : "Dancer"
+                        },
+                        {
+                            "name" : "Fire-eater"
+                        },
+                        {
+                            "name" : "Jester"
+                        },
+                        {
+                            "name" : "Juggler"
+                        },
+                        {
+                            "name" : "Instrumentalist"
+                        },
+                        {
+                            "name" : "Poet"
+                        },
+                        {
+                            "name" : "Singer"
+                        },
+                        {
+                            "name" : "Singer"
+                        },
+                        {
+                            "name" : "Storyteller"
+                        },
+                        {
+                            "name" : "Tumbler"
+                        }
+                    ]
+                },
+                {
+                    "name" : "By Popular Demand",
+                    "desc" : "You can always find a place to perform, usually in an inn or tavern but possibly with a circus, at a theater, or even in a noble's court. At such a place, you receive free lodging and food of a modest or comfortable standard (depending on the quality of the establishment), as long as you perform each night. In addition, your performance makes you something of a local figure. When strangers recognize you in a town where you have performed, they typically take a liking to you."
+                }
+            ],
+            "equipment": [
+                {
+                    "name" : "A musical instrument of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "musical_instruments"
+                        }
+                    ]
+                },
+                {
+                    "name" : "The favor of an admirer",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "Love letter"
+                        },
+                        {
+                            "name" : "Lock of hair"
+                        },
+                        {
+                            "name" : "Trinket"
+                        }
+                    ]
+                },
+                {
+                    "name" : "A costume"
+                },
+                {
+                    "name" : "A pouch containing 15gp",
+                    "index" : "gold",
+                    "amount" : 15
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name" : "Acrobatics"
+                },
+                {
+                    "name" : "Performance"
+                }
+            ],
+            "tool_proficiencies": [
+                {
+                    "name" : "Disguise kit"
+                },
+                {
+                    "name" : "One musical instrument of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "musical_instruments"
+                        }
+                    ]
+                }
+            ],
+            "languages": [
+            ]
+        },
+        {
+            "name": "Faceless",
+            "desc": "Being who you are, you could never be a hero. Whether due to your class, your people, your family, or your sins, something about you prevents you from effectively pursuing the path you've chosen. Even so, that doesn't stop you. You've left your old face behind, taking on a new persona, becoming something more.\n\nCharacters with the faceless background don a disguise—literally or otherwise—as they adventure. This persona might be dramatic or subtle. In a way, though, many characters have such larger than life personalities. Therefore, this background largely focuses on detailing the hero behind the mask.",
+            "features": [
+                {
+                    "name" : "Faceless Persona",
+                    "desc" : "A faceless character adventures behind a mask of a public persona. This persona is as natural to them as their hidden, true face, but it disguises their identity. Roll on the Faceless Persona table to determine your persona, or work with the DM to create a persona that's unique to your character and suits the tone of your game.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "A flamboyant spy or brigand"
+                        },
+                        {
+                            "name" : "The incarnation of a nation or people"
+                        },
+                        {
+                            "name" : "A scoundrel with a masked guise"
+                        },
+                        {
+                            "name" : "A vengeful spirit"
+                        },
+                        {
+                            "name" : "The manifestation of a deity or your faith"
+                        },
+                        {
+                            "name" : "One whose beauty is greatly accented using makeup"
+                        },
+                        {
+                            "name" : "An impersonation of another hero"
+                        },
+                        {
+                            "name" : "The embodiment of a school of magic"
+                        },
+                        {
+                            "name" : "A warrior with distinctive armor"
+                        },
+                        {
+                            "name" : "A disguise with animalistic or monstrous characteristics, meant to inspire fear"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Dual Personalities",
+                    "desc" : "Most of your fellow adventurers and the world know you as your persona. Those who seek to learn more about you—your weakness, your origins, your purpose—find themselves stymied by your disguise. Upon donning a disguise and behaving as your persona, you are unidentifiable as your true self. By removing your disguise and revealing your true face, you are no longer identifiable as your persona. This allows you to change appearances between your two personalities as often as you wish, using one to hide the other or serve as convenient camouflage. However, should someone realize the connection between your persona and your true self, your deception might lose its effectiveness."
+                }
+            ],
+            "equipment": [
+                {
+                    "name" : "A disguise kit"
+                },
+                {
+                    "name" : "A costume"
+                },
+                {
+                    "name" : "A pouch containing 10gp",
+                    "index" : "gold",
+                    "amount" : 10
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name" : "Deception"
+                },
+                {
+                    "name" : "Intimidation"
+                }
+            ],
+            "tool_proficiencies": [
+                {
+                    "name"  : "Disguise kit"
+                }
+            ],
+            "languages": [
+                {
+                    "name" : "One language of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

@@ -4,9 +4,9 @@ package com.example.dndhelper.ui.newCharacter
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -30,7 +30,6 @@ fun ClassView(
     characterId: Int
 ) {
     val classes by viewModel.classes.observeAsState()
-    val scrollState = rememberScrollState()
     viewModel.id = characterId
     val classIcons = listOf(
         painterResource(R.drawable.ic_class_icon___artificer),
@@ -48,45 +47,47 @@ fun ClassView(
         painterResource(R.drawable.ic_class_icon___wizard)
     )
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth()
-            .verticalScroll(state = scrollState, enabled = true),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        state = rememberLazyListState()
     ) {
         classes?.withIndex()?.forEach { (i, item) ->
-            Card(
-                elevation = 5.dp,
-                modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .height(100.dp)
-                    .background(
-                        color = MaterialTheme.colors.onPrimary.copy(alpha = 0.2f)
-                            .compositeOver(MaterialTheme.colors.background)
-                        , shape = RoundedCornerShape(10.dp))
-                    .clickable {
-                        navController.navigate("newCharacterView/ClassView/ConfirmClassView/$i/$characterId")
+            item {
+                Card(
+                    elevation = 5.dp,
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .height(100.dp)
+                        .background(
+                            color = MaterialTheme.colors.onPrimary
+                                .copy(alpha = 0.2f)
+                                .compositeOver(MaterialTheme.colors.background),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .clickable {
+                            navController.navigate("newCharacterView/ClassView/ConfirmClassView/$i/$characterId")
+                        }
+                ) {
+                    Row()
+                    {
+                        Icon(
+                            painter = classIcons[i],
+                            contentDescription = "${item.name} Icon",
+                            modifier = Modifier.padding(
+                                all = 10.dp
+                            )
+                        )
+                        Text(
+                            item.name,
+                            fontSize = 24.sp,
+                        )
                     }
-            )
-            {
-              Row()
-              {
-                  Icon(
-                      painter = classIcons[i],
-                      contentDescription = "${item.name} Icon",
-                      modifier = Modifier.padding(
-                          all = 10.dp
-                      )
-                  )
-                  Text(
-                      item.name,
-                      fontSize = 24.sp,
-                  )
-              }
+                }
             }
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

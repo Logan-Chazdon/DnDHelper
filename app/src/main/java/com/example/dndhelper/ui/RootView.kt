@@ -82,7 +82,7 @@ fun RootView() {
                                 name = "Race",
                                 route = "$route/RaceView/$id",
                                 baseRoute = "$route/RaceView",
-                                icon = Icons.Default.Home
+                                painter = painterResource(R.drawable.ic_race_icon)
                             ),
                             NavItem(
                                 name = "Background",

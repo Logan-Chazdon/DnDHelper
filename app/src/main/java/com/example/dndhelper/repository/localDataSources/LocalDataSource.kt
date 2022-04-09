@@ -60,6 +60,29 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         MutableLiveData()
     val _metamagics: MutableLiveData<List<Metamagic>> =
         MutableLiveData()
+    private val instrumentIndexes = mutableListOf(
+            "Bagpipes",
+            "Drum",
+            "Dulcimer",
+            "Flute",
+            "Lute",
+            "Lyre",
+            "Horn",
+            "Pan Flute",
+            "Shawm",
+            "Viol",
+            "Hurdy-Gurdy",
+            "Sackbut",
+            "Whistle-Stick",
+            "Harp",
+            "Tambourine",
+            "Erhu",
+            "Hulusi",
+            "Udu",
+            "Maracas",
+            "Gong",
+            "Wargong"
+        )
 
     init {
         context.mainExecutor.execute {
@@ -259,7 +282,12 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun getItemsByIndex(index: String): List<ItemInterface>? {
 
         when (index) {
-            "musical_instruments" -> return emptyList() //TODO update
+            "musical_instruments" -> return mutableListOf<ItemInterface>().run {
+                instrumentIndexes.forEach {
+                    getItemByIndex(it)?.let { item -> this.add(item) }
+                }
+                this
+            }
         }
 
         getWeaponsByIndex(index).let {
@@ -924,11 +952,25 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         val proficiencies = mutableListOf<ToolProficiency>()
         for (profIndex in 0 until proficienciesJson.length()) {
             val profJson = proficienciesJson.getJSONObject(profIndex)
-            proficiencies.add(
-                ToolProficiency(
-                    name = profJson.getString("name")
+            try {
+                when(profJson.getString("index")) {
+                    "musical_instruments" -> {
+                        instrumentIndexes.forEach {
+                            proficiencies.add(
+                                ToolProficiency(
+                                    name = it
+                                )
+                            )
+                        }
+                    }
+                }
+            } catch (e: JSONException) {
+                proficiencies.add(
+                    ToolProficiency(
+                        name = profJson.getString("name")
+                    )
                 )
-            )
+            }
         }
 
         return proficiencies

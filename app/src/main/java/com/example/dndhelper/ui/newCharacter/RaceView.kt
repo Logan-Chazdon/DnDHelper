@@ -2,9 +2,9 @@ package com.example.dndhelper.ui.newCharacter
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -24,59 +24,70 @@ fun RaceView(
 ) {
     viewModel.id = characterId
     val races = viewModel.races.observeAsState()
-    val scrollState = rememberScrollState()
 
-    Column(
+
+    LazyColumn(
         Modifier
-            .fillMaxSize()
-            .verticalScroll(state = scrollState, enabled = true),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        state = rememberLazyListState()
     ) {
         races.value?.forEachIndexed { i, race ->
-            Card(
-                backgroundColor = MaterialTheme.colors.surface,
-                modifier = Modifier
-                    .fillMaxWidth(0.95f)
-                    .clickable {
-                        navController.navigate("newCharacterView/ConfirmRaceView/$i/$characterId")
-                    },
-                shape = RoundedCornerShape(10.dp),
-                elevation = 10.dp
-            ) {
-                Column(Modifier.padding(start =5.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.Bottom
+            item {
+                Card(
+                    backgroundColor = MaterialTheme.colors.surface,
+                    modifier = Modifier
+                        .fillMaxWidth(0.95f)
+                        .clickable {
+                            navController.navigate("newCharacterView/ConfirmRaceView/$i/$characterId")
+                        },
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 10.dp
+                ) {
+                    Column(
+                        Modifier.padding(start = 5.dp),
+                        verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        Text(text = race.name, fontSize = 24.sp)
-                        Spacer(Modifier.fillMaxWidth(0.1f))
-                        Text(text = race.size, fontSize = 18.sp)
-                    }
-                    Column {
-
-                        Text(text = "Languages", style = MaterialTheme.typography.subtitle1)
-                        Row {
-                            for (language in race.languages) {
-                                Text(text = language.name.toString(), modifier = Modifier.padding(start = 5.dp))
-                                Spacer(modifier = Modifier.width(10.dp))
-                            }
+                        Row(
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            Text(text = race.name, fontSize = 24.sp)
+                            Spacer(Modifier.fillMaxWidth(0.1f))
+                            Text(text = race.size, fontSize = 18.sp)
                         }
+                        Column {
 
-                        for(trait in race.traits) {
-                            Text(text = trait.name, style = MaterialTheme.typography.subtitle1)
-                            Spacer(Modifier.height(2.dp))
-                            Text(text = trait.description, modifier = Modifier.padding(start = 5.dp))
-                        }
-
-                        Row()
-                        {
-                            Column() {
-                                race.abilityBonuses?.forEach { abilityBonus ->
-                                    Text(text = abilityBonus.toString())
+                            Text(text = "Languages", style = MaterialTheme.typography.subtitle1)
+                            Row {
+                                for (language in race.languages) {
+                                    Text(
+                                        text = language.name.toString(),
+                                        modifier = Modifier.padding(start = 5.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(10.dp))
                                 }
                             }
-                            Spacer(modifier = Modifier.fillMaxWidth(0.2f))
-                            Text(text = "Speed: ${race.groundSpeed}")
+
+                            for (trait in race.traits) {
+                                Text(text = trait.name, style = MaterialTheme.typography.subtitle1)
+                                Spacer(Modifier.height(2.dp))
+                                Text(
+                                    text = trait.description,
+                                    modifier = Modifier.padding(start = 5.dp)
+                                )
+                            }
+
+                            Row()
+                            {
+                                Column() {
+                                    race.abilityBonuses?.forEach { abilityBonus ->
+                                        Text(text = abilityBonus.toString())
+                                    }
+                                }
+                                Spacer(modifier = Modifier.fillMaxWidth(0.2f))
+                                Text(text = "Speed: ${race.groundSpeed}")
+                            }
                         }
                     }
                 }

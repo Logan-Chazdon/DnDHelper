@@ -1213,6 +1213,15 @@
                             "index": "skill_proficiencies"
                         }
                     ]
+                },
+                {
+                    "name": "Proficiency with three musical instruments of your choice",
+                    "choose": 3,
+                    "from": [
+                        {
+                            "index": "musical_instruments"
+                        }
+                    ]
                 }
             ],
             "proficiencies": [
@@ -1233,15 +1242,6 @@
                 },
                 {
                     "name" : "Shortswords"
-                },
-                {
-                    "name": "Three musical instruments of your choice",
-                    "choose": 3,
-                    "from": [
-                        {
-                            "index": "musical_instruments"
-                        }
-                    ]
                 },
                 {
                     "name" : "Saving throw (Dexterity)"

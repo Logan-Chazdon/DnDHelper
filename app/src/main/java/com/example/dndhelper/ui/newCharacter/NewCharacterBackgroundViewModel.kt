@@ -34,10 +34,6 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
     }
 
 
-    fun getLanguagesByIndex(index: String) : LiveData<List<Language>> {
-        return repository.getLanguages()
-    }
-
     suspend fun setBackGround(newBackground : Background) {
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1

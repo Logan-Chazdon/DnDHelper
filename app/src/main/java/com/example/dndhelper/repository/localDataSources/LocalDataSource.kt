@@ -749,7 +749,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     }
 
 
-    private fun generateSkills(): MutableMap<String, List<String>> {
+    private fun generateSkills() {
         val dataAsString =
             context.resources.openRawResource(R.raw.skills).bufferedReader().readText()
         val abilitiesToSkills = mutableMapOf<String, List<String>>()
@@ -770,7 +770,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             abilitiesToSkills[baseStat] = skills
         }
         _abilitiesToSkills.value = abilitiesToSkills
-        return abilitiesToSkills
     }
 
 
@@ -1254,7 +1253,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         val proficiencies = mutableListOf<Proficiency>()
         when (index) {
             "skill_proficiencies" -> {
-                generateSkills().values.forEach {
+                _abilitiesToSkills.value!!.values.forEach {
                     it.forEach { item ->
                         if (!item.contains("Saving")) {
                             proficiencies.add(

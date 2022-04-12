@@ -67,7 +67,7 @@
         },
         {
             "type" : "weapon",
-            "name" : "Alchemist’s Doom",
+            "name" : "Alchemist's Doom",
             "desc" : "Stored in a flask, this concoction is alchemist's fire, except it deals 7 (2d6) fire damage at the start of the target's turns.",
             "damage" : "2d6",
             "damage_type" : "fire",
@@ -1587,7 +1587,7 @@
         },
         {
             "type" : "item",
-            "name" : "Glassblowers Tools",
+            "name" : "Glassblower's Tools",
             "desc" : "These special tools include the items needed to pursue a craft or trade. Proficiency with a set of artisan's tools lets you add your proficiency bonus to any ability checks you make using the tools in your craft. Each type of artisan's tools requires a separate proficiency.",
             "cost": {
                 "pp": 0,

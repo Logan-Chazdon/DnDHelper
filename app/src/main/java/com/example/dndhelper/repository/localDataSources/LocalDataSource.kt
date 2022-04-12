@@ -93,6 +93,25 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         "Gong",
         "Wargong"
     )
+    private val artisansToolIndexes = mutableListOf(
+        "Alchemist's supplies",
+        "Brewer's supplies",
+        "Calligrapher's Supplies",
+        "Carpenter's tools",
+        "Cartographer's tools",
+        "Cobbler's tools",
+        "Cook's utensils",
+        "Glassblower's tools",
+        "Jeweler's tools",
+        "Leatherworker's tools",
+        "Mason's tools",
+        "Painter's supplies",
+        "Potter's tools",
+        "Smith's tools",
+        "Tinker's tools",
+        "Weaver's tools",
+        "Woodcarver's tools"
+    )
 
     override fun getItems(items: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>> = _items
     override fun getAbilitiesToSkills(abilitiesToSKills: MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>> = _abilitiesToSkills
@@ -309,6 +328,13 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun getItemsByIndex(index: String): List<ItemInterface>? {
 
         when (index) {
+            "artisans_tools" -> {
+                val result = mutableListOf<ItemInterface>()
+                artisansToolIndexes.forEach {
+                    result.add(getItemByIndex(it)!!)
+                }
+                return result
+            }
             "musical_instruments" -> return mutableListOf<ItemInterface>().run {
                 instrumentIndexes.forEach {
                     getItemByIndex(it)?.let { item -> this.add(item) }
@@ -1252,6 +1278,15 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun getProficienciesByIndex(index: String) : List<Proficiency> {
         val proficiencies = mutableListOf<Proficiency>()
         when (index) {
+            "artisans_tools" -> {
+                artisansToolIndexes.forEach {
+                    proficiencies.add(
+                        Proficiency(
+                            name = it
+                        )
+                    )
+                }
+            }
             "skill_proficiencies" -> {
                 _abilitiesToSkills.value!!.values.forEach {
                     it.forEach { item ->

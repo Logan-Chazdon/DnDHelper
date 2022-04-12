@@ -386,12 +386,12 @@ class Converters {
     }
 
     @TypeConverter
-    fun storedStringToItems(data: String?): List<ItemInterface> {
-        return gson.fromJson(data, object : TypeToken<List<ItemInterface>>() {}.type)
+    fun storedStringToItems(data: String?): List<ItemInterface>? {
+        return gson.fromJson(data, object : TypeToken<List<ItemInterface>?>() {}.type)
     }
 
     @TypeConverter
-    fun itemsToStoredString(myObjects: List<ItemInterface>): String? {
+    fun itemsToStoredString(myObjects: List<ItemInterface>?): String? {
         return gson.toJson(myObjects)
     }
 

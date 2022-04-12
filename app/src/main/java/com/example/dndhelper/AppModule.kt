@@ -4,10 +4,10 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.example.dndhelper.repository.model.DatabaseDao
-import com.example.dndhelper.repository.model.RoomDataBase
 import com.example.dndhelper.repository.localDataSources.LocalDataSource
 import com.example.dndhelper.repository.localDataSources.LocalDataSourceImpl
+import com.example.dndhelper.repository.model.DatabaseDao
+import com.example.dndhelper.repository.model.RoomDataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,10 +42,8 @@ object RepositoryModule{
 
     @RequiresApi(Build.VERSION_CODES.P)
     @Provides
-    @ViewModelScoped
-    fun providerWebservice(@ApplicationContext appContext: Context): LocalDataSource {
+    fun providerLocalDataSource(@ApplicationContext appContext: Context): LocalDataSource {
         return LocalDataSourceImpl(appContext)
     }
-
 
 }

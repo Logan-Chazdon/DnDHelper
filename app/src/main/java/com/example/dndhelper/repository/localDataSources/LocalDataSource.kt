@@ -16,73 +16,100 @@ import org.json.JSONException
 import org.json.JSONObject
 
 
+@Suppress("PropertyName")
 @Component(modules = [AppModule::class])
 interface LocalDataSource {
-    //val _items: MutableLiveData<List<ItemInterface>>
-    //val _abilitiesToSkills: MutableLiveData<Map<String, List<String>>>
-    //val _spells : MutableLiveData<List<Spell>>
-    //val _languages : MutableLiveData<List<Language>>
-    //val _backgrounds : MutableLiveData<List<Background>>
-    //val _races: MutableLiveData<List<Race>>
-    //val _classes: MutableLiveData<List<Class>>
+    fun getItems(items : MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>>
+    fun getAbilitiesToSkills(abilitiesToSKills : MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>>
+    fun getSpells(spells :MutableLiveData<List<Spell>>): MutableLiveData<List<Spell>>
+    fun getLanguages(languages : MutableLiveData<List<Language>>): MutableLiveData<List<Language>>
+    fun getBackgrounds(backgrounds : MutableLiveData<List<Background>>): MutableLiveData<List<Background>>
+    fun getRaces(races : MutableLiveData<List<Race>>): MutableLiveData<List<Race>>
+    fun getClasses(classes : MutableLiveData<List<Class>>): MutableLiveData<List<Class>>
+    fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>>
+    fun getFeats(feats : MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>>
+    fun getArmors(armors : MutableLiveData<List<Armor>>): MutableLiveData<List<Armor>>
+    fun getMiscItems(miscItems :  MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>>
+    fun getMartialWeapons(martialWeapons :MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
+    fun getInfusions(infusions : MutableLiveData<List<Infusion>>): MutableLiveData<List<Infusion>>
+    fun getSimpleWeapons(simpleWeapons :MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
+    fun getInvocations(invocations :MutableLiveData<List<Invocation>>): MutableLiveData<List<Invocation>>
 }
 
-@Suppress("PropertyName")
+
 @RequiresApi(Build.VERSION_CODES.P)
 class LocalDataSourceImpl(val context: Context) : LocalDataSource {
-    val _infusions: MutableLiveData<List<Infusion>> =
+    private val _infusions: MutableLiveData<List<Infusion>> =
         MutableLiveData()
-    val _invocations: MutableLiveData<List<Invocation>> =
+    private val _invocations: MutableLiveData<List<Invocation>> =
         MutableLiveData()
-    val _martialWeapons: MutableLiveData<List<Weapon>> =
+    private val _martialWeapons: MutableLiveData<List<Weapon>> =
         MutableLiveData()
-    val _simpleWeapons: MutableLiveData<List<Weapon>> =
+    private val _simpleWeapons: MutableLiveData<List<Weapon>> =
         MutableLiveData()
-    val _miscItems: MutableLiveData<List<ItemInterface>> =
+    private val _miscItems: MutableLiveData<List<ItemInterface>> =
         MutableLiveData()
-    val _armors: MutableLiveData<List<Armor>> =
+    private val _armors: MutableLiveData<List<Armor>> =
         MutableLiveData()
-    val _items: MediatorLiveData<List<ItemInterface>> =
+    private val _items: MediatorLiveData<List<ItemInterface>> =
         MediatorLiveData()
-    val _abilitiesToSkills: MutableLiveData<Map<String, List<String>>> =
+    private val _abilitiesToSkills: MutableLiveData<Map<String, List<String>>> =
         MutableLiveData()
-    val _spells: MutableLiveData<List<Spell>> =
+    private val _spells: MutableLiveData<List<Spell>> =
         MutableLiveData()
-    val _languages: MutableLiveData<List<Language>> =
+    private val _languages: MutableLiveData<List<Language>> =
         MutableLiveData()
-    val _feats: MutableLiveData<List<Feat>> =
+    private val _feats: MutableLiveData<List<Feat>> =
         MutableLiveData()
-    val _backgrounds: MutableLiveData<List<Background>> =
+    private val _backgrounds: MutableLiveData<List<Background>> =
         MutableLiveData()
-    val _races: MutableLiveData<List<Race>> =
+    private val _races: MutableLiveData<List<Race>> =
         MutableLiveData()
-    val _classes: MutableLiveData<List<Class>> =
+    private val _classes: MutableLiveData<List<Class>> =
         MutableLiveData()
-    val _metamagics: MutableLiveData<List<Metamagic>> =
+    private val _metaMagics: MutableLiveData<List<Metamagic>> =
         MutableLiveData()
+
     private val instrumentIndexes = mutableListOf(
-            "Bagpipes",
-            "Drum",
-            "Dulcimer",
-            "Flute",
-            "Lute",
-            "Lyre",
-            "Horn",
-            "Pan Flute",
-            "Shawm",
-            "Viol",
-            "Hurdy-Gurdy",
-            "Sackbut",
-            "Whistle-Stick",
-            "Harp",
-            "Tambourine",
-            "Erhu",
-            "Hulusi",
-            "Udu",
-            "Maracas",
-            "Gong",
-            "Wargong"
-        )
+        "Bagpipes",
+        "Drum",
+        "Dulcimer",
+        "Flute",
+        "Lute",
+        "Lyre",
+        "Horn",
+        "Pan Flute",
+        "Shawm",
+        "Viol",
+        "Hurdy-Gurdy",
+        "Sackbut",
+        "Whistle-Stick",
+        "Harp",
+        "Tambourine",
+        "Erhu",
+        "Hulusi",
+        "Udu",
+        "Maracas",
+        "Gong",
+        "Wargong"
+    )
+
+    override fun getItems(items: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>> = _items
+    override fun getAbilitiesToSkills(abilitiesToSKills: MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>> = _abilitiesToSkills
+    override fun getSpells(spells: MutableLiveData<List<Spell>>): MutableLiveData<List<Spell>> = _spells
+    override fun getLanguages(languages: MutableLiveData<List<Language>>): MutableLiveData<List<Language>> = _languages
+    override fun getBackgrounds(backgrounds: MutableLiveData<List<Background>>): MutableLiveData<List<Background>> =_backgrounds
+    override fun getRaces(races: MutableLiveData<List<Race>>): MutableLiveData<List<Race>> = _races
+    override fun getClasses(classes: MutableLiveData<List<Class>>): MutableLiveData<List<Class>> = _classes
+    override fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>> =  _metaMagics
+    override fun getFeats(feats: MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>> = _feats
+    override fun getArmors(armors: MutableLiveData<List<Armor>>): MutableLiveData<List<Armor>> = _armors
+    override fun getMiscItems(miscItems: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>> = _miscItems
+    override fun getMartialWeapons(martialWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>> = _martialWeapons
+    override fun getInfusions(infusions: MutableLiveData<List<Infusion>>): MutableLiveData<List<Infusion>> = _infusions
+    override fun getSimpleWeapons(simpleWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>> = _simpleWeapons
+    override fun getInvocations(invocations: MutableLiveData<List<Invocation>>): MutableLiveData<List<Invocation>> = _invocations
+
 
     init {
         context.mainExecutor.execute {
@@ -135,7 +162,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 )
             )
         }
-        _metamagics.value = metamagic
+        _metaMagics.value = metamagic
     }
 
     private fun generateInvocations() {
@@ -953,7 +980,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         for (profIndex in 0 until proficienciesJson.length()) {
             val profJson = proficienciesJson.getJSONObject(profIndex)
             try {
-                when(profJson.getString("index")) {
+                when (profJson.getString("index")) {
                     "musical_instruments" -> {
                         instrumentIndexes.forEach {
                             proficiencies.add(
@@ -1546,7 +1573,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             from.add(
                                 listOf(
                                     Item(
-                                         name = itemJson.getString("name")
+                                        name = itemJson.getString("name")
                                     )
                                 )
                             )
@@ -1554,7 +1581,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     } catch (e: JSONException) {
                         val itemsJson = fromJson.getJSONArray(fromIndex)
                         val sublist = mutableListOf<ItemInterface>()
-                        for(index in 0 until itemsJson.length()) {
+                        for (index in 0 until itemsJson.length()) {
                             val itemJson = itemsJson.getJSONObject(index)
                             try {
                                 //Get by index
@@ -1699,7 +1726,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             //TODO
                         }
                         "metamagic" -> {
-                            _metamagics.value?.forEach {
+                            _metaMagics.value?.forEach {
                                 features.add(
                                     Feature(
                                         name = it.name,
@@ -1743,7 +1770,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             conMax = acJson.getInt("con"),
                             wisMax = acJson.getInt("wis")
                         )
-                    } catch(e: JSONException) {
+                    } catch (e: JSONException) {
                         null
                     }
 

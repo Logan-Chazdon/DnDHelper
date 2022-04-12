@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.repository.localDataSources.LocalDataSource
-import com.example.dndhelper.repository.localDataSources.LocalDataSourceImpl
 import com.example.dndhelper.repository.model.DatabaseDao
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -12,47 +11,29 @@ import javax.inject.Inject
 
 
 class Repository @Inject constructor(
-    private var LocalDataSource: LocalDataSource?,
-    private val dao: DatabaseDao?,
-
-    ) {
-    private val _classes : MutableLiveData<List<Class>> = (LocalDataSource as LocalDataSourceImpl)._classes
-    private val _races : MutableLiveData<List<Race>> =  (LocalDataSource as LocalDataSourceImpl)._races
-    private val _backgrounds =  (LocalDataSource as LocalDataSourceImpl)._backgrounds
-    private val _characters : LiveData<List<Character>>? = dao?.getAllCharacters()
-    private val _languages =  (LocalDataSource as LocalDataSourceImpl)._languages
-    private val _skills : MutableLiveData<Map<String, List<String>>> =
-        (LocalDataSource as LocalDataSourceImpl)._abilitiesToSkills
-    private val _items: MutableLiveData<List<ItemInterface>> =  (LocalDataSource as LocalDataSourceImpl)._items
-    private val _feats: MutableLiveData<List<Feat>> =  (LocalDataSource as LocalDataSourceImpl)._feats
-    private val _spells: MutableLiveData<List<Spell>> =  (LocalDataSource as LocalDataSourceImpl)._spells
-
-    init {
- /*
-        //classes
-        GlobalScope.launch {
-            _classes.postValue(dao?.getAllClasses())
-        }
-        _classes.observeForever {
-            GlobalScope.launch {
-                dao?.insertClasses(it)
-            }
-        }
-        (webservice as WebserviceDnD).generateClasses(_classes)
-
-        //races
-        GlobalScope.launch {
-            _races.postValue(dao?.getAllRaces())
-        }
-        _races.observeForever {
-            GlobalScope.launch {
-                dao?.insertRaces(it)
-            }
-        }
-        (webservice as WebserviceDnD).generateRaces(_races)
-*/
-    }
-
+    LocalDataSource: LocalDataSource,
+    private val dao: DatabaseDao?
+) {
+    private val _classes =
+        LocalDataSource.getClasses(MutableLiveData())
+    private val _races =
+        LocalDataSource.getRaces(MutableLiveData())
+    private val _backgrounds =
+        LocalDataSource.getBackgrounds(
+            MutableLiveData()
+        )
+    private val _languages = LocalDataSource.getLanguages(
+        MutableLiveData()
+    )
+    private val _skills =
+        LocalDataSource.getAbilitiesToSkills(
+            MutableLiveData()
+        )
+    private val _items = LocalDataSource.getItems(
+        MutableLiveData()
+    )
+    private val _feats = LocalDataSource.getFeats(MutableLiveData())
+    private val _spells = LocalDataSource.getSpells(MutableLiveData())
 
     fun getClassIndex(name: String): Int {
         _classes.value?.forEachIndexed { index, it ->
@@ -63,27 +44,25 @@ class Repository @Inject constructor(
         return -1
     }
 
-    fun getLanguages() : LiveData<List<Language>> {
+    fun getLanguages(): LiveData<List<Language>> {
         return _languages
     }
 
-    fun getSkillsByIndex(index: String):
-            MutableLiveData<Map<String, List<String>>>? {
-        if(index == "skill_proficiencies"){
+    fun getSkillsByIndex(index: String): MutableLiveData<Map<String, List<String>>>? {
+        if (index == "skill_proficiencies") {
             return _skills
         }
         return null
     }
 
     fun getLanguagesByIndex(index: String): MutableLiveData<List<Language>>? {
-        if(index == "all_languages")
-        {
+        if (index == "all_languages") {
             return _languages
         }
         return null
     }
 
-    fun getBackgrounds() : LiveData<List<Background>> {
+    fun getBackgrounds(): LiveData<List<Background>> {
         return _backgrounds
     }
 
@@ -99,7 +78,7 @@ class Repository @Inject constructor(
         return _classes
     }
 
-    fun getAllCharacters() : LiveData<List<Character>>? {
+    fun getAllCharacters(): LiveData<List<Character>>? {
         return dao?.getAllCharacters()
     }
 
@@ -113,16 +92,16 @@ class Repository @Inject constructor(
         }
     }
 
-    suspend fun getCharacterById(id: Int) : Character? {
+    suspend fun getCharacterById(id: Int): Character? {
         return dao?.findCharacterById(id)
     }
 
-    fun getLiveCharacterById(id: Int) : LiveData<Character>? {
+    fun getLiveCharacterById(id: Int): LiveData<Character>? {
         return dao?.findLiveCharacterById(id)
     }
 
     //Inserts a new character into the database and returns its ID
-    fun createDefaultCharacter() : Int? {
+    fun createDefaultCharacter(): Int? {
         val newCharacter = Character(name = "My Character")
         return dao?.insertCharacter(newCharacter)?.toInt()
     }
@@ -134,14 +113,16 @@ class Repository @Inject constructor(
     fun getAllSpellsByClassIndex(classIndex: Int): MutableList<Spell> {
         val result = mutableListOf<Spell>()
         _spells.value?.forEach { spell ->
-            if(_classes.value?.get(classIndex)?.let {  it1 -> spell.classes.contains(it1.name.lowercase()) } == true){
+            if (_classes.value?.get(classIndex)
+                    ?.let { it1 -> spell.classes.contains(it1.name.lowercase()) } == true
+            ) {
                 result.add(spell)
             }
         }
         return result
     }
 
-    fun getAllSpells() : List<Spell> {
+    fun getAllSpells(): List<Spell> {
         return _spells.value ?: listOf()
     }
 
@@ -158,6 +139,4 @@ class Repository @Inject constructor(
             Pair(9, "Ninth Level"),
         )
     }
-
-
 }

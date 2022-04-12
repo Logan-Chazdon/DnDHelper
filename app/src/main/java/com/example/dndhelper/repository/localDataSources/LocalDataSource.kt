@@ -1017,7 +1017,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         _backgrounds.value = backgrounds
     }
 
-    fun generateRaces() {
+    private fun generateRaces() {
         val dataAsString =
             context.resources.openRawResource(R.raw.races).bufferedReader().readText()
         val races = mutableListOf<Race>()
@@ -1335,7 +1335,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     }
 
 
-    fun generateClasses() {
+    private fun generateClasses() {
         val dataAsString =
             context.resources.openRawResource(R.raw.classes).bufferedReader().readText()
 

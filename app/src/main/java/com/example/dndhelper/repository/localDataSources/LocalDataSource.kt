@@ -891,7 +891,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val backgroundJson = backgroundsJson.getJSONObject(backgroundIndex)
             val name = backgroundJson.getString("name")
             val desc = backgroundJson.getString("desc")
-            val proficiencies = extractProficiencies(backgroundJson.getJSONArray("proficiencies"))
             val features = extractFeatures(backgroundJson.getJSONArray("features"))
             val languages = mutableListOf<Language>()
             val languageChoices = mutableListOf<LanguageChoice>()
@@ -947,6 +946,17 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             } catch (e: JSONException) {
             }
 
+            val proficiencies = mutableListOf<Proficiency>()
+            val proficiencyChoices = mutableListOf<ProficiencyChoice>()
+            try {
+                extractProficienciesChoices(
+                    backgroundJson.getJSONArray("proficiencies"),
+                    proficiencyChoices,
+                    proficiencies
+                )
+            } catch (e: JSONException) {
+
+            }
 
             val equipmentChoices = mutableListOf<ItemChoice>()
             val equipment = mutableListOf<ItemInterface>()
@@ -957,6 +967,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     name = name,
                     desc = desc,
                     proficiencies = proficiencies,
+                    proficiencyChoices = proficiencyChoices,
                     features = features,
                     languages = languages,
                     languageChoices = languageChoices,
@@ -986,12 +997,13 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val age = raceJson.getString("age")
             val size = raceJson.getString("size")
             val sizeDesc = raceJson.getString("size_desc")
-            val startingProficiencies = extractProficiencies(raceJson.getJSONArray("proficiencies"))
+            val startingProficiencies = mutableListOf<Proficiency>()
             val proficiencyChoices = mutableListOf<ProficiencyChoice>()
             try {
                 extractProficienciesChoices(
-                    raceJson.getJSONArray("proficiency_choices"),
-                    proficiencyChoices
+                    raceJson.getJSONArray("proficiencies"),
+                    proficiencyChoices,
+                    startingProficiencies
                 )
             } catch (e: JSONException) {
             }
@@ -1058,17 +1070,19 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 )
             } catch (e: JSONException) {
             }
+            val proficiencies = mutableListOf<Proficiency>()
+            val proficiencyChoices = mutableListOf<ProficiencyChoice>()
+            try {
+                extractProficienciesChoices(subraceJson.getJSONArray("proficiencies"), proficiencyChoices, proficiencies)
+            } catch (e: JSONException) {
+            }
 
             subraces.add(
                 Subrace(
                     name = subraceJson.getString("name"),
                     abilityBonuses = abilityBonuses,
                     abilityBonusChoice = abilityBonusChoice,
-                    startingProficiencies = try {
-                        extractProficiencies(subraceJson.getJSONArray("proficiencies"))
-                    } catch (e: JSONException) {
-                        null
-                    },
+                    startingProficiencies = proficiencies,
                     languages = languages,
                     languageChoices = languageChoices,
                     traits = try {
@@ -1148,56 +1162,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     }
 
 
-    private fun extractProficiencies(proficienciesJson: JSONArray): List<Proficiency> {
-        val proficiencies = mutableListOf<Proficiency>()
-        for (profIndex in 0 until proficienciesJson.length()) {
-            val profJson = proficienciesJson.getJSONObject(profIndex)
-            var index: String? = null
-            try {
-                index = profJson.getString("index")
-                when (index) {
-                    "skill_proficiencies" -> {
-                        generateSkills().values.forEach {
-                            it.forEach { item ->
-                                if (!item.contains("Saving")) {
-                                    proficiencies.add(
-                                        Proficiency(
-                                            name = item
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    "musical_instruments" -> {
-                        instrumentIndexes.forEach {
-                            proficiencies.add(
-                                Proficiency(
-                                    name = it
-                                )
-                            )
-                        }
-                    }
-                    else -> {
-                        throw JSONException("Unknown index")
-                    }
-                }
-            } catch (e: JSONException) {
-                proficiencies.add(
-                    Proficiency(
-                        name = try {
-                            profJson.getString("name")
-                        } catch (e: JSONException) {
-                            null
-                        },
-                        index = index
-                    )
-                )
-            }
-        }
-        return proficiencies
-    }
-
     private fun extractAbilityBonuses(
         abilityBonusesJson: JSONArray,
         abilityBonuses: MutableList<AbilityBonus>
@@ -1243,19 +1207,79 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
     private fun extractProficienciesChoices(
         json: JSONArray,
-        choices: MutableList<ProficiencyChoice>
+        choices: MutableList<ProficiencyChoice>,
+        proficiencies : MutableList<Proficiency>
     ) {
+        val addProfsToList = fun(json: JSONObject, list: MutableList<Proficiency>) {
+            try {
+                list.addAll(getProficienciesByIndex(json.getString("index")))
+            } catch (e: JSONException) {
+                list.add(
+                    Proficiency(
+                        name = json.getString("name")
+                    )
+                )
+            }
+        }
+
+
         for (index in 0 until json.length()) {
             val profJson = json.getJSONObject(index)
-            choices.add(
-                ProficiencyChoice(
-                    name = profJson.getString("name"),
-                    choose = profJson.getInt("choose"),
-                    from =
-                    extractProficiencies(profJson.getJSONArray("from"))
+            val choose = try {
+                profJson.getInt("choose")
+            } catch (e: JSONException) {
+                0
+            }
+
+            if(choose == 0) {
+                addProfsToList(profJson, proficiencies)
+            } else {
+                val from = mutableListOf<Proficiency>()
+                val fromJson = profJson.getJSONArray("from")
+                for(fromIndex in 0 until fromJson.length()) {
+                    addProfsToList(fromJson.getJSONObject(fromIndex), from)
+                }
+                choices.add(
+                    ProficiencyChoice(
+                        name = profJson.getString("name"),
+                        choose = choose,
+                        from = from
+                    )
                 )
-            )
+            }
         }
+    }
+
+    private fun getProficienciesByIndex(index: String) : List<Proficiency> {
+        val proficiencies = mutableListOf<Proficiency>()
+        when (index) {
+            "skill_proficiencies" -> {
+                generateSkills().values.forEach {
+                    it.forEach { item ->
+                        if (!item.contains("Saving")) {
+                            proficiencies.add(
+                                Proficiency(
+                                    name = item
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+            "musical_instruments" -> {
+                instrumentIndexes.forEach {
+                    proficiencies.add(
+                        Proficiency(
+                            name = it
+                        )
+                    )
+                }
+            }
+            else -> {
+                throw JSONException("Unknown index: $index")
+            }
+        }
+        return proficiencies
     }
 
 
@@ -1273,7 +1297,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val subClasses = mutableListOf<Subclass>()
             val levelPath = extractFeatures(classJson.getJSONArray("features"))
             val proficiencyChoices = mutableListOf<ProficiencyChoice>()
-            val proficiencies = extractProficiencies(classJson.getJSONArray("proficiencies"))
+            val proficiencies = mutableListOf<Proficiency>()
             val equipmentChoices: MutableList<ItemChoice> = mutableListOf()
             val equipment: MutableList<ItemInterface> = mutableListOf()
             extractEquipmentChoices(
@@ -1283,8 +1307,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             )
             try {
                 extractProficienciesChoices(
-                    classJson.getJSONArray("proficiency_choices"),
-                    proficiencyChoices
+                    classJson.getJSONArray("proficiencies"),
+                    proficiencyChoices,
+                    proficiencies
                 )
             } catch (e: JSONException) {
             }

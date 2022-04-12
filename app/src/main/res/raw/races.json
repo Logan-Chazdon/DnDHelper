@@ -411,9 +411,7 @@
                 {
                     "name" : "warhammers",
                     "index" : "warhammer"
-                }
-            ],
-            "proficiency_choices" : [
+                },
                 {
                     "name" : "You gain proficiency with the artisan's tools of your choice: smith's tools, brewer's supplies, or mason's tools.",
                     "choose" : 1,
@@ -999,8 +997,7 @@
                     "bonus": 1
                 }
             ],
-            "proficiencies" : [],
-            "proficiency_choices" : [
+            "proficiencies" : [
                 {
                     "name" : "You gain proficiency in two skills of your choice",
                     "choose" : 2,
@@ -1684,9 +1681,6 @@
             "alignment" : "Most warforged take comfort in order and discipline, tending toward law and neutrality. But some have absorbed the morality – or lack thereof – of the beings with which they served.",
             "ground_speed" : 30,
             "proficiencies" : [
-
-            ],
-            "proficiency_choices" : [
                 {
                     "name" : "You gain one skill proficiency of your choice.",
                     "choose" : 1,

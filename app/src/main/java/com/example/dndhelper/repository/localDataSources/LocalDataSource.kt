@@ -892,12 +892,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val name = backgroundJson.getString("name")
             val desc = backgroundJson.getString("desc")
             val proficiencies = extractProficiencies(backgroundJson.getJSONArray("proficiencies"))
-            var toolProficiencies = listOf<ToolProficiency>()
-            try {
-                toolProficiencies =
-                    extractToolProficiencies(backgroundJson.getJSONArray("tool_proficiencies"))
-            } catch (e: JSONException) {
-            }
             val features = extractFeatures(backgroundJson.getJSONArray("features"))
             val languages = mutableListOf<Language>()
             val languageChoices = mutableListOf<LanguageChoice>()
@@ -963,7 +957,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     name = name,
                     desc = desc,
                     proficiencies = proficiencies,
-                    toolProficiencies = toolProficiencies,
                     features = features,
                     languages = languages,
                     languageChoices = languageChoices,
@@ -973,34 +966,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             )
         }
         _backgrounds.value = backgrounds
-    }
-
-    private fun extractToolProficiencies(proficienciesJson: JSONArray): List<ToolProficiency> {
-        val proficiencies = mutableListOf<ToolProficiency>()
-        for (profIndex in 0 until proficienciesJson.length()) {
-            val profJson = proficienciesJson.getJSONObject(profIndex)
-            try {
-                when (profJson.getString("index")) {
-                    "musical_instruments" -> {
-                        instrumentIndexes.forEach {
-                            proficiencies.add(
-                                ToolProficiency(
-                                    name = it
-                                )
-                            )
-                        }
-                    }
-                }
-            } catch (e: JSONException) {
-                proficiencies.add(
-                    ToolProficiency(
-                        name = profJson.getString("name")
-                    )
-                )
-            }
-        }
-
-        return proficiencies
     }
 
     fun generateRaces() {
@@ -1202,6 +1167,15 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                     )
                                 }
                             }
+                        }
+                    }
+                    "musical_instruments" -> {
+                        instrumentIndexes.forEach {
+                            proficiencies.add(
+                                Proficiency(
+                                    name = it
+                                )
+                            )
                         }
                     }
                     else -> {

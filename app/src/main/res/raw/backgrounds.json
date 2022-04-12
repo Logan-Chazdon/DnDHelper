@@ -188,9 +188,7 @@
                 },
                 {
                     "name": "Athletics"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name": "Vehicles (Land)"
                 }
@@ -305,9 +303,7 @@
                 },
                 {
                     "name": "Intimidation"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name": "One type of gaming set",
                     "choose": 1,
@@ -380,13 +376,11 @@
             "desc": "You have always had a way with people. You know what makes them tick, you can tease out their hearts' desires after a few minutes of conversation, and with a few leading questions you can read them like they were children's books. It's a useful talent, and one that you're perfectly willing to use for your advantage.\n\nYou know what people want and you deliver, or rather, you promise to deliver. Common sense should steer people away from things that sound too good to be true, but common sense seems to be in short supply when you're around. The bottle of pink colored liquid will surely cure that unseemly rash, this ointment – nothing more than a bit of fat with a sprinkle of silver dust can restore youth and vigor, and there's a bridge in the city that just happens to be for sale. These marvels sound implausible, but you make them sound like the real deal.",
             "proficiencies": [
                 {
-                    "name": " Deception,"
+                    "name": "Deception,"
                 },
                 {
                     "name": "Sleight of Hand"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name": "Disguise kit",
                     "choose": 0
@@ -498,9 +492,7 @@
                 },
                 {
                     "name": "Insight"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name": "One type of artisan’s tools TODO",
                     "choose": 1
@@ -567,8 +559,6 @@
                     ]
                 }
             ],
-            "tool_proficiencies": [
-            ],
             "features": [
             ],
             "languages": [
@@ -629,8 +619,6 @@
                 {
                     "name" : "Persuasion"
                 }
-            ],
-            "tool_proficiencies": [
             ],
             "languages": [
                 {
@@ -703,9 +691,7 @@
                 },
                 {
                     "name" : "Stealth"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name" : "One type of gaming set",
                     "choose" : 1,
@@ -811,9 +797,7 @@
                 },
                 {
                     "name" : "Performance"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name" : "Disguise kit"
                 },
@@ -895,9 +879,7 @@
                 },
                 {
                     "name" : "Intimidation"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name"  : "Disguise kit"
                 }
@@ -993,8 +975,6 @@
                         }
                     ]
                 }
-            ],
-            "tool_proficiencies": [
             ],
             "languages": [
                 {
@@ -1112,9 +1092,7 @@
                 },
                 {
                     "name" : "Perception"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name" : "Any one musical instrument or gaming set of your choice",
                     "choose" : 1,
@@ -1240,9 +1218,7 @@
                 },
                 {
                     "name" : "Survival"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name" : "One type of musical instrument",
                     "choose" : 1,
@@ -1355,8 +1331,6 @@
                     "name" : "Survival"
                 }
             ],
-            "tool_proficiencies": [
-            ],
             "languages": [
                 {
                     "name" : "One language of your choice",
@@ -1446,9 +1420,7 @@
                 },
                 {
                     "name" : "Survival"
-                }
-            ],
-            "tool_proficiencies": [
+                },
                 {
                     "name" : "Proficiency with one type of artisans tools",
                     "choose" : 1,

@@ -141,7 +141,7 @@ fun ConfirmBackgroundView(
                         }
                     }
 
-                    if (background.proficiencies.isNotEmpty() || background.toolProficiencies.isNotEmpty()) {
+                    if (background.proficiencies.isNotEmpty()) {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
                             backgroundColor = MaterialTheme.colors.surface,
@@ -157,9 +157,6 @@ fun ConfirmBackgroundView(
                                 )
                                 var proficiencies = ""
                                 background.proficiencies.forEach {
-                                    proficiencies += it.name + " "
-                                }
-                                background.toolProficiencies.forEach {
                                     proficiencies += it.name + " "
                                 }
                                 Text(text = proficiencies)

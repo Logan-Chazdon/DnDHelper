@@ -141,7 +141,31 @@
             "starting_gold_d4s" : 4,
             "hit_die": 8,
             "subclass_level": 3,
-            "proficiency_choices": [
+            "proficiencies": [
+                {
+                    "name": "Simple weapons"
+                },
+                {
+                    "name": "Light armor"
+                },
+                {
+                    "name": "Medium armor"
+                },
+                {
+                    "name": "Shields"
+                },
+                {
+                    "name": "Thieves tools"
+                },
+                {
+                    "name": "Tinkers tools"
+                },
+                {
+                    "name": "Saving throw (Constitution)"
+                },
+                {
+                    "name": "Saving throw (Intelligence)"
+                },
                 {
                     "name": "Choose two from Arcana, History, Investigation, Medicine, Nature, Perception, Sleight of Hand",
                     "choose": 2,
@@ -170,39 +194,13 @@
                     ]
                 },
                 {
-                    "name": "One type of artisan’s tools of your choice",
+                    "name": "Proficiency with one type of artisan’s tools",
                     "choose": 1,
                     "from": [
                         {
-                            "index": "artisans tools"
+                            "index": "artisans_tools"
                         }
                     ]
-                }
-            ],
-            "proficiencies": [
-                {
-                    "name": "Simple weapons"
-                },
-                {
-                    "name": "Light armor"
-                },
-                {
-                    "name": "Medium armor"
-                },
-                {
-                    "name": "Shields"
-                },
-                {
-                    "name": "Thieves tools"
-                },
-                {
-                    "name": "Tinkers tools"
-                },
-                {
-                    "name": "Saving throw (Constitution)"
-                },
-                {
-                    "name": "Saving throw (Intelligence)"
                 }
             ],
             "features": [

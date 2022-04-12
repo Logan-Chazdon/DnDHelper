@@ -112,6 +112,12 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         "Weaver's tools",
         "Woodcarver's tools"
     )
+    private val gamingSetIndexes = mutableListOf(
+        "Dice set",
+        "Dragonchess set",
+        "Playing card set",
+        "Three-Dragon Ante set"
+    )
 
     override fun getItems(items: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>> = _items
     override fun getAbilitiesToSkills(abilitiesToSKills: MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>> = _abilitiesToSkills
@@ -328,6 +334,13 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun getItemsByIndex(index: String): List<ItemInterface>? {
 
         when (index) {
+            "gaming_sets" -> {
+                val result = mutableListOf<ItemInterface>()
+                gamingSetIndexes.forEach {
+                    result.add(getItemByIndex(it)!!)
+                }
+                return result
+            }
             "artisans_tools" -> {
                 val result = mutableListOf<ItemInterface>()
                 artisansToolIndexes.forEach {
@@ -1278,6 +1291,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun getProficienciesByIndex(index: String) : List<Proficiency> {
         val proficiencies = mutableListOf<Proficiency>()
         when (index) {
+            "gaming_sets" -> {
+                gamingSetIndexes.forEach {
+                    proficiencies.addAll(getProficienciesByIndex(it))
+                }
+            }
             "artisans_tools" -> {
                 artisansToolIndexes.forEach {
                     proficiencies.add(

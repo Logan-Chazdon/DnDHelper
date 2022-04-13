@@ -262,6 +262,39 @@
             "spells": [
                 {
                     "name": "friends"
+                },
+                {
+                    "name" : "message"
+                },
+                {
+                    "name" : "command"
+                },
+                {
+                    "name" : "ensnaring strike"
+                },
+                {
+                    "name" : "arcane lock"
+                },
+                {
+                    "name" : "calm emotions"
+                },
+                {
+                    "name" : "hold person"
+                },
+                {
+                    "name" : "clairvoyance"
+                },
+                {
+                    "name" : "compulsion"
+                },
+                {
+                    "name" : "counterspell"
+                },
+                {
+                    "name" : "divination"
+                },
+                {
+                    "name" : "dominate person"
                 }
             ],
             "equipment": [

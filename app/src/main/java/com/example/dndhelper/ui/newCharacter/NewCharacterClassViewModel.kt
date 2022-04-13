@@ -23,7 +23,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     var takeGold =  mutableStateOf(false)
     var goldRolled = mutableStateOf("6")
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
-    var character : Character?  = null
+    val character : LiveData<Character>?
     val classSpells = mutableStateListOf<Spell>()
     val subclassSpells = mutableStateListOf<Spell>()
 
@@ -73,11 +73,17 @@ public class NewCharacterClassViewModel @Inject constructor(
         } catch (E : Exception) {
             -1
         }
+
+        character = try {
+            repository.getLiveCharacterById(id)!!
+        } catch(e: NullPointerException) {
+            null
+        }
+
         viewModelScope.launch {
             classes = repository.getClasses()
             feats = repository.getFeats()
-            character = repository.getCharacterById(id)
-            isBaseClass.value = !(character?.hasBaseClass ?: false)
+            isBaseClass.value = !(character?.value?.hasBaseClass ?: false)
             featNames.addSource(feats!!) {
                 val names = mutableListOf<String>()
                 for(item in it) {
@@ -218,7 +224,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun canAffordMoreClassLevels(num: Int): Boolean {
-        if((character?.totalClassLevels ?: 0) + num <= 20) {
+        if((character?.value?.totalClassLevels ?: 0) + num <= 20) {
             return true
         }
         return false
@@ -226,7 +232,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 
     val hasBaseClass: Boolean
     get() {
-        return character?.hasBaseClass ?: false
+        return character?.value?.hasBaseClass ?: false
     }
 
     fun getLearnableSpells(level: Int, subclass: Subclass?): MutableList<Spell> {
@@ -310,6 +316,16 @@ public class NewCharacterClassViewModel @Inject constructor(
         } else {
             subclassSpells.add(it)
         }
+    }
+
+    fun removeClass(name: String) {
+        val newClasses = character?.value?.classes?.run {
+            this.remove(name)
+            this
+        }
+        val newChar = character?.value?.copy(classes = newClasses!!)
+        newChar?.id = character?.value?.id!!
+        repository.insertCharacter(newChar!!)
     }
 }
 

@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,8 +18,11 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.example.dndhelper.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun ClassView(
@@ -30,6 +31,7 @@ fun ClassView(
     characterId: Int
 ) {
     val classes by viewModel.classes.observeAsState()
+    val scope = rememberCoroutineScope { Dispatchers.IO }
     viewModel.id = characterId
     val classIcons = listOf(
         painterResource(R.drawable.ic_class_icon___artificer),
@@ -47,6 +49,8 @@ fun ClassView(
         painterResource(R.drawable.ic_class_icon___wizard)
     )
 
+    val liveCharacter = viewModel.character?.observeAsState()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
@@ -55,6 +59,99 @@ fun ClassView(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         state = rememberLazyListState()
     ) {
+        liveCharacter?.value?.let { character ->
+            if (character.classes.isNotEmpty()) {
+                character.classes.forEach { (_, clazz) ->
+                    item {
+                        val classIndex = classes?.indexOfFirst { it.name == clazz.name }!!
+                        Card(
+                            elevation = 5.dp,
+                            modifier = Modifier
+                                .fillMaxWidth(0.95f)
+                                .height(50.dp)
+                                .clickable {
+                                    navController.navigate("newCharacterView/ClassView/ConfirmClassView/$classIndex/$characterId")
+                                }
+                        ) {
+                            var deleteClassIsExpanded by remember {
+                                mutableStateOf(false)
+                            }
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "${clazz.name}, ${clazz.level}",
+                                    style = MaterialTheme.typography.h6,
+                                    modifier = Modifier.padding(4.dp)
+                                )
+
+                                Box(
+                                    modifier = Modifier.clickable {
+                                        deleteClassIsExpanded = !deleteClassIsExpanded
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Remove class",
+                                        modifier = Modifier.padding(4.dp)
+                                    )
+                                }
+                            }
+
+                            if(deleteClassIsExpanded) {
+                                Dialog(onDismissRequest = { deleteClassIsExpanded = false }) {
+                                    Box(
+                                        Modifier
+                                        .background(
+                                            color = MaterialTheme.colors.surface,
+                                            shape = RoundedCornerShape(10.dp)
+                                        )
+                                    ) {
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(10.dp)
+                                        ) {
+                                            Text(
+                                                text = "Delete: ${clazz.name}",
+                                                fontSize = 20.sp
+                                            )
+                                            Row(
+                                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                                modifier = Modifier.fillMaxWidth()
+                                            ) {
+                                                Button(
+                                                    onClick = { deleteClassIsExpanded = false }
+                                                ) {
+                                                    Text(text = "Cancel")
+                                                }
+
+                                                Button(
+                                                    onClick = {
+                                                        scope.launch {
+                                                            viewModel.removeClass(clazz.name)
+                                                        }
+                                                        deleteClassIsExpanded = false
+                                                    }
+                                                ) {
+                                                    Text(text = "Delete")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                item {
+                    Divider()
+                }
+            }
+        }
+
         classes?.withIndex()?.forEach { (i, item) ->
             item {
                 Card(

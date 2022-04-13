@@ -384,7 +384,7 @@ fun ConfirmClassView(
                                 } catch (e: java.lang.NumberFormatException) {
                                     0
                                 },
-                                character = viewModel.character,
+                                character = viewModel.character?.observeAsState()?.value,
                                 proficiencies = viewModel.proficiencies,
                                 dropDownStates = viewModel.dropDownStates
                             )
@@ -438,7 +438,7 @@ fun ConfirmClassView(
                                         } catch (e: java.lang.NumberFormatException) {
                                             0
                                         },
-                                        character = viewModel.character,
+                                        character = viewModel.character?.observeAsState()?.value,
                                         proficiencies = viewModel.proficiencies,
                                         dropDownStates = viewModel.dropDownStates
                                     )

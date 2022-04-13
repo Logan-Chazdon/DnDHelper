@@ -374,8 +374,37 @@
             ],
             "spells": [
                 {
-                    "name": "freinds",
-                    "index": "freinds"
+                    "name": "fire bolt"
+                },
+                {
+                    "name" : "sacred flame"
+                },
+                {
+                    "name" : "guiding bolt"
+                },
+                {
+                    "name" : "heroism"
+                },
+                {
+                    "name" : "aid"
+                },
+                {
+                    "name" : "scorching ray"
+                },
+                {
+                    "name" : "beacon of hope"
+                },
+                {
+                    "name" : "blinding smite"
+                },
+                {
+                    "name" : "death ward"
+                },
+                {
+                    "name" : "wall of fire"
+                },
+                {
+                    "name" : "flame strike"
                 }
             ],
             "equipment": [

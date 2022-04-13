@@ -69,6 +69,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         MutableLiveData()
     private val _metaMagics: MutableLiveData<List<Metamagic>> =
         MutableLiveData()
+    private val _maneuvers: MutableLiveData<List<Feature>> =
+        MutableLiveData()
 
     private val instrumentIndexes = mutableListOf(
         "Bagpipes",
@@ -159,6 +161,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Metamagic
             generateMetaMagic()
 
+            //Maneuvers
+            generateManeuvers()
+
             //Feats
             generateFeats()
 
@@ -188,6 +193,25 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             )
         }
         _metaMagics.value = metamagic
+    }
+
+    private fun generateManeuvers() {
+        val dataAsString =
+            context.resources.openRawResource(R.raw.maneuvers).bufferedReader().readText()
+        val maneuvers = mutableListOf<Feature>()
+        val maneuversJson =JSONObject(dataAsString).getJSONArray("maneuvers")
+        for(index in 0 until maneuversJson.length()) {
+            val maneuverJson = maneuversJson.getJSONObject(index)
+            maneuvers.add(
+                Feature(
+                    name = maneuverJson.getString("name"),
+                    description = maneuverJson.getString("desc"),
+                    grantedAtLevel = 0,
+                    options = null
+                )
+            )
+        }
+        _maneuvers.value = maneuvers
     }
 
     private fun generateInvocations() {
@@ -1723,7 +1747,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     0
                 }
 
-                var options: MutableList<Feature>? = null
+                var options: MutableList<Feature>?
                 //If we have an index construct a list from that otherwise just make it normally.
                 try {
                     when (featureJson.getString("index")) {
@@ -1795,7 +1819,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             }
                         }
                         "maneuvers" -> {
-                            //TODO
+                            features.addAll(
+                                _maneuvers.value!!
+                            )
                         }
                         "metamagic" -> {
                             _metaMagics.value?.forEach {

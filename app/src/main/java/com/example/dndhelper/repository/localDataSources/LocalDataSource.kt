@@ -1000,10 +1000,31 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val equipment = mutableListOf<ItemInterface>()
             val itemChoicesJson = backgroundJson.getJSONArray("equipment")
             extractEquipmentChoices(itemChoicesJson, equipmentChoices, equipment)
+
+
+            val spells = try {
+                val result = mutableListOf<Spell>()
+                val backgroundSpellsJson = backgroundJson.getJSONArray("spells")
+                for (index in 0 until backgroundSpellsJson.length()) {
+                    val spellJson = backgroundSpellsJson.getJSONObject(index)
+                    val spell = getSpellsByIndex(spellJson.getString("name"))
+                    //TODO once all the spells are added put an exception here if the sell lists is not exactly one item.
+                    spell?.getOrNull(0)?.let {
+                        result.add(
+                            it
+                        )
+                    }
+                }
+                result
+            } catch (e: JSONException) {
+                null
+            }
+
             backgrounds.add(
                 Background(
                     name = name,
                     desc = desc,
+                    spells = spells,
                     proficiencies = proficiencies,
                     proficiencyChoices = proficiencyChoices,
                     features = features,

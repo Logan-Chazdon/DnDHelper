@@ -2,6 +2,7 @@ package com.example.dndhelper.ui.newCharacter
 
 import android.os.Handler
 import android.os.Looper
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,19 +11,24 @@ import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
+import com.example.dndhelper.ui.SpellDetailsView
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import com.example.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ConfirmBackgroundView(
     characterId: Int,
@@ -201,6 +207,48 @@ fun ConfirmBackgroundView(
                         }
                     }
 
+
+                    background.spells?.let {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(0.95f),
+                            backgroundColor = MaterialTheme.colors.surface,
+                            elevation = 5.dp,
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(5.dp)
+                            ) {
+                                Text(
+                                    text = "Spells",
+                                    style = MaterialTheme.typography.h6
+                                )
+                                it.forEach {
+                                    var expanded by remember { mutableStateOf(false) }
+                                    Text(
+                                        text = it.name,
+                                        modifier = Modifier.clickable {
+                                            expanded = true
+                                        }
+                                    )
+                                    if(expanded) {
+                                        Dialog(
+                                            onDismissRequest = {
+                                                expanded = false
+                                            },
+                                            properties = DialogProperties(
+                                                usePlatformDefaultWidth = false,
+                                                dismissOnClickOutside = true
+                                            )
+                                        ) {
+                                            Card {
+                                               SpellDetailsView(spell = it)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     background.features.forEach {
                         Card(

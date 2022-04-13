@@ -612,6 +612,16 @@ data class Character(
 
             }
         }
+
+        background?.spells?.let {
+            it.forEach { spell ->
+                if(!spells.containsKey(spell.level)) {
+                    spells[spell.level] = mutableListOf()
+                }
+                spells[spell.level]?.add(Pair(first = null, second = spell))
+            }
+        }
+
         return spells
     }
 

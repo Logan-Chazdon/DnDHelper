@@ -136,6 +136,14 @@ public class NewCharacterClassViewModel @Inject constructor(
                     }
                     this
                 }
+
+            newClass.subclass?.features?.filter { it.grantedAtLevel <= level }?.forEach {
+                if(it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
+                    it.chosen = dropDownStates[it.name + it.grantedAtLevel]
+                        ?.getSelected(it.getAvailableOptions(character, proficiencies, level))
+                            as List<Feature>
+                }
+            }
         }
 
         if(newClass.spellCasting?.type != 0.0) {

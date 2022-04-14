@@ -88,4 +88,13 @@ class MultipleChoiceDropdownState()  {
             incrementSelection(it)
         }
     }
+
+    @JvmName("setSelectedWithAmount")
+    fun setSelected(selectedNames : List<Pair<String, Int>>) {
+        selectedNames.forEach {
+            for(i in 0 until it.second) {
+                incrementSelection(names.indexOf(it.first))
+            }
+        }
+    }
 }

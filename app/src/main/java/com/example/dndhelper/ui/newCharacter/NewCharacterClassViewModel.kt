@@ -6,13 +6,15 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.SavedStateHandle
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import com.example.dndhelper.ui.utils.allNames
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,20 +22,20 @@ public class NewCharacterClassViewModel @Inject constructor(
     private val repository: Repository,
     application: Application,
     savedStateHandle: SavedStateHandle
-): AndroidViewModel(application){
-    var classes : LiveData<List<Class>> = repository.getClasses()
+) : AndroidViewModel(application) {
+    var classes: LiveData<List<Class>> = repository.getClasses()
     var id = -1
-    var isBaseClass =  mutableStateOf(true)
-    var takeGold =  mutableStateOf(false)
+    var isBaseClass = mutableStateOf(true)
+    var takeGold = mutableStateOf(false)
     var goldRolled = mutableStateOf("6")
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
-    val character : LiveData<Character>?
+    val character: LiveData<Character>?
     val classSpells = mutableStateListOf<Spell>()
     val subclassSpells = mutableStateListOf<Spell>()
     val levels = mutableStateOf(TextFieldValue("1"))
 
     //ASIs
-    private val shortAbilityNames  = mutableListOf(
+    private val shortAbilityNames = mutableListOf(
         "Str",
         "Dex",
         "Con",
@@ -50,29 +52,29 @@ public class NewCharacterClassViewModel @Inject constructor(
         "Wisdom",
         "Charisma"
     )
-    var feats : LiveData<List<Feat>> = repository.getFeats()
+    var feats: LiveData<List<Feat>> = repository.getFeats()
     val featNames: MediatorLiveData<MutableList<String>> = MediatorLiveData()
     val isFeat = mutableStateListOf<Boolean>()
     val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
     val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
     var classIndex = 0
 
-    val proficiencies : List<Proficiency>
-    get() {
-        val profs : MutableList<Proficiency> = mutableListOf()
-        classes.value?.get(classIndex)?.proficiencies?.let { profs.addAll(it) }
-        classes.value?.get(classIndex)?.proficiencyChoices?.forEach {
-            (dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>?)?.let { it1 ->
-                profs.addAll(
-                    it1
-                )
+    val proficiencies: List<Proficiency>
+        get() {
+            val profs: MutableList<Proficiency> = mutableListOf()
+            classes.value?.get(classIndex)?.proficiencies?.let { profs.addAll(it) }
+            classes.value?.get(classIndex)?.proficiencyChoices?.forEach {
+                (dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>?)?.let { it1 ->
+                    profs.addAll(
+                        it1
+                    )
+                }
             }
+            return profs
         }
-        return profs
-    }
 
 
-    fun toNumber(textFieldValue: MutableState<TextFieldValue>) : Int {
+    fun toNumber(textFieldValue: MutableState<TextFieldValue>): Int {
         return try {
             textFieldValue.value.text.toInt()
         } catch (e: NumberFormatException) {
@@ -82,38 +84,34 @@ public class NewCharacterClassViewModel @Inject constructor(
 
 
     init {
+        featNames.addSource(feats) {
+            val names = mutableListOf<String>()
+            for (item in it) {
+                names.add(item.name)
+            }
+            featNames.value = names
+        }
+
         classIndex = try {
             savedStateHandle.get<String>("classIndex")!!.toInt()
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             0
         }
 
         id = try {
             savedStateHandle.get<String>("characterId")!!.toInt()
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             -1
         }
 
         character = try {
             repository.getLiveCharacterById(id)!!
-        } catch(e: NullPointerException) {
+        } catch (e: NullPointerException) {
             null
         }
 
         isBaseClass.value = !(character?.value?.hasBaseClass ?: false)
-
-        viewModelScope.launch {
-            featNames.addSource(feats!!) {
-                val names = mutableListOf<String>()
-                for(item in it) {
-                    names.add(item.name)
-                }
-                featNames.value = names
-            }
-        }
     }
-
-
 
 
     suspend fun addClassLevels(newClass: Class, level: Int) {
@@ -124,7 +122,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         newClass.tookGold = takeGold.value
         newClass.totalNumOnGoldDie = goldRolled.value.toInt()
 
-        if(isBaseClass.value) {
+        if (isBaseClass.value) {
             newClass.isBaseClass = isBaseClass.value
             newClass.equipmentChoices.forEach {
                 it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
@@ -135,34 +133,42 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
 
         newClass.levelPath.filter { it.grantedAtLevel <= level }.forEach {
-            if(it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
-                it.chosen = dropDownStates[it.name + it.grantedAtLevel]?.getSelected(it.getAvailableOptions(character, proficiencies, level)) as List<Feature>
+            if (it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
+                it.chosen = dropDownStates[it.name + it.grantedAtLevel]?.getSelected(
+                    it.getAvailableOptions(
+                        character,
+                        proficiencies,
+                        level
+                    )
+                ) as List<Feature>
             }
         }
 
-        for((i, item) in isFeat.withIndex()) {
-            if(item) {
+        for ((i, item) in isFeat.withIndex()) {
+            if (item) {
                 newClass.featsGranted.addAll(featDropDownStates[i].getSelected(feats?.value!!) as List<Feat>)
             } else {
                 newClass.abilityImprovementsGranted.add(
                     (absDropDownStates[i].getSelected(shortAbilityNames) as List<Pair<String, Int>>)
                         .associateBy(
-                            {it.first}, {it.second}
+                            { it.first }, { it.second }
                         )
                 )
             }
         }
-        if(newClass.level >= newClass.subclassLevel) {
+        if (newClass.level >= newClass.subclassLevel) {
             newClass.subclass =
-                (subclassDropdownState?.getSelected(newClass.subClasses) as List<Subclass>).getOrNull(0).run {
-                    if(this?.spellCasting != null) {
+                (subclassDropdownState?.getSelected(newClass.subClasses) as List<Subclass>).getOrNull(
+                    0
+                ).run {
+                    if (this?.spellCasting != null) {
                         this.spellCasting?.known?.addAll(subclassSpells)
                     }
                     this
                 }
 
             newClass.subclass?.features?.filter { it.grantedAtLevel <= level }?.forEach {
-                if(it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
+                if (it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
                     it.chosen = dropDownStates[it.name + it.grantedAtLevel]
                         ?.getSelected(it.getAvailableOptions(character, proficiencies, level))
                             as List<Feature>
@@ -170,17 +176,17 @@ public class NewCharacterClassViewModel @Inject constructor(
             }
         }
 
-        if(newClass.spellCasting?.type != 0.0) {
+        if (newClass.spellCasting?.type != 0.0) {
             newClass.spellCasting?.known?.addAll(classSpells.toList())
         }
 
 
         newClass.pactMagic?.known?.addAll(classSpells.toList())
-        if(newClass.subclass?.spellAreFree == true) {
+        if (newClass.subclass?.spellAreFree == true) {
             val spellsGrantedBySubclass = newClass.subclass?.spells?.let {
                 val result = mutableListOf<Spell>()
                 it.forEach { (level, spell) ->
-                    if(level >= newClass.level) {
+                    if (level >= newClass.level) {
                         result.add(spell)
                     }
                 }
@@ -198,7 +204,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun getAsiNum(levels: Int): Int {
-        return when(levels) {
+        return when (levels) {
             in 0..3 -> {
                 0
             }
@@ -208,10 +214,10 @@ public class NewCharacterClassViewModel @Inject constructor(
             in 8..11 -> {
                 2
             }
-            in  12..15 -> {
+            in 12..15 -> {
                 3
             }
-            in  16..18 -> {
+            in 16..18 -> {
                 4
             }
             in 19..20 -> {
@@ -223,7 +229,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 
     private var subclassDropdownState: MultipleChoiceDropdownState? = null
     fun getSubclassDropdownState(it: Class): MultipleChoiceDropdownState {
-        return if(subclassDropdownState == null) {
+        return if (subclassDropdownState == null) {
             subclassDropdownState = MultipleChoiceDropdownState()
             subclassDropdownState!!.maxSelections = 1
             subclassDropdownState!!.choiceName = "Subclass"
@@ -240,29 +246,29 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun canAffordMoreClassLevels(num: Int): Boolean {
-        if((character?.value?.totalClassLevels ?: 0) + num <= 20) {
+        if ((character?.value?.totalClassLevels ?: 0) + num <= 20) {
             return true
         }
         return false
     }
 
     val hasBaseClass: Boolean
-    get() {
-        return if(character?.value?.hasBaseClass == true) {
-            //If the baseclass is the current class return false.
-            character.value!!
-                .classes[classes.value?.get(classIndex)?.name]
-                ?.isBaseClass != true
-        } else {
-            false
+        get() {
+            return if (character?.value?.hasBaseClass == true) {
+                //If the baseclass is the current class return false.
+                character.value!!
+                    .classes[classes.value?.get(classIndex)?.name]
+                    ?.isBaseClass != true
+            } else {
+                false
+            }
         }
-    }
 
     fun getLearnableSpells(level: Int, subclass: Subclass?): MutableList<Spell> {
         return repository.getAllSpellsByClassIndex(classIndex).run {
             subclass?.let {
                 //If the spells for the subclass arnt free add them to the selection.
-                if(!it.spellAreFree) {
+                if (!it.spellAreFree) {
                     val spells = mutableListOf<Spell>()
                     it.spells?.forEach { (_, spell) ->
                         spells.add(spell)
@@ -271,18 +277,19 @@ public class NewCharacterClassViewModel @Inject constructor(
                 }
             }
 
-            if(classes.value?.get(classIndex)?.spellCasting?.prepareFrom == "all") {
+            if (classes.value?.get(classIndex)?.spellCasting?.prepareFrom == "all") {
                 this.removeAll {
                     it.level != 0
                 }
             }
             try {
-                val maxLevel = classes.value?.get(classIndex)?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
-                    ?: classes.value?.get(classIndex)?.pactMagic?.pactSlots?.get(level - 1)!!.name.toInt()
+                val maxLevel =
+                    classes.value?.get(classIndex)?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
+                        ?: classes.value?.get(classIndex)?.pactMagic?.pactSlots?.get(level - 1)!!.name.toInt()
                 this.removeAll {
                     it.level > maxLevel
                 }
-            } catch(e : NumberFormatException) {
+            } catch (e: NumberFormatException) {
                 this.removeAll {
                     true
                 }
@@ -312,7 +319,7 @@ public class NewCharacterClassViewModel @Inject constructor(
             )
         }
 
-        if(subclass.spellCasting?.prepareFrom == "all") {
+        if (subclass.spellCasting?.prepareFrom == "all") {
             result.removeAll {
                 it.level != 0
             }
@@ -326,7 +333,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun toggleClassSpell(it: Spell) {
-        if(classSpells.contains(it)) {
+        if (classSpells.contains(it)) {
             classSpells.remove(it)
         } else {
             classSpells.add(it)
@@ -334,7 +341,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun toggleSubclassSpell(it: Spell) {
-        if(subclassSpells.contains(it)) {
+        if (subclassSpells.contains(it)) {
             subclassSpells.remove(it)
         } else {
             subclassSpells.add(it)
@@ -357,7 +364,7 @@ public class NewCharacterClassViewModel @Inject constructor(
             ?.getOrDefault(className, null)?.let { clazz ->
                 val applyFeature = fun(feature: Feature) {
                     val maxSelections = feature.choose.num(toNumber(levels))
-                    if(maxSelections != 0) {
+                    if (maxSelections != 0) {
                         val state = dropDownStates.getDropDownState(
                             key = feature.name + feature.grantedAtLevel,
                             choiceName = feature.name,
@@ -387,7 +394,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 
                 //Apply base class choice
                 isBaseClass.value = clazz.isBaseClass
-                if(isBaseClass.value) {
+                if (isBaseClass.value) {
                     //Apply proficiency choices
                     clazz.proficiencyChoices.forEach { choice ->
                         //Get or create the drop down state for the choice.
@@ -410,7 +417,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                         state.setSelected(selectedNames)
                     }
 
-                    if(clazz.tookGold == true) {
+                    if (clazz.tookGold == true) {
                         //Apply gold choices.
                         takeGold.value = true
                         goldRolled.value = clazz.totalNumOnGoldDie.toString()
@@ -424,10 +431,10 @@ public class NewCharacterClassViewModel @Inject constructor(
                             }
 
                             val state = dropDownStates.getDropDownState(
-                                    key = choice.name,
-                                    maxSelections = choice.choose,
-                                    names = names,
-                                    choiceName = choice.name
+                                key = choice.name,
+                                maxSelections = choice.choose,
+                                names = names,
+                                choiceName = choice.name
                             )
                             //Apply data from the choice.
                             val selectedIndexes = mutableListOf<Int>()
@@ -440,7 +447,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                 }
 
                 //Apply spell class choices.
-                if(clazz.spellCasting?.type != 0.0){
+                if (clazz.spellCasting?.type != 0.0) {
                     clazz.spellCasting?.known?.let { classSpells.addAll(it) }
                 }
                 clazz.pactMagic?.let {
@@ -453,8 +460,40 @@ public class NewCharacterClassViewModel @Inject constructor(
                 }
 
                 //Apply feat and asi choices.
-                //TODO
-
+                clazz.featsGranted.forEachIndexed { i, it ->
+                    isFeat.add(i, true)
+                    featNames.value?.let { featNames ->
+                        featDropDownStates
+                            .getDropDownState(
+                                key = i,
+                                maxSelections = 1,
+                                names = featNames,
+                                choiceName = "Feat"
+                            )
+                    }?.setSelected(mutableListOf(it.name))
+                }
+                val offset = isFeat.size
+                clazz.abilityImprovementsGranted.forEachIndexed { i, it ->
+                    isFeat.add(i + offset, false)
+                    val state = absDropDownStates
+                        .getDropDownState(
+                            key = i,
+                            maxSelections = 2,
+                            names = abilityNames,
+                            choiceName = "Ability Score Improvement",
+                            maxOfSameSelection = 2
+                        )
+                    val selectedList = mutableListOf<Pair<String, Int>>()
+                    it.forEach { entry ->
+                        val key = abilityNames.first {
+                            it.substring(0..2) == entry.key
+                        }
+                        selectedList.add(
+                            Pair(key, entry.value)
+                        )
+                    }
+                    state.setSelected(selectedList)
+                }
 
                 //Apply subclass choices.
                 clazz.subclass?.let { subclass ->
@@ -463,7 +502,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                     state.setSelected(listOf(subclass.name))
 
                     //Apply subclass spell choices.
-                    if(clazz.spellCasting?.type != 0.0){
+                    if (clazz.spellCasting?.type != 0.0) {
                         clazz.spellCasting?.known?.let { subclassSpells.addAll(it) }
                     }
                     clazz.pactMagic?.let {
@@ -475,7 +514,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                         applyFeature(it)
                     }
                 }
-        }
+            }
     }
 }
 

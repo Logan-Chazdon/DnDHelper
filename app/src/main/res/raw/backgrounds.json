@@ -1497,6 +1497,469 @@
             ],
             "languages": [
             ]
+        },
+        {
+            "name": "Guild Artisan",
+            "desc": "You are a member of an artisan's guild, skilled in a particular field and closely associated with other artisans. You are a well-established part of the mercantile world, freed by talent and wealth from the constraints of a feudal social order. You learned your skills as an apprentice to a master artisan, under the sponsorship of your guild, until you became a master in your own right.",
+            "features": [
+                {
+                    "name" : "Guild Business",
+                    "desc" : "As a member of your guild, you know the skills needed to create finished items from raw materials (reflected in your proficiency with a certain kind of artisan's tools), as well as the principles of trade and good business practices. The question now is whether you abandon your trade for adventure, or take on the extra effort to weave adventuring and trade together.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "Alchemists and apothecaries"
+                        },
+                        {
+                            "name" : "Armorers, locksmiths, and finesmiths"
+                        },
+                        {
+                            "name" : "Brewers, distillers, and vintners"
+                        },
+                        {
+                            "name" : "Calligraphers, scribes, and scriveners"
+                        },
+                        {
+                            "name" : "Carpenters, roofers, and plasterers"
+                        },
+                        {
+                            "name" : "Cartographers, surveyors, and chart-makers"
+                        },
+                        {
+                            "name" : "Cobblers and shoemakers"
+                        },
+                        {
+                            "name" : "Cooks and bakers"
+                        },
+                        {
+                            "name" : "Glassblowers and glaziers"
+                        },
+                        {
+                            "name" : "Jewelers and gemcutters"
+                        },
+                        {
+                            "name" : "Leatherworkers, skinners, and tanners"
+                        },
+                        {
+                            "name" : "Masons and stonecutters"
+                        },
+                        {
+                            "name" : "Painters, limners, and sign-makers"
+                        },
+                        {
+                            "name" : "Potters and tile-makers,"
+                        },
+                        {
+                            "name" : "Shipwrights and sailmakers"
+                        },
+                        {
+                            "name" : "Smiths and metal-forgers"
+                        },
+                        {
+                            "name" : "Tinkers, pewterers, and casters"
+                        },
+                        {
+                            "name" : "Wagon-makers and wheelwrights"
+                        },
+                        {
+                            "name" : "Weavers and dyers"
+                        },
+                        {
+                            "name" : "Woodcarvers, coopers, and bowyers"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Guild Membership",
+                    "desc" : "As an established and respected member of a guild, you can rely on certain benefits that membership provides. Your fellow guild members will provide you with lodging and food if necessary, and pay for your funeral if needed. In some cities and towns, a guildhall offers a central place to meet other members of your profession, which can be a good place to meet potential patrons, allies, or hirelings.\n\nGuilds often wield tremendous political power. If you are accused of a crime, your guild will support you if a good case can be made for your innocence or the crime is justifiable. You can also gain access to powerful political figures through the guild, if you are a member in good standing. Such connections might require the donation of money or magic items to the guild's coffers.\n\nYou must pay dues of 5 gp per month to the guild. If you miss payments, you must make up back dues to remain in the guild's good graces."
+                }
+            ],
+            "equipment": [
+                {
+                    "name" : "A set of artisan's tools.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "artisans_tools"
+                        }
+                    ]
+                },
+                {
+                    "name" : "a letter of introduction from your guild"
+                },
+                {
+                    "name" : "Traveler's clothes"
+                },
+                {
+                    "name" : "a pouch containing 15 gp",
+                    "index" : "gold",
+                    "amount" : 15
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name" : "Insight"
+                },
+                {
+                    "name" : "Persuasion"
+                },
+                {
+                    "name" : "Proficiency with one type of artisan's tools",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "artisans_tools"
+                        }
+                    ]
+                }
+            ],
+            "languages": [
+                {
+                    "name": "One language of your choice.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Haunted One",
+            "desc": "You are haunted by something so terrible that you dare not speak of it. You’ve tried to bury it and run away from it, to no avail. Whatever this thing is that haunts you can’t be slain with a sword or banished with a spell. It might come to you as a shadow on the wall, a bloodcurdling nightmare, a memory that refuses to die, or a demonic whisper in the dark. The burden has taken its toll, isolating you from most people and making you question your sanity. You must find a way to overcome it before it destroys you.",
+            "features": [
+                {
+                    "name" : "Harrowing Event",
+                    "choose" : 1,
+                    "desc" : "Prior to becoming an adventurer, your path in life was defined by one dark moment, one fateful decision, or one tragedy. Now you feel a darkness threatening to consume you, and you fear there may be no hope of escape. Choose a harrowing event that haunts you, or roll one on the Harrowing Events table.",
+                    "from" : [
+                        {
+                            "name" : "A monster that slaughtered dozens of innocent people spared your life, and you don’t know why."
+                        },
+                        {
+                            "name" : "You were born under a dark star. You can feel it watching you, coldly and distantly. Sometimes it beckons you in the dead of night."
+                        },
+                        {
+                            "name" : "An apparition that has haunted your family for generations now haunts you. You don’t know what it wants, and it won’t leave you alone."
+                        },
+                        {
+                            "name" : "Your family has a history of practicing the dark arts. You dabbled once and felt something horrible clutch at your soul, whereupon you fled in terror."
+                        },
+                        {
+                            "name" : "An oni took your sibling one cold, dark night, and you were unable to stop it."
+                        },
+                        {
+                            "name" : "You were cursed with lycanthropy and later cured. You are now haunted by the innocents you slaughtered."
+                        },
+                        {
+                            "name" : "A hag kidnapped and raised you. You escaped, but the hag still has a magical hold over you and fills your mind with evil thoughts."
+                        },
+                        {
+                            "name" : "You opened an eldritch tome and saw things unfit for a sane mind. You burned the book, but its words and images are burned into your psyche."
+                        },
+                        {
+                            "name" : "A fiend possessed you as a child. You were locked away but escaped. The fiend is still inside you, but now you try to keep it locked away."
+                        },
+                        {
+                            "name" : "You did terrible things to avenge the murder of someone you loved. You became a monster, and it haunts your waking dreams."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Heart of Darkness",
+                    "desc" : "Those who look into your eyes can see that you have faced unimaginable horror and that you are no stranger to darkness. Though they might fear you, commoners will extend you every courtesy and do their utmost to help you. Unless you have shown yourself to be a danger to them, they will even take up arms to fight alongside you, should you find yourself facing an enemy alone."
+                }
+            ],
+            "equipment": [
+                {
+                    "index" : "Monster Hunter's Pack"
+                },
+                {
+                    "name" : "One trinket of special significance"
+                },
+                {
+                    "name" : "A set of common clothes"
+                },
+                {
+                    "name" : "1 sp",
+                    "index" : "silver",
+                    "amount" : 1
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name" : "Choose two of Arcana, Investigation, Religion, or Survival",
+                    "choose" : 2,
+                    "from" : [
+                        {
+                            "name" : "Arcana"
+                        },
+                        {
+                            "name" : "Investigation"
+                        },
+                        {
+                            "name" : "Religion"
+                        },
+                        {
+                            "name" : "Survival"
+                        }
+                    ]
+                }
+            ],
+            "languages": [
+                {
+                    "name" : "One language of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                },
+                {
+                    "name" : "One exotic language of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "Abyssal"
+                        },
+                        {
+                            "name" : "Celestial"
+                        },
+                        {
+                            "name" : "Deep Speech"
+                        },
+                        {
+                            "name" : "Draconic"
+                        },
+                        {
+                            "name" : "Infernal"
+                        },
+                        {
+                            "name" : "Primordial"
+                        },
+                        {
+                            "name" : "Sylvan"
+                        },
+                        {
+                            "name" : "Undercommon"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Hermit",
+            "desc": "You lived in seclusion – either in a sheltered community such as a monastery, or entirely alone – for a formative part of your life. In your time apart from the clamor of society, you found quiet, solitude, and perhaps some of the answers you were looking for.",
+            "features": [
+                {
+                    "name" : "Life of Seclusion",
+                    "desc" : "What was the reason for your isolation, and what changed to allow you to end your solitude? You can work with your DM to determine the exact nature of your seclusion, or you can choose to roll on the table below to determine the reason behind your seclusion.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "I was searching for spiritual enlightenment."
+                        },
+                        {
+                            "name" : "I was partaking of communal living in accordance with the dictates of a religious order."
+                        },
+                        {
+                            "name" : "I was exiled for a crime I didn't commit."
+                        },
+                        {
+                            "name" : "I retreated from society after a life-altering event."
+                        },
+                        {
+                            "name" : "I needed a quiet place to work on my art, literature, music, or manifesto."
+                        },
+                        {
+                            "name" : "I needed to commune with nature, far from civilization."
+                        },
+                        {
+                            "name" : "I was the caretaker of an ancient ruin or relic."
+                        },
+                        {
+                            "name" : "tI was a pilgrim in search of a person, place, or relic of spiritual significance."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Discovery",
+                    "desc" : "The quiet seclusion of your extended hermitage gave you access to a unique and powerful discovery. The exact nature of this revelation depends on the nature of your seclusion. It might be a great truth about the cosmos, the deities, the powerful beings of the outer planes, or the forces of nature. It could be a site that no one else has ever seen. You might have uncovered a fact that has long been forgotten, or unearthed some relic of the past that could rewrite history. It might be information that would be damaging to the people who or consigned you to exile, and hence the reason for your return to society.\n\nWork with your DM to determine the details of your discovery and its impact on the campaign."
+                }
+            ],
+            "equipment": [
+                {
+                    "name" : "A scroll case stuffed full of notes from your studies or prayers"
+                },
+                {
+                    "name" : "A winter blanked"
+                },
+                {
+                    "index" : "Common clothes"
+                },
+                {
+                    "index" : "Herbalism kit"
+                },
+                {
+                    "name" : "5 gp",
+                    "index": "gold",
+                    "amount" : 5
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name" : "Medicine"
+                },
+                {
+                    "name" : "Religion"
+                }
+            ],
+            "languages": [
+                {
+                    "name" : "One language of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Inheritor",
+            "desc": "You are the heir to something of great value – not mere coin or wealth, but an object that has been entrusted to you and you alone. Your inheritance might have come directly to you from a member of your family, by right of birth, or it could have been left to you by a friend, a mentor, a teacher, or someone else important in your life. The revelation of your inheritance changed your life, and might have set you on the path to adventure, but it could also come with many dangers, including those who covet your gift and want to take it from you – by force, if need be.",
+            "features": [
+                {
+                    "name" : "Inheritance",
+                    "desc" : "Choose or randomly determine your inheritance from among the possibilities in the table below. Work with your DM to come up with details: Why is your inheritance so important, and what is its full story? You might prefer for the DM to invent these details as part of the game, allowing you to learn more about your inheritance as your character does.\n\nThe DM is free to use your inheritance as a story hook, sending you on quests to learn more about its history or true nature, or confronting you with foes who want to claim it for themselves or prevent you from learning what you seek. The DM also determines the properties of your inheritance and how they figure into the item's history and importance. For instance, the object might be a minor magic item, or one that begins with a modest ability and increases in potency with the passage of time. Or, the true nature of your inheritance might not be apparent at first and is revealed only when certain conditions are met.\n\nWhen you begin your adventuring career, you can decide whether to tell your companions about your inheritance right away. Rather than attracting attention to yourself, you might want to keep your inheritance a secret until you learn more about what it means to you and what it can do for you.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "A document such as a map, a letter, or a journal"
+                        },
+                        {
+                            "name" : "A trinket"
+                        },
+                        {
+                            "name" : "An article of clothing"
+                        },
+                        {
+                            "name" : "A piece of jewelry"
+                        },
+                        {
+                            "name" : "An arcane book or formulary"
+                        },
+                        {
+                            "name" : "A written story, song, poem, or secret"
+                        },
+                        {
+                            "name" : "A tattoo or other body marking"
+                        }
+                    ]
+                }
+            ],
+            "equipment": [
+            ],
+            "proficiencies": [
+                {
+                    "name" : "Survival"
+                },
+                {
+                    "name" : "Proficiency in Arcana, History, or Religion",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "name" : "Arcana"
+                        },
+                        {
+                            "name" : "History"
+                        },
+                        {
+                            "name" : "Religion"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Proficiency in a gaming set of musical instrument",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "gaming_sets"
+                        },
+                        {
+                            "index" : "musical_instruments"
+                        }
+                    ]
+                }
+            ],
+            "languages": [
+                {
+                    "name" : "Any language of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Knight",
+            "desc": "You understand wealth, power, and privilege. You carry a noble title, and your family owns land, collects taxes, and wields significant political influence. You might be a pampered aristocrat unfamiliar with work or discomfort, a former merchant just elevated to the nobility, or a disinherited scoundrel with a disproportionate sense of entitlement. Or you could be an honest, hard-working landowner who cares deeply about the people who live and work on your land, keenly aware of your responsibility to them.\n\nWork with your DM to come up with an appropriate title and determine how much authority that title carries. A noble title doesn't stand on its own-it's connected to an entire family, and whatever title you hold, you will pass it down to your own children. Not only do you need to determine your noble title, but you should also work with the DM to describe your family and their influence on you.\n\nIs your family old and established, or was your title only recently bestowed? How much influence do they wield, and over what area? What kind of reputation does your family have among the other aristocrats of the region? How do the common people regard them?\n\nWhat's your position in the family? Are you the heir to the head of the family? Have you already inherited the title? How do you feel about that responsibility? Or are you so far down the line of inheritance that no one cares what you do, as long as you don't embarrass the family? How does the head of your family feel about your adventuring career? Are you in your family's good graces, or shunned by the rest of your family?\n\nDoes your family have a coat of arms? An insignia you might wear on a signet ring? Particular colors you wear all the time? An animal you regard as a symbol of your line or even a spiritual member of the family?\n\nThese details help establish your family and your title as features of the world of the campaign.",
+            "features": [
+                {
+                    "name" : "Position of Privilege",
+                    "desc" : "Thanks to your noble birth, people are inclined to think the best of you. You are welcome in high society, and people assume you have the right to be wherever you are. The common folk make every effort to accommodate you and avoid your displeasure, and other people of high birth treat you as a member of the same social sphere. You can secure an audience with a local noble if you need to."
+                }
+            ],
+            "equipment": [
+                {
+                    "index" : "fine clothes"
+                },
+                {
+                    "index" : "Signet Ring"
+                },
+                {
+                    "name" : "A scroll of pedigree"
+                },
+                {
+                    "name" : "A purse containing 25gp",
+                    "index" : "gold",
+                    "amount" : 25
+                }
+            ],
+            "proficiencies": [
+                {
+                    "name" : "History"
+                },
+                {
+                    "name" : "Persuasion"
+                },
+                {
+                    "name" : "Proficiency with one type of gaming set",
+                    "choose" : 1,
+                    "from" :[
+                        {
+                            "index" : "gaming_sets"
+                        }
+                    ]
+                }
+            ],
+            "languages": [
+                {
+                    "name" : "One language of your choice",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "all_languages"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

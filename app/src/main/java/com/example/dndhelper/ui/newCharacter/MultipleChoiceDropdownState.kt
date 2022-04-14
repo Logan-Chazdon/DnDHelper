@@ -3,7 +3,6 @@ package com.example.dndhelper.ui.newCharacter
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 
 
 class MultipleChoiceDropdownState()  {
@@ -75,5 +74,18 @@ class MultipleChoiceDropdownState()  {
         }
 
         return returnList
+    }
+
+    fun setSelected(selectedNames : List<String>) {
+        selectedNames.forEach {
+            incrementSelection(names.indexOf(it))
+        }
+    }
+
+    @JvmName("setSelectedByIndex")
+    fun setSelected(selectedIndexes : List<Int>)  {
+        selectedIndexes.forEach {
+            incrementSelection(it)
+        }
     }
 }

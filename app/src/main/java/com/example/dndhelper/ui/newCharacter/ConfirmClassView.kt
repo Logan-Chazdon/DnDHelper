@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -27,22 +26,21 @@ import com.example.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+
 @ExperimentalComposeUiApi
 @Composable
 fun ConfirmClassView(
     viewModel: NewCharacterClassViewModel,
-    navController: NavController,
-    classIndex: Int
+    navController: NavController
 ) {
-    viewModel.classIndex = classIndex
     val classes = viewModel.classes.observeAsState()
-
     val mainLooper = Looper.getMainLooper()
-    val levels = remember {
-        mutableStateOf(TextFieldValue("1"))
+
+    LaunchedEffect(viewModel.character?.value?.id) {
+        viewModel.applyAlreadySelectedChoices()
     }
 
-    classes.value?.get(classIndex)?.let { clazz ->
+    classes.value?.get(viewModel.classIndex)?.let { clazz ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -64,14 +62,14 @@ fun ConfirmClassView(
                 Button(
                     enabled = viewModel.canAffordMoreClassLevels(
                         try {
-                            levels.value.text.toInt()
+                            viewModel.levels.value.text.toInt()
                         } catch (e: java.lang.Exception) {
                             0
                         }
                     ),
                     onClick = {
                         GlobalScope.launch {
-                            clazz.let { viewModel.addClassLevels(it, levels.value.text.toInt()) }
+                            clazz.let { viewModel.addClassLevels(it, viewModel.levels.value.text.toInt()) }
                             //Navigate to the next step
                             Handler(mainLooper).post {
                                 navController.navigate("newCharacterView/RaceView/${viewModel.id}")
@@ -91,17 +89,17 @@ fun ConfirmClassView(
                 Text(text = "Level: ", fontSize = 24.sp)
 
                 TextField(
-                    value = levels.value,
+                    value = viewModel.levels.value,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     onValueChange = {
                         try {
                             if (it.text.toInt() in 1..20)
-                                levels.value = it
+                                viewModel.levels.value = it
 
                         } catch (e: Exception) {
                             if (it.text.isEmpty())
-                                levels.value = it
+                                viewModel.levels.value = it
                         }
                     }
                 )
@@ -160,8 +158,8 @@ fun ConfirmClassView(
                     SpellSelectionView(
                         spells = viewModel.classSpells,
                         pactMagic = pactMagic,
-                        level = toNumber(levels),
-                        learnableSpells = viewModel.getLearnableSpells(toNumber(levels),  subclass),
+                        level = viewModel.toNumber(viewModel.levels),
+                        learnableSpells = viewModel.getLearnableSpells(viewModel.toNumber(viewModel.levels),  subclass),
                         toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
                 }
@@ -171,8 +169,8 @@ fun ConfirmClassView(
                     SpellSelectionView(
                         spells = viewModel.classSpells,
                         spellCasting = spellCasting,
-                        level = toNumber(levels),
-                        learnableSpells = viewModel.getLearnableSpells(toNumber(levels),  subclass),
+                        level = viewModel.toNumber(viewModel.levels),
+                        learnableSpells = viewModel.getLearnableSpells(viewModel.toNumber(viewModel.levels),  subclass),
                         toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
                 }
@@ -301,7 +299,7 @@ fun ConfirmClassView(
                 //ASIs
                 for (
                 it in 0 until try {
-                    viewModel.getAsiNum(levels.value.text.toInt())
+                    viewModel.getAsiNum(viewModel.levels.value.text.toInt())
                 } catch (e: NumberFormatException) {
                     0
                 }
@@ -375,12 +373,12 @@ fun ConfirmClassView(
 
 
                 for (choice in clazz.levelPath) {
-                    if (levels.value.text.isNotBlank()) {
-                        if (choice.grantedAtLevel <= levels.value.text.toInt()) {
+                    if (viewModel.levels.value.text.isNotBlank()) {
+                        if (choice.grantedAtLevel <= viewModel.levels.value.text.toInt()) {
                             FeatureView(
                                 feature = choice,
                                 level = try {
-                                    levels.value.text.toInt()
+                                    viewModel.levels.value.text.toInt()
                                 } catch (e: java.lang.NumberFormatException) {
                                     0
                                 },
@@ -397,7 +395,7 @@ fun ConfirmClassView(
                 if (
                     clazz.subclassLevel
                     <= try {
-                        levels.value.text.toInt()
+                        viewModel.levels.value.text.toInt()
                     } catch (e: NumberFormatException) {
                         0
                     }
@@ -429,12 +427,12 @@ fun ConfirmClassView(
                             .getOrNull(0)
                     }?.let { subclass ->
                         subclass.features.forEach {
-                            if (levels.value.text.isNotBlank()) {
-                                if (it.grantedAtLevel <= levels.value.text.toInt()) {
+                            if (viewModel.levels.value.text.isNotBlank()) {
+                                if (it.grantedAtLevel <= viewModel.levels.value.text.toInt()) {
                                     FeatureView(
                                         feature = it,
                                         level = try {
-                                            levels.value.text.toInt()
+                                            viewModel.levels.value.text.toInt()
                                         } catch (e: java.lang.NumberFormatException) {
                                             0
                                         },
@@ -450,8 +448,8 @@ fun ConfirmClassView(
                             SpellSelectionView(
                                 spellCasting = spellCasting,
                                 spells = viewModel.subclassSpells,
-                                level = toNumber(levels),
-                                learnableSpells = viewModel.getLearnableSpells(subclass, toNumber(levels)),
+                                level = viewModel.toNumber(viewModel.levels),
+                                learnableSpells = viewModel.getLearnableSpells(subclass, viewModel.toNumber(viewModel.levels)),
                                 toggleSpell = { viewModel.toggleSubclassSpell(it) }
                             )
                         }
@@ -459,13 +457,5 @@ fun ConfirmClassView(
                 }
             }
         }
-    }
-}
-
-private fun toNumber(textFieldValue: MutableState<TextFieldValue>) : Int {
-    return try {
-        textFieldValue.value.text.toInt()
-    } catch (e: NumberFormatException) {
-        1
     }
 }

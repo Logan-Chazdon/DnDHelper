@@ -200,12 +200,13 @@ data class Character(
         return result
     }
 
-    fun addClass(newClass: Class, takeGold: Boolean, goldRolled: Int) {
+    fun addClass(newClass: Class, takeGold: Boolean) {
         backpack.classCurrency = Currency.getEmptyCurrencyMap()
         backpack.classItems = mutableListOf()
         if(newClass.isBaseClass) {
             if(takeGold) {
-                backpack.classCurrency["gp"]?.amount = (backpack.classCurrency["gp"]?.amount ?: 0) + goldRolled
+                backpack.classCurrency["gp"]?.amount = (backpack.classCurrency["gp"]?.amount ?: 0) +
+                        (newClass.totalNumOnGoldDie ?: 0) * newClass.startingGoldMultiplier
             } else {
                 newClass.equipment.let { items ->
                     for (itemInterface in items) {

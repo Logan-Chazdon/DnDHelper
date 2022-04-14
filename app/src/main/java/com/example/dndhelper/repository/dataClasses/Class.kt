@@ -30,6 +30,8 @@ class Class(
     var isBaseClass: Boolean = false
     var level: Int = 1
     var subclass: Subclass? = null
+    var tookGold: Boolean? = null
+    var totalNumOnGoldDie : Int? = null
 
     fun longRest() {
         levelPath.forEach{

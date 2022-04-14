@@ -142,9 +142,9 @@ public class NewCharacterClassViewModel @Inject constructor(
 
         for((i, item) in isFeat.withIndex()) {
             if(item) {
-                character!!.feats.addAll(featDropDownStates[i].getSelected(feats?.value!!) as List<Feat>)
+                newClass.featsGranted.addAll(featDropDownStates[i].getSelected(feats?.value!!) as List<Feat>)
             } else {
-                character!!.addAbilityScoreIncreases(
+                newClass.abilityImprovementsGranted.add(
                     (absDropDownStates[i].getSelected(shortAbilityNames) as List<Pair<String, Int>>)
                         .associateBy(
                             {it.first}, {it.second}

@@ -32,26 +32,51 @@ data class Character(
     var id: Int = 0,
     var statGenerationMethodIndex: Int = 0,
     var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
-    var abilityScoreIncreases: MutableMap<String, Int> = mutableMapOf(
-        "Str" to 0,
-        "Dex" to 0,
-        "Con" to 0,
-        "Int" to 0,
-        "Wis" to 0,
-        "Cha" to 0
-    ),
     var background: Background? = null,
     var backpack: Backpack = Backpack(),
     var inspiration: Boolean = false,
     var equippedArmor: Armor = Armor.none,
     var equippedShield: Shield? = null,
-    var feats: MutableList<Feat> = mutableListOf<Feat>(),
     var positiveDeathSaves: Int = 0,
     var negativeDeathSaves: Int = 0,
     var spellSlots: List<Resource> = listOf(),
     val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
     val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
 ){
+    val feats: List<Feat>
+    get() {
+        val result = mutableListOf<Feat>()
+        //Race TODO
+
+        //Classes
+        classes.forEach { (_, clazz) ->
+            result.addAll(clazz.featsGranted)
+        }
+        return result
+    }
+
+    val abilityScoreIncreases: Map<String, Int>
+    get() {
+        val result: MutableMap<String, Int> = mutableMapOf(
+            "Str" to 0,
+            "Dex" to 0,
+            "Con" to 0,
+            "Int" to 0,
+            "Wis" to 0,
+            "Cha" to 0
+        )
+
+        classes.forEach { (_, clazz) ->
+            clazz.abilityImprovementsGranted.forEach {
+                it.forEach { item ->
+                    result[item.key] = result[item.key]?.plus(item.value) ?: 0
+                }
+            }
+        }
+
+        return result
+    }
+
     val hasPactMagic: Boolean
     get() {
         classes.forEach {
@@ -434,12 +459,6 @@ data class Character(
 
     fun getStatMod(name: String): Int {
         return (getStat(name)!! - 10) / 2
-    }
-
-    fun addAbilityScoreIncreases(increases: Map<String, Int>) {
-        for(item in increases) {
-            abilityScoreIncreases[item.key] = abilityScoreIncreases[item.key]?.plus(item.value) ?: 0
-        }
     }
 
     fun getFormattedClasses(): String {

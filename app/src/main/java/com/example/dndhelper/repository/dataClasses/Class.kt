@@ -32,6 +32,8 @@ class Class(
     var subclass: Subclass? = null
     var tookGold: Boolean? = null
     var totalNumOnGoldDie : Int? = null
+    var featsGranted: MutableList<Feat> = mutableListOf()
+    var abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf()
 
     fun longRest() {
         levelPath.forEach{

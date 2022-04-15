@@ -1834,6 +1834,18 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 )
                             }
                         }
+                        "all_languages" -> {
+                            _languages.value!!.forEach {
+                                features.add(
+                                    Feature(
+                                        name = it.name!!,
+                                        options = null,
+                                        languages = listOf(it),
+                                        description = "You can speak read and write ${it.name}."
+                                    )
+                                )
+                            }
+                        }
                         else -> throw JSONException("Invalid index")
                     }
 
@@ -1872,6 +1884,37 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         null
                     }
 
+                    val languages = try {
+                        val languagesJson = featureJson.getJSONArray("languages")
+                        val result = mutableListOf<Language>()
+                        for(i in 0 until languagesJson.length()) {
+                            result.add(
+                                Language(
+                                    name = languagesJson.getJSONObject(i).getString("name")
+                                )
+                            )
+                        }
+                        result
+                    } catch (e: JSONException) {
+                        null
+                    }
+
+
+                    val proficiencies = try {
+                        val proficienciesJson = featureJson.getJSONArray("proficiencies")
+                        val result = mutableListOf<Proficiency>()
+                        for(i in 0 until proficienciesJson.length()) {
+                            result.add(
+                                Proficiency(
+                                    name = proficienciesJson.getJSONObject(i).getString("name")
+                                )
+                            )
+                        }
+                        result
+                    } catch (e: JSONException) {
+                        null
+                    }
+
                     features.add(
                         Feature(
                             name = featureJson.getString("name"),
@@ -1896,7 +1939,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             } catch (e: JSONException) {
                                 null
                             },
-                            ac = ac
+                            ac = ac,
+                            proficiencies = proficiencies,
+                            languages = languages
                         )
                     )
                 }

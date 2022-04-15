@@ -571,6 +571,11 @@ data class Character(
         background?.languageChoices?.forEach { choice ->
             choice.chosen?.let { result.addAll(it) }
         }
+        features.forEach { feature ->
+            feature.second.languages?.let {
+                result.addAll(it)
+            }
+        }
         result.addAll(addedLanguages)
         return result
     }
@@ -586,6 +591,11 @@ data class Character(
             }
         }
         race?.getAllProficiencies()?.let { result.addAll(it) }
+        features.forEach { feature ->
+            feature.second.proficiencies?.let {
+                result.addAll(it)
+            }
+        }
         result.addAll(addedProficiencies)
         return result
     }

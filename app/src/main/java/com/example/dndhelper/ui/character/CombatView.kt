@@ -42,12 +42,17 @@ fun CombatView(viewModel: CombatViewModel) {
             Card(
                 elevation = 5.dp
             ) {
-                Column() {
+                Column(
+                    modifier = Modifier.padding(5.dp)
+                ) {
                     var onClick: () -> Unit = {}
                     var temp by remember { mutableStateOf("") }
+                    val title = remember {
+                        mutableStateOf("")
+                    }
                     when (hpPopUpMode) {
                         "addTemp" -> {
-                            Text("Add temporary HP")
+                            title.value = "Add temporary HP"
                             onClick = {
                                 hpPopUpExpanded = false
                                 scope.launch(Dispatchers.IO) {
@@ -56,7 +61,7 @@ fun CombatView(viewModel: CombatViewModel) {
                             }
                         }
                         "heal" -> {
-                            Text("Heal")
+                            title.value = "Heal"
                             onClick = {
                                 hpPopUpExpanded = false
                                 scope.launch(Dispatchers.IO) {
@@ -65,7 +70,7 @@ fun CombatView(viewModel: CombatViewModel) {
                             }
                         }
                         "damage" -> {
-                            Text("Damage")
+                            title.value  ="Damage"
                             onClick = {
                                 hpPopUpExpanded = false
                                 scope.launch(Dispatchers.IO) {
@@ -74,13 +79,22 @@ fun CombatView(viewModel: CombatViewModel) {
                             }
                         }
                     }
+
+                    Text(
+                        text = title.value,
+                        style = MaterialTheme.typography.h6
+                    )
+
                     TextField(
                         value = temp,
                         keyboardOptions = KeyboardOptions().copy(keyboardType = KeyboardType.Number),
                         onValueChange = { temp = it }
                     )
-                    //TODO left align
-                    Button(onClick = onClick) {
+
+                    Button(
+                        onClick = onClick,
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
                         when (hpPopUpMode) {
                             "addTemp" -> {
                                 Text("Add")

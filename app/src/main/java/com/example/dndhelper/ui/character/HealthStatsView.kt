@@ -82,8 +82,12 @@ fun HeathStatsView(
                             )
                             val keyboardController = LocalSoftwareKeyboardController.current
                             val focusController = LocalFocusManager.current
+
                             var text by remember {
-                                mutableStateOf(item.value.toString())
+                                mutableStateOf("")
+                            }
+                            LaunchedEffect(key1 = item.value) {
+                                text = item.value.toString()
                             }
 
                             val onDone = mapOf(

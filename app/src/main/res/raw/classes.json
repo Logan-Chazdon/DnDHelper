@@ -287,10 +287,7 @@
                             "choose": 1,
                             "from": [
                                 {
-                                    "name": "Artisans Tools",
-                                    "index": "artisans_tools",
-                                    "desc": "TODO",
-                                    "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
+                                    "index": "artisans_tools"
                                 }
                             ]
                         },
@@ -372,12 +369,14 @@
                             "name": "Tools of the Trade",
                             "desc": "You gain proficiency with heavy armor. You also gain proficiency with smith’s tools. If you already have this tool proficiency, you gain proficiency with one other type of artisan’s tools of your choice.",
                             "choose": 1,
+                            "proficiencies" : [
+                                {
+                                    "name" : "Heavy armor"
+                                }
+                            ],
                             "from": [
                                 {
-                                    "name": "Artisans Tools",
-                                    "index": "artisans_tools",
-                                    "desc": "TODO",
-                                    "comment": "TODO make sure this checks if you have Alchemists tools first before offering the choose option"
+                                    "index": "artisans_tools"
                                 }
                             ]
                         },
@@ -467,8 +466,13 @@
                         {
                             "name" : "Tool Proficiency",
                             "desc" : "When you adopt this specialization at 3rd level, you gain proficiency with woodcarver's tools. If you already have this proficiency, you gain proficiency with one other type of artisan's tools of your choice.",
-                            "comment" : "TODO",
-                            "level" : 3
+                            "level" : 3,
+                            "choose" : 1,
+                            "from": [
+                                {
+                                    "index": "artisans_tools"
+                                }
+                            ]
                         },
                         {
                             "name" : "Eldritch Cannon",
@@ -585,7 +589,12 @@
                             "name" : "Tool Proficiency",
                             "desc" : "When you adopt this specialization at 3rd level, you gain proficiency with smith's tools. If you already have this proficiency, you gain proficiency with one other type of artisan's tools of your choice.",
                             "level" : 3,
-                            "comment" : "TODO IMPL"
+                            "choose" : 1,
+                            "from": [
+                                {
+                                    "index": "artisans_tools"
+                                }
+                            ]
                         },
                         {
                             "name" : "Battle Ready",

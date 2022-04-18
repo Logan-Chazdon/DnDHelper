@@ -1846,6 +1846,18 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 )
                             }
                         }
+                        "artisans_tools" -> {
+                            artisansToolIndexes.forEach {
+                                features.add(
+                                    Feature(
+                                        name = it,
+                                        proficiencies = listOf(Proficiency(it)),
+                                        options = null,
+                                        description = ""
+                                    )
+                                )
+                            }
+                        }
                         else -> throw JSONException("Invalid index")
                     }
 

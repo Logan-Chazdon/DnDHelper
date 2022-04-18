@@ -194,6 +194,13 @@ data class Character(
             stats[it.ability.substring(0, 3)] = stats[it.ability.substring(0, 3)]?.plus(it.bonus) ?: 0
         }
 
+        //Ensure Feats Races and Ability Score Increases don't push stats above 20.
+        stats.forEach { (name, stat) ->
+            if(stat > 20) {
+                stats[name] = 20
+            }
+        }
+
         return stats
     }
 

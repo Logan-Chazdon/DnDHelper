@@ -12,12 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.dndhelper.repository.dataClasses.Feat
 import com.example.dndhelper.repository.dataClasses.Feature
 import com.example.dndhelper.repository.dataClasses.Infusion
 import com.example.dndhelper.repository.dataClasses.ItemInterface
 
 @Composable
 fun FeaturesAndTraitsView(
+    feats : List<Feat>?,
     features: List<Pair<Int, Feature>>,
     modifier: Modifier,
     items: List<ItemInterface>,
@@ -33,6 +35,36 @@ fun FeaturesAndTraitsView(
             modifier = Modifier.padding(8.dp),
             state = listState
         ) {
+            if(!feats.isNullOrEmpty()) {
+                items(items = feats) { feat ->
+                    var expanded by remember { mutableStateOf(false) }
+                    Text(text = feat.name, modifier = Modifier.clickable { expanded = true })
+                    feat.features?.forEach { feature ->
+                        feature.chosen?.forEach {
+                            Text(it.name)
+                            Divider(thickness = (0.5).dp, startIndent = 15.dp)
+                        }
+                    }
+                    Divider(thickness = (0.5).dp, startIndent = 10.dp)
+
+                    if(expanded) {
+                        Dialog(onDismissRequest = { expanded = false }) {
+                            Card {
+                                Text(
+                                    text = feat.desc,
+                                    modifier = Modifier.padding(4.dp),
+                                    style = MaterialTheme.typography.body2
+                                )
+                            }
+                        }
+                    }
+                }
+
+                item {
+                    Divider()
+                }
+            }
+
             items(items = features) { item: Pair<Int, Feature> ->
                 val maxActive = item.second.maxActive.num(item.first)
                 var expanded by remember { mutableStateOf(false) }

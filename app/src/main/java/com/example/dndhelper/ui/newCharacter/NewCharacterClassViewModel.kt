@@ -52,10 +52,11 @@ public class NewCharacterClassViewModel @Inject constructor(
         "Wisdom",
         "Charisma"
     )
-    var feats: LiveData<List<Feat>> = repository.getFeats()
+    val feats: LiveData<List<Feat>> = repository.getFeats()
     val featNames: MediatorLiveData<MutableList<String>> = MediatorLiveData()
     val isFeat = mutableStateListOf<Boolean>()
     val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
+    val featChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
     var classIndex = 0
 
@@ -146,7 +147,35 @@ public class NewCharacterClassViewModel @Inject constructor(
 
         for ((i, item) in isFeat.withIndex()) {
             if (item) {
-                newClass.featsGranted.addAll(featDropDownStates[i].getSelected(feats?.value!!) as List<Feat>)
+                newClass.featsGranted.addAll(
+                    (featDropDownStates[i].getSelected(feats.value!!) as List<Feat>)
+                        .run {
+                            this.forEach { feat ->
+                                feat.features?.forEach { feature ->
+                                    if(feature.choose.num(level) != 0) {
+                                        feature.chosen = feature.options?.let {
+                                            (
+                                                    featChoiceDropDownStates.getDropDownState(
+                                                        key = "${feature.name}$i",
+                                                        maxSelections = feature.choose.num(level),
+                                                        names = feature.options.let { featureList ->
+                                                            val result = mutableListOf<String>()
+                                                            featureList.forEach {
+                                                                result.add(it.name)
+                                                            }
+                                                            result
+                                                        },
+                                                        choiceName = feature.name,
+                                                        maxOfSameSelection = 1
+                                                    )
+                                                    ).getSelected(it)
+                                        } as List<Feature>
+                                    }
+                                }
+                            }
+                            this
+                    }
+                )
             } else {
                 newClass.abilityImprovementsGranted.add(
                     (absDropDownStates[i].getSelected(shortAbilityNames) as List<Pair<String, Int>>)

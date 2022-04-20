@@ -342,17 +342,16 @@ fun ConfirmClassView(
 
                             if (viewModel.isFeat[it]) {
                                 viewModel.featNames.observeAsState().value?.let { featNames ->
-                                    viewModel.featDropDownStates
-                                        .getDropDownState(
+                                    viewModel.feats.observeAsState().value?.let { feats ->
+                                        FeatView(
+                                            level = viewModel.toNumber(viewModel.levels),
                                             key = it,
-                                            maxSelections = 1,
-                                            names = featNames,
-                                            choiceName = "Feat"
+                                            featNames = featNames,
+                                            featDropDownStates = viewModel.featDropDownStates,
+                                            feats = feats,
+                                            featChoiceDropDownState = viewModel.featChoiceDropDownStates
                                         )
-                                }?.let { state ->
-                                    MultipleChoiceDropdownView(
-                                        state = state
-                                    )
+                                    }
                                 }
                             } else {
                                 MultipleChoiceDropdownView(

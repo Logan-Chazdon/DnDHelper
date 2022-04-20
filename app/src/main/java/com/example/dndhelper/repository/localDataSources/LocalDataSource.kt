@@ -484,81 +484,34 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val featJson = featsJson.getJSONObject(featIndex)
             val name = featJson.getString("name")
             val desc = featJson.getString("desc")
-            val prerequisite = featJson.getString("prerequisite")
-            var abilityBonusChoice: AbilityBonusChoice? = null
-            val abilityBonus = null
-            val features = extractFeatures(featJson.getJSONArray("features"))
-            val spellChoices = mutableListOf<SpellChoice>()
-            val spells = mutableListOf<Spell>()
-
-            //TODO Ability bonuses
-
-            //Ability bonus choice
-            try {
-                val abilityBonusChoiceJson = featJson.getJSONObject("ability_bonus_choice")
-                val from = mutableListOf<AbilityBonus>()
-                val fromJson = abilityBonusChoiceJson.getJSONArray("from")
-                for (fromIndex in 0 until fromJson.length()) {
-                    val abilityJson = fromJson.getJSONObject(fromIndex)
-                    from.add(
-                        AbilityBonus(
-                            ability = abilityJson.getString("name"),
-                            bonus = abilityJson.getInt("amount")
-                        )
-                    )
-                }
-                abilityBonusChoice = AbilityBonusChoice(
-                    choose = abilityBonusChoiceJson.getInt("choose"),
-                    from = from
+            val prerequisite = try {
+                extractPrerequisite(
+                    featJson.getJSONObject("prerequisite")
                 )
+            } catch (e: JSONException) {
+                null
+            }
+
+            val features = extractFeatures(featJson.getJSONArray("features"))
+
+
+            val abilityBonuses = mutableListOf<AbilityBonus>()
+            var abilityBonusChoice: AbilityBonusChoice? = null
+            try {
+                abilityBonusChoice =
+                    extractAbilityBonuses(featJson.getJSONArray("ability_bonuses"), abilityBonuses)
             } catch (e: JSONException) {
             }
 
-            //Spells
-            val spellsJson = featJson.getJSONArray("spells")
-            for (spellIndex in 0 until spellsJson.length()) {
-                val spellJson = spellsJson.getJSONObject(spellIndex)
-                val index = spellJson.getString("index")
-                getSpellsByIndex(index)?.let {
-                    spells.addAll(
-                        it
-                    )
-                }
-            }
-
-            //Spell Choices
-            val spellChoicesJson = featJson.getJSONArray("spell_choices")
-            for (spellChoiceIndex in 0 until spellChoicesJson.length()) {
-                val spellChoiceJson = spellChoicesJson.getJSONObject(spellChoiceIndex)
-                val choose = spellChoiceJson.getInt("choose")
-                val from = mutableListOf<Spell>()
-                try {
-                    val index = spellChoiceJson.getString("index")
-                    getSpellsByIndex(index)?.let {
-                        from.addAll(
-                            it
-                        )
-                    }
-                } catch (e: JSONException) {
-                }
-                spellChoices.add(
-                    SpellChoice(
-                        choose = choose,
-                        from = from
-                    )
-                )
-            }
 
             feats.add(
                 Feat(
                     name = name,
                     desc = desc,
                     prerequisite = prerequisite,
-                    abilityBonus = abilityBonus,
+                    abilityBonuses = abilityBonuses,
                     abilityBonusChoice = abilityBonusChoice,
-                    features = features,
-                    spellChoices = spellChoices,
-                    spells = spells
+                    features = features
                 )
             )
         }
@@ -1854,6 +1807,62 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                         proficiencies = listOf(Proficiency(it)),
                                         options = null,
                                         description = ""
+                                    )
+                                )
+                            }
+                        }
+                        "spells" -> {
+                            val levels = try {
+                                featureJson.getJSONArray("levels").let {
+                                    val result = mutableListOf<Int>()
+                                    for(i in 0 until it.length()) {
+                                        result.add(it.getInt(i))
+                                    }
+                                    result
+                                }
+                            } catch (e: JSONException) {
+                                null
+                            }
+
+                            val classes = try {
+                                featureJson.getJSONArray("classes").let {
+                                    val result = mutableListOf<String>()
+                                    for(i in 0 until it.length()) {
+                                        result.add(it.getString(i))
+                                    }
+                                    result
+                                }
+                            } catch (e: JSONException) {
+                                null
+                            }
+
+                            val passes = fun (spell: Spell) : Boolean {
+                                levels?.let {
+                                    if(!it.contains(spell.level)) {
+                                        return false
+                                    }
+                                }
+
+                                if(classes != null) {
+                                    classes.forEach {
+                                        if (spell.classes.contains(it)) {
+                                            return true
+                                        }
+                                    }
+                                    return false
+                                }
+                                return true
+                            }
+
+                            _spells.value!!.filter {
+                                passes(it)
+                            }.forEach { spell ->
+                                features.add(
+                                    Feature(
+                                        name = spell.name,
+                                        spells = listOf(spell),
+                                        description = "",
+                                        options = null,
                                     )
                                 )
                             }

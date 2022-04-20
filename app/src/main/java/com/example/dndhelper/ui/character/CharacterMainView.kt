@@ -115,7 +115,9 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
 
                                         Column {
                                             CharacterTextView(
-                                                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .fillMaxHeight(0.5f),
                                                 name = "Bonds",
                                                 value = viewModel.character?.observeAsState()?.value?.bonds
                                                     ?: "",
@@ -127,7 +129,9 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                             )
 
                                             CharacterTextView(
-                                                modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .fillMaxHeight(),
                                                 name = "Flaws",
                                                 value = viewModel.character?.observeAsState()?.value?.flaws
                                                     ?: "",
@@ -242,6 +246,7 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                         if(isVertical) RestButton(viewModel = viewModel)
 
                         FeaturesAndTraitsView(
+                            feats = viewModel.character?.observeAsState()?.value?.feats,
                             features = viewModel.characterFeatures.observeAsState(listOf()).value,
                             modifier = Modifier.fillMaxHeight(0.5f),
                             items = viewModel.character?.observeAsState()?.value?.backpack?.allItems ?: listOf(),

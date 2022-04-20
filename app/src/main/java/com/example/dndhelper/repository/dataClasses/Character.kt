@@ -179,12 +179,17 @@ data class Character(
 
         //Feats
         for(item in feats) {
-            if(item.abilityBonus != null) {
-                stats[item.abilityBonus.ability] = stats[item.abilityBonus.ability]?.plus(item.abilityBonus.bonus) ?: 0
+            if(item.abilityBonuses != null) {
+                item.abilityBonuses.forEach {
+                    stats[it.ability.substring(0, 3)] =
+                        stats[it.ability.substring(0, 3)]?.plus(it.bonus) ?: it.bonus
+                }
             }
+
             if(item.abilityBonusChoice != null) {
                 item.abilityBonusChoice.chosen?.forEach {
-                    stats[it.ability] = stats[it.ability]?.plus(it.bonus) ?: 0
+                    stats[it.ability.substring(0, 3)] =
+                        stats[it.ability.substring(0, 3)]?.plus(it.bonus)  ?: it.bonus
                 }
             }
         }

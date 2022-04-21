@@ -96,20 +96,16 @@
             "duration": "1 Round",
             "classes": [
                 {
-                    "name": "SORCERER",
-                    "index": "SORCERER"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "WARLOCK",
-                    "index": "WARLOCK"
+                    "name": "warlock"
                 },
                 {
-                    "name": "WIZARD",
-                    "index": "WIZARD"
+                    "name": "wizard"
                 },
                 {
-                    "name": "ARTIFICER",
-                    "index": "ARTIFICER"
+                    "name": "artificer"
                 }
             ],
             "damage": "1d8 Thunder"
@@ -135,16 +131,13 @@
             "duration": "Instantaneous",
             "classes": [
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "warlock",
-                    "index": "warlock"
+                    "name": "warlock"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "1d8 necrotic"
@@ -167,16 +160,13 @@
             "duration": "Instantaneous",
             "classes": [
                 {
-                    "name": "druid",
-                    "index": "druid"
+                    "name": "druid"
                 },
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "-"
@@ -206,20 +196,16 @@
                     "index": "artificer"
                 },
                 {
-                    "name": "druid",
-                    "index": "druid"
+                    "name": "druid"
                 },
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "warlock",
-                    "index": "warlock"
+                    "name": "warlock"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "1d8 fire"
@@ -257,20 +243,16 @@
             "duration": "Concentration 1 Minute",
             "classes": [
                 {
-                    "name": "artificer",
-                    "index": "artificer"
+                    "name": "artificer"
                 },
                 {
-                    "name": "bard",
-                    "index": "bard"
+                    "name": "bard"
                 },
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "-"
@@ -323,8 +305,7 @@
             "duration": "Instantaneous",
             "classes": [
                 {
-                    "name": "warlock",
-                    "index": "warlock"
+                    "name": "warlock"
                 }
             ],
             "damage": "1d10 force"
@@ -347,8 +328,7 @@
             "duration": "8 Hours",
             "classes": [
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "-"
@@ -374,16 +354,13 @@
             "duration": "Instantaneous",
             "classes": [
                 {
-                    "name": "artificer",
-                    "index": "artificer"
+                    "name": "artificer"
                 },
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "1d10 fire"
@@ -409,20 +386,16 @@
             "duration": "Concentration 1 Minute",
             "classes": [
                 {
-                    "name": "bard",
-                    "index": "bard"
+                    "name": "bard"
                 },
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "warlock",
-                    "index": "warlock"
+                    "name": "warlock"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "-"
@@ -448,24 +421,19 @@
             "duration": "Instantaneous",
             "classes": [
                 {
-                    "name": "artificer",
-                    "index": "artificer"
+                    "name": "artificer"
                 },
                 {
-                    "name": "druid",
-                    "index": "druid"
+                    "name": "druid"
                 },
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "warlock",
-                    "index": "warlock"
+                    "name": "warlock"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "1d6 cold"
@@ -494,20 +462,16 @@
             "duration": "Instantaneous",
             "classes": [
                 {
-                    "name": "artificer",
-                    "index": "artificer"
+                    "name": "artificer"
                 },
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "warlock",
-                    "index": "warlock"
+                    "name": "warlock"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "-"
@@ -533,16 +497,13 @@
             "duration": "Concentration 1 Minute",
             "classes": [
                 {
-                    "name": "artificer",
-                    "index": "artificer"
+                    "name": "artificer"
                 },
                 {
-                    "name": "druid",
-                    "index": "druid"
+                    "name": "druid"
                 },
                 {
-                    "name": "cleric",
-                    "index": "cleric"
+                    "name": "cleric"
                 }
             ],
             "damage": "-"
@@ -568,16 +529,13 @@
             "duration": "Instantaneous",
             "classes": [
                 {
-                    "name": "druid",
-                    "index": "druid"
+                    "name": "druid"
                 },
                 {
-                    "name": "sorcerer",
-                    "index": "sorcerer"
+                    "name": "sorcerer"
                 },
                 {
-                    "name": "wizard",
-                    "index": "wizard"
+                    "name": "wizard"
                 }
             ],
             "damage": "-"

@@ -1752,6 +1752,22 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 }
                             }
                         }
+                        "skills" -> {
+                            _abilitiesToSkills.value!!.values.forEach {
+                                it.forEach { item ->
+                                    if (!item.contains("Saving")) {
+                                        features.add(
+                                            Feature(
+                                                name = item,
+                                                proficiencies = listOf(Proficiency(name = item)),
+                                                options = null,
+                                                description = ""
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
                         "all_spells" -> {
                             val bound = try {
                                 featureJson.getInt("bound")

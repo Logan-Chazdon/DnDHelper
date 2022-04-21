@@ -1852,6 +1852,19 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 null
                             }
 
+
+                            val schools = try {
+                                featureJson.getJSONArray("schools").let {
+                                    val result = mutableListOf<String>()
+                                    for(i in 0 until it.length()) {
+                                        result.add(it.getString(i))
+                                    }
+                                    result
+                                }
+                            } catch (e: JSONException) {
+                                null
+                            }
+
                             val passes = fun (spell: Spell) : Boolean {
                                 levels?.let {
                                     if(!it.contains(spell.level)) {
@@ -1867,6 +1880,16 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                     }
                                     return false
                                 }
+
+                                if(schools != null) {
+                                    schools.forEach {
+                                        if (spell.school == it) {
+                                            return true
+                                        }
+                                    }
+                                    return false
+                                }
+
                                 return true
                             }
 

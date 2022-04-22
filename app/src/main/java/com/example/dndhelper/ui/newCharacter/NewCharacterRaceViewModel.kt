@@ -53,7 +53,14 @@ public class NewCharacterRaceViewModel @Inject constructor(
         filterRaceFeatures(newRace).forEach {
             if(it.choose.num(character?.totalClassLevels ?: 0) != 0 && it.options?.isNullOrEmpty() == false) {
                 it.chosen = raceFeaturesDropdownStates[it.name + it.grantedAtLevel]
-                    ?.getSelected(it.getAvailableOptions(character, proficiencies, character?.totalClassLevels ?: 0))
+                    ?.getSelected(it.getAvailableOptions(
+                        character,
+                        proficiencies,
+                        character?.totalClassLevels ?: 0,
+                        null,
+                        calculateAssumedSpells(),
+                        calculateAssumedStatBonuses()
+                    ))
                         as List<Feature>
             }
         }
@@ -76,7 +83,14 @@ public class NewCharacterRaceViewModel @Inject constructor(
                 this.traits.forEach {
                     if(it.choose.num(character?.totalClassLevels ?: 0) != 0 && it.options?.isNullOrEmpty() == false) {
                         it.chosen = subraceFeaturesDropdownStates[it.name + it.grantedAtLevel]
-                            ?.getSelected(it.getAvailableOptions(character, proficiencies, character?.totalClassLevels ?: 0))
+                            ?.getSelected(it.getAvailableOptions(
+                                character,
+                                proficiencies,
+                                character?.totalClassLevels ?: 0,
+                                null,
+                                calculateAssumedSpells(),
+                                calculateAssumedStatBonuses()
+                            ))
                                 as List<Feature>
                     }
                 }
@@ -86,16 +100,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
                         ?.getSelected(it.from) as List<Language>
                 }
 
-                subraceASIDropdownState.value?.getSelected(
-                    newRace.subraces[subraceIndex.value]
-                        ?.abilityBonusChoice?.from.let { from ->
-                    val names = mutableListOf<String>()
-                    from?.forEach { it ->
-                        names.add(it.ability)
-                    }
-                    names
-                })?.let { result ->
-                    result as List<Pair<String, Int>>
+                selectedSubraceASIs.let { result ->
                     val chosen = mutableListOf<AbilityBonus>()
                     result.forEach {
                         chosen.add(
@@ -117,6 +122,19 @@ public class NewCharacterRaceViewModel @Inject constructor(
         repository.insertCharacter(character)
     }
 
+    private val selectedSubraceASIs : List<Pair<String, Int>>
+        get() {
+            return subraceASIDropdownState.value?.getSelected(
+                races.value?.get(raceIndex)?.subraces?.get(subraceIndex.value)
+                    ?.abilityBonusChoice?.from.let { from ->
+                        val names = mutableListOf<String>()
+                        from?.forEach { it ->
+                            names.add(it.ability)
+                        }
+                        names
+                    }) as List<Pair<String, Int>>
+        }
+
     val proficiencies: List<Proficiency>
         get() {
             //TODO update me.
@@ -124,6 +142,42 @@ public class NewCharacterRaceViewModel @Inject constructor(
 
             return profs
         }
+
+    fun calculateAssumedSpells(): MutableList<Spell> {
+        val result = mutableListOf<Spell>()
+        character.value?.let { repository.getSpellsForCharacter(it) }?.let {
+            it.forEach { (_, spells) ->
+                spells.forEach { (_, spell) ->
+                    result.add(spell)
+                }
+            }
+        }
+        //TODO spells from feats
+        return result
+    }
+
+    fun calculateAssumedStatBonuses(): MutableMap<String, Int> {
+        val result = mutableMapOf<String, Int>()
+        val applyBonus = fun(name: String, amount: Int) {
+            result[name.substring(0, 3)] =
+                (result[name.substring(0, 3)] ?: 0) + amount
+        }
+
+        races.value?.get(raceIndex)?.abilityBonuses?.forEach {
+            applyBonus(it.ability, it.bonus)
+        }
+
+        races.value?.get(raceIndex)?.subraces?.get(subraceIndex.value)?.abilityBonuses?.forEach {
+            applyBonus(it.ability, it.bonus)
+        }
+
+        selectedSubraceASIs.forEach {
+            applyBonus(it.first, it.second)
+        }
+
+        //TODO stats from feats
+        return result
+    }
 
     fun filterRaceFeatures(
         race: Race,

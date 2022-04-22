@@ -36,6 +36,22 @@ fun ConfirmClassView(
     val classes = viewModel.classes.observeAsState()
     val mainLooper = Looper.getMainLooper()
 
+    val assumedStatBonuses = remember(
+        viewModel.absDropDownStates,
+        viewModel.isFeat,
+        viewModel.featChoiceDropDownStates
+    ) {
+        derivedStateOf {
+            viewModel.calculateAssumedStatBonuses()
+        }
+    }
+
+    val assumedSpells = remember(viewModel.subclassSpells, viewModel.classSpells) {
+        derivedStateOf {
+            viewModel.calculateAssumedSpells()
+        }
+    }
+
     LaunchedEffect(viewModel.character?.value?.id) {
         viewModel.applyAlreadySelectedChoices()
     }
@@ -383,7 +399,10 @@ fun ConfirmClassView(
                                 },
                                 character = viewModel.character?.observeAsState()?.value,
                                 proficiencies = viewModel.proficiencies,
-                                dropDownStates = viewModel.dropDownStates
+                                dropDownStates = viewModel.dropDownStates,
+                                assumedClass = viewModel.classes.observeAsState().value?.get(viewModel.classIndex),
+                                assumedSpells = assumedSpells.value,
+                                assumedStatBonuses =  assumedStatBonuses.value
                             )
                         }
                     }
@@ -437,7 +456,10 @@ fun ConfirmClassView(
                                         },
                                         character = viewModel.character?.observeAsState()?.value,
                                         proficiencies = viewModel.proficiencies,
-                                        dropDownStates = viewModel.dropDownStates
+                                        dropDownStates = viewModel.dropDownStates,
+                                        assumedClass = viewModel.classes.observeAsState().value?.get(viewModel.classIndex),
+                                        assumedSpells = assumedSpells.value,
+                                        assumedStatBonuses =  assumedStatBonuses.value
                                     )
                                 }
                             }

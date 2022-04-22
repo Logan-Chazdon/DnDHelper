@@ -114,6 +114,35 @@ public class NewCharacterClassViewModel @Inject constructor(
         isBaseClass.value = !(character?.value?.hasBaseClass ?: false)
     }
 
+    private fun getFeatsAt(i: Int, level: Int) : List<Feat> {
+        return (featDropDownStates[i].getSelected(feats.value!!) as List<Feat>).run {
+                this.forEach { feat ->
+                    feat.features?.forEach { feature ->
+                        if(feature.choose.num(level) != 0) {
+                            feature.chosen = feature.options?.let {
+                                (
+                                        featChoiceDropDownStates.getDropDownState(
+                                            key = "${feature.name}$i",
+                                            maxSelections = feature.choose.num(level),
+                                            names = feature.options.let { featureList ->
+                                                val result = mutableListOf<String>()
+                                                featureList.forEach {
+                                                    result.add(it.name)
+                                                }
+                                                result
+                                            },
+                                            choiceName = feature.name,
+                                            maxOfSameSelection = 1
+                                        )
+                                        ).getSelected(it)
+                            } as List<Feature>
+                        }
+                    }
+                }
+                this
+            }
+    }
+
 
     suspend fun addClassLevels(newClass: Class, level: Int) {
         if (id == -1)
@@ -137,9 +166,12 @@ public class NewCharacterClassViewModel @Inject constructor(
             if (it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
                 it.chosen = dropDownStates[it.name + it.grantedAtLevel]?.getSelected(
                     it.getAvailableOptions(
-                        character,
-                        proficiencies,
-                        level
+                        character = character,
+                        assumedProficiencies = proficiencies,
+                        level = level,
+                        assumedStatBonuses = calculateAssumedStatBonuses(),
+                        assumedSpells = calculateAssumedSpells(),
+                        assumedClass = classes.value?.get(classIndex)
                     )
                 ) as List<Feature>
             }
@@ -148,33 +180,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         for ((i, item) in isFeat.withIndex()) {
             if (item) {
                 newClass.featsGranted.addAll(
-                    (featDropDownStates[i].getSelected(feats.value!!) as List<Feat>)
-                        .run {
-                            this.forEach { feat ->
-                                feat.features?.forEach { feature ->
-                                    if(feature.choose.num(level) != 0) {
-                                        feature.chosen = feature.options?.let {
-                                            (
-                                                    featChoiceDropDownStates.getDropDownState(
-                                                        key = "${feature.name}$i",
-                                                        maxSelections = feature.choose.num(level),
-                                                        names = feature.options.let { featureList ->
-                                                            val result = mutableListOf<String>()
-                                                            featureList.forEach {
-                                                                result.add(it.name)
-                                                            }
-                                                            result
-                                                        },
-                                                        choiceName = feature.name,
-                                                        maxOfSameSelection = 1
-                                                    )
-                                                    ).getSelected(it)
-                                        } as List<Feature>
-                                    }
-                                }
-                            }
-                            this
-                    }
+                    getFeatsAt(i, level)
                 )
             } else {
                 newClass.abilityImprovementsGranted.add(
@@ -199,7 +205,16 @@ public class NewCharacterClassViewModel @Inject constructor(
             newClass.subclass?.features?.filter { it.grantedAtLevel <= level }?.forEach {
                 if (it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
                     it.chosen = dropDownStates[it.name + it.grantedAtLevel]
-                        ?.getSelected(it.getAvailableOptions(character, proficiencies, level))
+                        ?.getSelected(
+                            it.getAvailableOptions(
+                                character = character,
+                                assumedProficiencies = proficiencies,
+                                level = level,
+                                assumedStatBonuses = calculateAssumedStatBonuses(),
+                                assumedSpells = calculateAssumedSpells(),
+                                assumedClass = classes.value?.get(classIndex)
+                            )
+                        )
                             as List<Feature>
                 }
             }
@@ -386,6 +401,61 @@ public class NewCharacterClassViewModel @Inject constructor(
         newChar?.id = character?.value?.id!!
         repository.insertCharacter(newChar!!)
     }
+
+    fun calculateAssumedSpells() : List<Spell> {
+        val result = mutableListOf<Spell>()
+        character?.value?.let { repository.getSpellsForCharacter(it) }?.let {
+            it.forEach { (_, spells) ->
+                spells.forEach { (_, spell) ->
+                    result.add(spell)
+                }
+            }
+        }
+        isFeat.forEachIndexed { i, it ->
+            if(it) {
+                getFeatsAt(i, toNumber(levels)).forEach { feat ->
+                    feat.features?.forEach {
+                        result.addAll(it.getSpellsGiven())
+                    }
+                }
+            }
+        }
+        result.addAll(subclassSpells)
+        result.addAll(classSpells)
+        return result
+    }
+
+    fun calculateAssumedStatBonuses(): MutableMap<String, Int> {
+        val result = mutableMapOf<String, Int>()
+        val applyBonus = fun(name: String, amount: Int) {
+            result[name.substring(0, 3)] =
+                (result[name.substring(0, 3)] ?: 0) + amount
+        }
+
+        isFeat.forEachIndexed { i, it ->
+            if (it) {
+                getFeatsAt(i, toNumber(levels)).forEach { feat ->
+                    feat.abilityBonuses?.forEach {
+                        applyBonus(it.ability, it.bonus)
+                    }
+                    feat.abilityBonusChoice?.let { choice ->
+                        choice.chosen?.forEach {
+                            applyBonus(it.ability, it.bonus)
+                        }
+                    }
+                }
+            } else {
+                (absDropDownStates[i].getSelected(shortAbilityNames) as List<Pair<String, Int>>)
+                    .associateBy(
+                        { it.first }, { it.second }
+                    ).forEach { (name, bonus) ->
+                        applyBonus(name, bonus)
+                    }
+            }
+        }
+        return result
+    }
+
 
     fun applyAlreadySelectedChoices() {
         val className = classes.value?.get(classIndex)?.name

@@ -10,7 +10,6 @@ import com.example.dndhelper.repository.Repository.Companion.allSpellLevels
 import com.example.dndhelper.repository.dataClasses.Character
 import com.example.dndhelper.repository.dataClasses.Resource
 import com.example.dndhelper.repository.dataClasses.Spell
-import com.example.dndhelper.repository.dataClasses.SpellCasting
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

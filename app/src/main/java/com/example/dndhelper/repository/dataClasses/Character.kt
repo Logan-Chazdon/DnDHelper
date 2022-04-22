@@ -43,6 +43,24 @@ data class Character(
     val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
     val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
 ){
+    val hasSpells: Boolean
+    get() {
+        classes.forEach { (_, clazz) ->
+            clazz.pactMagic?.let {
+                return true
+            }
+            if(clazz.spellCasting?.type != 0.0) {
+                return true
+            }
+        }
+
+        if(!additionalSpells.isNullOrEmpty()) {
+            return true
+        }
+
+        return false
+    }
+
     val feats: List<Feat>
     get() {
         val result = mutableListOf<Feat>()
@@ -616,6 +634,9 @@ data class Character(
     get() {
         classes.values.forEach {
             if(it.spellCasting?.type ?: 0.0 != 0.0) {
+                return true
+            }
+            if(it.pactMagic != null) {
                 return true
             }
         }

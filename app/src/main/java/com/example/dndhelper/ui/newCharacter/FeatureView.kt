@@ -13,9 +13,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
-import com.example.dndhelper.repository.dataClasses.Character
-import com.example.dndhelper.repository.dataClasses.Feature
-import com.example.dndhelper.repository.dataClasses.Proficiency
+import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 
 @Composable
@@ -24,8 +22,11 @@ fun FeatureView(
     level : Int,
     proficiencies: List<Proficiency>,
     character: Character?,
-    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>
-) {
+    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>,
+    assumedClass: Class?,
+    assumedSpells: List<Spell>,
+    assumedStatBonuses: Map<String, Int>?
+    ) {
     val color = if (feature.choose.num(level) != 0) {
         MaterialTheme.colors.surface
     } else {
@@ -50,7 +51,10 @@ fun FeatureView(
                 val options = feature.getAvailableOptions(
                     character,
                     proficiencies,
-                    level
+                    level,
+                    assumedClass,
+                    assumedSpells,
+                    assumedStatBonuses
                 )
                 MultipleChoiceDropdownView(
                     state = dropDownStates.getDropDownState(

@@ -36,6 +36,21 @@ fun ConfirmRaceView(
     val scrollState = rememberScrollState(0)
     viewModel.id = characterId
     val mainLooper = Looper.getMainLooper()
+
+    val assumedStatBonuses = remember(
+        viewModel.subraceASIDropdownState
+    ) {
+        derivedStateOf {
+            viewModel.calculateAssumedStatBonuses()
+        }
+    }
+
+    val assumedSpells = remember {
+        derivedStateOf {
+            viewModel.calculateAssumedSpells()
+        }
+    }
+
     Column(
         Modifier
             .fillMaxSize()
@@ -124,7 +139,9 @@ fun ConfirmRaceView(
                     character = viewModel.character.observeAsState().value,
                     features = viewModel.filterRaceFeatures(race),
                     dropDownStates = viewModel.raceFeaturesDropdownStates,
-                    proficiencies = viewModel.proficiencies
+                    proficiencies = viewModel.proficiencies,
+                    assumedSpells = assumedSpells.value,
+                    assumedStatBonuses = assumedStatBonuses.value
                 )
 
                 if(!(race.proficiencyChoices.isNullOrEmpty() && race.startingProficiencies.isNullOrEmpty())) {
@@ -266,7 +283,9 @@ fun ConfirmRaceView(
                         character = viewModel.character.observeAsState().value,
                         features = subraces[viewModel.subraceIndex.value].traits,
                         dropDownStates = viewModel.subraceFeaturesDropdownStates,
-                        proficiencies = viewModel.proficiencies
+                        proficiencies = viewModel.proficiencies,
+                        assumedSpells = assumedSpells.value,
+                        assumedStatBonuses = assumedStatBonuses.value
                     )
                 }
             }
@@ -297,7 +316,9 @@ private fun RaceFeaturesView(
     character: Character?,
     features: List<Feature>,
     dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>,
-    proficiencies: List<Proficiency>
+    proficiencies: List<Proficiency>,
+    assumedSpells : List<Spell>,
+    assumedStatBonuses:MutableMap<String, Int>
 ) {
     features.forEach { feature ->
         FeatureView(
@@ -305,7 +326,10 @@ private fun RaceFeaturesView(
             level = character?.totalClassLevels ?: 0,
             proficiencies = proficiencies,
             character = character,
-            dropDownStates = dropDownStates
+            dropDownStates = dropDownStates,
+            null,
+            assumedSpells,
+            assumedStatBonuses
         )
     }
 }

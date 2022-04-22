@@ -255,10 +255,40 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             null
         }
 
+        val hasSpells = try {
+            jsonObject.getBoolean("has_spells")
+        } catch (e: JSONException) {
+            null
+        }
+
+        val isCaster = try {
+            jsonObject.getBoolean("is_caster")
+        } catch (e: JSONException) {
+            null
+        }
+
+        val stats = mutableMapOf<String, Int>()
+        val statNames= listOf(
+            "Strength",
+            "Dexterity",
+            "Constitution",
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+        )
+        for(name in statNames) {
+            try {
+                stats[name.substring(0, 3)] = jsonObject.getInt(name)
+            } catch(e: JSONException) { }
+        }
+
         return Prerequisite(
             level = level,
             feature = feature,
-            spell = spell
+            spell = spell,
+            hasSpells = hasSpells,
+            isCaster = isCaster,
+            stats = stats
         )
     }
 

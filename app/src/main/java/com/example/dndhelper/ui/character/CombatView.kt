@@ -7,6 +7,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,7 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -56,7 +59,10 @@ fun CombatView(viewModel: CombatViewModel) {
                             onClick = {
                                 hpPopUpExpanded = false
                                 scope.launch(Dispatchers.IO) {
-                                    viewModel.addTemp(temp)
+                                    try {
+                                        viewModel.addTemp(temp)
+                                    } catch (e: NumberFormatException) {
+                                    }
                                 }
                             }
                         }
@@ -65,16 +71,22 @@ fun CombatView(viewModel: CombatViewModel) {
                             onClick = {
                                 hpPopUpExpanded = false
                                 scope.launch(Dispatchers.IO) {
-                                    viewModel.heal(temp)
+                                    try {
+                                        viewModel.heal(temp)
+                                    } catch (e: NumberFormatException) {
+                                    }
                                 }
                             }
                         }
                         "damage" -> {
-                            title.value  ="Damage"
+                            title.value = "Damage"
                             onClick = {
                                 hpPopUpExpanded = false
                                 scope.launch(Dispatchers.IO) {
-                                    viewModel.damage(temp)
+                                    try {
+                                        viewModel.damage(temp)
+                                    } catch (e: NumberFormatException) {
+                                    }
                                 }
                             }
                         }
@@ -84,15 +96,26 @@ fun CombatView(viewModel: CombatViewModel) {
                         text = title.value,
                         style = MaterialTheme.typography.h6
                     )
-
+                    val focusManager = LocalFocusManager.current
                     TextField(
                         value = temp,
-                        keyboardOptions = KeyboardOptions().copy(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.NumberPassword,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                onClick.invoke()
+                                focusManager.clearFocus()
+                            }
+                        ),
                         onValueChange = { temp = it }
                     )
 
                     Button(
-                        onClick = onClick,
+                        onClick = {
+                            onClick.invoke()
+                        },
                         modifier = Modifier.align(Alignment.End)
                     ) {
                         when (hpPopUpMode) {
@@ -295,8 +318,8 @@ fun CombatView(viewModel: CombatViewModel) {
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                val allSpells =viewModel.getAllSpells()
-                if(allSpells.isNotEmpty()) {
+                val allSpells = viewModel.getAllSpells()
+                if (allSpells.isNotEmpty()) {
                     Box(
                         Modifier.width(width)
                     ) {
@@ -340,7 +363,11 @@ fun CombatView(viewModel: CombatViewModel) {
             if (castIsExpanded) {
                 Dialog(
                     onDismissRequest = { castIsExpanded = false },
-                    properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true, usePlatformDefaultWidth = false)
+                    properties = DialogProperties(
+                        dismissOnBackPress = true,
+                        dismissOnClickOutside = true,
+                        usePlatformDefaultWidth = false
+                    )
                 ) {
                     spell?.let {
                         Card(
@@ -354,8 +381,10 @@ fun CombatView(viewModel: CombatViewModel) {
 
 
                                 var level by remember { mutableStateOf(it.level) }
-                                val levelText = viewModel.getCastingOptions(it).findLast { it.first == level }?.second
-                                    ?: viewModel.getCastingOptions(it).findLast { it.first >= level }?.second
+                                val levelText = viewModel.getCastingOptions(it)
+                                    .findLast { it.first == level }?.second
+                                    ?: viewModel.getCastingOptions(it)
+                                        .findLast { it.first >= level }?.second
                                 if (spell?.level != 0 && levelText != null) {
                                     var expanded by remember { mutableStateOf(false) }
 

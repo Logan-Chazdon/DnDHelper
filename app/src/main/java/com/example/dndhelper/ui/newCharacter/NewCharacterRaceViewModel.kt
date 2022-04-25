@@ -163,11 +163,11 @@ public class NewCharacterRaceViewModel @Inject constructor(
                 (result[name.substring(0, 3)] ?: 0) + amount
         }
 
-        races.value?.get(raceIndex)?.abilityBonuses?.forEach {
+        races.value?.getOrNull(raceIndex)?.abilityBonuses?.forEach {
             applyBonus(it.ability, it.bonus)
         }
 
-        races.value?.get(raceIndex)?.subraces?.get(subraceIndex.value)?.abilityBonuses?.forEach {
+        races.value?.get(raceIndex)?.subraces?.getOrNull(subraceIndex.value)?.abilityBonuses?.forEach {
             applyBonus(it.ability, it.bonus)
         }
 

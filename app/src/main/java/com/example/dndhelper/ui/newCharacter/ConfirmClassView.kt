@@ -111,11 +111,17 @@ fun ConfirmClassView(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(text = "Level: ", fontSize = 24.sp)
+                val focusManager = LocalFocusManager.current
 
                 TextField(
                     value = viewModel.levels.value,
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions (
+                        onDone = {
+                            focusManager.clearFocus()
+                        }
+                   ),
                     onValueChange = {
                         try {
                             if (it.text.toInt() in 1..20)

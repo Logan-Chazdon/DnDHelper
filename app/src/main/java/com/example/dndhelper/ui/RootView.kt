@@ -12,14 +12,18 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.dndhelper.R
+import com.example.dndhelper.ui.character.AllCharactersViewModel
 import com.example.dndhelper.ui.navigation.NavItem
 import com.example.dndhelper.ui.navigation.Navigation
 import com.example.dndhelper.ui.navigation.bottomNavBar.BottomNavigationBar
@@ -29,10 +33,17 @@ import com.example.dndhelper.ui.navigation.sideDrawer.SideNavDrawer
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
-fun RootView() {
+fun RootView(allCharactersViewModel: AllCharactersViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(allCharactersViewModel.getAllCharacters()?.observeAsState()?.value?.size) {
+        if(allCharactersViewModel.getAllCharacters()?.value?.size == 0) {
+            scaffoldState.drawerState.open()
+        }
+    }
+
     Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {

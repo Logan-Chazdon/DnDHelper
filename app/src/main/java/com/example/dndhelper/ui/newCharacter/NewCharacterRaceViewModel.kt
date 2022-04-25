@@ -132,7 +132,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
                             names.add(it.ability)
                         }
                         names
-                    }) as List<Pair<String, Int>>
+                    }) as List<Pair<String, Int>>? ?: listOf()
         }
 
     val proficiencies: List<Proficiency>

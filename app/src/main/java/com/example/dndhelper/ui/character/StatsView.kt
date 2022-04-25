@@ -1,5 +1,6 @@
 package com.example.dndhelper.ui.character
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,10 +18,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.example.dndhelper.ui.utils.Dimensions
-import com.example.dndhelper.ui.utils.MediaQuery
-import com.example.dndhelper.ui.utils.greaterThan
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -40,94 +39,98 @@ fun StatsView(viewModel: StatsViewModel) {
             listOf("Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma")
         val statNamesAbr = listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")
 
-
-        var gridCells = 3
-        MediaQuery(Dimensions.Width greaterThan 600.dp) {
-            gridCells = 6
-        }
         val proficiencyBoxesExpanded =
             remember { mutableStateListOf<Boolean>(true, false, false, false, false, false) }
-
-
-        LazyVerticalGrid(
-            cells = GridCells.Fixed(gridCells)
-        ) {
-            items(6) { item ->
-                val stat = stats?.get(statNamesAbr[item]) ?: 10
-                val mod = (stat - 10) / 2
-                StatBoxView(stat = statNames[item], value = stat, mod = mod, onClick = {
-                    proficiencyBoxesExpanded.replaceAll { false }
-                    proficiencyBoxesExpanded[item] = true
-                })
-            }
-        }
-
-
-
-        Row(
-            modifier = Modifier
-                .height(85.dp)
-                .fillMaxWidth(0.9f),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            //Inspiration
-            Card(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(
-                        MaterialTheme.colors.surface
-                    )
-                    .clickable {
-                        GlobalScope.launch {
-                            viewModel.toggleInspiration()
-                        }
-                    },
-                elevation = 10.dp,
-                shape = RoundedCornerShape(10.dp),
+        val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+        VariableOrientationView(isVertical = isVertical) {
+            LazyVerticalGrid(
+                cells = GridCells.Fixed(3),
+                modifier = if(isVertical) {
+                     Modifier
+                } else {
+                    Modifier.fillMaxWidth(0.5f)
+                }
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("Inspiration", Modifier.padding(5.dp))
-                    Checkbox(
-                        checked = viewModel.character?.observeAsState()?.value?.inspiration
-                            ?: false,
-                        onCheckedChange = null,
-                        Modifier.size(30.dp)
-                    )
+                items(6) { item ->
+                    val stat = stats?.get(statNamesAbr[item]) ?: 10
+                    val mod = (stat - 10) / 2
+                    StatBoxView(stat = statNames[item], value = stat, mod = mod, onClick = {
+                        proficiencyBoxesExpanded.replaceAll { false }
+                        proficiencyBoxesExpanded[item] = true
+                    })
                 }
             }
 
-            Spacer(Modifier.width(20.dp))
-
-            //Passives
             Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                viewModel.character?.observeAsState()?.value?.passives?.forEach {
-                    PassiveStatView(passive = it.key, value = it.value)
+                Row(
+                    modifier = Modifier
+                        .height(85.dp)
+                        .fillMaxWidth(0.9f),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    //Inspiration
+                    Card(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .background(
+                                MaterialTheme.colors.surface
+                            )
+                            .clickable {
+                                GlobalScope.launch {
+                                    viewModel.toggleInspiration()
+                                }
+                            },
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(10.dp),
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("Inspiration", Modifier.padding(5.dp))
+                            Checkbox(
+                                checked = viewModel.character?.observeAsState()?.value?.inspiration
+                                    ?: false,
+                                onCheckedChange = null,
+                                Modifier.size(30.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.width(20.dp))
+
+                    //Passives
+                    Column(
+                        modifier = Modifier.fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        viewModel.character?.observeAsState()?.value?.passives?.forEach {
+                            PassiveStatView(passive = it.key, value = it.value)
+                        }
+                    }
+
+                }
+
+                viewModel.skills?.value?.let {
+                    for (item in 0..5) {
+                        if (proficiencyBoxesExpanded[item]) {
+                            ProficienciesBoxView(
+                                baseStat = statNames[item],
+                                baseStatNum = viewModel.character?.observeAsState()
+                                    ?.value?.getStatMod(statNamesAbr[item]) ?: 0,
+                                profBonus = viewModel.character?.observeAsState()?.value?.proficiencyBonus
+                                    ?: 2,
+                                stats = viewModel.checkForProficienciesOrExpertise
+                                    (it[statNames[item]]!!) ?: mutableMapOf(),
+                                modifier = Modifier.fillMaxSize(0.9f)
+                            )
+                        }
+                    }
                 }
             }
-
         }
 
-
-        viewModel.skills?.value?.let {
-            for (item in 0..5) {
-                if (proficiencyBoxesExpanded[item]) {
-                    ProficienciesBoxView(
-                        baseStat = statNames[item],
-                        baseStatNum = viewModel.character?.observeAsState()
-                            ?.value?.getStatMod(statNamesAbr[item]) ?: 0,
-                        profBonus = viewModel.character?.observeAsState()?.value?.proficiencyBonus ?: 2,
-                        stats = viewModel.checkForProficienciesOrExpertise
-                            (it[statNames[item]]!!) ?: mutableMapOf(),
-                    modifier = Modifier.fillMaxSize(0.9f)
-                    )
-                }
-            }
-        }
     }
 }
 

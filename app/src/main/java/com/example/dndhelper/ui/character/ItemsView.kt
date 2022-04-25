@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -24,7 +25,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -110,7 +113,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                                         item.name?.let { string ->
                                             Text(
                                                 text = string,
-                                                modifier = if(item.type == "Item") {
+                                                modifier = if (item.type == "Item") {
                                                     Modifier
                                                 } else {
                                                     Modifier.width(screenWidth / 4)
@@ -175,16 +178,30 @@ fun ItemsView(viewModel: ItemViewModel) {
                     IconButton(onClick = { isHidden = !isHidden }) {
                         Icon(
                             Icons.Default.ArrowDropDown,
-                            if(isHidden) {"Show currencies"} else {"Hide currencies"},
-                            Modifier.rotate(if(isHidden) {-90f } else {90f})
+                            if (isHidden) {
+                                "Show currencies"
+                            } else {
+                                "Hide currencies"
+                            },
+                            Modifier.rotate(
+                                if (isHidden) {
+                                    -90f
+                                } else {
+                                    90f
+                                }
+                            )
                         )
                     }
                 }
                 Spacer(Modifier.height(8.dp))
                 Column(
-                    Modifier.absoluteOffset(x = if(isHidden) {
-                        (-50).dp
-                    } else {0.dp})
+                    Modifier.absoluteOffset(
+                        x = if (isHidden) {
+                            (-50).dp
+                        } else {
+                            0.dp
+                        }
+                    )
                 ) {
                     val character = viewModel.character?.observeAsState()
                     val currencies = character?.value?.backpack?.allCurrency
@@ -197,7 +214,12 @@ fun ItemsView(viewModel: ItemViewModel) {
                                 .width(90.dp),
                             elevation = 5.dp
                         ) {
-                            val text = remember { mutableStateOf(it.amount.toString()) }
+                            var text by remember { mutableStateOf("") }
+                            val focusManager = LocalFocusManager.current
+
+                            LaunchedEffect(currencies[it.abbreviatedName]) {
+                                text = currencies[it.abbreviatedName]?.amount.toString()
+                            }
 
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -205,22 +227,26 @@ fun ItemsView(viewModel: ItemViewModel) {
                             ) {
                                 Text("${it.abbreviatedName}: ", Modifier.padding(start = 4.dp))
                                 BasicTextField(
-                                    value = it.amount.toString(),
-                                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                                    value = text,
+                                    keyboardOptions = KeyboardOptions.Default.copy(
+                                        keyboardType = KeyboardType.Number,
+                                        imeAction = ImeAction.Done
+                                    ),
+                                    keyboardActions = KeyboardActions(
+                                        onDone = {
+                                            focusManager.clearFocus()
+                                            text = currencies[it.abbreviatedName]?.amount.toString()
+                                        }),
                                     singleLine = true,
                                     textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
                                     onValueChange = { string ->
-                                        text.value = string
+                                        text = string
                                         if (string.isNotEmpty())
                                             GlobalScope.launch {
                                                 viewModel.addCurrency(
                                                     it.abbreviatedName,
                                                     string.toInt()
                                                 )
-                                            }
-                                        else
-                                            GlobalScope.launch {
-                                                viewModel.addCurrency(it.abbreviatedName, 0)
                                             }
                                     }
                                 )
@@ -264,7 +290,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                                 TextField(
                                     value = search,
                                     label = {
-                                            Text("Search")
+                                        Text("Search")
                                     },
                                     onValueChange = {
                                         search = it
@@ -284,9 +310,9 @@ fun ItemsView(viewModel: ItemViewModel) {
                             LazyColumn(
                                 modifier = Modifier
                                     .fillMaxHeight(0.55f),
-                                state= rememberLazyListState(),
+                                state = rememberLazyListState(),
                             ) {
-                                itemsIndexed(allItems?.value ?: listOf()) {  i, item ->
+                                itemsIndexed(allItems?.value ?: listOf()) { i, item ->
                                     //TODO upgrade search
                                     if (
                                         search == "" ||
@@ -351,7 +377,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                             var maxAcFromDex by remember { mutableStateOf("") }
                             var customItemName by remember { mutableStateOf("") }
                             var stealth by remember { mutableStateOf(false) }
-                            var proficiency by remember {mutableStateOf("") }
+                            var proficiency by remember { mutableStateOf("") }
 
                             TextField(
                                 value = customItemName,
@@ -371,7 +397,8 @@ fun ItemsView(viewModel: ItemViewModel) {
                                         modifier = Modifier.fillMaxWidth(),
                                         horizontalArrangement = Arrangement.SpaceEvenly
                                     ) {
-                                        val textFieldSize = LocalConfiguration.current.screenWidthDp.dp * 0.45f
+                                        val textFieldSize =
+                                            LocalConfiguration.current.screenWidthDp.dp * 0.45f
                                         OutlinedTextField(
                                             value = baseAc,
                                             onValueChange = {
@@ -404,228 +431,251 @@ fun ItemsView(viewModel: ItemViewModel) {
                                             },
                                         )
                                     }
-                            }
-                            2 -> {
-                                //Weapon
-                                val textFieldSize = LocalConfiguration.current.screenWidthDp.dp * 0.45f
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly
-                                ) {
-                                    OutlinedTextField(
-                                        value = customWeaponDamage,
-                                        onValueChange = {
-                                            customWeaponDamage = it
-                                        },
-                                        label = {
-                                            Text("Damage")
-                                        },
-                                        modifier = Modifier.width(textFieldSize)
-                                    )
-                                    OutlinedTextField(
-                                        value = customWeaponDamageType,
-                                        onValueChange = {
-                                            customWeaponDamageType = it
-                                        },
-                                        label = {
-                                            Text("Damage type")
-                                        },
-                                        modifier = Modifier.width(textFieldSize)
-                                    )
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
-                                    verticalAlignment = Alignment.Bottom
-                                ) {
-                                    OutlinedTextField(
-                                        value = customWeaponRange,
-                                        onValueChange = {
-                                            customWeaponRange = it
-                                        },
-                                        label = {
-                                            Text("Range")
-                                        },
-                                        modifier = Modifier.width(textFieldSize)
-                                    )
-                                    var dropdownExpanded by remember {mutableStateOf(false)}
-                                    var selectedProficiency by remember {mutableStateOf(0)}
-                                    val proficiencyTypes = listOf(
-                                        "Martial" to "Martial weapons",
-                                        "Simple" to "Simple weapons",
-                                        "Firearm" to "Firearms"
-                                    )
-                                    Card(
-                                        elevation = 0.dp,
-                                        border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)),
-                                        shape = MaterialTheme.shapes.small,
-                                        modifier = Modifier.width(textFieldSize)
-                                    ) {
-                                        Text(
-                                            text = proficiencyTypes[selectedProficiency].first,
-                                            modifier = Modifier
-                                                .clickable {
-                                                    dropdownExpanded = true
-                                                }
-                                                .padding(
-                                                    start = 16.dp,
-                                                    bottom = 16.dp,
-                                                    end = 16.dp,
-                                                    top = 19.dp
-                                                )
-                                        )
-                                    }
-                                    DropdownMenu(expanded = dropdownExpanded, onDismissRequest = { dropdownExpanded = false }) {
-                                        proficiencyTypes.forEachIndexed { i, it ->
-                                            DropdownMenuItem(onClick = {
-                                                selectedProficiency = i
-                                                proficiency = proficiencyTypes[selectedProficiency].second
-                                                dropdownExpanded = false
-                                            }) {
-                                                Text(it.first)
-                                            }
-                                        }
-                                    }
-                                    //TODO find a way to to properties
-                                }
-                            }
-                        }
-
-                        val enabled = (selected != -1 || (
-                            if (customItemName.isBlank()) {
-                                 false
-                            } else {
-                            when (customItemType) {
-                                0 -> {
-                                     true
-                                }
-                                1 -> {
-                                    !(baseAc.isBlank() || maxAcFromDex.isBlank())
                                 }
                                 2 -> {
-                                    !(customWeaponDamage.isBlank() || customWeaponRange.isBlank() || customWeaponDamageType.isBlank())
-                                }
-                                else -> {
-                                     false
-                                }
-                            } }))
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Bottom
-                        ) {
-                            Row(
-                                horizontalArrangement = Arrangement.End,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Button(
-                                    enabled = enabled,
-                                    onClick = {
-                                        scope.launch(Dispatchers.IO) {
-                                            if(selected == -1) {
-                                                val item : ItemInterface? = when(customItemType) {
-                                                    0 -> {
-                                                        Item(name = customItemName)
+                                    //Weapon
+                                    val textFieldSize =
+                                        LocalConfiguration.current.screenWidthDp.dp * 0.45f
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly
+                                    ) {
+                                        OutlinedTextField(
+                                            value = customWeaponDamage,
+                                            onValueChange = {
+                                                customWeaponDamage = it
+                                            },
+                                            label = {
+                                                Text("Damage")
+                                            },
+                                            modifier = Modifier.width(textFieldSize)
+                                        )
+                                        OutlinedTextField(
+                                            value = customWeaponDamageType,
+                                            onValueChange = {
+                                                customWeaponDamageType = it
+                                            },
+                                            label = {
+                                                Text("Damage type")
+                                            },
+                                            modifier = Modifier.width(textFieldSize)
+                                        )
+                                    }
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly,
+                                        verticalAlignment = Alignment.Bottom
+                                    ) {
+                                        OutlinedTextField(
+                                            value = customWeaponRange,
+                                            onValueChange = {
+                                                customWeaponRange = it
+                                            },
+                                            label = {
+                                                Text("Range")
+                                            },
+                                            modifier = Modifier.width(textFieldSize)
+                                        )
+                                        var dropdownExpanded by remember { mutableStateOf(false) }
+                                        var selectedProficiency by remember { mutableStateOf(0) }
+                                        val proficiencyTypes = listOf(
+                                            "Martial" to "Martial weapons",
+                                            "Simple" to "Simple weapons",
+                                            "Firearm" to "Firearms"
+                                        )
+                                        Card(
+                                            elevation = 0.dp,
+                                            border = BorderStroke(
+                                                1.dp,
+                                                MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+                                            ),
+                                            shape = MaterialTheme.shapes.small,
+                                            modifier = Modifier.width(textFieldSize)
+                                        ) {
+                                            Text(
+                                                text = proficiencyTypes[selectedProficiency].first,
+                                                modifier = Modifier
+                                                    .clickable {
+                                                        dropdownExpanded = true
                                                     }
-                                                    1 -> {
-                                                        Armor(
-                                                            name = customItemName,
-                                                            baseAc = baseAc.toInt(),
-                                                            dexCap = maxAcFromDex.toInt(),
-                                                            stealth = if(stealth) { "-" } else { "Disadvantage" }
-                                                        )
-                                                    }
-                                                    2 -> {
-                                                        Weapon(
-                                                            name = customItemName,
-                                                            damage = customWeaponDamage,
-                                                            range = customWeaponRange,
-                                                            damageType = customWeaponDamageType,
-                                                            proficiency = proficiency
-                                                            //TODO properties
-                                                        )
-                                                    }
-                                                    else -> {
-                                                        null
-                                                    }
+                                                    .padding(
+                                                        start = 16.dp,
+                                                        bottom = 16.dp,
+                                                        end = 16.dp,
+                                                        top = 19.dp
+                                                    )
+                                            )
+                                        }
+                                        DropdownMenu(
+                                            expanded = dropdownExpanded,
+                                            onDismissRequest = { dropdownExpanded = false }) {
+                                            proficiencyTypes.forEachIndexed { i, it ->
+                                                DropdownMenuItem(onClick = {
+                                                    selectedProficiency = i
+                                                    proficiency =
+                                                        proficiencyTypes[selectedProficiency].second
+                                                    dropdownExpanded = false
+                                                }) {
+                                                    Text(it.first)
                                                 }
-                                                item?.let{ it : ItemInterface -> viewModel.addItem(it) }
-
-                                            } else {
-                                                viewModel.addItem(allItems!!.value!!.get(selected))
-                                                selected = -1
                                             }
-                                            expanded = false
                                         }
+                                        //TODO find a way to to properties
                                     }
-                                ) {
-                                    Text("Add Item")
-                                }
-
-                                Spacer(Modifier.width(10.dp))
-
-                                Button(
-                                    enabled = if (enabled) {
-                                        if(allItems?.value?.getOrNull(selected)?.hasCost() == true) {
-                                            (allItems.value!![selected].cost!!.getValueInCopper()
-                                                    <= viewModel.character!!.observeAsState().value!!.backpack.allCurrency.getValueInCopper())
-                                        } else {
-                                            false
-                                        }
-                                    } else {
-                                        false
-                                    },
-                                    onClick = {
-                                        scope.launch(Dispatchers.IO) {
-                                            viewModel.buyItem(allItems!!.value!!.get(selected))
-                                            selected = -1
-                                            expanded = false
-                                        }
-                                    }
-                                ) {
-                                    Text("Buy Item")
                                 }
                             }
-                        }
 
+                            val enabled = (selected != -1 || (
+                                    if (customItemName.isBlank()) {
+                                        false
+                                    } else {
+                                        when (customItemType) {
+                                            0 -> {
+                                                true
+                                            }
+                                            1 -> {
+                                                !(baseAc.isBlank() || maxAcFromDex.isBlank())
+                                            }
+                                            2 -> {
+                                                !(customWeaponDamage.isBlank() || customWeaponRange.isBlank() || customWeaponDamageType.isBlank())
+                                            }
+                                            else -> {
+                                                false
+                                            }
+                                        }
+                                    }))
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Bottom
+                            ) {
+                                Row(
+                                    horizontalArrangement = Arrangement.End,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Button(
+                                        enabled = enabled,
+                                        onClick = {
+                                            scope.launch(Dispatchers.IO) {
+                                                if (selected == -1) {
+                                                    val item: ItemInterface? =
+                                                        when (customItemType) {
+                                                            0 -> {
+                                                                Item(name = customItemName)
+                                                            }
+                                                            1 -> {
+                                                                Armor(
+                                                                    name = customItemName,
+                                                                    baseAc = baseAc.toInt(),
+                                                                    dexCap = maxAcFromDex.toInt(),
+                                                                    stealth = if (stealth) {
+                                                                        "-"
+                                                                    } else {
+                                                                        "Disadvantage"
+                                                                    }
+                                                                )
+                                                            }
+                                                            2 -> {
+                                                                Weapon(
+                                                                    name = customItemName,
+                                                                    damage = customWeaponDamage,
+                                                                    range = customWeaponRange,
+                                                                    damageType = customWeaponDamageType,
+                                                                    proficiency = proficiency
+                                                                    //TODO properties
+                                                                )
+                                                            }
+                                                            else -> {
+                                                                null
+                                                            }
+                                                        }
+                                                    item?.let { it: ItemInterface ->
+                                                        viewModel.addItem(
+                                                            it
+                                                        )
+                                                    }
+
+                                                } else {
+                                                    viewModel.addItem(
+                                                        allItems!!.value!!.get(
+                                                            selected
+                                                        )
+                                                    )
+                                                    selected = -1
+                                                }
+                                                expanded = false
+                                            }
+                                        }
+                                    ) {
+                                        Text("Add Item")
+                                    }
+
+                                    Spacer(Modifier.width(10.dp))
+
+                                    Button(
+                                        enabled = if (enabled) {
+                                            if (allItems?.value?.getOrNull(selected)
+                                                    ?.hasCost() == true
+                                            ) {
+                                                (allItems.value!![selected].cost!!.getValueInCopper()
+                                                        <= viewModel.character!!.observeAsState().value!!.backpack.allCurrency.getValueInCopper())
+                                            } else {
+                                                false
+                                            }
+                                        } else {
+                                            false
+                                        },
+                                        onClick = {
+                                            scope.launch(Dispatchers.IO) {
+                                                viewModel.buyItem(allItems!!.value!!.get(selected))
+                                                selected = -1
+                                                expanded = false
+                                            }
+                                        }
+                                    ) {
+                                        Text("Buy Item")
+                                    }
+                                }
+                            }
+
+                        }
                     }
                 }
             }
         }
-    }
 
-    if (confirmDeleteExpanded) {
-        AlertDialog(
-            onDismissRequest = { confirmDeleteExpanded = false },
-            title = {
-                Text(text = "Delete Item?")
-            },
-            text = {
-                Text(
-                    "Would you like to delete " +
-                            "${viewModel.character?.value?.backpack?.allItems!![itemToDeleteIndex].name}"
-                )
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        GlobalScope.launch {
-                            viewModel.deleteItemAt(itemToDeleteIndex)
-                        }
-                        confirmDeleteExpanded = false
-                    }) {
-                    Text("Delete Item")
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = {
-                        confirmDeleteExpanded = false
-                    }) {
-                    Text("Cancel")
-                }
-            })
+        if (confirmDeleteExpanded) {
+            AlertDialog(
+                onDismissRequest = { confirmDeleteExpanded = false },
+                title = {
+                    Text(text = "Delete Item?")
+                },
+                text = {
+                    Text(
+                        "Would you like to delete " +
+                                "${viewModel.character?.value?.backpack?.allItems!![itemToDeleteIndex].name}"
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            GlobalScope.launch {
+                                viewModel.deleteItemAt(itemToDeleteIndex)
+                            }
+                            confirmDeleteExpanded = false
+                        }) {
+                        Text("Delete Item")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            confirmDeleteExpanded = false
+                        }) {
+                        Text("Cancel")
+                    }
+                })
+        }
     }
-}
 }
 
 
@@ -636,8 +686,8 @@ fun EquipButton(viewModel: ItemViewModel, item: ItemInterface) {
         elevation = 0.dp,
         modifier = Modifier.clickable {
             GlobalScope.launch {
-                when(item) {
-                    is Shield  -> {
+                when (item) {
+                    is Shield -> {
                         viewModel.equip(item)
                     }
                     is Armor -> {

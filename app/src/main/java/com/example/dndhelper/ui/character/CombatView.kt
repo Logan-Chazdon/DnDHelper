@@ -271,7 +271,7 @@ fun CombatView(viewModel: CombatViewModel) {
 
 
             Row(
-                modifier = Modifier.fillMaxWidth(0.9f),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
 

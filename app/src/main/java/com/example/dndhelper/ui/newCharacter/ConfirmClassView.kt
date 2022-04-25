@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
@@ -16,6 +17,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -85,7 +88,12 @@ fun ConfirmClassView(
                     ),
                     onClick = {
                         GlobalScope.launch {
-                            clazz.let { viewModel.addClassLevels(it, viewModel.levels.value.text.toInt()) }
+                            clazz.let {
+                                viewModel.addClassLevels(
+                                    it,
+                                    viewModel.levels.value.text.toInt()
+                                )
+                            }
                             //Navigate to the next step
                             Handler(mainLooper).post {
                                 navController.navigate("newCharacterView/RaceView/${viewModel.id}")
@@ -175,7 +183,10 @@ fun ConfirmClassView(
                         spells = viewModel.classSpells,
                         pactMagic = pactMagic,
                         level = viewModel.toNumber(viewModel.levels),
-                        learnableSpells = viewModel.getLearnableSpells(viewModel.toNumber(viewModel.levels),  subclass),
+                        learnableSpells = viewModel.getLearnableSpells(
+                            viewModel.toNumber(viewModel.levels),
+                            subclass
+                        ),
                         toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
                 }
@@ -186,7 +197,10 @@ fun ConfirmClassView(
                         spells = viewModel.classSpells,
                         spellCasting = spellCasting,
                         level = viewModel.toNumber(viewModel.levels),
-                        learnableSpells = viewModel.getLearnableSpells(viewModel.toNumber(viewModel.levels),  subclass),
+                        learnableSpells = viewModel.getLearnableSpells(
+                            viewModel.toNumber(viewModel.levels),
+                            subclass
+                        ),
                         toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
                 }
@@ -290,16 +304,30 @@ fun ConfirmClassView(
                                     style = MaterialTheme.typography.subtitle1
                                 )
                                 Row {
-                                    //TODO validate
+                                    val focusManager = LocalFocusManager.current
                                     BasicTextField(
                                         modifier = Modifier.width(IntrinsicSize.Min),
                                         value = viewModel.goldRolled.value,
                                         onValueChange = {
                                             viewModel.goldRolled.value = it
                                         },
-                                        textStyle = MaterialTheme.typography.h6,
-                                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                                        singleLine = true
+                                        textStyle = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
+                                        singleLine = true,
+                                        keyboardOptions = KeyboardOptions(
+                                            imeAction = ImeAction.Done,
+                                            keyboardType = KeyboardType.NumberPassword
+                                        ),
+                                        keyboardActions = KeyboardActions(
+                                            onDone = {
+                                                if (viewModel.goldRolled.value.toInt() < viewModel.minGoldRolled) {
+                                                    viewModel.goldRolled.value = viewModel.minGoldRolled.toString()
+                                                } else if (viewModel.goldRolled.value.toInt() > viewModel.maxGoldRolled) {
+                                                    viewModel.goldRolled.value =
+                                                        viewModel.maxGoldRolled.toString()
+                                                }
+                                                focusManager.clearFocus()
+                                            }
+                                        )
                                     )
                                     Text(
                                         text = " * ${clazz.startingGoldMultiplier}",
@@ -400,9 +428,11 @@ fun ConfirmClassView(
                                 character = viewModel.character?.observeAsState()?.value,
                                 proficiencies = viewModel.proficiencies,
                                 dropDownStates = viewModel.dropDownStates,
-                                assumedClass = viewModel.classes.observeAsState().value?.get(viewModel.classIndex),
+                                assumedClass = viewModel.classes.observeAsState().value?.get(
+                                    viewModel.classIndex
+                                ),
                                 assumedSpells = assumedSpells.value,
-                                assumedStatBonuses =  assumedStatBonuses.value
+                                assumedStatBonuses = assumedStatBonuses.value
                             )
                         }
                     }
@@ -457,9 +487,11 @@ fun ConfirmClassView(
                                         character = viewModel.character?.observeAsState()?.value,
                                         proficiencies = viewModel.proficiencies,
                                         dropDownStates = viewModel.dropDownStates,
-                                        assumedClass = viewModel.classes.observeAsState().value?.get(viewModel.classIndex),
+                                        assumedClass = viewModel.classes.observeAsState().value?.get(
+                                            viewModel.classIndex
+                                        ),
                                         assumedSpells = assumedSpells.value,
-                                        assumedStatBonuses =  assumedStatBonuses.value
+                                        assumedStatBonuses = assumedStatBonuses.value
                                     )
                                 }
                             }
@@ -470,7 +502,10 @@ fun ConfirmClassView(
                                 spellCasting = spellCasting,
                                 spells = viewModel.subclassSpells,
                                 level = viewModel.toNumber(viewModel.levels),
-                                learnableSpells = viewModel.getLearnableSpells(subclass, viewModel.toNumber(viewModel.levels)),
+                                learnableSpells = viewModel.getLearnableSpells(
+                                    subclass,
+                                    viewModel.toNumber(viewModel.levels)
+                                ),
                                 toggleSpell = { viewModel.toggleSubclassSpell(it) }
                             )
                         }

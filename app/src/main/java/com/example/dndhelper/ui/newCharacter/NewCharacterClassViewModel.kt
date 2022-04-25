@@ -27,7 +27,6 @@ public class NewCharacterClassViewModel @Inject constructor(
     var id = -1
     var isBaseClass = mutableStateOf(true)
     var takeGold = mutableStateOf(false)
-    var goldRolled = mutableStateOf("6")
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     val character: LiveData<Character>?
     val classSpells = mutableStateListOf<Spell>()
@@ -59,6 +58,10 @@ public class NewCharacterClassViewModel @Inject constructor(
     val featChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
     var classIndex = 0
+    var goldRolled = mutableStateOf(
+        (classes.value?.getOrNull(classIndex)?.startingGoldD4s?.times(2) ?: 4).toString()
+    )
+
 
     val proficiencies: List<Proficiency>
         get() {
@@ -114,33 +117,33 @@ public class NewCharacterClassViewModel @Inject constructor(
         isBaseClass.value = !(character?.value?.hasBaseClass ?: false)
     }
 
-    private fun getFeatsAt(i: Int, level: Int) : List<Feat> {
+    private fun getFeatsAt(i: Int, level: Int): List<Feat> {
         return (featDropDownStates[i].getSelected(feats.value!!) as List<Feat>).run {
-                this.forEach { feat ->
-                    feat.features?.forEach { feature ->
-                        if(feature.choose.num(level) != 0) {
-                            feature.chosen = feature.options?.let {
-                                (
-                                        featChoiceDropDownStates.getDropDownState(
-                                            key = "${feature.name}$i",
-                                            maxSelections = feature.choose.num(level),
-                                            names = feature.options.let { featureList ->
-                                                val result = mutableListOf<String>()
-                                                featureList.forEach {
-                                                    result.add(it.name)
-                                                }
-                                                result
-                                            },
-                                            choiceName = feature.name,
-                                            maxOfSameSelection = 1
-                                        )
-                                        ).getSelected(it)
-                            } as List<Feature>
-                        }
+            this.forEach { feat ->
+                feat.features?.forEach { feature ->
+                    if (feature.choose.num(level) != 0) {
+                        feature.chosen = feature.options?.let {
+                            (
+                                    featChoiceDropDownStates.getDropDownState(
+                                        key = "${feature.name}$i",
+                                        maxSelections = feature.choose.num(level),
+                                        names = feature.options.let { featureList ->
+                                            val result = mutableListOf<String>()
+                                            featureList.forEach {
+                                                result.add(it.name)
+                                            }
+                                            result
+                                        },
+                                        choiceName = feature.name,
+                                        maxOfSameSelection = 1
+                                    )
+                                    ).getSelected(it)
+                        } as List<Feature>
                     }
                 }
-                this
             }
+            this
+        }
     }
 
 
@@ -296,6 +299,16 @@ public class NewCharacterClassViewModel @Inject constructor(
         return false
     }
 
+    val maxGoldRolled: Int
+        get() {
+            return classes.value?.getOrNull(classIndex)?.startingGoldD4s?.times(4) ?: 0
+        }
+    val minGoldRolled: Int
+        get() {
+            return classes.value?.getOrNull(classIndex)?.startingGoldD4s?.times(4) ?: 0
+        }
+
+
     val hasBaseClass: Boolean
         get() {
             return if (character?.value?.hasBaseClass == true) {
@@ -402,7 +415,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         repository.insertCharacter(newChar!!)
     }
 
-    fun calculateAssumedSpells() : List<Spell> {
+    fun calculateAssumedSpells(): List<Spell> {
         val result = mutableListOf<Spell>()
         character?.value?.let { repository.getSpellsForCharacter(it) }?.let {
             it.forEach { (_, spells) ->
@@ -412,7 +425,7 @@ public class NewCharacterClassViewModel @Inject constructor(
             }
         }
         isFeat.forEachIndexed { i, it ->
-            if(it) {
+            if (it) {
                 getFeatsAt(i, toNumber(levels)).forEach { feat ->
                     feat.features?.forEach {
                         result.addAll(it.getSpellsGiven())

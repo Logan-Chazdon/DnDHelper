@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -119,6 +120,18 @@ fun AllCharactersView(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End
                             ) {
+                                Box(
+                                    modifier = Modifier
+                                        .clickable {
+                                            navController.navigate("newCharacterView/ClassView/${character.id}")
+                                        }
+                                ) {
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        "Edit Character",
+                                        modifier = Modifier.padding(top = 7.dp, end = 7.dp)
+                                    )
+                                }
                                 Box(
                                     modifier = Modifier
                                         .clickable {

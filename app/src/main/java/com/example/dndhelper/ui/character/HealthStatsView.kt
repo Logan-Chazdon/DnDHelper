@@ -48,7 +48,7 @@ fun HeathStatsView(
 
 
 
-    Card (
+    Card(
         modifier = Modifier
             .fillMaxWidth(0.95f)
             .padding(5.dp),
@@ -96,12 +96,12 @@ fun HeathStatsView(
                                     keyboardController?.hide()
                                     focusController.clearFocus()
                                 },
-                                "Temp HP" to fun(_: KeyboardActionScope){
+                                "Temp HP" to fun(_: KeyboardActionScope) {
                                     setTemp.invoke(text)
                                     keyboardController?.hide()
                                     focusController.clearFocus()
                                 },
-                                "Max HP" to fun(_: KeyboardActionScope){
+                                "Max HP" to fun(_: KeyboardActionScope) {
 
                                 }
                             )
@@ -109,10 +109,16 @@ fun HeathStatsView(
                             BasicTextField(
                                 value = text,
                                 modifier = Modifier.padding(5.dp),
-                                textStyle = MaterialTheme.typography.h6.copy(textAlign = TextAlign.Center),
+                                textStyle = MaterialTheme.typography.h6.copy(
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colors.onBackground
+                                ),
                                 singleLine = true,
                                 enabled = i != 2,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Number,
+                                    imeAction = ImeAction.Done
+                                ),
                                 keyboardActions = KeyboardActions(
                                     onDone = onDone[item.key]
                                 ),

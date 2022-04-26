@@ -4220,7 +4220,7 @@
                     "spell_casting" : {
                         "type" : 0.5,
                         "cantrips_known" : [
-                            0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+                            0, 0, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
                         ],
                         "casting_ability" : "Int",
                         "spells_known" : [

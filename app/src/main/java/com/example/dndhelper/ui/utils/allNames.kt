@@ -4,6 +4,14 @@ import com.example.dndhelper.repository.dataClasses.ItemInterface
 
 val <E> List<E>.allNames: String
     get() {
+        if(this.distinct().count() == 1 && this.size != 1) {
+            when(this[0]) {
+                is ItemInterface -> {
+                    return "${this.size} ${(this[0] as ItemInterface).name}s"
+                }
+            }
+        }
+
         var result = ""
         this.forEachIndexed { index, it ->
             val name  = when(it) {

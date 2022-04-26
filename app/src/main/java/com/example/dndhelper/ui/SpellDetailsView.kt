@@ -1,12 +1,16 @@
 package com.example.dndhelper.ui
 
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,12 +27,39 @@ fun SpellDetailsView(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = spell.name,
-                style = MaterialTheme.typography.h5
-                    .copy(fontStyle = Italic),
-                modifier = Modifier.padding(4.dp)
-            )
+            Row {
+                Text(
+                    text = spell.name,
+                    style = MaterialTheme.typography.h5
+                        .copy(fontStyle = Italic),
+                    modifier = Modifier.padding(4.dp)
+                )
+
+                if (spell.isRitual) {
+                    Box(contentAlignment = Alignment.Center) {
+                        val surface = MaterialTheme.colors.surface
+                        val onSurface = MaterialTheme.colors.onSurface
+                        Canvas(modifier = Modifier.size(15.dp)) {
+                            drawCircle(
+                                color = surface,
+                                center = this.center,
+                                style = Fill
+                            )
+
+                            drawCircle(
+                                color = onSurface,
+                                center = this.center,
+                                style = Stroke(2f)
+                            )
+                        }
+                        Text(
+                            text = "R",
+                            style = MaterialTheme.typography
+                                .body2.copy(fontStyle = Italic)
+                        )
+                    }
+                }
+            }
 
             Row {
                 spell.components.forEach {
@@ -42,7 +73,9 @@ fun SpellDetailsView(
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 4.dp, end = 4.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
@@ -81,6 +114,7 @@ fun PreviewSpellDetailsView() {
     Card {
         SpellDetailsView(
             spell = Spell(
+                isRitual = true,
                 name = "Eldritch Blast",
                 level = 0,
                 castingTime = "1 Bonus Action",

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
+import com.example.dndhelper.ui.theme.noActionNeeded
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -125,7 +126,7 @@ fun ConfirmRaceView(
 
             races.value?.get(raceIndex)?.abilityBonuses?.let { bonuses ->
                 if (bonuses.isNotEmpty())
-                    RaceContentCard("Ability bonuses") {
+                    RaceContentCard("Ability bonuses", false) {
                         Row {
                             bonuses.forEach {
                                 Text(text = "${it.ability} +${it.bonus}  ")
@@ -145,7 +146,7 @@ fun ConfirmRaceView(
                 )
 
                 if(!(race.proficiencyChoices.isNullOrEmpty() && race.startingProficiencies.isNullOrEmpty())) {
-                    RaceContentCard(title = "Proficiencies") {
+                    RaceContentCard(title = "Proficiencies", race.proficiencyChoices.size > 0) {
                         race.startingProficiencies.let {
                             var string = ""
                             it.forEachIndexed { index, prof ->
@@ -186,7 +187,7 @@ fun ConfirmRaceView(
 
             races.value?.get(raceIndex)?.subraces?.let { subraces ->
                 if (races.value?.get(raceIndex)?.subraces?.isNotEmpty() == true) {
-                    RaceContentCard("Subrace") {
+                    RaceContentCard("Subrace", true) {
                         subraces[viewModel.subraceIndex.value].let { subrace ->
                             Box {
                                 var expanded by remember { mutableStateOf(false) }
@@ -244,7 +245,7 @@ fun ConfirmRaceView(
 
                     subraces[viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
                         if (bonuses.isNotEmpty())
-                            RaceContentCard("Ability bonuses") {
+                            RaceContentCard("Ability bonuses", false) {
                                 Row {
                                     bonuses.forEach {
                                         Text(text = "${it.ability} +${it.bonus}  ")
@@ -254,7 +255,7 @@ fun ConfirmRaceView(
                     }
 
                     subraces[viewModel.subraceIndex.value].abilityBonusChoice?.let { choice ->
-                        RaceContentCard("Ability bonuses") {
+                        RaceContentCard("Ability bonuses", true) {
                             val state = viewModel.subraceASIDropdownState.value.let {
                                 if (it == null) {
                                     val newState = MultipleChoiceDropdownState()
@@ -296,11 +297,12 @@ fun ConfirmRaceView(
 @Composable
 private fun RaceContentCard(
     title: String,
+    containsChoice: Boolean,
     Content: @Composable () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(0.95f),
-        backgroundColor = MaterialTheme.colors.surface,
+        backgroundColor = if(containsChoice) {MaterialTheme.colors.surface} else {MaterialTheme.colors.noActionNeeded},
         elevation = 5.dp,
         shape = RoundedCornerShape(10.dp)
     ) {
@@ -341,7 +343,7 @@ private fun RaceLanguagesView(
     languageChoices: List<LanguageChoice>?,
     dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>
 ) {
-    RaceContentCard("Languages") {
+    RaceContentCard("Languages", (languageChoices?.size ?: 0) > 0) {
         Text(
             languageDesc ?: (languages.let { langs ->
                 val names = mutableListOf<String>()

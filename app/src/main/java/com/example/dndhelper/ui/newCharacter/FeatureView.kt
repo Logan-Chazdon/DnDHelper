@@ -11,10 +11,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
+import com.example.dndhelper.ui.theme.noActionNeeded
 
 @Composable
 fun FeatureView(
@@ -30,8 +30,7 @@ fun FeatureView(
     val color = if (feature.choose.num(level) != 0) {
         MaterialTheme.colors.surface
     } else {
-        MaterialTheme.colors.onBackground.copy(alpha = 0.3f)
-            .compositeOver(MaterialTheme.colors.background)
+        MaterialTheme.colors.noActionNeeded
     }
     Card(
         elevation = 5.dp,

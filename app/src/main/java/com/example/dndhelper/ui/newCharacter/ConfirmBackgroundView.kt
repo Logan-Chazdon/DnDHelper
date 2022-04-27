@@ -23,6 +23,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import com.example.dndhelper.ui.SpellDetailsView
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
+import com.example.dndhelper.ui.theme.noActionNeeded
 import com.example.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -91,7 +92,7 @@ fun ConfirmBackgroundView(
                 ) {
                     Card(
                         modifier = Modifier.fillMaxWidth(0.95f),
-                        backgroundColor = MaterialTheme.colors.surface,
+                        backgroundColor = MaterialTheme.colors.noActionNeeded,
                         elevation = 5.dp,
                         shape = RoundedCornerShape(10.dp)
                     ) {
@@ -150,7 +151,7 @@ fun ConfirmBackgroundView(
                     if (background.proficiencies.isNotEmpty()) {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = MaterialTheme.colors.surface,
+                            backgroundColor = MaterialTheme.colors.noActionNeeded,
                             elevation = 5.dp,
                             shape = RoundedCornerShape(10.dp)
                         ) {
@@ -211,7 +212,7 @@ fun ConfirmBackgroundView(
                     background.spells?.let {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = MaterialTheme.colors.surface,
+                            backgroundColor = MaterialTheme.colors.noActionNeeded,
                             elevation = 5.dp,
                             shape = RoundedCornerShape(10.dp)
                         ) {
@@ -253,7 +254,7 @@ fun ConfirmBackgroundView(
                     background.features.forEach {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = MaterialTheme.colors.surface,
+                            backgroundColor = if(it.choose.num(1) != 0) MaterialTheme.colors.surface else MaterialTheme.colors.noActionNeeded,
                             elevation = 5.dp,
                             shape = RoundedCornerShape(10.dp)
                         ) {

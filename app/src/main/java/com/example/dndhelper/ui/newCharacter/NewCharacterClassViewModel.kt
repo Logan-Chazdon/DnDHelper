@@ -305,7 +305,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
     val minGoldRolled: Int
         get() {
-            return classes.value?.getOrNull(classIndex)?.startingGoldD4s?.times(4) ?: 0
+            return classes.value?.getOrNull(classIndex)?.startingGoldD4s?.times(1) ?: 0
         }
 
 

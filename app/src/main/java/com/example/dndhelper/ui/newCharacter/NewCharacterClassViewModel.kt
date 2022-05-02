@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
+import com.example.dndhelper.ui.newCharacter.utils.getFeatsAt
 import com.example.dndhelper.ui.utils.allNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -117,39 +118,6 @@ public class NewCharacterClassViewModel @Inject constructor(
         isBaseClass.value = !(character?.value?.hasBaseClass ?: false)
     }
 
-    private fun getFeatsAt(i: Int, level: Int): List<Feat> {
-        return try {
-            (featDropDownStates[i].getSelected(feats.value!!) as List<Feat>).run {
-                this.forEach { feat ->
-                    feat.features?.forEach { feature ->
-                        if (feature.choose.num(level) != 0) {
-                            feature.chosen = feature.options?.let {
-                                (
-                                        featChoiceDropDownStates.getDropDownState(
-                                            key = "${feature.name}$i",
-                                            maxSelections = feature.choose.num(level),
-                                            names = feature.options.let { featureList ->
-                                                val result = mutableListOf<String>()
-                                                featureList.forEach {
-                                                    result.add(it.name)
-                                                }
-                                                result
-                                            },
-                                            choiceName = feature.name,
-                                            maxOfSameSelection = 1
-                                        )
-                                        ).getSelected(it)
-                            } as List<Feature>
-                        }
-                    }
-                }
-                this
-            }
-        } catch (e: IndexOutOfBoundsException) {
-            listOf()
-        }
-    }
-
 
     suspend fun addClassLevels(newClass: Class, level: Int) {
         if (id == -1)
@@ -187,7 +155,13 @@ public class NewCharacterClassViewModel @Inject constructor(
         for ((i, item) in isFeat.withIndex()) {
             if (item) {
                 newClass.featsGranted.addAll(
-                    getFeatsAt(i, level)
+                    getFeatsAt(
+                        i,
+                        level,
+                        featDropDownStates,
+                        featChoiceDropDownStates,
+                        feats.value!!
+                    )
                 )
             } else {
                 newClass.abilityImprovementsGranted.add(
@@ -430,7 +404,13 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
         isFeat.forEachIndexed { i, it ->
             if (it) {
-                getFeatsAt(i, toNumber(levels)).forEach { feat ->
+                getFeatsAt(
+                    i,
+                    toNumber(levels),
+                    featDropDownStates,
+                    featChoiceDropDownStates,
+                    feats.value!!
+                ).forEach { feat ->
                     feat.features?.forEach {
                         result.addAll(it.getSpellsGiven())
                     }
@@ -451,7 +431,13 @@ public class NewCharacterClassViewModel @Inject constructor(
 
         isFeat.forEachIndexed { i, it ->
             if (it) {
-                getFeatsAt(i, toNumber(levels)).forEach { feat ->
+                getFeatsAt(
+                    i,
+                    toNumber(levels),
+                    featDropDownStates,
+                    featChoiceDropDownStates,
+                    feats.value!!
+                ).forEach { feat ->
                     feat.abilityBonuses?.forEach {
                         applyBonus(it.ability, it.bonus)
                     }

@@ -47,7 +47,7 @@ fun ConfirmBackgroundView(
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
-                    .fillMaxSize()
+                .fillMaxSize()
         ) {
             Column(
                 modifier = Modifier
@@ -172,13 +172,13 @@ fun ConfirmBackgroundView(
                     }
 
                     if (background.languageChoices.isNotEmpty()) {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = MaterialTheme.colors.surface,
-                            elevation = 5.dp,
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            background.languageChoices.forEach { choice ->
+                        background.languageChoices.forEach { choice ->
+                            Card(
+                                modifier = Modifier.fillMaxWidth(0.95f),
+                                backgroundColor = MaterialTheme.colors.surface,
+                                elevation = 5.dp,
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
                                 Column(
                                     modifier = Modifier.padding(start = 5.dp)
                                 ) {
@@ -231,7 +231,7 @@ fun ConfirmBackgroundView(
                                             expanded = true
                                         }
                                     )
-                                    if(expanded) {
+                                    if (expanded) {
                                         Dialog(
                                             onDismissRequest = {
                                                 expanded = false
@@ -242,7 +242,7 @@ fun ConfirmBackgroundView(
                                             )
                                         ) {
                                             Card {
-                                               SpellDetailsView(spell = it)
+                                                SpellDetailsView(spell = it)
                                             }
                                         }
                                     }
@@ -254,7 +254,7 @@ fun ConfirmBackgroundView(
                     background.features.forEach {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = if(it.choose.num(1) != 0) MaterialTheme.colors.surface else MaterialTheme.colors.noActionNeeded,
+                            backgroundColor = if (it.choose.num(1) != 0) MaterialTheme.colors.surface else MaterialTheme.colors.noActionNeeded,
                             elevation = 5.dp,
                             shape = RoundedCornerShape(10.dp)
                         ) {

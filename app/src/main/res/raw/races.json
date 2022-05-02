@@ -1263,7 +1263,69 @@
                 }
             ],
             "proficiencies" : [],
-            "comment": "TODO Subraces",
+            "subraces" : [
+                {
+                    "name" : "Standard Human",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Strength",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Dexterity",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Constitution",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Intelligence",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Wisdom",
+                            "bonus" : 1
+                        },
+                        {
+                            "name" : "Charisma",
+                            "bonus" : 1
+                        }
+                    ]
+                },
+                {
+                    "name" : "Variant Human",
+                    "ability_bonuses" : [
+                        {
+                            "choose" : 2,
+                            "from" : [
+                                {
+                                    "index" : "any"
+                                }
+                            ]
+                        }
+                    ],
+                    "feats" : [
+                        {
+                            "choose" : 1,
+                            "from" : [
+                                {
+                                    "index" : "all_feats"
+                                }
+                            ]
+                        }
+                    ],
+                    "proficiencies" : [
+                        {
+                            "name" : "You gain one skill proficiency of your choice.",
+                            "choose" : 1,
+                            "from" : [
+                                {"index" : "skill_proficiencies"}
+                            ]
+                        }
+                    ]
+                }
+            ],
             "ground_speed" : 30,
             "features" : []
         },

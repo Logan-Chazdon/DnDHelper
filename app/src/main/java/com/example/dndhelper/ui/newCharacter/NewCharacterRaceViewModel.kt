@@ -139,15 +139,15 @@ public class NewCharacterRaceViewModel @Inject constructor(
 
     private val selectedSubraceASIs : List<Pair<String, Int>>
         get() {
-            return subraceASIDropdownState.value?.getSelected(
+            return ((subraceASIDropdownState.value?.getSelected(
                 races.value?.get(raceIndex)?.subraces?.get(subraceIndex.value)
                     ?.abilityBonusChoice?.from.let { from ->
-                        val names = mutableListOf<String>()
+                        val names = mutableListOf<Pair<String, Int>>()
                         from?.forEach { it ->
-                            names.add(it.ability)
+                            names.add(Pair(it.ability, it.bonus))
                         }
                         names
-                    }) as List<Pair<String, Int>>? ?: listOf()
+                    }) ?: listOf<Pair<String, Int>>()) as List<Pair<String, Int>>)
         }
 
     val proficiencies: List<Proficiency>

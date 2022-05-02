@@ -1,6 +1,7 @@
 package com.example.dndhelper.ui.newCharacter
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -9,6 +10,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
 import com.example.dndhelper.repository.dataClasses.*
+import com.example.dndhelper.ui.newCharacter.utils.getFeatsAt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,6 +27,8 @@ public class NewCharacterRaceViewModel @Inject constructor(
     val raceProficiencyChoiceDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var subraceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     var subraceASIDropdownState = mutableStateOf<MultipleChoiceDropdownState?>(null)
+    val subraceFeatDropdownStates = mutableStateListOf<MultipleChoiceDropdownState>()
+    val subraceFeatChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     val languageDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
     lateinit var races: LiveData<List<Race>>
     var id by Delegates.notNull<Int>()
@@ -113,6 +117,17 @@ public class NewCharacterRaceViewModel @Inject constructor(
                     this.abilityBonusChoice?.chosen = chosen
                 }
 
+                featChoices?.let { choices ->
+                    subraceFeatDropdownStates.forEachIndexed { index, _ ->
+                        choices[index].chosen = getFeatsAt(
+                            index,
+                            1,
+                            subraceFeatDropdownStates,
+                            subraceFeatChoiceDropDownStates,
+                            choices[index].from
+                        )
+                    }
+                }
 
                 this
             }

@@ -35,6 +35,17 @@ data class Race (
         return maxOf(groundSpeed, subrace?.groundSpeed ?: 0)
     }
 
+    val allFeats: List<Feat>
+    get() {
+        val result = mutableListOf<Feat>()
+        subrace?.let {
+            it.featChoices?.forEach {
+                it.chosen?.let { feats -> result.addAll(feats) }
+            }
+        }
+        return result
+    }
+
     private val allRaceLanguages: List<Language>
     get() {
         val result = mutableListOf<Language>()

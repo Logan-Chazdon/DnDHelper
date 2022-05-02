@@ -254,6 +254,26 @@ fun ConfirmRaceView(
                             }
                     }
 
+                    subraces[viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->
+                        RaceContentCard(it.name, containsChoice = true) {
+                            FeatView(
+                                level = 1,
+                                key = index,
+                                featNames = it.from.run {
+                                    val result = mutableListOf<String>()
+                                    this.forEach {
+                                        result.add(it.name)
+                                    }
+                                    result
+                                },
+                                feats = it.from,
+                                featDropDownStates = viewModel.subraceFeatDropdownStates,
+                                featChoiceDropDownState = viewModel.subraceFeatChoiceDropDownStates
+                            )
+                        }
+                    }
+
+
                     subraces[viewModel.subraceIndex.value].abilityBonusChoice?.let { choice ->
                         RaceContentCard("Ability bonuses", true) {
                             val state = viewModel.subraceASIDropdownState.value.let {

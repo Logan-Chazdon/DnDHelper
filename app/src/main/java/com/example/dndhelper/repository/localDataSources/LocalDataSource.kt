@@ -1151,6 +1151,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     startingProficiencies = proficiencies,
                     languages = languages,
                     languageChoices = languageChoices,
+                    featChoices = try {
+                        extractFeatChoices(subraceJson.getJSONArray("feats"))
+                    } catch (e: JSONException) {
+                        null
+                    },
                     traits = try {
                         extractFeatures(subraceJson.getJSONArray("features"))
                     } catch (e: JSONException) {
@@ -1170,6 +1175,39 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             )
         }
         return subraces
+    }
+
+    private fun extractFeatChoices(jsonArray: JSONArray): List<FeatChoice> {
+        val result = mutableListOf<FeatChoice>()
+        for(index in 0 until jsonArray.length()) {
+            val featChoiceJson = jsonArray.getJSONObject(index)
+            result.add(
+                FeatChoice(
+                    name = featChoiceJson.getString("name"),
+                    choose = featChoiceJson.getInt("choose"),
+                    from = extractFeats(featChoiceJson.getJSONArray("from"))
+                )
+            )
+        }
+        return result
+    }
+
+    //As far as we have implemented this only needs to work off of indexes.
+    //In the future it may be necessary to add more indexes or the ability to create feats
+    //from data in the list.
+    private fun extractFeats(jsonArray: JSONArray): List<Feat> {
+        val result = mutableListOf<Feat>()
+        for(i in 0 until jsonArray.length()) {
+            val featJson = jsonArray.getJSONObject(i)
+            when(featJson.getString("index")) {
+                "all_feats" -> {
+                    result.addAll(
+                        _feats.value!!
+                    )
+                }
+            }
+        }
+        return result
     }
 
 

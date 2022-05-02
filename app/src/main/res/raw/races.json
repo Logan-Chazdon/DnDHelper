@@ -1307,6 +1307,7 @@
                     ],
                     "feats" : [
                         {
+                            "name" : "One feat of your choice.",
                             "choose" : 1,
                             "from" : [
                                 {

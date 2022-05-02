@@ -64,7 +64,8 @@ data class Character(
     val feats: List<Feat>
     get() {
         val result = mutableListOf<Feat>()
-        //Race TODO
+        //Race
+        race?.allFeats?.let { result.addAll(it) }
 
         //Classes
         classes.forEach { (_, clazz) ->

@@ -36,6 +36,17 @@ fun SpellCastingView(
     refundSlot: (Int) -> Unit,
     togglePreparation: (Spell) -> Unit
 ) {
+    val hasAnyPreparableSpells = fun() : Boolean {
+        allSpells.forEach { spellLevel ->
+            spellLevel.value.forEach { (preparable, _) ->
+                if(preparable != null) {
+                    return true
+                }
+            }
+        }
+        return false
+    }.invoke()
+
     val state = rememberLazyListState()
     Card(
         elevation = 5.dp,
@@ -61,14 +72,17 @@ fun SpellCastingView(
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ){
-                            CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
-                                Checkbox(
-                                    checked = hideNonPreparedSpells,
-                                    onCheckedChange = {
-                                        hideNonPreparedSpells = !hideNonPreparedSpells
-                                    }
-                                )
+                            if(hasAnyPreparableSpells) {
+                                CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+                                    Checkbox(
+                                        checked = hideNonPreparedSpells,
+                                        onCheckedChange = {
+                                            hideNonPreparedSpells = !hideNonPreparedSpells
+                                        }
+                                    )
+                                }
                             }
+
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth(0.95f)

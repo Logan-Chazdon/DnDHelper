@@ -1300,7 +1300,28 @@
                             "choose" : 2,
                             "from" : [
                                 {
-                                    "index" : "any"
+                                    "name" : "Strength",
+                                    "bonus" : 1
+                                },
+                                {
+                                    "name" : "Dexterity",
+                                    "bonus" : 1
+                                },
+                                {
+                                    "name" : "Constitution",
+                                    "bonus" : 1
+                                },
+                                {
+                                    "name" : "Intelligence",
+                                    "bonus" : 1
+                                },
+                                {
+                                    "name" : "Wisdom",
+                                    "bonus" : 1
+                                },
+                                {
+                                    "name" : "Charisma",
+                                    "bonus" : 1
                                 }
                             ]
                         }

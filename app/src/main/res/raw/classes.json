@@ -4926,16 +4926,23 @@
             ],
             "equipment" : [
                 {
-                    "name" : "A martial weapon and a shield or two martial weapons",
+                    "name" : "A martial weapon of your choice.",
                     "choose" : 1,
                     "from" : [
                         {
-                            "index" : "martial_weapons",
-                            "comment" : "TODO"
+                            "index" : "martial_weapons"
+                        }
+                    ]
+                },
+                {
+                    "name" : "A martial weapon or a shield.",
+                    "choose" : 1,
+                    "from" : [
+                        {
+                            "index" : "martial_weapons"
                         },
                         {
-                            "index": "martial_weapons",
-                            "comment": "TODO"
+                            "index" : "shield"
                         }
                     ]
                 },

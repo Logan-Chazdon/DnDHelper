@@ -46,14 +46,29 @@ fun StatsView(
         val statsOptions = viewModel.currentStatsOptions.observeAsState()
         val stats = viewModel.currentStats.observeAsState()
         val statGenOptions = listOf("Point Buy", "Standard Array", "Rolled")
-        Text(
-            text = statGenOptions[selectedIndexStatGen.value ?: 0],
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = { statGenDropdownExpanded = true })
-                .background(MaterialTheme.colors.surface),
-            fontSize = 20.sp
-        )
+        Box {
+            Text(
+                text = statGenOptions[selectedIndexStatGen.value ?: 0],
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { statGenDropdownExpanded = true })
+                    .background(MaterialTheme.colors.surface),
+                fontSize = 20.sp
+            )
+
+            DropdownMenu(
+                expanded = statGenDropdownExpanded,
+                onDismissRequest = { statGenDropdownExpanded = false }) {
+                statGenOptions.forEachIndexed { index, item ->
+                    DropdownMenuItem(onClick = {
+                        viewModel.setCurrentStatGenTypeIndex(index)
+                        statGenDropdownExpanded = false
+                    }) {
+                        Text(text = item, fontSize = 20.sp)
+                    }
+                }
+            }
+        }
 
         val pointsRemaining = viewModel.pointsRemaining.observeAsState()
         if (selectedIndexStatGen.value == 0) {
@@ -61,19 +76,7 @@ fun StatsView(
                 text = "Points Remaining: ${pointsRemaining.value}"
             )
         }
-
-        DropdownMenu(
-            expanded = statGenDropdownExpanded,
-            onDismissRequest = { statGenDropdownExpanded = false }) {
-            statGenOptions.forEachIndexed { index, item ->
-                DropdownMenuItem(onClick = {
-                    viewModel.setCurrentStatGenTypeIndex(index)
-                    statGenDropdownExpanded = false
-                }) {
-                    Text(text = item, fontSize = 20.sp)
-                }
-            }
-        }
+        
 
         val statNames = listOf(
             "Str", "Dex", "Con", "Int", "Wis", "Cha"

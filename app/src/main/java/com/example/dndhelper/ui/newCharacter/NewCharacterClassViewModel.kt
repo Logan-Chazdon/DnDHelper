@@ -64,21 +64,6 @@ public class NewCharacterClassViewModel @Inject constructor(
     )
 
 
-    val proficiencies: List<Proficiency>
-        get() {
-            val profs: MutableList<Proficiency> = mutableListOf()
-            classes.value?.get(classIndex)?.proficiencies?.let { profs.addAll(it) }
-            classes.value?.get(classIndex)?.proficiencyChoices?.forEach {
-                (dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>?)?.let { it1 ->
-                    profs.addAll(
-                        it1
-                    )
-                }
-            }
-            return profs
-        }
-
-
     fun toNumber(textFieldValue: MutableState<TextFieldValue>): Int {
         return try {
             textFieldValue.value.text.toInt()
@@ -142,7 +127,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                 it.chosen = dropDownStates[it.name + it.grantedAtLevel]?.getSelected(
                     it.getAvailableOptions(
                         character = character,
-                        assumedProficiencies = proficiencies,
+                        assumedProficiencies = calculateAssumedProficiencies(),
                         level = level,
                         assumedStatBonuses = calculateAssumedStatBonuses(),
                         assumedSpells = calculateAssumedSpells(),
@@ -189,7 +174,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                         ?.getSelected(
                             it.getAvailableOptions(
                                 character = character,
-                                assumedProficiencies = proficiencies,
+                                assumedProficiencies = calculateAssumedProficiencies(),
                                 level = level,
                                 assumedStatBonuses = calculateAssumedStatBonuses(),
                                 assumedSpells = calculateAssumedSpells(),
@@ -459,6 +444,18 @@ public class NewCharacterClassViewModel @Inject constructor(
         return result
     }
 
+    fun calculateAssumedProficiencies(): MutableList<Proficiency> {
+        val profs: MutableList<Proficiency> = mutableListOf()
+        classes.value?.get(classIndex)?.proficiencies?.let { profs.addAll(it) }
+        classes.value?.get(classIndex)?.proficiencyChoices?.forEach {
+            (dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>?)?.let { it1 ->
+                profs.addAll(
+                    it1
+                )
+            }
+        }
+        return profs
+    }
 
     fun applyAlreadySelectedChoices() {
         val className = classes.value?.get(classIndex)?.name

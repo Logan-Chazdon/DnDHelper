@@ -19,7 +19,7 @@ data class Prerequisite(
     ) : Boolean {
         proficiency?.name?.let {
             if(
-                character?.checkForProficiencyOrExpertise(it) != 0 ||
+                character?.checkForProficiencyOrExpertise(it) != 0 &&
                 assumedProficiencies?.find {prof -> prof.name == it } == null
             ) {
                 return false

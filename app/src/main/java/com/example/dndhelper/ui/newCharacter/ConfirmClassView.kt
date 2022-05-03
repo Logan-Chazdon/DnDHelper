@@ -49,6 +49,16 @@ fun ConfirmClassView(
         }
     }
 
+    val assumedProficiencies = remember (
+        viewModel.featChoiceDropDownStates,
+        viewModel.isFeat,
+        viewModel.dropDownStates
+    ) {
+        derivedStateOf {
+            viewModel.calculateAssumedProficiencies()
+        }
+    }
+
     val assumedSpells = remember(viewModel.subclassSpells, viewModel.classSpells) {
         derivedStateOf {
             viewModel.calculateAssumedSpells()
@@ -432,7 +442,7 @@ fun ConfirmClassView(
                                     0
                                 },
                                 character = viewModel.character?.observeAsState()?.value,
-                                proficiencies = viewModel.proficiencies,
+                                proficiencies = assumedProficiencies.value,
                                 dropDownStates = viewModel.dropDownStates,
                                 assumedClass = viewModel.classes.observeAsState().value?.get(
                                     viewModel.classIndex
@@ -491,7 +501,7 @@ fun ConfirmClassView(
                                             0
                                         },
                                         character = viewModel.character?.observeAsState()?.value,
-                                        proficiencies = viewModel.proficiencies,
+                                        proficiencies = assumedProficiencies.value,
                                         dropDownStates = viewModel.dropDownStates,
                                         assumedClass = viewModel.classes.observeAsState().value?.get(
                                             viewModel.classIndex

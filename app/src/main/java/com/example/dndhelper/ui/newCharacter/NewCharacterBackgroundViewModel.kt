@@ -4,12 +4,10 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.dataClasses.Background
-import com.example.dndhelper.repository.dataClasses.Item
-import com.example.dndhelper.repository.dataClasses.Language
-import com.example.dndhelper.repository.dataClasses.LanguageChoice
+import com.example.dndhelper.repository.dataClasses.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,19 +16,29 @@ import javax.inject.Inject
 @HiltViewModel
 public class NewCharacterBackgroundViewModel @Inject constructor(
     private val repository: Repository,
-    application: Application,
+    application: Application, savedStateHandle: SavedStateHandle
 ): AndroidViewModel(application){
     lateinit var backgrounds : LiveData<List<Background>>
     var backgroundIndex : Int = -1
     var id = -1
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
+    val character: LiveData<Character>?
 
     init {
         viewModelScope.launch {
            backgrounds = repository.getBackgrounds()
         }
+        id = try {
+            savedStateHandle.get<String>("characterId")!!.toInt()
+        } catch (e: Exception) {
+            -1
+        }
 
-
+        character = try {
+            repository.getLiveCharacterById(id)!!
+        } catch (e: NullPointerException) {
+            null
+        }
     }
 
 
@@ -44,6 +52,20 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
         newBackground.equipmentChoices.forEach {
             it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
         }
+
+        newBackground.features.forEach {
+            it.chosen = dropDownStates[it.name + it.grantedAtLevel]?.getSelected(
+                it.getAvailableOptions(
+                    character = character,
+                    assumedProficiencies = listOf(),
+                    level = 1,
+                    assumedStatBonuses = null,
+                    assumedSpells = listOf(),
+                    assumedClass = null
+                )
+            ) as List<Feature>?
+        }
+
         character!!.setNewBackground(newBackground)
         repository.insertCharacter(character)
     }

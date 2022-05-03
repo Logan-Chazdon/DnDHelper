@@ -32,7 +32,6 @@ import java.util.*
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ConfirmBackgroundView(
-    characterId: Int,
     viewModel: NewCharacterBackgroundViewModel,
     navController: NavHostController,
     backgroundIndex: Int
@@ -41,8 +40,8 @@ fun ConfirmBackgroundView(
     val background = backgrounds.value?.get(backgroundIndex)
     val scrollState = rememberScrollState(0)
     val mainLooper = Looper.getMainLooper()
-    viewModel.id = characterId
     viewModel.backgroundIndex = backgroundIndex
+
     if (background != null) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -251,20 +250,18 @@ fun ConfirmBackgroundView(
                         }
                     }
 
+                    //TODO update assumptions.
                     background.features.forEach {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = if (it.choose.num(1) != 0) MaterialTheme.colors.surface else MaterialTheme.colors.noActionNeeded,
-                            elevation = 5.dp,
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                Text(text = it.name, style = MaterialTheme.typography.h6)
-                                Text(text = it.description)
-                            }
-                        }
+                        FeatureView(
+                            feature = it,
+                            level = 1,
+                            proficiencies = listOf(),
+                            character =viewModel.character?.observeAsState()?.value,
+                            dropDownStates = viewModel.dropDownStates,
+                            assumedClass = null,
+                            assumedSpells = listOf(),
+                            assumedStatBonuses = null
+                        )
                     }
                 }
             }

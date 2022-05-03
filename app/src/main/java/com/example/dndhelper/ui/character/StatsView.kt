@@ -44,6 +44,7 @@ fun StatsView(viewModel: StatsViewModel) {
         val isVertical = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
         VariableOrientationView(isVertical = isVertical) {
             LazyVerticalGrid(
+                contentPadding = PaddingValues(5.dp),
                 cells = GridCells.Fixed(3),
                 modifier = if(isVertical) {
                      Modifier

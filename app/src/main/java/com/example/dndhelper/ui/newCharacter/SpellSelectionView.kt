@@ -128,25 +128,25 @@ private fun SpellSelectionView(
                 var schools = ""
                 schoolRestriction.schools.forEachIndexed { index, it ->
                     schools += it
-                    if(index < schoolRestriction.schools.size - 2) {
+                    if (index < schoolRestriction.schools.size - 2) {
                         schools += ", "
-                    } else if(index == schoolRestriction.schools.size - 2){
+                    } else if (index == schoolRestriction.schools.size - 2) {
                         schools += " or "
                     }
                 }
                 Text("At least ${schoolRestriction.amount} spells must be from $schools.")
             }
-
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Spell mod: $castingAbility")
-
-                Button(
-                    onClick = { spellsExpanded = true }
-                ) {
-                    Text("Choose Spells")
+                if(totalCantrips != 0 || totalSpells != 0) {
+                    Button(
+                        onClick = { spellsExpanded = true }
+                    ) {
+                        Text("Choose Spells")
+                    }
                 }
             }
         }

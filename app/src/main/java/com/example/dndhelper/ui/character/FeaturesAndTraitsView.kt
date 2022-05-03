@@ -41,8 +41,20 @@ fun FeaturesAndTraitsView(
                     Text(text = feat.name, modifier = Modifier.clickable { expanded = true })
                     feat.features?.forEach { feature ->
                         feature.chosen?.forEach {
-                            Text(it.name)
-                            Divider(thickness = (0.5).dp, startIndent = 15.dp)
+                            var descExpanded by remember { mutableStateOf(false) }
+                            Text(it.name, Modifier.padding(start = 5.dp).clickable { descExpanded = !descExpanded})
+
+                            if(descExpanded) {
+                                Dialog(onDismissRequest = { descExpanded = false }) {
+                                    Card {
+                                        Text(
+                                            text = it.description,
+                                            modifier = Modifier.padding(4.dp),
+                                            style = MaterialTheme.typography.body2
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                     Divider(thickness = (0.5).dp, startIndent = 10.dp)
@@ -61,6 +73,7 @@ fun FeaturesAndTraitsView(
                 }
 
                 item {
+                    Spacer(Modifier.height(5.dp))
                     Divider()
                 }
             }

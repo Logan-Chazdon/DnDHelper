@@ -29,7 +29,7 @@ public class CharacterMainViewModel @Inject constructor(
         viewModelScope.launch {
             character = repository.getLiveCharacterById(id)
             characterFeatures.addSource(character!!) {
-                characterFeatures.value = it.features
+                characterFeatures.value = it.displayFeatures
             }
         }
 

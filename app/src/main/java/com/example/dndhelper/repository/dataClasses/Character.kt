@@ -146,9 +146,8 @@ data class Character(
         return result
     }
 
-
-    //Returns a list of integers representing level to features
-    val features: List<Pair<Int, Feature>>
+    //All features excluding those granted by feats.
+    val displayFeatures : List<Pair<Int, Feature>>
     get() {
         val result = mutableListOf<Pair<Int, Feature>>()
         race?.let { race ->
@@ -171,17 +170,28 @@ data class Character(
             }
         }
 
+
+        background?.let { background ->
+            background.features.forEach {
+                result.add(totalClassLevels to it)
+            }
+        }
+
+        return result
+    }
+
+
+    //Returns a list of integers representing level to features
+    val features: List<Pair<Int, Feature>>
+    get() {
+        val result = mutableListOf<Pair<Int, Feature>>()
+        result.addAll(displayFeatures)
+
         feats.forEach { feat ->
             feat.features?.let { features ->
                 features.forEach {
                     result.add(totalClassLevels to it)
                 }
-            }
-        }
-
-        background?.let { background ->
-            background.features.forEach {
-                result.add(totalClassLevels to it)
             }
         }
 

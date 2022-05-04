@@ -67,7 +67,7 @@ fun RaceView(
                             modifier = Modifier
                                 .fillMaxWidth(0.95f)
                                 .clickable {
-                                    navController.navigate("newCharacterView/ConfirmRaceView/$i/$characterId")
+                                    navController.navigate("newCharacterView/RaceView/ConfirmRaceView/$i/$characterId")
                                 },
                             shape = RoundedCornerShape(10.dp),
                             elevation = 10.dp

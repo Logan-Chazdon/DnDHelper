@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.dndhelper.repository.dataClasses.Subclass
+import com.example.dndhelper.model.Subclass
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import com.example.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.GlobalScope

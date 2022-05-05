@@ -2,8 +2,8 @@ package com.example.dndhelper.ui.newCharacter.utils
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import com.example.dndhelper.repository.dataClasses.Feat
-import com.example.dndhelper.repository.dataClasses.Feature
+import com.example.dndhelper.model.Feat
+import com.example.dndhelper.model.Feature
 import com.example.dndhelper.ui.newCharacter.MultipleChoiceDropdownState
 
 fun getFeatsAt(

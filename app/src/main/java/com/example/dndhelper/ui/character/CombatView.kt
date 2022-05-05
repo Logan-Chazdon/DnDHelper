@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.dndhelper.R
-import com.example.dndhelper.repository.dataClasses.Spell
+import com.example.dndhelper.model.Spell
 import com.example.dndhelper.ui.SpellDetailsView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

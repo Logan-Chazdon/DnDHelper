@@ -5,11 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.Repository.Companion.allSpellLevels
-import com.example.dndhelper.repository.dataClasses.Character
-import com.example.dndhelper.repository.dataClasses.Resource
-import com.example.dndhelper.repository.dataClasses.Spell
+import com.example.dndhelper.model.Character
+import com.example.dndhelper.model.Resource
+import com.example.dndhelper.model.Spell
+import com.example.dndhelper.model.repositories.Repository
+import com.example.dndhelper.model.repositories.Repository.Companion.allSpellLevels
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

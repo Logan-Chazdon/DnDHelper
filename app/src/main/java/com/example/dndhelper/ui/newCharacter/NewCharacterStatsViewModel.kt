@@ -4,8 +4,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.dataClasses.Character
+import com.example.dndhelper.model.Character
+import com.example.dndhelper.model.repositories.Repository
 import com.example.dndhelper.ui.newCharacter.utils.indexOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.GlobalScope

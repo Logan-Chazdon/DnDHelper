@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.dndhelper.repository.dataClasses.Feat
-import com.example.dndhelper.repository.dataClasses.Feature
-import com.example.dndhelper.repository.dataClasses.Infusion
-import com.example.dndhelper.repository.dataClasses.ItemInterface
+import com.example.dndhelper.model.Feat
+import com.example.dndhelper.model.Feature
+import com.example.dndhelper.model.Infusion
+import com.example.dndhelper.model.ItemInterface
 
 @Composable
 fun FeaturesAndTraitsView(

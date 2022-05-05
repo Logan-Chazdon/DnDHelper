@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.dndhelper.repository.dataClasses.*
+import com.example.dndhelper.model.*
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import com.example.dndhelper.ui.theme.noActionNeeded
 import kotlinx.coroutines.GlobalScope

@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.dndhelper.repository.dataClasses.*
-import com.example.dndhelper.repository.dataClasses.utils.getValueInCopper
+import com.example.dndhelper.model.*
+import com.example.dndhelper.model.utils.getValueInCopper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

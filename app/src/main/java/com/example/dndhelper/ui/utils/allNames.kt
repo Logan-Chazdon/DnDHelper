@@ -1,6 +1,6 @@
 package com.example.dndhelper.ui.utils
 
-import com.example.dndhelper.repository.dataClasses.ItemInterface
+import com.example.dndhelper.model.ItemInterface
 
 val <E> List<E>.allNames: String
     get() {

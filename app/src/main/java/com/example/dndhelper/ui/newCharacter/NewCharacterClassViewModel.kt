@@ -10,8 +10,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
-import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.dataClasses.*
+import com.example.dndhelper.model.*
+import com.example.dndhelper.model.repositories.Repository
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import com.example.dndhelper.ui.newCharacter.utils.getFeatsAt
 import com.example.dndhelper.ui.utils.allNames
@@ -24,7 +24,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
-    var classes: LiveData<List<Class>> = repository.getClasses()
+    var classes: LiveData<List<com.example.dndhelper.model.Class>> = repository.getClasses()
     var id = -1
     var isBaseClass = mutableStateOf(true)
     var takeGold = mutableStateOf(false)
@@ -104,7 +104,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
 
-    suspend fun addClassLevels(newClass: Class, level: Int) {
+    suspend fun addClassLevels(newClass: com.example.dndhelper.model.Class, level: Int) {
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
         val character = repository.getCharacterById(id)
@@ -238,7 +238,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     private var subclassDropdownState: MultipleChoiceDropdownState? = null
-    fun getSubclassDropdownState(it: Class): MultipleChoiceDropdownState {
+    fun getSubclassDropdownState(it: com.example.dndhelper.model.Class): MultipleChoiceDropdownState {
         return if (subclassDropdownState == null) {
             subclassDropdownState = MultipleChoiceDropdownState()
             subclassDropdownState!!.maxSelections = 1

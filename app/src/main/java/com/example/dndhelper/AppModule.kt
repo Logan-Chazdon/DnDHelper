@@ -4,10 +4,10 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.example.dndhelper.repository.localDataSources.LocalDataSource
-import com.example.dndhelper.repository.localDataSources.LocalDataSourceImpl
-import com.example.dndhelper.repository.model.DatabaseDao
-import com.example.dndhelper.repository.model.RoomDataBase
+import com.example.dndhelper.model.database.DatabaseDao
+import com.example.dndhelper.model.database.RoomDataBase
+import com.example.dndhelper.model.localDataSources.LocalDataSource
+import com.example.dndhelper.model.localDataSources.LocalDataSourceImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
-import com.example.dndhelper.repository.dataClasses.Language
-import com.example.dndhelper.repository.dataClasses.Proficiency
+import com.example.dndhelper.model.Language
+import com.example.dndhelper.model.Proficiency
 
 @Composable
 fun LanguagesAndProficienciesView(

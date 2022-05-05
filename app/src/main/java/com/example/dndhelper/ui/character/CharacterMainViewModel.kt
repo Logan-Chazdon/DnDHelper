@@ -2,11 +2,11 @@ package com.example.dndhelper.ui.character
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.dndhelper.repository.Repository
-import com.example.dndhelper.repository.dataClasses.Character
-import com.example.dndhelper.repository.dataClasses.Feature
-import com.example.dndhelper.repository.dataClasses.Infusion
-import com.example.dndhelper.repository.dataClasses.ItemInterface
+import com.example.dndhelper.model.Character
+import com.example.dndhelper.model.Feature
+import com.example.dndhelper.model.Infusion
+import com.example.dndhelper.model.ItemInterface
+import com.example.dndhelper.model.repositories.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

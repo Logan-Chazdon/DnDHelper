@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.example.dndhelper.repository.dataClasses.Resource
-import com.example.dndhelper.repository.dataClasses.Spell
+import com.example.dndhelper.model.Resource
+import com.example.dndhelper.model.Spell
 
 
 @OptIn(ExperimentalMaterialApi::class)

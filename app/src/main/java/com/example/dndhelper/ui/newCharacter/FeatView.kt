@@ -5,7 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import com.example.dndhelper.repository.dataClasses.Feat
+import com.example.dndhelper.model.Feat
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 
 @Composable

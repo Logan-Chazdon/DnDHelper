@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.dndhelper.repository.dataClasses.PactMagic
-import com.example.dndhelper.repository.dataClasses.Spell
-import com.example.dndhelper.repository.dataClasses.SpellCasting
+import com.example.dndhelper.model.PactMagic
+import com.example.dndhelper.model.Spell
+import com.example.dndhelper.model.SpellCasting
 import com.example.dndhelper.ui.SpellDetailsView
 
 @OptIn(ExperimentalComposeUiApi::class)

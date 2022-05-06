@@ -519,6 +519,11 @@ data class Character(
             it.longRest()
         }
 
+        //Spell slots
+        spellSlots.forEach {
+            it.recharge(0)
+        }
+
         //Race
         race?.longRest()
 

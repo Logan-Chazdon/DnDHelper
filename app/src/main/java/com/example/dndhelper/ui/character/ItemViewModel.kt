@@ -69,12 +69,12 @@ public class ItemViewModel @Inject constructor(
     }
 
      fun equip(armor: Armor) {
-        character?.value?.equippedArmor = armor
+        character?.value?.backpack?.equippedArmor = armor
         repository.insertCharacter(character?.value!!)
     }
 
     fun equip(shield: Shield) {
-        character?.value?.equippedShield = shield
+        character?.value?.backpack?.equippedShield = shield
         repository.insertCharacter(character?.value!!)
     }
 

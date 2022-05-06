@@ -23,15 +23,14 @@ class Backpack {
 
     fun deleteItemAtIndex(itemToDeleteIndex: Int) {
         when {
-            itemToDeleteIndex < backgroundItems.size -> {
-                backgroundItems.removeAt(itemToDeleteIndex)
-            }
-            itemToDeleteIndex < classItems.size + backgroundItems.size -> {
-                classItems.removeAt(itemToDeleteIndex - backgroundItems.size)
-            }
-            else -> {
-                addedItems.removeAt(itemToDeleteIndex - backgroundItems.size - classItems.size)
-            }
+            itemToDeleteIndex < backgroundItems.size ->
+                deleteIndexFrom(itemToDeleteIndex, backgroundItems)
+
+            itemToDeleteIndex < classItems.size + backgroundItems.size ->
+                deleteIndexFrom(itemToDeleteIndex - backgroundItems.size, classItems)
+
+            else ->
+                deleteIndexFrom(itemToDeleteIndex - backgroundItems.size - classItems.size, addedItems)
         }
     }
 
@@ -80,8 +79,42 @@ class Backpack {
         return 0
     }
 
+    private fun deleteIndexFrom(index: Int, target : MutableList<ItemInterface>) {
+        //Make sure to remove the item from any places it being used.
+        when(val item = target[index]) {
+            is Armor -> {
+                if(equippedArmor == item && allItems.count { it == item} == 1) {
+                    equippedArmor = Armor.none
+                }
+            }
+            is Shield -> {
+                if(equippedShield == item && allItems.count { it == item} == 1) {
+                    equippedShield = null
+                }
+            }
+        }
+        target.removeAt(index)
+    }
+
+    private fun addItemTo(item: ItemInterface, target: MutableList<ItemInterface>) {
+        //Automatically equip the item if we don't have something like it equipped.
+        when(item) {
+            is Armor -> {
+                if(equippedArmor == Armor.none) {
+                    equippedArmor = item
+                }
+            }
+            is Shield -> {
+                if(equippedShield == null) {
+                    equippedShield = item
+                }
+            }
+        }
+        target.add(item)
+    }
+
     fun addItem(item: ItemInterface) {
-        addedItems.add(item)
+        addItemTo(item, addedItems)
     }
 
     fun addClassItems(items: List<ItemInterface?>) {
@@ -93,7 +126,7 @@ class Backpack {
                         classCurrency[itemInterface.abbreviatedName]!!.amount += itemInterface.amount
                     }
                     else -> {
-                        classItems.add(itemInterface)
+                        addItemTo(itemInterface, classItems     )
                     }
                 }
             }
@@ -109,7 +142,7 @@ class Backpack {
                         backgroundCurrency[itemInterface.abbreviatedName]!!.amount += itemInterface.amount
                     }
                     else -> {
-                        backgroundItems.add(itemInterface)
+                        addItemTo(itemInterface, backgroundItems)
                     }
                 }
             }

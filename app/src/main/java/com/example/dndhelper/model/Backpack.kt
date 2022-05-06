@@ -3,6 +3,10 @@ package com.example.dndhelper.model
 import com.example.dndhelper.model.utils.getValueInCopper
 
 class Backpack {
+    var equippedArmor: Armor = Armor.none
+    var equippedShield: Shield? = null
+
+
     var backgroundItems = mutableListOf<ItemInterface>()
     var classItems = mutableListOf<ItemInterface>()
     var addedItems = mutableListOf<ItemInterface>()

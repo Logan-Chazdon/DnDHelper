@@ -35,8 +35,6 @@ data class Character(
     var background: Background? = null,
     var backpack: Backpack = Backpack(),
     var inspiration: Boolean = false,
-    var equippedArmor: Armor = Armor.none,
-    var equippedShield: Shield? = null,
     var positiveDeathSaves: Int = 0,
     var negativeDeathSaves: Int = 0,
     var spellSlots: List<Resource> = listOf(),
@@ -109,7 +107,7 @@ data class Character(
     val groundSpeed: Int
     get() {
         var result = race?.totalGroundSpeed ?: 30
-        if(equippedArmor.strengthPrerequisite ?: 0 > realStats["Str"] ?: 0) {
+        if(backpack.equippedArmor.strengthPrerequisite ?: 0 > realStats["Str"] ?: 0) {
             result -= 10
         }
         return result
@@ -117,10 +115,10 @@ data class Character(
     val armorClass: Int
     get() {
         //TODO implement all other sources of ac.
-        var result = equippedArmor.getAC(getStatMod("Dex"))
+        var result = backpack.equippedArmor.getAC(getStatMod("Dex"))
         //Check for a feature with a higher ac than the armor.
         //If one is found replace the current ac.
-        if(equippedArmor == Armor.none) {
+        if(backpack.equippedArmor == Armor.none) {
             features.forEach {
                 it.second.ac?.let { armorClass: ArmorClass ->
                     armorClass.calculate(
@@ -137,7 +135,7 @@ data class Character(
             }
         }
 
-        equippedShield?.let {
+        backpack.equippedShield?.let {
             result += it.totalAcBonus
         }
         features.forEach {

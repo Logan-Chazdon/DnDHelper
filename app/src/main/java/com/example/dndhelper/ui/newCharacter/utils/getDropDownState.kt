@@ -15,6 +15,7 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownState>.getDropDownState (
 
     val state : MultipleChoiceDropdownState =  if(this.containsKey(key)) {
         this[key]!!.names = names
+        this[key]!!.maxSelections = maxSelections
         this[key]!!
     } else {
         generateDefault(
@@ -55,6 +56,7 @@ fun SnapshotStateList<MultipleChoiceDropdownState>.getDropDownState (
 
     val state : MultipleChoiceDropdownState
     if(this.elementAtOrNull(key) != null) {
+        this[key].maxSelections = maxSelections
         state = this[key]
     } else {
         state = generateDefault(

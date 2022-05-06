@@ -3867,6 +3867,10 @@
                             "name" : "Chain mail",
                             "index" : "chain mail"
                         },
+                        {
+                            "name" : "Leather armor",
+                            "index" : "leather"
+                        },
                         [
                             {
                                 "name" : "Longbow",
@@ -3898,7 +3902,7 @@
                         [
                             {
                                 "name" : "A Light crossbow",
-                                "index" : "light crossbow"
+                                "index" : "crossbow, light"
                             },
                             {
                                 "name" : "20 bolts"

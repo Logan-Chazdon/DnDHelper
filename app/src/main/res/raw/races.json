@@ -990,11 +990,7 @@
             "ability_bonuses": [
                 {
                     "name": "Charisma",
-                    "bonus": 1
-                },
-                {
-                    "name": "Charisma",
-                    "bonus": 1
+                    "bonus": 2
                 }
             ],
             "proficiencies" : [

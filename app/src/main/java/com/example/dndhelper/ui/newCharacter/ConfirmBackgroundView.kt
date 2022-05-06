@@ -89,27 +89,33 @@ fun ConfirmBackgroundView(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(0.95f),
-                        backgroundColor = MaterialTheme.colors.noActionNeeded,
-                        elevation = 5.dp,
-                        shape = RoundedCornerShape(10.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(start = 5.dp)) {
-                            Text(
-                                text = "Equipment",
-                                style = MaterialTheme.typography.h6
-                            )
-                            Text(background.equipment.let { items ->
-                                var result = ""
-                                items.forEachIndexed { i, item ->
-                                    result += item.name
-                                    if (i != items.size - 1) {
-                                        result += ", "
+                    if(background.equipment.isNotEmpty()) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(0.95f),
+                            backgroundColor = MaterialTheme.colors.noActionNeeded,
+                            elevation = 5.dp,
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(start = 5.dp)) {
+                                Text(
+                                    text = "Equipment",
+                                    style = MaterialTheme.typography.h6
+                                )
+                                Text(background.equipment.let { items ->
+                                    var result = ""
+                                    items.forEachIndexed { i, item ->
+                                        result += item.name
+                                        if (i != items.size - 1) {
+                                            result += ", "
+                                        }
                                     }
-                                }
-                                result.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-                            })
+                                    result.replaceFirstChar {
+                                        if (it.isLowerCase()) it.titlecase(
+                                            Locale.getDefault()
+                                        ) else it.toString()
+                                    }
+                                })
+                            }
                         }
                     }
 

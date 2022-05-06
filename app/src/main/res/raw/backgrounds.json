@@ -555,8 +555,13 @@
                     "name": "Insight"
                 },
                 {
-                    "name": "One type of artisan’s tools TODO",
-                    "choose": 1
+                    "name": "One type of artisan’s tools",
+                    "choose": 1,
+                    "from" : [
+                        {
+                            "index" : "artisans_tools"
+                        }
+                    ]
                 }
             ],
             "features": [
@@ -575,25 +580,28 @@
             ],
             "equipment": [
                 {
-                    "name": "TODO A set of artisan’s tools with which you are proficient",
-                    "choose": 0
+                    "name": "A set of artisan’s tools with which you are proficient",
+                    "choose": 1,
+                    "comment" : "TODO impl prereq",
+                    "from" : [
+                        {
+                            "index" : "artisans_tools"
+                        }
+                    ]
                 },
                 {
-                    "name": "TODO? a maker’s mark chisel used to mark your handiwork with the symbol of the clan of crafters you learned your skill from",
-                    "choose": 0
+                    "name": "A maker’s mark chisel used to mark your handiwork with the symbol of the clan of crafters you learned your skill from"
                 },
                 {
-                    "name": "a set of traveler’s clothes,",
-                    "choose": 0
-                },
-                {
-                    "name": "TODO and a pouch containing 5 gp",
-                    "index": "gold",
-                    "value": 5,
-                    "choose": 0
+                    "name": "a set of traveler’s clothes"
                 },
                 {
                     "name" : "a gem worth 10 gp"
+                },
+                {
+                    "name": "a pouch containing 5 gp",
+                    "index": "gold",
+                    "amount": 5
                 }
             ]
         },

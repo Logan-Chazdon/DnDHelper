@@ -963,6 +963,7 @@
             "features": [
                 {
                     "name" : "Factions of the Sword Coast",
+                    "desc" : "The lack of large, centralized governments in the North and along the Sword Coast is likely directly responsible for the proliferation of secret societies and conspiracies in those lands. If your background is as an agent for one of the main factions of the North and Sword Coast, here are some possibilities.",
                     "choose" : 1,
                     "from" : [
                         {

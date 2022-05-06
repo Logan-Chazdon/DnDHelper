@@ -213,7 +213,7 @@
                     "index": {
                       "type": "string"
                     },
-                    "value": {
+                    "amount": {
                       "type": "integer"
                     },
                     "choose": {
@@ -223,7 +223,7 @@
                   "required": [
                     "name",
                     "index",
-                    "value",
+                    "amount",
                     "choose"
                   ]
                 }

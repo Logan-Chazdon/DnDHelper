@@ -60,7 +60,7 @@
                 {
                     "name": "a pouch containing 15 gp",
                     "index": "gold",
-                    "value": 15,
+                    "amount": 15,
                     "choose": 0
                 }
             ]
@@ -113,7 +113,7 @@
                 {
                     "name": "a pouch containing 10 gp",
                     "index": "gold",
-                    "value": 10,
+                    "amount": 10,
                     "choose": 0
                 }
             ]
@@ -174,7 +174,7 @@
                 {
                     "name": "a pouch containing 25 gp",
                     "index": "gold",
-                    "value": 25,
+                    "amount": 25,
                     "choose": 0
                 }
             ]
@@ -226,7 +226,7 @@
                 {
                     "name": "a pouch containing 10 gp",
                     "index": "gold",
-                    "value": 10,
+                    "amount": 10,
                     "choose": 0
                 }
             ]

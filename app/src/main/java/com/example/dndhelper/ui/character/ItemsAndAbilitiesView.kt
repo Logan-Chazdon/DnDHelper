@@ -32,7 +32,7 @@ fun ItemsAndAbilitiesView(
         ) {
             items(character.backpack.allWeapons) {
                 Row {
-                    Text(text = it.name!!, modifier = Modifier.width(100.dp))
+                    Text(text = it.displayName, modifier = Modifier.width(100.dp))
                     Text(
                         text = character.calculateWeaponAttackBonus(it).let {
                             if (it < 0) {

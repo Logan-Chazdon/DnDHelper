@@ -110,16 +110,14 @@ fun ItemsView(viewModel: ItemViewModel) {
                                         horizontalArrangement = Arrangement.spacedBy(5.dp)
                                     ) {
                                         //Display item name
-                                        item.name?.let { string ->
-                                            Text(
-                                                text = string,
-                                                modifier = if (item.type == "Item") {
-                                                    Modifier
-                                                } else {
-                                                    Modifier.width(screenWidth / 4)
-                                                }
-                                            )
-                                        }
+                                        Text(
+                                            text = item.displayName,
+                                            modifier = if (item.type == "Item") {
+                                                Modifier
+                                            } else {
+                                                Modifier.width(screenWidth / 4)
+                                            }
+                                        )
 
                                         //Display data  specific to the time type.
                                         when (item.type) {
@@ -316,7 +314,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                                     //TODO upgrade search
                                     if (
                                         search == "" ||
-                                        item.name?.lowercase()?.contains(search.lowercase()) == true
+                                        item.displayName.lowercase().contains(search.lowercase())
                                     ) {
                                         val color = if (selected == i) {
                                             MaterialTheme.colors.primary
@@ -335,7 +333,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                                                 Modifier.padding(5.dp),
                                                 horizontalArrangement = Arrangement.SpaceBetween
                                             ) {
-                                                Text(text = item.name!!)
+                                                Text(text = item.displayName)
                                                 Text(text = item.costString())
                                             }
                                         }
@@ -652,7 +650,7 @@ fun ItemsView(viewModel: ItemViewModel) {
                 text = {
                     Text(
                         "Would you like to delete " +
-                                "${viewModel.character?.value?.backpack?.allItems!![itemToDeleteIndex].name}"
+                                viewModel.character?.value?.backpack?.allItems!![itemToDeleteIndex].displayName
                     )
                 },
                 confirmButton = {

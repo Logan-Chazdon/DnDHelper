@@ -4,9 +4,10 @@ import kotlin.math.ceil
 
 
 data class Currency(
+    private val backingDisplayName: String? = null,
     var amount: Int,
     override val name: String?,
-    override val weight: Int? = 0,
+    override val weight: Int? = 0
 ) : ItemInterface {
     override val type = "Currency"
     override val charges: Resource? = null
@@ -16,6 +17,14 @@ data class Currency(
     override val cost: Map<String, Currency>? = null
     override val maxInfusions: Int= 0
     override val infusions: MutableList<Infusion>? = null
+
+    override val displayName: String
+        get() {
+            backingDisplayName?.let{
+                return it
+            }
+            return name ?: ""
+        }
 
     public val abbreviatedName : String
     get() {

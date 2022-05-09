@@ -7,7 +7,7 @@ val <E> List<E>.allNames: String
         if(this.distinct().count() == 1 && this.size != 1) {
             when(this[0]) {
                 is ItemInterface -> {
-                    return "${this.size} ${(this[0] as ItemInterface).name}s"
+                    return "${this.size} ${(this[0] as ItemInterface).displayName}s"
                 }
             }
         }
@@ -16,7 +16,7 @@ val <E> List<E>.allNames: String
         this.forEachIndexed { index, it ->
             val name  = when(it) {
                 is ItemInterface -> {
-                    (it as ItemInterface).name
+                    (it as ItemInterface).displayName
                 }
                 else -> {
                     ""

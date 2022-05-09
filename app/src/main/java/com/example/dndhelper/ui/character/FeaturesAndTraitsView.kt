@@ -154,7 +154,7 @@ fun FeaturesAndTraitsView(
                                                             if (targetItemIndex < 0) {
                                                                 "None"
                                                             } else {
-                                                                targetItems[targetItemIndex].name
+                                                                targetItems[targetItemIndex].displayName
                                                             }
                                                         }",
                                                         modifier = Modifier.padding(8.dp),
@@ -175,7 +175,7 @@ fun FeaturesAndTraitsView(
                                                         DropdownMenuItem(onClick = {
                                                             targetItemIndex = index
                                                         }) {
-                                                            Text(it.name.toString())
+                                                            Text(it.displayName.toString())
                                                         }
                                                     }
                                                 }

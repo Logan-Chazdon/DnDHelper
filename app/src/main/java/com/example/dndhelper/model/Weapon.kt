@@ -18,7 +18,8 @@ data class Weapon(
     override val infusions: MutableList<Infusion>? = mutableListOf()
 ) : ItemInterface {
     override val type = "Weapon"
-
+    override val displayName: String
+        get() = name ?: ""
     val damageDesc: String
     get() {
         val infusionBonus = infusions.let { infusions ->

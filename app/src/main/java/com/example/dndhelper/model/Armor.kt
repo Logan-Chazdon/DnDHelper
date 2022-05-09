@@ -16,6 +16,8 @@ data class Armor(
     override val infusions: MutableList<Infusion>? = mutableListOf()
 ) : ItemInterface {
     override val type = "Armor"
+    override val displayName: String
+        get() = name ?: ""
 
     val totalBaseAc : Int
     get() {

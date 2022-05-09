@@ -1664,6 +1664,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         "gold" -> {
                             items.add(
                                 Currency(
+                                    backingDisplayName = json.getString("name"),
                                     name = "Gold pieces",
                                     amount = json.getInt("amount")
                                 )
@@ -1672,6 +1673,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         "silver" -> {
                             items.add(
                                 Currency(
+                                    backingDisplayName = json.getString("name"),
                                     name = "Silver pieces",
                                     amount = json.getInt("amount")
                                 )

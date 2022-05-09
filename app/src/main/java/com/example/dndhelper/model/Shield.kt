@@ -13,7 +13,8 @@ data class Shield(
     override val infusions: MutableList<Infusion>? = mutableListOf()
 ) : ItemInterface {
     override val type = "Shield"
-
+    override val displayName: String
+        get() = name ?: ""
      val totalAcBonus : Int
      get() {
         var result = acBonus

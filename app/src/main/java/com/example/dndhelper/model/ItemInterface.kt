@@ -2,6 +2,7 @@ package com.example.dndhelper.model
 
 interface ItemInterface {
     val type : String
+    val displayName: String
     val name : String?
     val index: String?
     val desc: String?

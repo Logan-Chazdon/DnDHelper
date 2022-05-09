@@ -14,4 +14,6 @@ data class Item (
     override val infusions: MutableList<Infusion>? = mutableListOf()
 ) : ItemInterface {
     override val type = "Item"
+    override val displayName: String
+        get() = name ?: ""
 }

@@ -44,6 +44,7 @@ data class Feature(
     fun getAvailableOptions(
         character: Character?,
         assumedProficiencies: List<Proficiency>,
+        assumedFeatures: List<Feature>,
         level: Int,
         assumedClass: Class?,
         assumedSpells: List<Spell>,
@@ -56,6 +57,7 @@ data class Feature(
                 try {level >= it.grantedAtLevel} catch(e: NumberFormatException) {false} &&
                 it.prerequisite?.check(
                     character,
+                    assumedFeatures,
                     assumedProficiencies,
                     assumedClass = assumedClass,
                     assumedLevel = level,

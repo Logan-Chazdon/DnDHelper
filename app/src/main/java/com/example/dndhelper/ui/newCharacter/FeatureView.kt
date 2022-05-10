@@ -26,6 +26,7 @@ fun FeatureView(
     dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>,
     assumedClass: Class?,
     assumedSpells: List<Spell>,
+    assumedFeatures: List<Feature>,
     assumedStatBonuses: Map<String, Int>?
     ) {
     val color = if (feature.choose.num(level) != 0) {
@@ -52,6 +53,7 @@ fun FeatureView(
                     state = dropDownStates.getDropDownState(
                         feature = feature,
                         character = character,
+                        assumedFeatures = assumedFeatures,
                         assumedProficiencies = proficiencies,
                         level = level,
                         assumedClass = assumedClass,

@@ -11,6 +11,7 @@ data class Prerequisite(
 ) {
     fun check(
         character: Character?,
+        assumedFeatures: List<Feature>,
         assumedProficiencies: List<Proficiency>?,
         assumedClass: Class?,
         assumedSpells: List<Spell>,
@@ -77,9 +78,41 @@ data class Prerequisite(
             }
         }
 
+        feature?.let {
+            if(!checkFeature(character, assumedFeatures)) {
+                return false
+            }
+        }
 
-        //TODO check feature
         return true
+    }
+
+    private fun checkFeature(character: Character?, assumedFeatures: List<Feature>): Boolean {
+        fun checkForFeature(it: Feature) : Boolean {
+            if(it.name == feature) {
+                return true
+            }
+            it.chosen?.forEach {
+                if(checkForFeature(it)) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        assumedFeatures.forEach {
+            if(checkForFeature(it)) {
+                return true
+            }
+        }
+
+        character?.features?.forEach {
+            if(checkForFeature(it.second)) {
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun checkSpell(

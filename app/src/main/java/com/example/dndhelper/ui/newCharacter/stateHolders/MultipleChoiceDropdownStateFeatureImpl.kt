@@ -17,6 +17,8 @@ class MultipleChoiceDropdownStateFeatureImpl(
     var assumedClass: Class? = null
     var assumedSpells: List<Spell> = listOf()
     var assumedStatBonuses: Map<String, Int>? = null
+    var assumedFeatures: List<Feature> = listOf()
+
     override val selectedNames: MutableLiveData<String> = MutableLiveData(feature.name)
 
     override var choiceName = ""
@@ -48,6 +50,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
     get() {
         return feature.getAvailableOptions(
             character = character,
+            assumedFeatures = assumedFeatures,
             assumedSpells = assumedSpells,
             assumedClass = assumedClass,
             assumedStatBonuses = assumedStatBonuses,

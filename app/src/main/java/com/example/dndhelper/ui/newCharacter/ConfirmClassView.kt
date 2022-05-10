@@ -49,6 +49,16 @@ fun ConfirmClassView(
         }
     }
 
+    val assumedFeatures = remember (
+        viewModel.featChoiceDropDownStates,
+        viewModel.isFeat,
+        viewModel.featureDropdownStates
+    ) {
+        derivedStateOf {
+            viewModel.calculateAssumedFeatures()
+        }
+    }
+
     val assumedProficiencies = remember (
         viewModel.featChoiceDropDownStates,
         viewModel.isFeat,
@@ -441,6 +451,7 @@ fun ConfirmClassView(
                                 } catch (e: java.lang.NumberFormatException) {
                                     0
                                 },
+                                assumedFeatures = assumedFeatures.value,
                                 character = viewModel.character?.observeAsState()?.value,
                                 proficiencies = assumedProficiencies.value,
                                 dropDownStates = viewModel.featureDropdownStates,
@@ -500,6 +511,7 @@ fun ConfirmClassView(
                                         } catch (e: java.lang.NumberFormatException) {
                                             0
                                         },
+                                        assumedFeatures = assumedFeatures.value,
                                         character = viewModel.character?.observeAsState()?.value,
                                         proficiencies = assumedProficiencies.value,
                                         dropDownStates = viewModel.featureDropdownStates,

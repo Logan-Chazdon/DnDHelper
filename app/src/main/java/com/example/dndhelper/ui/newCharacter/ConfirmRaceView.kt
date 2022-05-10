@@ -347,13 +347,14 @@ private fun RaceFeaturesView(
     features.forEach { feature ->
         FeatureView(
             feature = feature,
+            assumedFeatures = listOf(),
             level = character?.totalClassLevels ?: 0,
             proficiencies = proficiencies,
             character = character,
             dropDownStates = dropDownStates,
-            null,
-            assumedSpells,
-            assumedStatBonuses
+            assumedClass = null,
+            assumedSpells = assumedSpells,
+            assumedStatBonuses = assumedStatBonuses
         )
     }
 }

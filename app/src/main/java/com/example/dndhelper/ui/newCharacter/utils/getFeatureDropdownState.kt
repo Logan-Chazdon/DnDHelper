@@ -11,7 +11,8 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>.getDropDown
     level: Int,
     assumedClass: Class?,
     assumedSpells: List<Spell>,
-    assumedStatBonuses: Map<String, Int>?
+    assumedStatBonuses: Map<String, Int>?,
+    assumedFeatures: List<Feature>
 ) : MultipleChoiceDropdownStateFeatureImpl {
     val applyData = fun (state: MultipleChoiceDropdownStateFeatureImpl): MultipleChoiceDropdownStateFeatureImpl {
         state.assumedClass = assumedClass
@@ -20,6 +21,7 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>.getDropDown
         state.assumedSpells = assumedSpells
         state.level = level
         state.assumedStatBonuses = assumedStatBonuses
+        state.assumedFeatures = assumedFeatures
         return state
     }
     val key = feature.name + feature.grantedAtLevel

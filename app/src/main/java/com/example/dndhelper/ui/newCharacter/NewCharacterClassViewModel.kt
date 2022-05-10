@@ -26,7 +26,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
-    var classes: LiveData<List<com.example.dndhelper.model.Class>> = repository.getClasses()
+    var classes: LiveData<List<Class>> = repository.getClasses()
     var id = -1
     var isBaseClass = mutableStateOf(true)
     var takeGold = mutableStateOf(false)
@@ -107,7 +107,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
 
-    suspend fun addClassLevels(newClass: com.example.dndhelper.model.Class, level: Int) {
+    suspend fun addClassLevels(newClass: Class, level: Int) {
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
         val character = repository.getCharacterById(id)
@@ -221,7 +221,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     private var subclassDropdownState: MultipleChoiceDropdownStateImpl? = null
-    fun getSubclassDropdownState(it: com.example.dndhelper.model.Class): MultipleChoiceDropdownStateImpl {
+    fun getSubclassDropdownState(it: Class): MultipleChoiceDropdownStateImpl {
         return if (subclassDropdownState == null) {
             subclassDropdownState = MultipleChoiceDropdownStateImpl()
             subclassDropdownState!!.maxSelections = 1
@@ -359,6 +359,27 @@ public class NewCharacterClassViewModel @Inject constructor(
         val newChar = character?.value?.copy(classes = newClasses!!)
         newChar?.id = character?.value?.id!!
         repository.insertCharacter(newChar!!)
+    }
+
+    //TODO look into refactoring the parts of this that are similar to code snippets in addClass into separate functions.
+    fun calculateAssumedFeatures() : List<Feature> {
+        val result = mutableListOf<Feature>()
+        classes.value?.get(classIndex)?.levelPath?.filter { it.grantedAtLevel <= toNumber(levels) }?.forEach {
+            if (it.choose.num(toNumber(levels)) != 0 && it.options?.isNullOrEmpty() == false) {
+                it.chosen = featureDropdownStates[it.name + it.grantedAtLevel]?.getSelected()
+            }
+            result.add(it)
+        }
+        if (toNumber(levels) >= classes.value?.get(classIndex)?.subclassLevel!!) {
+            classes.value?.get(classIndex)?.subclass?.features?.filter { it.grantedAtLevel <= toNumber(levels) }?.forEach {
+                if (it.choose.num(toNumber(levels)) != 0 && it.options?.isNullOrEmpty() == false) {
+                    it.chosen = featureDropdownStates[it.name + it.grantedAtLevel]?.getSelected()
+                    result.add(it)
+                }
+            }
+        }
+
+        return result
     }
 
     fun calculateAssumedSpells(): List<Spell> {

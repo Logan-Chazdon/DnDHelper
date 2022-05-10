@@ -263,7 +263,7 @@ fun ConfirmBackgroundView(
                             level = 1,
                             proficiencies = listOf(),
                             character =viewModel.character?.observeAsState()?.value,
-                            dropDownStates = viewModel.dropDownStates,
+                            dropDownStates = viewModel.featureDropDownStates,
                             assumedClass = null,
                             assumedSpells = listOf(),
                             assumedStatBonuses = null

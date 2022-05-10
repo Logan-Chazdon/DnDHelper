@@ -13,6 +13,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.dndhelper.model.*
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import com.example.dndhelper.ui.theme.noActionNeeded
 
@@ -22,7 +23,7 @@ fun FeatureView(
     level : Int,
     proficiencies: List<Proficiency>,
     character: Character?,
-    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>,
+    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>,
     assumedClass: Class?,
     assumedSpells: List<Spell>,
     assumedStatBonuses: Map<String, Int>?
@@ -47,26 +48,15 @@ fun FeatureView(
             )
 
             if (feature.choose.num(level) != 0) {
-                val options = feature.getAvailableOptions(
-                    character,
-                    proficiencies,
-                    level,
-                    assumedClass,
-                    assumedSpells,
-                    assumedStatBonuses
-                )
                 MultipleChoiceDropdownView(
                     state = dropDownStates.getDropDownState(
-                        key = feature.name + feature.grantedAtLevel,
-                        choiceName = feature.name,
-                        maxSelections = feature.choose.num(level),
-                        names = options.let { list ->
-                            val result = mutableListOf<String>()
-                            list.forEach {
-                                result.add(it.name)
-                            }
-                            result
-                        }
+                        feature = feature,
+                        character = character,
+                        assumedProficiencies = proficiencies,
+                        level = level,
+                        assumedClass = assumedClass,
+                        assumedStatBonuses = assumedStatBonuses,
+                        assumedSpells = assumedSpells
                     )
                 )
             }

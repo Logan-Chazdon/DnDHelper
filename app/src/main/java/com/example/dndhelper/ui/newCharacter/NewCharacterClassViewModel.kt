@@ -124,16 +124,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 
         newClass.levelPath.filter { it.grantedAtLevel <= level }.forEach {
             if (it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
-                it.chosen = dropDownStates[it.name + it.grantedAtLevel]?.getSelected(
-                    it.getAvailableOptions(
-                        character = character,
-                        assumedProficiencies = calculateAssumedProficiencies(),
-                        level = level,
-                        assumedStatBonuses = calculateAssumedStatBonuses(),
-                        assumedSpells = calculateAssumedSpells(),
-                        assumedClass = classes.value?.get(classIndex)
-                    )
-                ) as List<Feature>
+                it.chosen = featureDropdownStates[it.name + it.grantedAtLevel]?.getSelected()
             }
         }
 
@@ -170,18 +161,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 
             newClass.subclass?.features?.filter { it.grantedAtLevel <= level }?.forEach {
                 if (it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
-                    it.chosen = dropDownStates[it.name + it.grantedAtLevel]
-                        ?.getSelected(
-                            it.getAvailableOptions(
-                                character = character,
-                                assumedProficiencies = calculateAssumedProficiencies(),
-                                level = level,
-                                assumedStatBonuses = calculateAssumedStatBonuses(),
-                                assumedSpells = calculateAssumedSpells(),
-                                assumedClass = classes.value?.get(classIndex)
-                            )
-                        )
-                            as List<Feature>
+                    it.chosen = featureDropdownStates[it.name + it.grantedAtLevel]?.getSelected()
                 }
             }
         }

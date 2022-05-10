@@ -443,7 +443,7 @@ fun ConfirmClassView(
                                 },
                                 character = viewModel.character?.observeAsState()?.value,
                                 proficiencies = assumedProficiencies.value,
-                                dropDownStates = viewModel.dropDownStates,
+                                dropDownStates = viewModel.featureDropdownStates,
                                 assumedClass = viewModel.classes.observeAsState().value?.get(
                                     viewModel.classIndex
                                 ),
@@ -502,7 +502,7 @@ fun ConfirmClassView(
                                         },
                                         character = viewModel.character?.observeAsState()?.value,
                                         proficiencies = assumedProficiencies.value,
-                                        dropDownStates = viewModel.dropDownStates,
+                                        dropDownStates = viewModel.featureDropdownStates,
                                         assumedClass = viewModel.classes.observeAsState().value?.get(
                                             viewModel.classIndex
                                         ),

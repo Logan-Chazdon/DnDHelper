@@ -57,15 +57,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
         filterRaceFeatures(newRace).forEach {
             if(it.choose.num(character?.totalClassLevels ?: 0) != 0 && it.options?.isNullOrEmpty() == false) {
                 it.chosen = raceFeaturesDropdownStates[it.name + it.grantedAtLevel]
-                    ?.getSelected(it.getAvailableOptions(
-                        character,
-                        proficiencies,
-                        character?.totalClassLevels ?: 0,
-                        null,
-                        calculateAssumedSpells(),
-                        calculateAssumedStatBonuses()
-                    ))
-                        as List<Feature>
+                    ?.getSelected()
             }
         }
 
@@ -87,15 +79,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
                 this.traits.forEach {
                     if(it.choose.num(character?.totalClassLevels ?: 0) != 0 && it.options?.isNullOrEmpty() == false) {
                         it.chosen = subraceFeaturesDropdownStates[it.name + it.grantedAtLevel]
-                            ?.getSelected(it.getAvailableOptions(
-                                character,
-                                proficiencies,
-                                character?.totalClassLevels ?: 0,
-                                null,
-                                calculateAssumedSpells(),
-                                calculateAssumedStatBonuses()
-                            ))
-                                as List<Feature>
+                            ?.getSelected()
                     }
                 }
 

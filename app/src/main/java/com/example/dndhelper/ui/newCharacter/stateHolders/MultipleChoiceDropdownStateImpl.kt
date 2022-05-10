@@ -1,18 +1,18 @@
-package com.example.dndhelper.ui.newCharacter
+package com.example.dndhelper.ui.newCharacter.stateHolders
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 
-class MultipleChoiceDropdownState()  {
-    val selectedList =  mutableStateListOf<Int>()
+class MultipleChoiceDropdownStateImpl : MultipleChoiceDropdownState {
+    override val selectedList =  mutableStateListOf<Int>()
     private val _selectedNames = MutableLiveData("")
-    val selectedNames: LiveData<String> = _selectedNames
+    override val selectedNames: LiveData<String> = _selectedNames
     var maxSameSelections = 1
-    var maxSelections = 0
+    override var maxSelections = 0
 
-    var names : List<String> = listOf()
+    override var names : List<String> = listOf()
         set(newName: List<String>) {
             field = newName
             //This fills selectedList with false and makes sure its the correct size
@@ -23,7 +23,7 @@ class MultipleChoiceDropdownState()  {
             }
         }
 
-    var choiceName = ""
+    override var choiceName = ""
         set(newName : String) {
             field = newName
             if(_selectedNames.value == "")
@@ -32,7 +32,7 @@ class MultipleChoiceDropdownState()  {
 
 
 
-    fun incrementSelection(index:Int) {
+    override fun incrementSelection(index:Int) {
         //Change the selection and make sure we stay below the max selections.
         var selections = 0
         for(item in selectedList) {
@@ -55,7 +55,7 @@ class MultipleChoiceDropdownState()  {
         _selectedNames.value = (newNames)
     }
 
-    fun decrementSelection(index: Int) {
+    override fun decrementSelection(index: Int) {
         if(selectedList[index] != 0)
              selectedList[index] = selectedList[index] - 1
     }

@@ -2,18 +2,18 @@ package com.example.dndhelper.ui.newCharacter.utils
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
-import com.example.dndhelper.ui.newCharacter.MultipleChoiceDropdownState
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 
 
-fun SnapshotStateMap<String, MultipleChoiceDropdownState>.getDropDownState (
+fun SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>.getDropDownState (
     key: String,
     maxSelections : Int,
     names : MutableList<String>,
     choiceName: String,
     maxOfSameSelection: Int = 1
-) : MultipleChoiceDropdownState {
+) : MultipleChoiceDropdownStateImpl {
 
-    val state : MultipleChoiceDropdownState =  if(this.containsKey(key)) {
+    val state : MultipleChoiceDropdownStateImpl =  if(this.containsKey(key)) {
         this[key]!!.names = names
         this[key]!!.maxSelections = maxSelections
         this[key]!!
@@ -31,13 +31,13 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownState>.getDropDownState (
     return state
 }
 
-fun SnapshotStateList<MultipleChoiceDropdownState>.getDropDownState (
+fun SnapshotStateList<MultipleChoiceDropdownStateImpl>.getDropDownState (
     key: Int,
     maxSelections : Int,
     names : MutableList<String>,
     choiceName: String,
     maxOfSameSelection: Int = 1
-) : MultipleChoiceDropdownState {
+) : MultipleChoiceDropdownStateImpl {
     if(key > this.size) {
         for(i in 0..key) {
             if(this.elementAtOrNull(i) == null) {
@@ -54,7 +54,7 @@ fun SnapshotStateList<MultipleChoiceDropdownState>.getDropDownState (
         }
     }
 
-    val state : MultipleChoiceDropdownState
+    val state : MultipleChoiceDropdownStateImpl
     if(this.elementAtOrNull(key) != null) {
         this[key].maxSelections = maxSelections
         state = this[key]
@@ -75,8 +75,8 @@ private fun generateDefault(
     names : MutableList<String>,
     choiceName: String,
     maxOfSameSelection: Int
-): MultipleChoiceDropdownState {
-    val result = MultipleChoiceDropdownState()
+): MultipleChoiceDropdownStateImpl {
+    val result = MultipleChoiceDropdownStateImpl()
     result.maxSelections = maxSelections
     result.choiceName = choiceName
     result.names = names

@@ -10,6 +10,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.model.*
 import com.example.dndhelper.model.repositories.Repository
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import com.example.dndhelper.ui.newCharacter.utils.getFeatsAt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,13 +25,13 @@ public class NewCharacterRaceViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
     lateinit var character: LiveData<Character>
-    var raceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
-    val raceProficiencyChoiceDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
-    var subraceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
-    var subraceASIDropdownState = mutableStateOf<MultipleChoiceDropdownState?>(null)
-    val subraceFeatDropdownStates = mutableStateListOf<MultipleChoiceDropdownState>()
-    val subraceFeatChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
-    val languageDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
+    var raceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
+    val raceProficiencyChoiceDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
+    var subraceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
+    var subraceASIDropdownState = mutableStateOf<MultipleChoiceDropdownStateImpl?>(null)
+    val subraceFeatDropdownStates = mutableStateListOf<MultipleChoiceDropdownStateImpl>()
+    val subraceFeatChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
+    val languageDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     lateinit var races: LiveData<List<Race>>
     var id by Delegates.notNull<Int>()
     var raceIndex = 0

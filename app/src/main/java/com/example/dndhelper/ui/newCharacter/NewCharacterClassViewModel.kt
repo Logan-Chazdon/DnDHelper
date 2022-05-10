@@ -12,6 +12,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.example.dndhelper.model.*
 import com.example.dndhelper.model.repositories.Repository
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import com.example.dndhelper.ui.newCharacter.utils.getFeatsAt
 import com.example.dndhelper.ui.utils.allNames
@@ -28,7 +30,8 @@ public class NewCharacterClassViewModel @Inject constructor(
     var id = -1
     var isBaseClass = mutableStateOf(true)
     var takeGold = mutableStateOf(false)
-    var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
+    var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
+    val featureDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
     val character: LiveData<Character>?
     val classSpells = mutableStateListOf<Spell>()
     val subclassSpells = mutableStateListOf<Spell>()
@@ -55,9 +58,9 @@ public class NewCharacterClassViewModel @Inject constructor(
     val feats: LiveData<List<Feat>> = repository.getFeats()
     val featNames: MediatorLiveData<MutableList<String>> = MediatorLiveData()
     val isFeat = mutableStateListOf<Boolean>()
-    val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
-    val featChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
-    val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownState>()
+    val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownStateImpl>()
+    val featChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
+    val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownStateImpl>()
     var classIndex = 0
     var goldRolled = mutableStateOf(
         (classes.value?.getOrNull(classIndex)?.startingGoldD4s?.times(2) ?: 4).toString()
@@ -217,10 +220,10 @@ public class NewCharacterClassViewModel @Inject constructor(
         }
     }
 
-    private var subclassDropdownState: MultipleChoiceDropdownState? = null
-    fun getSubclassDropdownState(it: com.example.dndhelper.model.Class): MultipleChoiceDropdownState {
+    private var subclassDropdownState: MultipleChoiceDropdownStateImpl? = null
+    fun getSubclassDropdownState(it: com.example.dndhelper.model.Class): MultipleChoiceDropdownStateImpl {
         return if (subclassDropdownState == null) {
-            subclassDropdownState = MultipleChoiceDropdownState()
+            subclassDropdownState = MultipleChoiceDropdownStateImpl()
             subclassDropdownState!!.maxSelections = 1
             subclassDropdownState!!.choiceName = "Subclass"
             val names = mutableListOf<String>()

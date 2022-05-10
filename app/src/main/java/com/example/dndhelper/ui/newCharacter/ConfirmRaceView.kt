@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.dndhelper.model.*
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 import com.example.dndhelper.ui.theme.noActionNeeded
 import kotlinx.coroutines.GlobalScope
@@ -278,7 +280,7 @@ fun ConfirmRaceView(
                         RaceContentCard("Ability bonuses", true) {
                             val state = viewModel.subraceASIDropdownState.value.let {
                                 if (it == null) {
-                                    val newState = MultipleChoiceDropdownState()
+                                    val newState = MultipleChoiceDropdownStateImpl()
                                     newState.names = choice.from.let { list ->
                                         val names = mutableListOf<String>()
                                         list.forEach {
@@ -337,7 +339,7 @@ private fun RaceContentCard(
 private fun RaceFeaturesView(
     character: Character?,
     features: List<Feature>,
-    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>,
+    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>,
     proficiencies: List<Proficiency>,
     assumedSpells : List<Spell>,
     assumedStatBonuses:MutableMap<String, Int>
@@ -361,7 +363,7 @@ private fun RaceLanguagesView(
     languageDesc: String?,
     languages: List<Language>?,
     languageChoices: List<LanguageChoice>?,
-    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>
+    dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>
 ) {
     RaceContentCard("Languages", (languageChoices?.size ?: 0) > 0) {
         Text(

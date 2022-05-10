@@ -4,13 +4,13 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.dndhelper.model.Feat
 import com.example.dndhelper.model.Feature
-import com.example.dndhelper.ui.newCharacter.MultipleChoiceDropdownState
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 
 fun getFeatsAt(
     i: Int,
     level: Int,
-    featDropDownStates: SnapshotStateList<MultipleChoiceDropdownState>,
-    featChoiceDropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownState>,
+    featDropDownStates: SnapshotStateList<MultipleChoiceDropdownStateImpl>,
+    featChoiceDropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>,
     feats: List<Feat>
     ): List<Feat> {
     return try {

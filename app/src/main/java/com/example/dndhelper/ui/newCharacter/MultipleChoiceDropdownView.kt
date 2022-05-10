@@ -8,6 +8,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownState
 
 @Composable
 fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
@@ -26,14 +27,14 @@ fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
     ) {
         state.names.forEachIndexed { index, item ->
             DropdownMenuItem(onClick = {
-                if(state.selectedList[index] >= state.maxSameSelections) {
+                if(state.selectedList[index] >= state.getMaxSameSelectionsAt(index)) {
                     state.decrementSelection(index)
                 } else {
                     state.incrementSelection(index)
                 }
             }) {
                     //If we can only select each item once make a checkbox
-                    if (state.maxSameSelections == 1) {
+                    if (state.getMaxSameSelectionsAt(index) == 1) {
                         Checkbox(
                             checked = state.selectedList[index] != 0,
                             onCheckedChange = null
@@ -44,7 +45,7 @@ fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
                     Text(text = item)
                     Spacer(modifier = Modifier.width(15.dp))
 
-                    if (state.maxSameSelections != 1) {
+                    if (state.getMaxSameSelectionsAt(index) != 1) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                             Button(onClick = {
                                 state.decrementSelection(index)

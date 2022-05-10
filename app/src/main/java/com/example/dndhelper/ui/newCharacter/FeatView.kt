@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.dndhelper.model.Feat
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 
 @Composable
@@ -14,8 +15,8 @@ fun FeatView(
     key : Int,
     featNames: MutableList<String>,
     feats: List<Feat>,
-    featDropDownStates: SnapshotStateList<MultipleChoiceDropdownState>,
-    featChoiceDropDownState: SnapshotStateMap<String, MultipleChoiceDropdownState>,
+    featDropDownStates: SnapshotStateList<MultipleChoiceDropdownStateImpl>,
+    featChoiceDropDownState: SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>,
 ) {
     val state = featDropDownStates.getDropDownState(
             key = key,

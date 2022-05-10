@@ -8,6 +8,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.dndhelper.model.*
 import com.example.dndhelper.model.repositories.Repository
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
+import com.example.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,7 +23,8 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
     lateinit var backgrounds : LiveData<List<Background>>
     var backgroundIndex : Int = -1
     var id = -1
-    var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownState>()
+    var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
+    var featureDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
     val character: LiveData<Character>?
 
     init {

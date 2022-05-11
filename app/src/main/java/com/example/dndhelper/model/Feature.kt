@@ -6,6 +6,7 @@ data class Feature(
     val index : String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.
     val grantedAtLevel: Int = 1,
     val choose: Choose = Choose(0),
+    val maxTimesChosen : Int? = null, //If the feature is in another features options. This is the max amount of times the user can select it.
     val options: MutableList<Feature>?,
     val prerequisite: Prerequisite? = null,
     val spells: List<Spell>? = null, //Spells granted by this feature

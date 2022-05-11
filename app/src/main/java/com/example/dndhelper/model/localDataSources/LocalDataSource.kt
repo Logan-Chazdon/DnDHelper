@@ -299,40 +299,74 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         val infusionsJson = JSONObject(dataAsString).getJSONArray("infusions")
         for (index in 0 until infusionsJson.length()) {
             val infusionJson = infusionsJson.getJSONObject(index)
-            infusions.add(
-                Infusion(
-                    grantedAtLevel = try {
-                        infusionJson.getInt("level")
-                    } catch (e: JSONException) {
-                        0
-                    },
-                    name = infusionJson.getString("name"),
-                    desc = infusionJson.getString("desc"),
-                    charges = null, //TODO implement me
-                    atkDmgBonus = try {
-                        extractScalingBonus(infusionJson.getJSONArray("atk_dmg_bonus"))
-                    } catch (e: JSONException) {
-                        null
-                    },
-                    acBonus = try {
-                        extractScalingBonus(infusionJson.getJSONArray("ac_bonus"))
-                    } catch (e: JSONException) {
-                        null
-                    },
-                    attuned = try {
-                        infusionJson.getBoolean("requires_attunement")
-                    } catch (e: JSONException) {
-                        false
-                    },
-                    targetItemFilter = try {
-                        extractTargetItemFilter(infusionJson.getJSONObject("target_item_filter"))
-                    } catch (e: JSONException) {
-                        null
-                    }
-                )
-            )
+            infusions.add(extractInfusion(infusionJson))
         }
         _infusions.value = infusions
+    }
+
+    private fun extractInfusion(infusionJson : JSONObject) : Infusion {
+        val options = try {
+            val fromJson = infusionJson.getJSONArray("from")
+            val result = mutableListOf<Feature>()
+            for(index in 0 until fromJson.length()) {
+                val infusion = extractInfusion(fromJson.getJSONObject(index))
+                result.add(
+                    Feature(
+                        name =infusion.name,
+                        description = infusion.desc,
+                        options = null,
+                        grantedAtLevel = infusion.grantedAtLevel,
+                        maxTimesChosen = infusion.maxTimesChosen,
+                        infusion = infusion
+                    )
+                )
+            }
+            result
+        } catch (e: JSONException) {
+            null
+        }
+
+        return Infusion(
+            choose = try {
+                infusionJson.getInt("choose")
+            } catch (e: JSONException) {
+                0
+            },
+            options = options,
+            maxTimesChosen = try {
+                infusionJson.getInt("max_times_chosen")
+            } catch (e : JSONException) {
+                null
+            },
+            grantedAtLevel = try {
+                infusionJson.getInt("level")
+            } catch (e: JSONException) {
+                0
+            },
+            name = infusionJson.getString("name"),
+            desc = infusionJson.getString("desc"),
+            charges = null, //TODO implement me
+            atkDmgBonus = try {
+                extractScalingBonus(infusionJson.getJSONArray("atk_dmg_bonus"))
+            } catch (e: JSONException) {
+                null
+            },
+            acBonus = try {
+                extractScalingBonus(infusionJson.getJSONArray("ac_bonus"))
+            } catch (e: JSONException) {
+                null
+            },
+            attuned = try {
+                infusionJson.getBoolean("requires_attunement")
+            } catch (e: JSONException) {
+                false
+            },
+            targetItemFilter = try {
+                extractTargetItemFilter(infusionJson.getJSONObject("target_item_filter"))
+            } catch (e: JSONException) {
+                null
+            }
+        )
     }
 
     private fun extractTargetItemFilter(json: JSONObject): TargetItemFilter {
@@ -1809,11 +1843,13 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             _infusions.value!!.forEach {
                                 features.add(
                                     Feature(
+                                        choose = Choose(static = it.choose),
+                                        maxTimesChosen = it.maxTimesChosen,
                                         grantedAtLevel = it.grantedAtLevel,
                                         name = it.name,
                                         description = it.desc,
                                         infusion = it,
-                                        options = null,
+                                        options = it.options as MutableList<Feature>?,
                                     )
                                 )
                             }
@@ -2067,6 +2103,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     features.add(
                         Feature(
                             name = featureJson.getString("name"),
+                            maxTimesChosen = try {
+                                featureJson.getInt("max_times_chosen")
+                            } catch (e : JSONException) {
+                                null
+                            },
                             description = try {
                                 featureJson.getString("desc")
                             } catch (e: JSONException) {

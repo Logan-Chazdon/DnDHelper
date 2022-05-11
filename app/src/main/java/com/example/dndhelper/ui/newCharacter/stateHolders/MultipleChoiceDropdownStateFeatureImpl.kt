@@ -96,8 +96,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
     }
 
     override fun getMaxSameSelectionsAt(index: Int): Int {
-        //TODO impl me
-        return 1
+        return options[index].maxTimesChosen ?: 1
     }
 
     fun getSelected() : List<Feature> {

@@ -20,19 +20,19 @@ fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
         modifier = Modifier
             .clickable { expanded = true }
     )
-
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false }
-    ) {
-        state.names.forEachIndexed { index, item ->
-            DropdownMenuItem(onClick = {
-                if(state.selectedList[index] >= state.getMaxSameSelectionsAt(index)) {
-                    state.decrementSelection(index)
-                } else {
-                    state.incrementSelection(index)
-                }
-            }) {
+    Column {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            state.names.forEachIndexed { index, item ->
+                DropdownMenuItem(onClick = {
+                    if (state.selectedList[index] >= state.getMaxSameSelectionsAt(index)) {
+                        state.decrementSelection(index)
+                    } else {
+                        state.incrementSelection(index)
+                    }
+                }) {
                     //If we can only select each item once make a checkbox
                     if (state.getMaxSameSelectionsAt(index) == 1) {
                         Checkbox(
@@ -46,7 +46,10 @@ fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
                     Spacer(modifier = Modifier.width(15.dp))
 
                     if (state.getMaxSameSelectionsAt(index) != 1) {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
                             Button(onClick = {
                                 state.decrementSelection(index)
                             }) {
@@ -54,6 +57,14 @@ fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
                             }
                         }
                     }
+                }
+            }
+        }
+        state.subChoiceKeys?.let { keys ->
+            Column(Modifier.padding(start = 8.dp)) {
+                keys.forEach {
+                    MultipleChoiceDropdownView(state = state.getSubChoiceAt(it)!!)
+                }
             }
         }
     }

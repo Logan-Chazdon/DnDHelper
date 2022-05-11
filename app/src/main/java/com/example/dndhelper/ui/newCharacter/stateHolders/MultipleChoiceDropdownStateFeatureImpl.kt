@@ -6,6 +6,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.MutableLiveData
 import com.example.dndhelper.model.*
+import com.example.dndhelper.ui.newCharacter.utils.getDropDownState
 
 
 class MultipleChoiceDropdownStateFeatureImpl(
@@ -62,6 +63,48 @@ class MultipleChoiceDropdownStateFeatureImpl(
     override val maxSelections: Int
         get() = feature.choose.num(level)
 
+    override val subChoiceKeys: List<String>
+        get() {
+            val result = mutableListOf<String>()
+            getSelectedWithoutSubFeatures().forEachIndexed { i, it ->
+                if (it.choose.num(level) != 0) {
+                    result += getOverrideKey(it, i)
+                }
+            }
+            return result
+        }
+
+    private fun getOverrideKey(feature: Feature, index: Int) : String {
+        return feature.name + index
+    }
+
+
+    private val subChoices: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl> = mutableStateMapOf()
+    override fun getSubChoiceAt(key: String): MultipleChoiceDropdownState? {
+       var subFeature : Feature? = null
+        getSelectedWithoutSubFeatures()
+       for((i, it) in getSelectedWithoutSubFeatures().withIndex()) {
+           if(getOverrideKey(it, i) == key) {
+               subFeature = it
+               break
+           }
+       }
+
+       return subFeature?.let {
+           subChoices.getDropDownState(
+               feature = it,
+               character = character,
+               assumedProficiencies = assumedProficiencies,
+               assumedClass =assumedClass,
+               assumedStatBonuses = assumedStatBonuses,
+               assumedSpells = assumedSpells,
+               assumedFeatures = assumedFeatures,
+               level = level,
+               overrideKey = key
+           )
+       }
+    }
+
 
     override fun incrementSelection(index: Int) {
         //Change the selection and make sure we stay below the max selections.
@@ -99,11 +142,26 @@ class MultipleChoiceDropdownStateFeatureImpl(
         return options[index].maxTimesChosen ?: 1
     }
 
-    fun getSelected() : List<Feature> {
+    private fun getSelectedWithoutSubFeatures() : List<Feature> {
         val result = mutableListOf<Feature>()
         selectedFeatures.forEach {
             for(x in 0 until it.value) {
-                result.add(options.first { feature -> feature.name == it.key })
+                result.add(
+                    options
+                        .first { feature -> feature.name == it.key }
+                )
+            }
+        }
+        return result
+    }
+
+    fun getSelected() : List<Feature> {
+        val result = getSelectedWithoutSubFeatures()
+        result.forEachIndexed { index, it ->
+            if (it.choose.num(level) != 0) {
+                it.chosen = (getSubChoiceAt(
+                    getOverrideKey(it, index)
+                ) as MultipleChoiceDropdownStateFeatureImpl).getSelected()
             }
         }
         return result

@@ -6,11 +6,15 @@ import androidx.lifecycle.MutableLiveData
 
 
 class MultipleChoiceDropdownStateImpl : MultipleChoiceDropdownState {
+    override fun getSubChoiceAt(key: String): MultipleChoiceDropdownState? = null
+    override val subChoiceKeys: List<String>? = null
+
     override val selectedList =  mutableStateListOf<Int>()
     private val _selectedNames = MutableLiveData("")
     override val selectedNames: LiveData<String> = _selectedNames
     var maxSameSelections = 1
     override var maxSelections = 0
+
 
     override var names : List<String> = listOf()
         set(newName: List<String>) {

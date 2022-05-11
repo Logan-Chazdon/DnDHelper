@@ -12,7 +12,8 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>.getDropDown
     assumedClass: Class?,
     assumedSpells: List<Spell>,
     assumedStatBonuses: Map<String, Int>?,
-    assumedFeatures: List<Feature>
+    assumedFeatures: List<Feature>,
+    overrideKey: String? = null
 ) : MultipleChoiceDropdownStateFeatureImpl {
     val applyData = fun (state: MultipleChoiceDropdownStateFeatureImpl): MultipleChoiceDropdownStateFeatureImpl {
         state.assumedClass = assumedClass
@@ -24,7 +25,7 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>.getDropDown
         state.assumedFeatures = assumedFeatures
         return state
     }
-    val key = feature.name + feature.grantedAtLevel
+    val key = overrideKey ?: feature.name + feature.grantedAtLevel
     return if(this.containsKey(key)) {
         applyData(this[key]!!)
     } else {

@@ -791,6 +791,16 @@ data class Character(
         return slots
     }
 
+    fun totalClassLevelsExcluding(className: String): Int {
+        var result = 0
+        classes.forEach {
+            if(it.key != className) {
+                result += it.value.level
+            }
+        }
+        return 0
+    }
+
     val maxHitDice: String
     get() {
         var result = ""

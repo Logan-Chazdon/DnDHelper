@@ -237,7 +237,8 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun canAffordMoreClassLevels(num: Int): Boolean {
-        if ((character?.value?.totalClassLevels ?: 0) + num <= 20) {
+        val className = classes.value!![classIndex].name
+        if ((character?.value?.totalClassLevelsExcluding(className) ?: 0) + num <= 20) {
             return true
         }
         return false

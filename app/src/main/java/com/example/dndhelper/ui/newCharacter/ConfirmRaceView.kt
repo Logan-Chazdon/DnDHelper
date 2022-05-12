@@ -2,8 +2,14 @@ package com.example.dndhelper.ui.newCharacter
 
 import android.os.Handler
 import android.os.Looper
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -127,14 +133,7 @@ fun ConfirmRaceView(
                 )
 
             races.value?.get(raceIndex)?.abilityBonuses?.let { bonuses ->
-                if (bonuses.isNotEmpty())
-                    RaceContentCard("Ability bonuses", false) {
-                        Row {
-                            bonuses.forEach {
-                                Text(text = "${it.ability} +${it.bonus}  ")
-                            }
-                        }
-                    }
+                RaceAbilityBonusesView(bonuses)
             }
 
             races.value?.get(raceIndex)?.let { race ->
@@ -147,17 +146,17 @@ fun ConfirmRaceView(
                     assumedStatBonuses = assumedStatBonuses.value
                 )
 
-                if(!(race.proficiencyChoices.isNullOrEmpty() && race.startingProficiencies.isNullOrEmpty())) {
+                if (!(race.proficiencyChoices.isNullOrEmpty() && race.startingProficiencies.isNullOrEmpty())) {
                     RaceContentCard(title = "Proficiencies", race.proficiencyChoices.size > 0) {
                         race.startingProficiencies.let {
                             var string = ""
                             it.forEachIndexed { index, prof ->
                                 string += prof.name
-                                if(index != it.size - 1){
+                                if (index != it.size - 1) {
                                     string += ", "
                                 }
                             }
-                            if(string.isNotEmpty()) {
+                            if (string.isNotEmpty()) {
                                 "$string."
                             } else {
                                 null
@@ -167,19 +166,21 @@ fun ConfirmRaceView(
                         }
 
                         race.proficiencyChoices.forEach { proficiencyChoice ->
-                            MultipleChoiceDropdownView(state = viewModel.raceProficiencyChoiceDropdownStates.getDropDownState(
-                                key = proficiencyChoice.name,
-                                maxSelections = proficiencyChoice.choose,
-                                names = proficiencyChoice.from.let { proficiencyChoices ->
-                                    val names = mutableListOf<String>()
-                                    proficiencyChoices.forEach {
-                                        it.name?.let { name -> names.add(name) }
-                                    }
-                                    names
-                                },
-                                maxOfSameSelection = 1,
-                                choiceName = proficiencyChoice.name
-                            ))
+                            MultipleChoiceDropdownView(
+                                state = viewModel.raceProficiencyChoiceDropdownStates.getDropDownState(
+                                    key = proficiencyChoice.name,
+                                    maxSelections = proficiencyChoice.choose,
+                                    names = proficiencyChoice.from.let { proficiencyChoices ->
+                                        val names = mutableListOf<String>()
+                                        proficiencyChoices.forEach {
+                                            it.name?.let { name -> names.add(name) }
+                                        }
+                                        names
+                                    },
+                                    maxOfSameSelection = 1,
+                                    choiceName = proficiencyChoice.name
+                                )
+                            )
                         }
                     }
                 }
@@ -246,14 +247,7 @@ fun ConfirmRaceView(
                         )
 
                     subraces[viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
-                        if (bonuses.isNotEmpty())
-                            RaceContentCard("Ability bonuses", false) {
-                                Row {
-                                    bonuses.forEach {
-                                        Text(text = "${it.ability} +${it.bonus}  ")
-                                    }
-                                }
-                            }
+                        RaceAbilityBonusesView(bonuses)
                     }
 
                     subraces[viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->
@@ -324,7 +318,11 @@ private fun RaceContentCard(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(0.95f),
-        backgroundColor = if(containsChoice) {MaterialTheme.colors.surface} else {MaterialTheme.colors.noActionNeeded},
+        backgroundColor = if (containsChoice) {
+            MaterialTheme.colors.surface
+        } else {
+            MaterialTheme.colors.noActionNeeded
+        },
         elevation = 5.dp,
         shape = RoundedCornerShape(10.dp)
     ) {
@@ -341,8 +339,8 @@ private fun RaceFeaturesView(
     features: List<Feature>,
     dropDownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>,
     proficiencies: List<Proficiency>,
-    assumedSpells : List<Spell>,
-    assumedStatBonuses:MutableMap<String, Int>
+    assumedSpells: List<Spell>,
+    assumedStatBonuses: MutableMap<String, Int>
 ) {
     features.forEach { feature ->
         FeatureView(
@@ -416,3 +414,30 @@ private fun RaceLanguagesView(
         }
     }
 }
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun RaceAbilityBonusesView(bonuses: List<AbilityBonus>) {
+    if (bonuses.isNotEmpty())
+        RaceContentCard("Ability bonuses", false) {
+            Column {
+                var i = 0
+                while(i < bonuses.size) {
+                    Row {
+                        i += 1
+                        Text(
+                            text = "+${bonuses[i].bonus} ${bonuses[i].ability}",
+                            modifier = Modifier.fillMaxWidth(0.45f)
+                        )
+                        i += 1
+                        if(i < bonuses.size) {
+                            Text(
+                                text = "+${bonuses[i].bonus} ${bonuses[i].ability}"
+                            )
+                        }
+                    }
+                }
+            }
+        }
+}
+

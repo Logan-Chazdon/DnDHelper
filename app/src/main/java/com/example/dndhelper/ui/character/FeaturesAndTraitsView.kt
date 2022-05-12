@@ -83,6 +83,17 @@ fun FeaturesAndTraitsView(
                 var expanded by remember { mutableStateOf(false) }
                 Text(text = item.second.name, modifier = Modifier.clickable { expanded = true })
                 item.second.chosen?.forEach { feature ->
+                    //If this feature has 1 sub feature. For example in the case of replicate magic item.
+                    //Just fuse the features and display the data of the sub feature.
+                    var name = feature.name
+                    val desc : String
+                    if(feature.chosen?.size == 1) {
+                        name += " - " + feature.chosen!![0].name
+                        desc = feature.chosen!![0].description
+                    } else {
+                        desc = feature.description
+                    }
+
                     var activationExpanded by remember { mutableStateOf(false) }
                     var descExpanded by remember { mutableStateOf(false) }
                     if (activationExpanded) {
@@ -97,7 +108,7 @@ fun FeaturesAndTraitsView(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
-                                            text = feature.name,
+                                            text = name,
                                             style = MaterialTheme.typography.subtitle1,
                                             modifier = Modifier.padding(4.dp)
                                         )
@@ -107,7 +118,7 @@ fun FeaturesAndTraitsView(
                                         )
                                     }
                                     Text(
-                                        text = feature.description,
+                                        text = desc,
                                         modifier = Modifier.padding(4.dp)
                                     )
                                     if (feature.infusion?.active == true) {
@@ -214,7 +225,7 @@ fun FeaturesAndTraitsView(
                     }
 
                     Text(
-                        text = feature.name,
+                        text = name,
                         modifier = Modifier.padding(start = 5.dp).run {
                             if (maxActive != 0) {
                                 this.clickable { activationExpanded = true }

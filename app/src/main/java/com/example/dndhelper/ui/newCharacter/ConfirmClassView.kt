@@ -38,6 +38,9 @@ fun ConfirmClassView(
 ) {
     val classes = viewModel.classes.observeAsState()
     val mainLooper = Looper.getMainLooper()
+    LaunchedEffect(viewModel.hasBaseClass) {
+        viewModel.isBaseClass.value = !viewModel.hasBaseClass
+    }
 
     val assumedStatBonuses = remember(
         viewModel.absDropDownStates,

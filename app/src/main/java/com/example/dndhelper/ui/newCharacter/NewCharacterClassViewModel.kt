@@ -102,8 +102,6 @@ public class NewCharacterClassViewModel @Inject constructor(
         } catch (e: NullPointerException) {
             null
         }
-
-        isBaseClass.value = !(character?.value?.hasBaseClass ?: false)
     }
 
 

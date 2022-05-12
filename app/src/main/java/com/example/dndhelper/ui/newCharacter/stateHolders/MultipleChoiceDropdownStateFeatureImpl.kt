@@ -148,7 +148,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
             for(x in 0 until it.value) {
                 result.add(
                     options
-                        .first { feature -> feature.name == it.key }
+                        .first { feature -> feature.name == it.key }.copy()
                 )
             }
         }

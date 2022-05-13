@@ -4337,7 +4337,16 @@
                             "name" : "Bonus Proficiencies",
                             "desc" : "When you choose this archetype at 3rd level, you gain proficiency with smith’s tools, and you learn to speak, read, and write Giant.",
                             "level" : 3,
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                {
+                                    "name" : "Smith's tools"
+                                }
+                            ],
+                            "languages" : [
+                                {
+                                    "name" : "Giant"
+                                }
+                            ]
                         },
                         {
                             "name" : "Rune Carver",

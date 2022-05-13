@@ -4093,7 +4093,12 @@
                             "name" : "Student of War",
                             "level" : 3,
                             "desc" : "At 3rd level, you gain proficiency with one type of artisan's tools of your choice.",
-                            "comment": "TODO IMPL"
+                            "choose" : 1,
+                            "from" : [
+                                {
+                                    "index" : "artisans_tools"
+                                }
+                            ]
                         },
                         {
                             "name" : "Know Your Enemy",

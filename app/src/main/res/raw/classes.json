@@ -6604,7 +6604,14 @@
                             "name" : "Bonus Proficiencies",
                             "level" : 3,
                             "desc" : "When you choose this archetype at 3rd level, you gain proficiency with the disguise kit and the poisoner's kit.",
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                {
+                                    "name" : "Disguise Kit"
+                                },
+                                {
+                                    "name" : "Poisoner's kit"
+                                }
+                            ]
                         },
                         {
                             "name" : "Assassinate",

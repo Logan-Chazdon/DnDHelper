@@ -6906,7 +6906,11 @@
                     "name" : "Slippery Mind",
                     "desc" : "By 15th level, you have acquired greater mental strength. You gain proficiency in Wisdom saving throws.",
                     "level" : 15,
-                    "comment" : "TODO"
+                    "proficiencies" : [
+                        {
+                            "name" : "Saving throw (Wisdom)"
+                        }
+                    ]
                 },
                 {
                     "name" : "Elusive",

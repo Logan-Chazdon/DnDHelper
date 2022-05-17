@@ -7071,7 +7071,6 @@
             "subclasses" : [
                 {
                     "name" : "Aberrant Mind",
-                    "comment" : "TODO Whenever you gain a sorcerer level, you can replace one spell you gained from this feature with another spell of the same level. The new spell must be a divination or an enchantment spell from the sorcerer, warlock, or wizard spell list.",
                     "spells_are_free" : true,
                     "spells" : [
                         {

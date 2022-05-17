@@ -8548,7 +8548,12 @@
                             "name" : "Training in War and Song",
                             "desc" : "When you adopt this tradition at 2nd level, you gain proficiency with light armor, and you gain proficiency with one type of one-handed melee weapon of your choice.\n\nYou also gain proficiency in the Performance skill if you don’t already have it.",
                             "comment" : "TODO IMPL",
-                            "level" : 1
+                            "level" : 1,
+                            "proficiencies" : [
+                                {
+                                    "name" : "light armor"
+                                }
+                            ]
                         },
                         {
                             "name" : "Bladesong",

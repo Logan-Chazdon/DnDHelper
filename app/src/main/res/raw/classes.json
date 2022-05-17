@@ -4124,7 +4124,44 @@
                             "name" : "Bonus Proficiency",
                             "desc" : "When you choose this archetype at 3rd level, you gain proficiency in one of the following skills of your choice: Animal Handling, History, Insight, Performance, or Persuasion. Alternatively, you learn one language of your choice.",
                             "level" : 3,
-                            "comment" :"TODO IMPL"
+                            "choose" : 1,
+                            "from ": [
+                                {
+                                    "name" : "Animal Handling",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "Animal Handling"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "History",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "History"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Performance",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "Performance"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Persuasion",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "Persuasion"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "index" : "all_languages"
+                                }
+                            ]
                         },
                         {
                             "name" : "Born to the Saddle",

@@ -7411,8 +7411,24 @@
                         {
                             "name" : "Wind Speaker",
                             "desc" : "The arcane magic you command is infused with elemental air. You can speak, read, and write Primordial. Knowing this language allows you to understand and be understood by those who speak its dialects: Aquan, Auran, Ignan, and Terran.",
-                            "comment" : "TODO IMPL",
-                            "level" : 1
+                            "level" : 1,
+                            "languages" : [
+                                {
+                                    "name" : "Aquan"
+                                },
+                                {
+                                    "name" : "Auran"
+                                },
+                                {
+                                    "name" : "Ignan"
+                                },
+                                {
+                                    "name" : "Terran"
+                                },
+                                {
+                                    "name" : "Primordial"
+                                }
+                            ]
                         },
                         {
                             "name" : "Tempestuous Magic",

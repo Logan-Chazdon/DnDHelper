@@ -24,7 +24,7 @@ abstract class RoomDataBase: RoomDatabase() {
                         context.applicationContext,
                         RoomDataBase::class.java,
                         "database"
-                    ).fallbackToDestructiveMigration()  //TODO update this after release to avoid getting stabbed
+                    ).fallbackToDestructiveMigration()
                         .build()
 
                 }

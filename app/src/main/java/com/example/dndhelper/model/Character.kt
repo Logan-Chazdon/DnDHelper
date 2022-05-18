@@ -669,7 +669,17 @@ data class Character(
                 spells[spell.level]?.add(Pair(first = null, second = spell))
             }
         }
-        //TODO feats
+
+        feats.forEach { feat ->
+            feat.features?.forEach {
+                it.spells?.forEach { spell ->
+                    if(!spells.containsKey(spell.level)) {
+                        spells[spell.level] = mutableListOf()
+                    }
+                    spells[spell.level]?.add(Pair(first = null, second = spell))
+                }
+            }
+        }
 
         classes.forEach { (_, clazz) ->
             if(clazz.subclass?.spellAreFree == true) {

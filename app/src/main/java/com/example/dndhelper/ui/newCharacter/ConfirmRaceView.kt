@@ -4,12 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -424,7 +419,6 @@ fun RaceAbilityBonusesView(bonuses: List<AbilityBonus>) {
                 var i = 0
                 while(i < bonuses.size) {
                     Row {
-                        i += 1
                         Text(
                             text = "+${bonuses[i].bonus} ${bonuses[i].ability}",
                             modifier = Modifier.fillMaxWidth(0.45f)
@@ -435,6 +429,7 @@ fun RaceAbilityBonusesView(bonuses: List<AbilityBonus>) {
                                 text = "+${bonuses[i].bonus} ${bonuses[i].ability}"
                             )
                         }
+                        i += 1
                     }
                 }
             }

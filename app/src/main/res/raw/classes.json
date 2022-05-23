@@ -1484,7 +1484,12 @@
                             "name" : "Bonus Proficiencies",
                             "desc" : "When you join the College of Lore at 3rd level, you gain proficiency with three skills of your choice.",
                             "level" : 3,
-                            "comment" : "TODO IMPL"
+                            "choose" : 1,
+                            "from" : [
+                                {
+                                    "index" : "skills"
+                                }
+                            ]
                         },
                         {
                             "name" : "Cutting Words",
@@ -1544,7 +1549,14 @@
                         {
                             "name" : "Bonus Proficiencies",
                             "desc" : "When you join the College of Swords at 3rd level, you gain proficiency with medium armor and the scimitar.\n\nIf you’re proficient with a simple or martial melee weapon, you can use it as a spellcasting focus for your bard spells.",
-                            "comment" : "TODO IMPL",
+                            "proficiencies" : [
+                                {
+                                    "name" :"Medium Armor"
+                                },
+                                {
+                                    "name" : "Scimitars"
+                                }
+                            ],
                             "level" : 3
                         },
                         {
@@ -1576,7 +1588,17 @@
                         {
                             "name" : "Bonus Proficiencies",
                             "desc" : "When you join the College of Valor at 3rd level, you gain proficiency with medium armor, shields, and martial weapons.",
-                            "comment" : "TODO IMPL",
+                            "proficiencies" : [
+                                {
+                                    "name" : "Medium Armor"
+                                },
+                                {
+                                    "name" : "Shields"
+                                },
+                                {
+                                    "name" : "Martial Weapons"
+                                }
+                            ],
                             "level" : 3
                         },
                         {
@@ -2076,15 +2098,24 @@
                     "features" : [
                         {
                             "name" : "Bonus Proficiency",
-                            "desc" : "When you choose this domain at 1st level, you gain proficiency with martial weapon",
+                            "desc" : "When you choose this domain at 1st level, you gain proficiency with martial weapons",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                 {
+                                     "name": "Martial weapons"
+                                 }
+                             ]
                         },
                         {
                             "name" : "Reaper",
                             "desc" : "At 1st level, you learn one necromancy cantrip of your choice from any spell list. When you cast a necromancy cantrip that normally targets only one creature, the spell can instead target two creatures within range and within 5 feet of each other.",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "choose" : 1,
+                            "from" : [
+                                {
+                                    "index" : "all_spells"
+                                }
+                            ]
                         },
                         {
                             "name" : "Channel Divinity: Touch of Death",
@@ -2157,8 +2188,15 @@
                         {
                             "name" : "Bonus Proficiencies",
                             "level" : 1,
-                            "comment" : "TODO IMPL",
-                            "desc" : "When you choose this domain at 1st level, you gain proficiency with heavy armor and smith's tools."
+                            "desc" : "When you choose this domain at 1st level, you gain proficiency with heavy armor and smith's tools.",
+                            "proficiencies" : [
+                                {
+                                    "name" : "Heavy Armor"
+                                },
+                                {
+                                    "name" : "Smith's Tools"
+                                }
+                            ]
                         },
                         {
                             "name" : "Blessing of the Forge",
@@ -2389,8 +2427,12 @@
                         {
                             "name" : "Bonus Proficiency",
                             "level" : 1,
-                            "comment" : "TODO IMPL",
-                            "desc" : "When you choose this domain at 1st level, you gain proficiency with heavy armor."
+                            "desc" : "When you choose this domain at 1st level, you gain proficiency with heavy armor.",
+                            "proficiencies" : [
+                                {
+                                    "name" : "Heavy Armor"
+                                }
+                            ]
                         },
                         {
                             "name" : "Disciple of Life",
@@ -2558,7 +2600,11 @@
                             "name" : "Bonus Proficiency",
                             "desc" : "At 1st level, you gain proficiency with heavy armor.",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                {
+                                    "name" : "Heavy Armor"
+                                }
+                            ]
                         },
                         {
                             "name" : "Channel Divinity: Charm Animals and Plants",
@@ -2632,7 +2678,30 @@
                             "name" : "Bonus Proficiencies",
                             "desc" : "When you choose this domain at 1st level, you gain proficiency with heavy armor. You also gain proficiency in the Intimidation or Persuasion skill (your choice).",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "choose" : 1,
+                            "proficiencies" : [
+                                {
+                                    "name" : "Heavy Armor"
+                                }
+                            ],
+                            "from" : [
+                                {
+                                    "name" : "Intimidation",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "Intimidation"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Persuasion",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "Persuasion"
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "name" : "Voice of Authority",
@@ -2710,8 +2779,34 @@
                         {
                             "name" : "Implement of Peace",
                             "desc" : "When you choose this domain at 1st level, you gain proficiency in the Insight, Performance, or Persuasion skill (your choice).",
-                            "comment" : "TODO IMPL",
-                            "level" : 1
+                            "level" : 1,
+                            "choose" : 1,
+                            "from" : [
+                                {
+                                    "name" : "Insight",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "Insight"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Performance",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "Performance"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Persuasion",
+                                    "proficiencies" : [
+                                        {
+                                            "name" : "Persuasion"
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "name" : "Emboldening Bond",
@@ -2789,7 +2884,11 @@
                         {
                             "name" : "Bonus Proficiencies",
                             "level" : 1,
-                            "comment" : "TODO IMPL",
+                            "proficiencies" : [
+                                {
+                                    "name" : "Martial weapons"
+                                }
+                            ],
                             "desc" : "At 1st level, you gain proficiency with martial weapons and heavy armor."
                         },
                         {
@@ -2937,7 +3036,14 @@
                         {
                             "name" : "Bonus Proficiencies",
                             "level" : 1,
-                            "comment" : "TODO IMPL",
+                            "proficiencies" : [
+                                {
+                                    "name": "Martial weapons"
+                                },
+                                {
+                                    "name" : "Heavy Armor"
+                                }
+                            ],
                             "desc" : "At 1st level, you gain proficiency with martial weapons and heavy armor."
                         },
                         {
@@ -3583,7 +3689,18 @@
                             "name" : "Bonus Cantrip",
                             "level" : 2,
                             "desc" : "When you choose this circle at 2nd level, you learn one additional druid cantrip of your choice. This cantrip doesn’t count against the number of druid cantrips you know.",
-                            "comment" : "TODO IMPL"
+                            "choose" : 1,
+                            "from" : [
+                                {
+                                    "index" : "spells",
+                                    "levels" : [
+                                        0
+                                    ],
+                                    "classes" : [
+                                        "druid"
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "name" : "Natural Recovery",
@@ -3884,14 +4001,13 @@
                 },
                 {
                     "name" : "A martial weapon and a shield or two martial weapons",
-                    "choose" : 1,
+                    "choose" : 2,
                     "from" : [
                         {
-                            "name" : "A martial weapon",
                             "index" : "martial_weapons"
                         },
                         {
-                            "name" : "TODO"
+                            "index" : "shield"
                         }
                     ]
                 },
@@ -4632,7 +4748,14 @@
                             "name" : "Bonus Proficiencies",
                             "desc" : "When you choose this tradition at 3rd level, you gain proficiency in the Performance skill if you don't already have it. Your martial arts technique mixes combat training with the precision of a dancer and the antics of a jester. You also gain proficiency with brewer's supplies if you don't already have it.",
                             "level" : 3,
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                {
+                                    "name" : "Performance"
+                                },
+                                {
+                                    "name" : "Brewer's supplies"
+                                }
+                            ]
                         },
                         {
                             "name" : "Drunken Technique",
@@ -8763,8 +8886,12 @@
                         {
                             "name" : "Improved Minor Illusion",
                             "desc" : "When you choose this school at 2nd level, you learn the Minor Illusion cantrip. If you already know this cantrip, you learn a different wizard cantrip of your choice. The cantrip doesn't count against your number of cantrips known.\n\nWhen you cast Minor Illusion, you can create both a sound and an image with a single casting of the spell.",
-                            "comment" : "TODO IMPL ",
-                            "level" : 2
+                            "level" : 2,
+                            "spells" : [
+                                {
+                                    "index" : "minor illusion"
+                                }
+                            ]
                         },
                         {
                             "name" : "Illusory Self",

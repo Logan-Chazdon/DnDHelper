@@ -3128,7 +3128,14 @@
                             "name" : "Bonus Proficiency",
                             "desc" : "At 1st level, you gain proficiency with martial weapons and heavy armor.",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                {
+                                    "name" : "Martial Weapons"
+                                },
+                                {
+                                    "name": "Heavy Armor"
+                                }
+                            ]
                         },
                         {
                             "name" : "War Priest",
@@ -3280,7 +3287,11 @@
                             "name" : "Bonus Proficiency",
                             "desc" : "At 1st level, you gain proficiency with heavy armor.",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                {
+                                    "name" : "Heavy Armor"
+                                }
+                            ]
                         },
                         {
                             "name" : "Solidarity's Action",
@@ -3359,7 +3370,11 @@
                             "name" : "Bonus Proficiency",
                             "desc" : "At 1st level, you gain proficiency with heavy armor.",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                {
+                                    "name" : "Heavy Armor"
+                                }
+                            ]
                         },
                         {
                             "name" : "Acolyte of Strength",
@@ -3440,7 +3455,14 @@
                             "name" : "Bonus Proficiencies",
                             "desc" : "At 1st level, you gain proficiency with martial weapons and heavy armor.",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "proficiencies" : [
+                                {
+                                    "name" : "Martial Weapons"
+                                },
+                                {
+                                    "name" : "Heavy Armor"
+                                }
+                            ]
                         },
                         {
                             "name" : "Priest of Zeal",

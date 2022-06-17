@@ -17,22 +17,30 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.dndhelper.ui.utils.Dimensions
+import com.example.dndhelper.ui.utils.MediaQuery
+import com.example.dndhelper.ui.utils.greaterThan
 
 @Composable
 fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
+    var sizeMod = 1
+    MediaQuery(Dimensions.Width greaterThan 800.dp) {
+        sizeMod = 2
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
     ) {
         Card(
             modifier = Modifier
-                .size(100.dp)
+                .size((100 * sizeMod).dp)
                 .background(
                     color = MaterialTheme.colors.surface
                 )
                 .clickable { onClick() },
             elevation = 10.dp,
-            shape = RoundedCornerShape(10.dp),
+            shape = RoundedCornerShape((10* sizeMod).dp),
         ) {
             Column(
 
@@ -42,15 +50,15 @@ fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
                 Text(
                     text = stat
                 )
-                Spacer(modifier = Modifier.fillMaxHeight(0.12f))
+                Spacer(modifier = Modifier.fillMaxHeight(0.12f * sizeMod))
                 Box(
                   modifier = Modifier
-                      .size(40.dp)
+                      .size((40 * sizeMod).dp)
                       .background(
-                      shape = CutCornerShape(10.dp),
-                      color = MaterialTheme.colors.onSurface
-                          .copy(alpha = 0.3f)
-                  ),
+                          shape = CutCornerShape((20 * 1).dp),
+                          color = MaterialTheme.colors.onSurface
+                              .copy(alpha = 0.3f)
+                      ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

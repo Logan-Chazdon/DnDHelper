@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
-    <runningDeviceTargetsSelectedWithDialog>
+    <targetSelectedWithDropDown>
       <Target>
-        <type value="RUNNING_DEVICE_TARGET" />
+        <type value="QUICK_BOOT_TARGET" />
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="$USER_HOME$/.android/avd/4.65_720p_Galaxy_Nexus_API_30.avd" />
+            <value value="$USER_HOME$/.android/avd/Pixel_C_API_30.avd" />
           </Key>
         </deviceKey>
       </Target>
+    </targetSelectedWithDropDown>
+    <timeTargetWasSelectedWithDropDown value="2022-06-17T18:03:59.848191Z" />
+    <targetsSelectedWithDialog>
       <Target>
-        <type value="RUNNING_DEVICE_TARGET" />
+        <type value="QUICK_BOOT_TARGET" />
         <deviceKey>
           <Key>
-            <type value="SERIAL_NUMBER" />
-            <value value="ZY22C3C88S" />
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="$USER_HOME$/.android/avd/Pixel_C_API_30.avd" />
           </Key>
         </deviceKey>
       </Target>
-    </runningDeviceTargetsSelectedWithDialog>
+    </targetsSelectedWithDialog>
   </component>
 </project>

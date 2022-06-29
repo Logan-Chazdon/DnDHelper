@@ -55,7 +55,7 @@ fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
                   modifier = Modifier
                       .size((40 * sizeMod).dp)
                       .background(
-                          shape = CutCornerShape((20 * 1).dp),
+                          shape = CutCornerShape((10 * sizeMod).dp),
                           color = MaterialTheme.colors.onSurface
                               .copy(alpha = 0.3f)
                       ),

@@ -2105,10 +2105,16 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     } catch (e : JSONException) {
                         null
                     }
+                    val extraAttackAndDamageRollStat = try {
+                        featureJson.getString("extra_attack_and_damage_roll_stat")
+                    } catch (e : JSONException) {
+                        null
+                    }
 
                     features.add(
                         Feature(
                             name = featureJson.getString("name"),
+                            extraAttackAndDamageRollStat = extraAttackAndDamageRollStat,
                             maxTimesChosen = try {
                                 featureJson.getInt("max_times_chosen")
                             } catch (e : JSONException) {

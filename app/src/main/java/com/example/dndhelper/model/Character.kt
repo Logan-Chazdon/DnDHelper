@@ -749,26 +749,30 @@ data class Character(
             result
         }
 
-        val bonusFromStats = if(weapon.range != "5 ft") {
-            getStatMod("Dex")
-        } else {
-            if(
-                weapon.properties.run {
-                    var result = false
-                    this?.let {
-                        for (item in it) {
-                          if(item.name == "Finesse") {
-                              result = true
-                              break
-                          }
-                        }
-                    }
-                    result
+        var bonusFromStats = 0
+        //All stats the could be used with the weapon.
+        val statOptions = mutableListOf<String>()
+
+        //If the weapon is ranged add dex as an option.
+        if(weapon.range != "5 ft") {
+            statOptions.add("Dex")
+        } //If the weapon is melee add Str as an option.
+        else {
+            statOptions.add("Str")
+        }
+
+        //if the weapon has finesse add dex as an option.
+        if(weapon.properties?.any { it -> it.name == "Finesse" } == true) {
+            statOptions.add("Dex")
+        }
+
+
+        //Use the stat with the highest value.
+        statOptions.forEach { statName ->
+            getStatMod(statName).let { stat ->
+                if(stat > bonusFromStats) {
+                        bonusFromStats = stat
                 }
-            ) {
-                maxOf(getStatMod("Str"), getStatMod("Dex"))
-            } else {
-                getStatMod("Str")
             }
         }
 

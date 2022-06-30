@@ -18,7 +18,7 @@ data class Feature(
     val ac: ArmorClass? = null, //This will only be applied when not wearing armor.
     val proficiencies: List<Proficiency>? = null,
     val languages: List<Language>? = null,
-    val extraAttackAndDamageRollStat: String? = null
+    val extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
 ) {
 
     var chosen : List<Feature>? = null

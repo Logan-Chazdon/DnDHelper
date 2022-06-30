@@ -786,8 +786,21 @@ data class Character(
             total
         }
 
+        var bonusFromFeatures = 0
+        val applyFeature = fun(it : Feature) {
+            if(it.rangedAttackBonus != null && weapon.range != "5 ft") {
+                bonusFromFeatures += it.rangedAttackBonus
+            }
+        }
+        features.forEach {
+            applyFeature(it.second)
+            it.second.chosen?.forEach { subfeature ->
+                applyFeature(subfeature)
+            }
+        }
+
         //TODO add support for magic items.
-        return bonusForProficiency + bonusFromStats + bonusFromInfusions
+        return bonusForProficiency + bonusFromStats + bonusFromInfusions + bonusFromFeatures
     }
 
     fun getAllSpellSlots(): List<Resource> {

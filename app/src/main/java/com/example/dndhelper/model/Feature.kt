@@ -19,6 +19,7 @@ data class Feature(
     val proficiencies: List<Proficiency>? = null,
     val languages: List<Language>? = null,
     val extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
+    val rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.
 ) {
 
     var chosen : List<Feature>? = null

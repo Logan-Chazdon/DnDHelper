@@ -4087,7 +4087,7 @@
                         {
                             "name" : "Archery",
                             "desc" : "You gain a +2 bonus to attack rolls you make with ranged weapons.",
-                            "comment" : "TODO"
+                            "ranged_attack_bonus" : 2
                         },
                         {
                             "name" : "Blind Fighting",
@@ -4360,7 +4360,7 @@
                                 {
                                     "name" : "Archery",
                                     "desc" : "You gain a +2 bonus to attack rolls you make with ranged weapons.",
-                                    "comment" : "TODO"
+                                    "ranged_attack_bonus" : 2
                                 },
                                 {
                                     "name" : "Blind Fighting",
@@ -6572,7 +6572,7 @@
                         {
                             "name" : "Archery",
                             "desc" : "You gain a +2 bonus to attack rolls you make with ranged weapons.",
-                            "comment" : "TODO"
+                            "ranged_attack_bonus" : 2
                         },
                         {
                             "name" : "Blind Fighting",

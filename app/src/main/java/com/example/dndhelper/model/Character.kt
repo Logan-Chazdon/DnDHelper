@@ -133,6 +133,18 @@ data class Character(
                     }
                 }
             }
+        } else {
+            //The character is wearing armor so apply effects accordingly.
+            features.forEach { feature ->
+                feature.second.armorContingentAcBonus?.let {
+                    result += it
+                }
+                feature.second.chosen?.forEach { chosen ->
+                    chosen.armorContingentAcBonus?.let {
+                        result += it
+                    }
+                }
+            }
         }
 
         backpack.equippedShield?.let {

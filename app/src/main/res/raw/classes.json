@@ -4096,8 +4096,7 @@
                         {
                             "name" : "Defense",
                             "desc" : "While you are wearing armor, you gain a +1 bonus to AC.",
-                            "ac_bonus" : 1,
-                            "comment" : "TODO while wearing armor"
+                            "armor_contingent_ac_bonus" : 1
                         },
                         {
                             "name" : "Dueling",
@@ -4370,8 +4369,7 @@
                                 {
                                     "name" : "Defense",
                                     "desc" : "While you are wearing armor, you gain a +1 bonus to AC.",
-                                    "ac_bonus" : 1,
-                                    "comment" : "TODO while wearing armor"
+                                    "armor_contingent_ac_bonus" : 1
                                 },
                                 {
                                     "name" : "Dueling",

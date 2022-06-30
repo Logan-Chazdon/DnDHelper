@@ -13,6 +13,7 @@ data class Feature(
     val infusion: Infusion? = null,
     val maxActive: Choose = Choose(0),
     val hpBonusPerLevel: Int? = null,
+    val armorContingentAcBonus: Int? = null, //Extra ac only granted when wearing armor.
     val acBonus: Int? = null,
     val ac: ArmorClass? = null, //This will only be applied when not wearing armor.
     val proficiencies: List<Proficiency>? = null,

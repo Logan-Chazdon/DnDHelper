@@ -2100,6 +2100,12 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         null
                     }
 
+                    val armorContingentAcBonus = try {
+                        featureJson.getInt("armor_contingent_ac_bonus")
+                    } catch (e : JSONException) {
+                        null
+                    }
+
                     features.add(
                         Feature(
                             name = featureJson.getString("name"),
@@ -2130,6 +2136,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 null
                             },
                             ac = ac,
+                            armorContingentAcBonus = armorContingentAcBonus,
                             proficiencies = proficiencies,
                             languages = languages
                         )

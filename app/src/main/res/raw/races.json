@@ -982,6 +982,51 @@
             ]
         },
         {
+            "name" : "Goliath",
+            "ability_bonuses": [
+                {
+                    "name": "Intelligence",
+                    "bonus": 2
+                },
+                {
+                    "name": "Constitution",
+                    "bonus" : 1
+                }
+            ],
+            "age" : "Goliaths have lifespans comparable to humans. They enter adulthood in their late teens and usually live less than a century.",
+            "size_desc" : "Goliaths are between 7 and 8 feet tall and weigh between 280 and 340 pounds. Your size is Medium.",
+            "size" : "Medium",
+            "ground_speed" : 30,
+            "proficiencies" : [
+                {
+                    "name" : "Athletics"
+                }
+            ],
+            "features" : [
+                {
+                    "name" : "Stone's Endurance",
+                    "desc" : " You can focus yourself to occasionally shrug off injury. When you take damage, you can use your reaction to roll a d12. Add your Constitution modifier to the number rolled, and reduce the damage by that total. After you use this trait, you can’t use it again until you finish a short or long rest."
+                },
+                {
+                    "name" : "Powerful Build",
+                    "desc" : "You count as one size larger when determining your carrying capacity and the weight you can push, drag, or lift."
+                },
+                {
+                    "name" : "Mountain Born",
+                    "desc" : "You have resistance to cold damage. You’re also acclimated to high altitude, including elevations above 20,000 feet."
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Giant.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Giant"
+                }
+            ]
+        },
+        {
             "name" : "Half-Elf",
             "age" : "Half-elves age at much the same rate as humans, reaching adulthood at the age of 20. They live much longer than humans, however, often exceeding 180 years.",
             "size" : "Medium",

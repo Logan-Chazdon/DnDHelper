@@ -4657,7 +4657,6 @@
             "name" : "Monk",
             "starting_gold_d4s" : 5,
             "staring_gold_multiplier" : 1,
-            "comment" : "TODO this",
             "subclass_level" : 3,
             "spell_casting" : {
                 "type" : 0.0

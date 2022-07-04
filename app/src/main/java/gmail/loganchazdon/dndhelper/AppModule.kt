@@ -27,7 +27,7 @@ object AppModule {
             appContext,
             RoomDataBase::class.java,
             "database"
-        ).fallbackToDestructiveMigration().build()
+        ).build()
     }
 }
 

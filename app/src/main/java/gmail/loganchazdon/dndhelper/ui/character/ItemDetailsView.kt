@@ -218,7 +218,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                     val damageType = (item.value as Weapon).damageType
                     Text(
                         modifier = Modifier.padding(5.dp),
-                        text = "+ $infusionBonus $damageType",
+                        text = "+ ${if(infusionBonus != 0){infusionBonus.toString()} else {""}} $damageType",
                         style = MaterialTheme.typography.h6
                     )
 

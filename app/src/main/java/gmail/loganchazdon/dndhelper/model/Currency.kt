@@ -6,13 +6,13 @@ import kotlin.math.ceil
 data class Currency(
     private val backingDisplayName: String? = null,
     var amount: Int,
-    override val name: String?,
+    override var name: String?,
     override val weight: Int? = 0
 ) : ItemInterface {
     override val type = "Currency"
     override val charges: Resource? = null
     override val index: String? = null
-    override val desc: String? = null
+    override var desc: String? = null
     override val itemRarity: String? = null
     override val cost: Map<String, Currency>? = null
     override val maxInfusions: Int= 0
@@ -30,7 +30,7 @@ data class Currency(
     get() {
         if(name?.isNotEmpty() == true) {
             var it = ""
-            for (s in name.split(" ")) {
+            for (s in name!!.split(" ")) {
                 if(s[0].isLetter()) {
                     it += s[0].lowercase()
                 }

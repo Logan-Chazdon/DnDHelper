@@ -3,9 +3,9 @@ package gmail.loganchazdon.dndhelper.model
 interface ItemInterface {
     val type : String
     val displayName: String
-    val name : String?
+    var name : String?
     val index: String?
-    val desc: String?
+    var desc: String?
     val itemRarity : String?
     val cost : Map<String, Currency>?
     val weight : Int?

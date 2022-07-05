@@ -1,14 +1,14 @@
 package gmail.loganchazdon.dndhelper.model
 
 data class Shield(
-    override val name: String?,
+    override var name: String?,
     override val index: String?,
-    override val desc: String?,
+    override var desc: String?,
     override val itemRarity: String?,
     override val cost: Map<String, Currency>?,
     override val weight: Int?,
     override val charges: Resource?,
-    val acBonus: Int = 2,
+    var acBonus: Int = 2,
     override val maxInfusions: Int? = 1,
     override val infusions: MutableList<Infusion>? = mutableListOf()
 ) : ItemInterface {

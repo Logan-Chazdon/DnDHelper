@@ -96,6 +96,17 @@ class Backpack {
         target.removeAt(index)
     }
 
+    fun getItemByIndex(index: Int) : ItemInterface {
+        return when {
+            index < backgroundItems.size ->
+                backgroundItems[index]
+            index < classItems.size + backgroundItems.size ->
+                classItems[index - backgroundItems.size]
+            else ->
+                addedItems[index - backgroundItems.size - classItems.size]
+        }
+    }
+
     private fun addItemTo(item: ItemInterface, target: MutableList<ItemInterface>) {
         //Automatically equip the item if we don't have something like it equipped.
         when(item) {
@@ -210,6 +221,17 @@ class Backpack {
         allItemLists.forEach {
             if(attemptDeinfusion(it))
                 return
+        }
+    }
+
+    fun replaceItemAt(item: ItemInterface, index: Int) {
+        when {
+            index < backgroundItems.size ->
+                backgroundItems[index] = item
+            index < classItems.size + backgroundItems.size ->
+                classItems[index - backgroundItems.size] = item
+            else ->
+                addedItems[index - backgroundItems.size - classItems.size] = item
         }
     }
 

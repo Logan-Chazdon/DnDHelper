@@ -42,7 +42,11 @@ fun Navigation(navController: NavHostController) {
         }
 
         composable("characterView/ItemsView/{characterId}") {
-            ItemsView(hiltViewModel())
+            ItemsView(hiltViewModel(), navController)
+        }
+
+        composable("characterView/ItemsView/ItemDetailView/{characterId}/{itemIndex}") {
+            ItemDetailsView(hiltViewModel())
         }
 
         composable("characterView/StatsView/{characterId}") {

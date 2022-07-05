@@ -3,9 +3,9 @@ package gmail.loganchazdon.dndhelper.model
 
 
 data class Item (
-    override val name : String? = null,
+    override var name : String? = null,
     override val index: String? = null,
-    override val desc: String? = null,
+    override var desc: String? = null,
     override val itemRarity : String? = null,
     override val cost : Map<String, Currency>? = null,
     override val weight : Int? = 0,

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.utils.getValueInCopper
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,7 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
-fun ItemsView(viewModel: ItemViewModel) {
+fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
 
     var expanded by remember { mutableStateOf(false) }
     var confirmDeleteExpanded by remember { mutableStateOf(false) }
@@ -87,8 +88,10 @@ fun ItemsView(viewModel: ItemViewModel) {
                                     .padding(top = 2.dp)
                                     .combinedClickable(
                                         onClick = {
-                                            //Do nothing
-                                            //In the future maybe make this take the user to a detail screen.
+                                            //Take the user to the items detail view
+                                            navController.navigate(
+                                                "characterView/ItemsView/ItemDetailView/${viewModel.character!!.value!!.id}/$i"
+                                            )
                                         },
                                         onLongClick = {
                                             //Ask the user if they want to delete the item

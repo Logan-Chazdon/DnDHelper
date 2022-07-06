@@ -8,11 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -31,6 +28,34 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
     val scope = rememberCoroutineScope()
     val isVertical =
         LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+    //Update all data whenever it is emitted from the database.
+    //TODO find a more dry way to do this.
+    LaunchedEffect(viewModel.character.value?.personalityTraits) {
+        viewModel.personalityTraits.value =
+            viewModel.character.value?.personalityTraits ?: ""
+    }
+    LaunchedEffect(viewModel.character.value?.name) {
+        viewModel.name.value =
+            viewModel.character.value?.name?: ""
+    }
+    LaunchedEffect(viewModel.character.value?.bonds) {
+        viewModel.bonds.value =
+            viewModel.character.value?.bonds?: ""
+    }
+    LaunchedEffect(viewModel.character.value?.flaws) {
+        viewModel.flaws.value =
+            viewModel.character.value?.flaws?: ""
+    }
+    LaunchedEffect(viewModel.character.value?.notes) {
+        viewModel.notes.value =
+            viewModel.character.value?.notes?: ""
+    }
+    LaunchedEffect(viewModel.character.value?.ideals) {
+        viewModel.ideals.value =
+            viewModel.character.value?.ideals?: ""
+    }
+
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -46,12 +71,8 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                     ) {
                         Row {
                             TextField(
-                                value = viewModel.character.observeAsState().value?.name ?: "",
-                                onValueChange = {
-                                    scope.launch(Dispatchers.IO) {
-                                        viewModel.setName(it)
-                                    }
-                                },
+                                value = viewModel.name.collectAsState().value,
+                                onValueChange = { viewModel.name.value = it},
                             )
                             if(!isVertical) RestButton(viewModel = viewModel)
                         }
@@ -88,24 +109,16 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                             CharacterTextView(
                                                 modifier = topModifier.fillMaxHeight(0.5f),
                                                 name = "Personality Traits",
-                                                value = viewModel.character.observeAsState().value?.personalityTraits
-                                                    ?: "",
-                                                onChange = {
-                                                    scope.launch(Dispatchers.IO) {
-                                                        viewModel.setPersonalityTraits(it)
-                                                    }
-                                                }
+                                                value = viewModel.personalityTraits.collectAsState().value,
+                                                onChange = { viewModel.personalityTraits.value = it}
                                             )
 
                                             CharacterTextView(
                                                 modifier = topModifier.fillMaxHeight(),
                                                 name = "Ideals",
-                                                value = viewModel.character.observeAsState().value?.ideals
-                                                    ?: "",
+                                                value = viewModel.ideals.collectAsState().value,
                                                 onChange = {
-                                                    scope.launch(Dispatchers.IO) {
-                                                        viewModel.setIdeals(it)
-                                                    }
+                                                    viewModel.ideals.value = it
                                                 }
                                             )
                                         }
@@ -119,12 +132,9 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                                     .fillMaxWidth()
                                                     .fillMaxHeight(0.5f),
                                                 name = "Bonds",
-                                                value = viewModel.character.observeAsState().value?.bonds
-                                                    ?: "",
+                                                value = viewModel.bonds.collectAsState().value,
                                                 onChange = {
-                                                    scope.launch(Dispatchers.IO) {
-                                                        viewModel.setBonds(it)
-                                                    }
+                                                    viewModel.bonds.value = it
                                                 }
                                             )
 
@@ -133,12 +143,9 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                                     .fillMaxWidth()
                                                     .fillMaxHeight(),
                                                 name = "Flaws",
-                                                value = viewModel.character.observeAsState().value?.flaws
-                                                    ?: "",
+                                                value = viewModel.flaws.collectAsState().value,
                                                 onChange = {
-                                                    scope.launch(Dispatchers.IO) {
-                                                        viewModel.setFlaws(it)
-                                                    }
+                                                    viewModel.flaws.value = it
                                                 }
                                             )
                                         }
@@ -148,12 +155,9 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                 CharacterTextView(
                                     modifier = Modifier.fillMaxSize(),
                                     name = "Notes",
-                                    value = viewModel.character.observeAsState().value?.notes
-                                        ?: "",
+                                    value = viewModel.notes.collectAsState().value,
                                     onChange = {
-                                        scope.launch(Dispatchers.IO) {
-                                            viewModel.setNotes(it)
-                                        }
+                                        viewModel.notes.value = it
                                     }
                                 )
                             }
@@ -181,59 +185,44 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                     TextField(
                                         modifier = modifier,
                                         label = { Text("Personality Traits") },
-                                        value = viewModel.character.observeAsState().value?.personalityTraits
-                                            ?: "",
+                                        value = viewModel.personalityTraits.collectAsState().value,
                                         onValueChange = {
-                                            scope.launch(Dispatchers.IO) {
-                                                viewModel.setPersonalityTraits(it)
-                                            }
+                                            viewModel.personalityTraits.value = it
                                         }
                                     )
 
                                     TextField(
                                         modifier = modifier,
                                         label = { Text("Ideals") },
-                                        value = viewModel.character.observeAsState().value?.ideals
-                                            ?: "",
+                                        value = viewModel.ideals.collectAsState().value,
                                         onValueChange = {
-                                            scope.launch(Dispatchers.IO) {
-                                                viewModel.setIdeals(it)
-                                            }
+                                            viewModel.ideals.value = it
                                         }
                                     )
                                     TextField(
                                         modifier = modifier,
                                         label = { Text("Bonds") },
-                                        value = viewModel.character.observeAsState().value?.bonds
-                                            ?: "",
+                                        value = viewModel.bonds.collectAsState().value,
                                         onValueChange = {
-                                            scope.launch(Dispatchers.IO) {
-                                                viewModel.setBonds(it)
-                                            }
+                                            viewModel.bonds.value = it
                                         }
                                     )
 
                                     TextField(
                                         modifier = modifier,
                                         label = { Text("Flaws") },
-                                        value = viewModel.character.observeAsState().value?.flaws
-                                            ?: "",
+                                        value = viewModel.flaws.collectAsState().value,
                                         onValueChange = {
-                                            scope.launch(Dispatchers.IO) {
-                                                viewModel.setFlaws(it)
-                                            }
+                                            viewModel.flaws.value = it
                                         }
                                     )
 
                                     TextField(
                                         modifier = modifier,
                                         label = { Text("Notes") },
-                                        value = viewModel.character.observeAsState().value?.notes
-                                            ?: "",
+                                        value = viewModel.notes.collectAsState().value,
                                         onValueChange = {
-                                            scope.launch(Dispatchers.IO) {
-                                                viewModel.setNotes(it)
-                                            }
+                                            viewModel.notes.value = it
                                         }
                                     )
                                 }

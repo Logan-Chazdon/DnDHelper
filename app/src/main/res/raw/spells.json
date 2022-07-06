@@ -4568,7 +4568,7 @@
         {
             "name": "Arcane Lock",
             "level": 2,
-            "casting_time": "Arcane Lock",
+            "casting_time": "1 Action",
             "range": "Touch",
             "school": "Abjuration",
             "desc": "You touch a closed door, window, gate, chest, or other entryway, and it becomes locked for the duration. You and the creatures you designate when you cast this spell can open the object normally. You can also set a password that, when spoken within 5 feet of the object, suppresses this spell for 1 minute. Otherwise, it is impassable until it is broken or the spell is dispelled or suppressed. Casting knock on the object suppresses arcane lock for 10 minutes. While affected by this spell, the object is more difficult to break or force open; the DC to break it or pick any locks on it increases by 10.",
@@ -4853,14 +4853,13 @@
             "school": "Evocation",
             "desc": "The next time you hit a creature with a weapon attack before this spell ends, the weapon gleams with astral radiance as you strike. The attack deals an extra 2d6 radiant damage to the target, which becomes visible if it is invisible, and the target sheds dim light in a 5-foot radius and can’t become invisible until the spell ends. At Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, the extra damage increases by 1d6 for each slot level above 2nd.",
             "area": "-",
-            "ritual": true,
             "components": [
                 {
                     "name": "Verbal"
                 }
             ],
             "item_components": [],
-            "duration": "Instantaneous",
+            "duration": "1 Minute Concentration",
             "classes": [
                 {
                     "name": "paladin",
@@ -6383,7 +6382,7 @@
         {
             "name": "Mirror Image",
             "level": 2,
-            "casting_time": "Mirror Image",
+            "casting_time": "1 Action",
             "range": "Self",
             "school": "Illusion",
             "desc": "Three illusory duplicates of yourself appear in your space. Until the spell ends, the duplicates move with you and mimic your actions, shifting position so it's impossible to track which image is real. You can use your action to dismiss the illusory duplicates. Each time a creature targets you with an attack during the spell's duration, roll a d20 to determine whether the attack instead targets one of your duplicates. If you have three duplicates, you must roll a 6 or higher to change the attack's target to a duplicate. With two duplicates, you must roll an 8 or higher. With one duplicate, you must roll an 11 or higher. A duplicate's AC equals 10 + your Dexterity modifier. If an attack hits a duplicate, the duplicate is destroyed. A duplicate can be destroyed only by an attack that hits it. It ignores all other damage and effects. The spell ends when all three duplicates are destroyed. A creature is unaffected by this spell if it can't see, if it relies on senses other than sight, such as blindsight, or if it can perceive illusions as false, as with truesight.",

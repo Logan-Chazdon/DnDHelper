@@ -1,14 +1,16 @@
 package gmail.loganchazdon.dndhelper.ui.character
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.Infusion
 import gmail.loganchazdon.dndhelper.model.ItemInterface
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,22 +18,16 @@ public class CharacterMainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val repository: Repository, application: Application
 ): AndroidViewModel(application) {
-
-
     val characterFeatures: MediatorLiveData<List<Pair<Int, Feature>>> = MediatorLiveData()
-
-    var character : LiveData<Character>? = null
+    var character : LiveData<Character> =
+        repository.getLiveCharacterById(
+            savedStateHandle.get<String>("characterId")!!.toInt()
+        )!!
 
     init {
-        val id = savedStateHandle.get<String>("characterId")!!.toInt()
-
-        viewModelScope.launch {
-            character = repository.getLiveCharacterById(id)
-            characterFeatures.addSource(character!!) {
-                characterFeatures.value = it.displayFeatures
-            }
+        characterFeatures.addSource(character!!) {
+            characterFeatures.value = it.displayFeatures
         }
-
     }
 
 

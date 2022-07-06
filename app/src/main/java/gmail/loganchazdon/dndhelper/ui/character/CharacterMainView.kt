@@ -39,8 +39,8 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
         Card(
             modifier = Modifier.fillMaxSize(0.97f)
         ) {
-            Column() {
-                Row() {
+            Column {
+                Row {
                     Column(
                         modifier = Modifier.fillMaxWidth(0.6f)
                     ) {
@@ -181,7 +181,7 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                     TextField(
                                         modifier = modifier,
                                         label = { Text("Personality Traits") },
-                                        value = viewModel.character?.observeAsState().value?.personalityTraits
+                                        value = viewModel.character.observeAsState().value?.personalityTraits
                                             ?: "",
                                         onValueChange = {
                                             scope.launch(Dispatchers.IO) {

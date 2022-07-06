@@ -14,7 +14,7 @@ import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import javax.inject.Inject
 
 @HiltViewModel
-public class CharacterMainViewModel @Inject constructor(
+class CharacterMainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val repository: Repository, application: Application
 ): AndroidViewModel(application) {
@@ -25,7 +25,7 @@ public class CharacterMainViewModel @Inject constructor(
         )!!
 
     init {
-        characterFeatures.addSource(character!!) {
+        characterFeatures.addSource(character) {
             characterFeatures.value = it.displayFeatures
         }
     }
@@ -33,8 +33,8 @@ public class CharacterMainViewModel @Inject constructor(
 
 
     fun longRest() {
-        val newChar = character!!.value!!.copy()
-        newChar.id = character!!.value!!.id
+        val newChar = character.value!!.copy()
+        newChar.id = character.value!!.id
         newChar.longRest()
         repository.insertCharacter(newChar)
     }
@@ -44,54 +44,54 @@ public class CharacterMainViewModel @Inject constructor(
     }
 
     fun setName(it: String) {
-        val newChar = character!!.value!!.copy(name = it)
-        newChar.id = character!!.value!!.id
+        val newChar = character.value!!.copy(name = it)
+        newChar.id = character.value!!.id
         repository.insertCharacter(newChar)
     }
 
     fun setPersonalityTraits(it: String) {
-        val newChar = character!!.value!!.copy(personalityTraits = it)
-        newChar.id = character!!.value!!.id
+        val newChar = character.value!!.copy(personalityTraits = it)
+        newChar.id = character.value!!.id
         repository.insertCharacter(newChar)
     }
 
     fun setIdeals(it: String) {
-        val newChar = character!!.value!!.copy(ideals = it)
-        newChar.id = character!!.value!!.id
+        val newChar = character.value!!.copy(ideals = it)
+        newChar.id = character.value!!.id
         repository.insertCharacter(newChar)
     }
 
     fun setBonds(it: String) {
-        val newChar = character!!.value!!.copy(bonds = it)
-        newChar.id = character!!.value!!.id
+        val newChar = character.value!!.copy(bonds = it)
+        newChar.id = character.value!!.id
         repository.insertCharacter(newChar)
     }
 
     fun setFlaws(it: String) {
-        val newChar = character!!.value!!.copy(flaws = it)
-        newChar.id = character!!.value!!.id
+        val newChar = character.value!!.copy(flaws = it)
+        newChar.id = character.value!!.id
         repository.insertCharacter(newChar)
     }
 
     fun setNotes(it: String) {
-        val newChar = character!!.value!!.copy(notes = it)
-        newChar.id = character!!.value!!.id
+        val newChar = character.value!!.copy(notes = it)
+        newChar.id = character.value!!.id
         repository.insertCharacter(newChar)
     }
 
     fun infuse(targetItem: ItemInterface?, infusion: Infusion) {
-        val newChar = activateInfusion(infusion, character!!.value!!.copy())
+        val newChar = activateInfusion(infusion, character.value!!.copy())
         if(targetItem != null) {
             newChar?.backpack?.applyInfusion(targetItem, infusion)
         }
-        newChar?.id = character!!.value!!.id
+        newChar?.id = character.value!!.id
         newChar?.let { character -> repository.insertCharacter(character) }
     }
 
     fun disableInfusion(infusion: Infusion) {
-        val newChar = deactivateInfusion(infusion, character!!.value!!.copy())
+        val newChar = deactivateInfusion(infusion, character.value!!.copy())
         newChar?.backpack?.removeInfusion(infusion)
-        newChar?.id = character!!.value!!.id
+        newChar?.id = character.value!!.id
         newChar?.let { character -> repository.insertCharacter(character) }
     }
 

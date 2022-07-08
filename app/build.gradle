@@ -12,8 +12,8 @@ android {
         applicationId "gmail.loganchazdon.dndhelper"
         minSdk 24
         targetSdk 31
-        versionCode 1
-        versionName compose_version
+        versionCode 2
+        versionName "1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -25,6 +25,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

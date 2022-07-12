@@ -3740,7 +3740,241 @@
                             "name" : "Circle Spells",
                             "desc" : "Your mystical connection to the land infuses you with the ability to cast certain spells. At 3rd, 5th, 7th, and 9th level you gain access to circle spells connected to the land where you became a druid. Choose that land – arctic, coast, desert, forest, grassland, mountain, swamp, or Underdark – and consult the associated list of spells.\n\nOnce you gain access to a circle spell, you always have it prepared, and it doesn't count against the number of spells you can prepare each day. If you gain access to a spell that doesn't appear on the druid spell list, the spell is nonetheless a druid spell for you.",
                             "level" : 3,
-                            "comment" : "TODO http://dnd5e.wikidot.com/druid:land"
+                            "choose" : 1,
+                            "from" : [
+                                {
+                                    "name": "Arctic",
+                                    "spells": [
+                                        {
+                                            "index": "hold person"
+                                        },
+                                        {
+                                            "index": "spike growth"
+                                        },
+                                        {
+                                            "index": "sleet storm"
+                                        },
+                                        {
+                                            "index": "slow"
+                                        },
+                                        {
+                                            "index": "freedom of movement"
+                                        },
+                                        {
+                                            "index": "ice storm"
+                                        },
+                                        {
+                                            "index": "commune with nature"
+                                        },
+                                        {
+                                            "index": "cone of cold"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Coast",
+                                    "spells" : [
+                                        {
+                                            "index" : "mirror image"
+                                        },
+                                        {
+                                            "index" : "misty step"
+                                        },
+                                        {
+                                            "index" : "water breathing"
+                                        },
+                                        {
+                                            "index" : "water walk"
+                                        },
+                                        {
+                                            "index" : "control water"
+                                        },
+                                        {
+                                            "index" : "freedom of movement"
+                                        },
+                                        {
+                                            "index" : "conjure elemental"
+                                        },
+                                        {
+                                            "index" : "scrying"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Desert",
+                                    "spells" : [
+                                        {
+                                            "index" : "blur"
+                                        },
+                                        {
+                                            "index" : "silence"
+                                        },
+                                        {
+                                            "index" : "create food and water"
+                                        },
+                                        {
+                                            "index" : "protection from energy"
+                                        },
+                                        {
+                                            "index" : "blight"
+                                        },
+                                        {
+                                            "index" : "hallucinaotry terrain"
+                                        },
+                                        {
+                                            "index" :"insect plague"
+                                        },
+                                        {
+                                            "index" : "wall of stone"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Forest",
+                                    "spells" : [
+                                        {
+                                            "index" : "barkskin"
+                                        },
+                                        {
+                                            "index" : "spider climb"
+                                        },
+                                        {
+                                            "index" : "call lightning"
+                                        },
+                                        {
+                                            "index" : "plant growth"
+                                        },
+                                        {
+                                            "index" : "divination"
+                                        },
+                                        {
+                                            "index" : "freedom of movement"
+                                        },
+                                        {
+                                            "index" : "commune with nature"
+                                        },
+                                        {
+                                            "index" : "tree stride"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Grassland",
+                                    "spells" : [
+                                        {
+                                            "index": "invisibility"
+                                        },
+                                        {
+                                            "index" : "pass without trace"
+                                        },
+                                        {
+                                            "index" : "daylight"
+                                        },
+                                        {
+                                            "index" : "haste"
+                                        },
+                                        {
+                                            "index" : "divination"
+                                        },
+                                        {
+                                            "index" : "freedom of movement"
+                                        },
+                                        {
+                                            "index" : "dream"
+                                        },
+                                        {
+                                            "index" : "insect plague"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Moutain",
+                                    "spells" : [
+                                        {
+                                            "index" : "spider climb"
+                                        },
+                                        {
+                                            "index" : "spike growth"
+                                        },
+                                        {
+                                            "index" : "lightning bolt"
+                                        },
+                                        {
+                                            "index" : "meld into stone"
+                                        },
+                                        {
+                                            "index" : "stone shape"
+                                        },
+                                        {
+                                            "index" : "stoneskin"
+                                        },
+                                        {
+                                            "index" : "passwall"
+                                        },
+                                        {
+                                            "index" : "wall of stone"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Swamp",
+                                    "spells" : [
+                                        {
+                                            "index" : "darkness"
+                                        },
+                                        {
+                                            "index" : "melf's acid arrow"
+                                        },
+                                        {
+                                            "index" : "water walk"
+                                        },
+                                        {
+                                            "index" : "stinking cloud"
+                                        },
+                                        {
+                                            "index" : "freedom of movement"
+                                        },
+                                        {
+                                            "index" : "locate creature"
+                                        },
+                                        {
+                                            "index" : "insect plague"
+                                        },
+                                        {
+                                            "index" : "scrying"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Underdark",
+                                    "spells" : [
+                                        {
+                                            "index" : "spider climb"
+                                        },
+                                        {
+                                            "index" : "web"
+                                        },
+                                        {
+                                            "index" : "gaseous form"
+                                        },
+                                        {
+                                            "index" : "stinking cloud"
+                                        },
+                                        {
+                                            "index" : "greater invisibility"
+                                        },
+                                        {
+                                            "index" : "stone shape"
+                                        },
+                                        {
+                                            "index" : "cloudkill"
+                                        },
+                                        {
+                                            "index" : "insect plague"
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "name" : "Land's Stride",

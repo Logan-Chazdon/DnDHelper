@@ -71,6 +71,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         MutableLiveData()
     private val _maneuvers: MutableLiveData<List<Feature>> =
         MutableLiveData()
+    private val _fightingStyles: MutableLiveData<List<Feature>> =
+        MutableLiveData()
 
     private val instrumentIndexes = mutableListOf(
         "Bagpipes",
@@ -164,6 +166,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Maneuvers
             generateManeuvers()
 
+            //Fighting Styles
+            generateFightingStyles()
+
             //Feats
             generateFeats()
 
@@ -176,6 +181,15 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             //Classes
             generateClasses()
         }
+    }
+
+    private fun generateFightingStyles() {
+        val dataAsString =
+            context.resources.openRawResource(R.raw.fighting_styles).bufferedReader().readText()
+        val fightingStylesJson = JSONObject(dataAsString).getJSONArray("fighting_styles")
+        _fightingStyles.value = extractFeatures(
+            fightingStylesJson
+        )
     }
 
     private fun generateMetaMagic() {
@@ -1826,7 +1840,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 var options: MutableList<Feature>?
                 //If we have an index construct a list from that otherwise just make it normally.
                 try {
-                    when (featureJson.getString("index")) {
+                    when (val index = featureJson.getString("index")) {
                         "invocations" -> {
                             _invocations.value!!.forEach {
                                 features.add(
@@ -2030,6 +2044,19 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                     )
                                 )
                             }
+                        }
+                        in _fightingStyles.value.let { styles ->
+                            val result = mutableListOf<String>()
+                            styles?.forEach{
+                                result.add(it.name)
+                            }
+                            result
+                        } -> {
+                            features.add(
+                                _fightingStyles.value!!.single {
+                                    it.name == index
+                                }
+                            )
                         }
                         else -> throw JSONException("Invalid index")
                     }

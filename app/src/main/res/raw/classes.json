@@ -4882,9 +4882,46 @@
                     "features" : [
                         {
                             "name": "Bonus Proficiency",
-                            "comment" : "TODO IMPl",
                             "desc" : "When you choose this archetype at 3rd level, you gain proficiency in one of the following skills of your choice: History, Insight, Performance, or Persuasion. Alternatively, you learn one language of your choice.",
-                            "level" : 3
+                            "level" : 3,
+                            "choose" : 1,
+                            "from" : [
+                                {
+                                    "name" : "History",
+                                    "profencies" : [
+                                        {
+                                            "name" : "History"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Insight",
+                                    "profencies" : [
+                                        {
+                                            "name" : "Insight"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Performance",
+                                    "profencies" : [
+                                        {
+                                            "name" : "Performance"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name" : "Persuasion",
+                                    "profencies" : [
+                                        {
+                                            "name" : "Persuasion"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "index" : "all_languages"
+                                }
+                            ]
                         },
                         {
                             "name" : "Fighting Spirit",

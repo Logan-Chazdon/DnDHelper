@@ -277,10 +277,15 @@ data class Character(
     }
 
     fun addClass(newClass: Class, takeGold: Boolean) {
+        //Clear out the unused level path too save memory.
+        newClass.levelPath.forEach {
+            it.options?.clear()
+        }
+
         backpack.classCurrency = Currency.getEmptyCurrencyMap()
         backpack.classItems = mutableListOf()
-        if(newClass.isBaseClass) {
-            if(takeGold) {
+        if (newClass.isBaseClass) {
+            if (takeGold) {
                 backpack.classCurrency["gp"]?.amount = (backpack.classCurrency["gp"]?.amount ?: 0) +
                         (newClass.totalNumOnGoldDie ?: 0) * newClass.startingGoldMultiplier
             } else {

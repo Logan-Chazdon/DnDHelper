@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import gmail.loganchazdon.dndhelper.model.database.Converters
 
-@Entity(tableName="classes")
+@Entity(tableName = "classes")
 @TypeConverters(Converters::class)
-class Class(
+data class Class(
     @PrimaryKey(autoGenerate = false)
     @NonNull
     @ColumnInfo(name = "name")

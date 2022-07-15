@@ -190,7 +190,7 @@ public class NewCharacterClassViewModel @Inject constructor(
             }
         }
 
-        character!!.addClass(newClass, takeGold.value)
+        character!!.addClass(newClass.copy(), takeGold.value)
         character.let { repository.insertCharacter(it) }
     }
 

@@ -56,20 +56,26 @@ public class NewCharacterRaceViewModel @Inject constructor(
             id = repository.createDefaultCharacter() ?: -1
         val character = repository.getCharacterById(id)
 
-        filterRaceFeatures(newRace).forEach {
-            if(it.choose.num(character?.totalClassLevels ?: 0) != 0 && it.options?.isNullOrEmpty() == false) {
-                it.chosen = raceFeaturesDropdownStates[it.name + it.grantedAtLevel]
-                    ?.getSelected()
+        filterRaceFeatures(newRace).forEach { feature ->
+            feature.choices?.forEachIndexed { index, it ->
+                if (it.choose.num(
+                        character?.totalClassLevels ?: 0
+                    ) != 0 && it.options?.isEmpty() == false
+                ) {
+                    it.chosen =
+                        raceFeaturesDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
+                            ?.getSelected()
+                }
             }
         }
 
         if (newRace.subrace?.languages.isNullOrEmpty() &&
             newRace.subrace?.languageChoices.isNullOrEmpty()
         )
-        newRace.languageChoices.forEach {
-            it.chosen = languageDropdownStates[it.name]
-                ?.getSelected(it.from) as List<Language>
-        }
+            newRace.languageChoices.forEach {
+                it.chosen = languageDropdownStates[it.name]
+                    ?.getSelected(it.from) as List<Language>
+            }
 
         newRace.proficiencyChoices.forEach {
             it.chosen = raceProficiencyChoiceDropdownStates[it.name]
@@ -78,10 +84,16 @@ public class NewCharacterRaceViewModel @Inject constructor(
 
         if(!newRace.subraces.isNullOrEmpty()) {
             newRace.subrace = newRace.subraces[subraceIndex.value].run {
-                this.traits.forEach {
-                    if(it.choose.num(character?.totalClassLevels ?: 0) != 0 && it.options?.isNullOrEmpty() == false) {
-                        it.chosen = subraceFeaturesDropdownStates[it.name + it.grantedAtLevel]
-                            ?.getSelected()
+                this.traits.forEachIndexed { index, feature ->
+                    feature.choices?.forEach {
+                        if (it.choose.num(
+                                character?.totalClassLevels ?: 0
+                            ) != 0 && it.options?.isNullOrEmpty() == false
+                        ) {
+                            it.chosen =
+                                subraceFeaturesDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
+                                    ?.getSelected()
+                        }
                     }
                 }
 

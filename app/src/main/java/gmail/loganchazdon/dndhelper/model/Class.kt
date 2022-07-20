@@ -9,7 +9,7 @@ import gmail.loganchazdon.dndhelper.model.database.Converters
 
 @Entity(tableName = "classes")
 @TypeConverters(Converters::class)
-data class Class(
+class Class(
     @PrimaryKey(autoGenerate = false)
     @NonNull
     @ColumnInfo(name = "name")

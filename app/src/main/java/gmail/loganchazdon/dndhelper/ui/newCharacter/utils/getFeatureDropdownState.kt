@@ -5,6 +5,7 @@ import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 
 fun SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>.getDropDownState (
+    choiceIndex: Int,
     feature: Feature,
     character: Character?,
     assumedProficiencies: List<Proficiency>,
@@ -15,21 +16,24 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>.getDropDown
     assumedFeatures: List<Feature>,
     overrideKey: String? = null
 ) : MultipleChoiceDropdownStateFeatureImpl {
-    val applyData = fun (state: MultipleChoiceDropdownStateFeatureImpl): MultipleChoiceDropdownStateFeatureImpl {
-        state.assumedClass = assumedClass
-        state.assumedProficiencies = assumedProficiencies
-        state.character = character
-        state.assumedSpells = assumedSpells
-        state.level = level
-        state.assumedStatBonuses = assumedStatBonuses
-        state.assumedFeatures = assumedFeatures
-        return state
-    }
-    val key = overrideKey ?: feature.name + feature.grantedAtLevel
-    return if(this.containsKey(key)) {
+    val applyData =
+        fun(state: MultipleChoiceDropdownStateFeatureImpl): MultipleChoiceDropdownStateFeatureImpl {
+            state.assumedClass = assumedClass
+            state.assumedProficiencies = assumedProficiencies
+            state.character = character
+            state.assumedSpells = assumedSpells
+            state.level = level
+            state.assumedStatBonuses = assumedStatBonuses
+            state.assumedFeatures = assumedFeatures
+            return state
+        }
+    val key = overrideKey
+        ?: (choiceIndex.toString() + feature.name + feature.grantedAtLevel)
+
+    return if (this.containsKey(key)) {
         applyData(this[key]!!)
     } else {
-        this[key] = applyData(MultipleChoiceDropdownStateFeatureImpl(feature))
+        this[key] = applyData(MultipleChoiceDropdownStateFeatureImpl(feature, choiceIndex))
         this[key]!!
     }
 }

@@ -123,9 +123,13 @@ public class NewCharacterClassViewModel @Inject constructor(
             }
         }
 
-        newClass.levelPath.filter { it.grantedAtLevel <= level }.forEach {
-            if (it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
-                it.chosen = featureDropdownStates[it.name + it.grantedAtLevel]?.getSelected()
+        newClass.levelPath.filter { it.grantedAtLevel <= level }.forEach { feature ->
+            feature.choices?.forEachIndexed { index, it ->
+                if (it.choose.num(level) != 0 && it.options?.isEmpty() == false) {
+                    it.chosen =
+                        featureDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
+                            ?.getSelected()
+                }
             }
         }
 
@@ -160,9 +164,13 @@ public class NewCharacterClassViewModel @Inject constructor(
                     this
                 }
 
-            newClass.subclass?.features?.filter { it.grantedAtLevel <= level }?.forEach {
-                if (it.choose.num(level) != 0 && it.options?.isNullOrEmpty() == false) {
-                    it.chosen = featureDropdownStates[it.name + it.grantedAtLevel]?.getSelected()
+            newClass.subclass?.features?.filter { it.grantedAtLevel <= level }?.forEach { feature ->
+                feature.choices?.forEachIndexed { index, it ->
+                    if (it.choose.num(level) != 0 && it.options?.isEmpty() == false) {
+                        it.chosen =
+                            featureDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
+                                ?.getSelected()
+                    }
                 }
             }
         }
@@ -190,7 +198,7 @@ public class NewCharacterClassViewModel @Inject constructor(
             }
         }
 
-        character!!.addClass(newClass.copy(), takeGold.value)
+        character!!.addClass(newClass, takeGold.value)
         character.let { repository.insertCharacter(it) }
     }
 
@@ -363,18 +371,29 @@ public class NewCharacterClassViewModel @Inject constructor(
     //TODO look into refactoring the parts of this that are similar to code snippets in addClass into separate functions.
     fun calculateAssumedFeatures() : List<Feature> {
         val result = mutableListOf<Feature>()
-        classes.value?.get(classIndex)?.levelPath?.filter { it.grantedAtLevel <= toNumber(levels) }?.forEach {
-            if (it.choose.num(toNumber(levels)) != 0 && it.options?.isNullOrEmpty() == false) {
-                it.chosen = featureDropdownStates[it.name + it.grantedAtLevel]?.getSelected()
-            }
-            result.add(it)
-        }
-        if (toNumber(levels) >= classes.value?.get(classIndex)?.subclassLevel!!) {
-            classes.value?.get(classIndex)?.subclass?.features?.filter { it.grantedAtLevel <= toNumber(levels) }?.forEach {
-                if (it.choose.num(toNumber(levels)) != 0 && it.options?.isNullOrEmpty() == false) {
-                    it.chosen = featureDropdownStates[it.name + it.grantedAtLevel]?.getSelected()
-                    result.add(it)
+        classes.value?.get(classIndex)?.levelPath?.filter { it.grantedAtLevel <= toNumber(levels) }
+            ?.forEach { feature ->
+                feature.choices?.forEach {
+                    if (it.choose.num(toNumber(levels)) != 0 && it.options?.isEmpty() == false) {
+                        it.chosen =
+                            featureDropdownStates[feature.name + feature.grantedAtLevel]?.getSelected()
+                    }
                 }
+                result.add(feature)
+            }
+        if (toNumber(levels) >= classes.value?.get(classIndex)?.subclassLevel!!) {
+            classes.value?.get(classIndex)?.subclass?.features?.filter {
+                it.grantedAtLevel <= toNumber(
+                    levels
+                )
+            }?.forEach { feature ->
+                feature.choices?.forEach {
+                    if (it.choose.num(toNumber(levels)) != 0 && it.options?.isEmpty() == false) {
+                        it.chosen =
+                            featureDropdownStates[feature.name + feature.grantedAtLevel]?.getSelected()
+                    }
+                }
+                result.add(feature)
             }
         }
 

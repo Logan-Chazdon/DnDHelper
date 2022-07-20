@@ -8,7 +8,11 @@ import gmail.loganchazdon.dndhelper.model.Class
 import gmail.loganchazdon.dndhelper.model.Race
 
 
-@Database(entities = [(Character::class), (Class::class), (Race::class)], version = 56)
+@Database(
+    entities = [(Character::class), (Class::class), (Race::class)],
+    version = 57,
+    exportSchema = true
+)
 @TypeConverters(Converters::class)
 abstract class RoomDataBase: RoomDatabase() {
     abstract fun databaseDao(): DatabaseDao

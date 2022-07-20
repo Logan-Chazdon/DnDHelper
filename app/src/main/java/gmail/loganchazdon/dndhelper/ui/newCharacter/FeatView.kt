@@ -30,22 +30,24 @@ fun FeatView(
         )
         (state.getSelected(feats) as List<Feat>).getOrNull(0)?.let { feat ->
             Text(feat.desc)
-            feat.features?.filter { it.choose.num(level) != 0}?.forEach { feature ->
-                MultipleChoiceDropdownView(
-                    state = featChoiceDropDownState.getDropDownState(
-                        key = "${feature.name}$key",
-                        maxSelections = feature.choose.num(level),
-                        names = feature.options.let { featureList ->
-                            val result = mutableListOf<String>()
-                            featureList?.forEach {
-                                result.add(it.name)
-                            }
-                            result
-                        },
-                        choiceName = feature.name,
-                        maxOfSameSelection = 1
+            feat.features?.forEach { feature ->
+                feature.choices?.filter { it.choose.num(level) != 0 }?.forEach { featureChoice ->
+                    MultipleChoiceDropdownView(
+                        state = featChoiceDropDownState.getDropDownState(
+                            key = "${feature.name}$key",
+                            maxSelections = featureChoice.choose.num(level),
+                            names = featureChoice.options.let { featureList ->
+                                val result = mutableListOf<String>()
+                                featureList?.forEach {
+                                    result.add(it.name)
+                                }
+                                result
+                            },
+                            choiceName = feature.name,
+                            maxOfSameSelection = 1
+                        )
                     )
-                )
+                }
             }
         }
     }

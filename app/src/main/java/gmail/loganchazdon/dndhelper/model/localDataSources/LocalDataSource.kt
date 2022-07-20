@@ -221,7 +221,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     name = maneuverJson.getString("name"),
                     description = maneuverJson.getString("desc"),
                     grantedAtLevel = 0,
-                    options = null
                 )
             )
         }
@@ -328,7 +327,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     Feature(
                         name =infusion.name,
                         description = infusion.desc,
-                        options = null,
                         grantedAtLevel = infusion.grantedAtLevel,
                         maxTimesChosen = infusion.maxTimesChosen,
                         infusion = infusion
@@ -1801,21 +1799,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         try {
             for (featureIndex in 0 until featuresJson.length()) {
                 val featureJson = featuresJson.getJSONObject(featureIndex)
-                val choose = try {
-                    Choose(featureJson.getInt("choose"))
-                } catch (e: JSONException) {
-                    try {
-                        val result = mutableListOf<Int>()
-                        val json = featureJson.getJSONArray("choose")
-                        for (i in 0 until json.length()) {
-                            result.add(json.getInt(i))
-                        }
-                        Choose(result)
-                    } catch (e: JSONException) {
-                        Choose(0)
-                    }
-                }
-
                 val maxActive = try {
                     Choose(featureJson.getInt("max_active"))
                 } catch (e: JSONException) {
@@ -1848,7 +1831,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                         name = it.name,
                                         prerequisite = it.prerequisite,
                                         description = it.desc,
-                                        options = null
                                     )
                                 )
                             }
@@ -1857,13 +1839,17 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             _infusions.value!!.forEach {
                                 features.add(
                                     Feature(
-                                        choose = Choose(static = it.choose),
                                         maxTimesChosen = it.maxTimesChosen,
                                         grantedAtLevel = it.grantedAtLevel,
                                         name = it.name,
                                         description = it.desc,
                                         infusion = it,
-                                        options = it.options as MutableList<Feature>?,
+                                        choices = listOf(
+                                            FeatureChoice(
+                                                options = it.options as MutableList<Feature>?,
+                                                choose = Choose(static = it.choose)
+                                            )
+                                        )
                                     )
                                 )
                             }
@@ -1878,8 +1864,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                                 name = skill,
                                                 description = "",
                                                 grantedAtLevel = 0,
-                                                choose = Choose(0),
-                                                options = null,
                                                 prerequisite = Prerequisite(
                                                     proficiency = Proficiency(
                                                         name = skill
@@ -1899,7 +1883,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                             Feature(
                                                 name = item,
                                                 proficiencies = listOf(Proficiency(name = item)),
-                                                options = null,
                                                 description = ""
                                             )
                                         )
@@ -1920,7 +1903,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                             name = spell.name,
                                             spells = listOf(spell),
                                             description = "",
-                                            options = null,
                                         )
                                     )
                                 }
@@ -1936,8 +1918,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 features.add(
                                     Feature(
                                         name = it.name,
-                                        description = it.desc,
-                                        options = null
+                                        description = it.desc
                                     )
                                 )
                             }
@@ -1947,7 +1928,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 features.add(
                                     Feature(
                                         name = it.name!!,
-                                        options = null,
                                         languages = listOf(it),
                                         description = "You can speak read and write ${it.name}."
                                     )
@@ -1960,7 +1940,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                     Feature(
                                         name = it,
                                         proficiencies = listOf(Proficiency(it)),
-                                        options = null,
                                         description = ""
                                     )
                                 )
@@ -2040,7 +2019,6 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                         name = spell.name,
                                         spells = listOf(spell),
                                         description = "",
-                                        options = null,
                                     )
                                 )
                             }
@@ -2062,11 +2040,50 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     }
 
                 } catch (e: JSONException) {
-                    options = try {
-                        extractFeatures(featureJson.getJSONArray("from"))
-                    } catch (e: JSONException) {
-                        null
+                    val choices = mutableListOf<FeatureChoice>()
+
+                    val extractAndAddChoice = fun(choiceJson: JSONObject) {
+                        options = try {
+                            extractFeatures(choiceJson.getJSONArray("from"))
+                        } catch (e: JSONException) {
+                            null
+                        }
+
+                        val choose = try {
+                            Choose(choiceJson.getInt("choose"))
+                        } catch (e: JSONException) {
+                            try {
+                                val result = mutableListOf<Int>()
+                                val json = choiceJson.getJSONArray("choose")
+                                for (i in 0 until json.length()) {
+                                    result.add(json.getInt(i))
+                                }
+                                Choose(result)
+                            } catch (e: JSONException) {
+                                Choose(0)
+                            }
+                        }
+                        if (options?.isNotEmpty() == true && choose != Choose(0)) {
+                            choices.add(
+                                FeatureChoice(
+                                    choose, options
+                                )
+                            )
+                        }
                     }
+
+                    //Look for an array called choices
+                    //If you cant find one try to make a feature choice by looking for a choose
+                    //And a from
+                    try {
+                        val choicesJson = featureJson.getJSONArray("choices")
+                        for (choiceIndex in 0 until choicesJson.length()) {
+                            extractAndAddChoice(choicesJson.getJSONObject(choiceIndex))
+                        }
+                    } catch (e: JSONException) {
+                        extractAndAddChoice(featureJson)
+                    }
+
 
                     val hpBonusPerLevel = try {
                         featureJson.getInt("hp_bonus_per_level")
@@ -2146,11 +2163,12 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     features.add(
                         Feature(
                             name = featureJson.getString("name"),
+                            choices = choices,
                             rangedAttackBonus = rangedAttackBonus,
                             extraAttackAndDamageRollStat = extraAttackAndDamageRollStat,
                             maxTimesChosen = try {
                                 featureJson.getInt("max_times_chosen")
-                            } catch (e : JSONException) {
+                            } catch (e: JSONException) {
                                 null
                             },
                             description = try {
@@ -2159,9 +2177,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 ""
                             },
                             grantedAtLevel = level,
-                            choose = choose,
                             hpBonusPerLevel = hpBonusPerLevel,
-                            options = options,
                             maxActive = maxActive,
                             index = try {
                                 featureJson.getString("index")

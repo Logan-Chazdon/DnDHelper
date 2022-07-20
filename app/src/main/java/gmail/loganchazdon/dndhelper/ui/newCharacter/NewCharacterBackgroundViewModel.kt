@@ -56,8 +56,11 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
             it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
         }
 
-        newBackground.features.forEach {
-            it.chosen = featureDropDownStates[it.name + it.grantedAtLevel]?.getSelected()
+        newBackground.features.forEach { feature ->
+            feature.choices?.forEach {
+                it.chosen =
+                    featureDropDownStates[feature.name + feature.grantedAtLevel]?.getSelected()
+            }
         }
 
         character!!.setNewBackground(newBackground)

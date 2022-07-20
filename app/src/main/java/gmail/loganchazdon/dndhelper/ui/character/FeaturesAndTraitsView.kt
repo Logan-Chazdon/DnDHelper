@@ -40,11 +40,15 @@ fun FeaturesAndTraitsView(
                     var expanded by remember { mutableStateOf(false) }
                     Text(text = feat.name, modifier = Modifier.clickable { expanded = true })
                     feat.features?.forEach { feature ->
-                        feature.chosen?.forEach {
+                        feature.allChosen.forEach {
                             var descExpanded by remember { mutableStateOf(false) }
-                            Text(it.name, Modifier.padding(start = 5.dp).clickable { descExpanded = !descExpanded})
+                            Text(
+                                it.name,
+                                Modifier
+                                    .padding(start = 5.dp)
+                                    .clickable { descExpanded = !descExpanded })
 
-                            if(descExpanded) {
+                            if (descExpanded) {
                                 Dialog(onDismissRequest = { descExpanded = false }) {
                                     Card {
                                         Text(
@@ -82,14 +86,14 @@ fun FeaturesAndTraitsView(
                 val maxActive = item.second.maxActive.num(item.first)
                 var expanded by remember { mutableStateOf(false) }
                 Text(text = item.second.name, modifier = Modifier.clickable { expanded = true })
-                item.second.chosen?.forEach { feature ->
+                item.second.allChosen.forEach { feature ->
                     //If this feature has 1 sub feature. For example in the case of replicate magic item.
                     //Just fuse the features and display the data of the sub feature.
                     var name = feature.name
-                    val desc : String
-                    if(feature.chosen?.size == 1) {
-                        name += " - " + feature.chosen!![0].name
-                        desc = feature.chosen!![0].description
+                    val desc: String
+                    if (feature.allChosen.size == 1) {
+                        name += " - " + feature.allChosen[0].name
+                        desc = feature.allChosen[0].description
                     } else {
                         desc = feature.description
                     }

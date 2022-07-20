@@ -12,6 +12,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
+import gmail.loganchazdon.dndhelper.model.database.MIGRATION_56_57
 import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSourceImpl
@@ -27,7 +28,7 @@ object AppModule {
             appContext,
             RoomDataBase::class.java,
             "database"
-        ).build()
+        ).addMigrations(MIGRATION_56_57).build()
     }
 }
 

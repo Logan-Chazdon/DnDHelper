@@ -89,11 +89,11 @@ data class Prerequisite(
 
     private fun checkFeature(character: Character?, assumedFeatures: List<Feature>): Boolean {
         fun checkForFeature(it: Feature) : Boolean {
-            if(it.name == feature) {
+            if (it.name == feature) {
                 return true
             }
-            it.chosen?.forEach {
-                if(checkForFeature(it)) {
+            it.allChosen.forEach {
+                if (checkForFeature(it)) {
                     return true
                 }
             }

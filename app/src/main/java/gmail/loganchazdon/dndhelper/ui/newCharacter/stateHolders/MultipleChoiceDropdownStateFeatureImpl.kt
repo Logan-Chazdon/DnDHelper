@@ -10,7 +10,8 @@ import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 
 
 class MultipleChoiceDropdownStateFeatureImpl(
-    val feature: Feature
+    val feature: Feature,
+    val choiceIndex: Int
 ) : MultipleChoiceDropdownState {
     var character: Character? = null
     var assumedProficiencies: List<Proficiency> = listOf()
@@ -29,7 +30,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
     private val selectedFeatures: SnapshotStateMap<String, Int> = mutableStateMapOf()
 
     init {
-        feature.chosen?.forEach {
+        feature.choices?.get(choiceIndex)?.chosen?.forEach {
             selectedFeatures[it.name] = (selectedFeatures[it.name] ?: 0) + 1
         }
     }
@@ -53,7 +54,8 @@ class MultipleChoiceDropdownStateFeatureImpl(
 
     val options : List<Feature>
     get() {
-        return feature.getAvailableOptions(
+        return feature.getAvailableOptionsAt(
+            index = choiceIndex,
             character = character,
             assumedFeatures = assumedFeatures,
             assumedSpells = assumedSpells,
@@ -65,13 +67,13 @@ class MultipleChoiceDropdownStateFeatureImpl(
     }
 
     override val maxSelections: Int
-        get() = feature.choose.num(level)
+        get() = feature.choices?.get(choiceIndex)?.choose?.num(level) ?: 0
 
     override val subChoiceKeys: List<String>
         get() {
             val result = mutableListOf<String>()
             getSelectedWithoutSubFeatures().forEachIndexed { i, it ->
-                if (it.choose.num(level) != 0) {
+                if ((it.choices?.get(choiceIndex)?.choose?.num(level) ?: 0) != 0) {
                     result += getOverrideKey(it, i)
                 }
             }
@@ -96,10 +98,11 @@ class MultipleChoiceDropdownStateFeatureImpl(
 
        return subFeature?.let {
            subChoices.getDropDownState(
+               choiceIndex = choiceIndex,
                feature = it,
                character = character,
                assumedProficiencies = assumedProficiencies,
-               assumedClass =assumedClass,
+               assumedClass = assumedClass,
                assumedStatBonuses = assumedStatBonuses,
                assumedSpells = assumedSpells,
                assumedFeatures = assumedFeatures,
@@ -150,10 +153,10 @@ class MultipleChoiceDropdownStateFeatureImpl(
         val result = mutableListOf<Feature>()
         selectedFeatures.forEach {
             for(x in 0 until it.value) {
-                result.add(
-                    options
-                        .first { feature -> feature.name == it.key }.copy()
-                )
+                options
+                    .firstOrNull { feature -> feature.name == it.key }?.copy()?.let { newFeature ->
+                        result.add(newFeature)
+                    }
             }
         }
         return result
@@ -162,8 +165,8 @@ class MultipleChoiceDropdownStateFeatureImpl(
     fun getSelected() : List<Feature> {
         val result = getSelectedWithoutSubFeatures()
         result.forEachIndexed { index, it ->
-            if (it.choose.num(level) != 0) {
-                it.chosen = (getSubChoiceAt(
+            if (feature.choices?.get(choiceIndex)?.choose?.num(level) != 0) {
+                feature.choices?.get(choiceIndex)?.chosen = (getSubChoiceAt(
                     getOverrideKey(it, index)
                 ) as MultipleChoiceDropdownStateFeatureImpl).getSelected()
             }

@@ -139,7 +139,7 @@ data class Character(
                 feature.second.armorContingentAcBonus?.let {
                     result += it
                 }
-                feature.second.chosen?.forEach { chosen ->
+                feature.second.allChosen.forEach { chosen ->
                     chosen.armorContingentAcBonus?.let {
                         result += it
                     }
@@ -278,8 +278,10 @@ data class Character(
 
     fun addClass(newClass: Class, takeGold: Boolean) {
         //Clear out the unused level path too save memory.
-        newClass.levelPath.forEach {
-            it.options?.clear()
+        newClass.levelPath.forEach { feature ->
+            feature.choices?.forEach {
+                it.options?.clear()
+            }
         }
 
         backpack.classCurrency = Currency.getEmptyCurrencyMap()
@@ -552,8 +554,8 @@ data class Character(
     private fun checkForExpertise(it: String) : Boolean {
         features.forEach { feature ->
             if(feature.second.name == "Expertise") {
-                feature.second.chosen?.forEach { item ->
-                    if(item.name == it) {
+                feature.second.allChosen.forEach { item ->
+                    if (item.name == it) {
                         return true
                     }
                 }
@@ -799,7 +801,7 @@ data class Character(
         }
         features.forEach {
             applyFeature(it.second)
-            it.second.chosen?.forEach { subfeature ->
+            it.second.allChosen.forEach { subfeature ->
                 applyFeature(subfeature)
             }
         }

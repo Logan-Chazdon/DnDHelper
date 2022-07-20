@@ -17,24 +17,26 @@ fun getFeatsAt(
         (featDropDownStates[i].getSelected(feats) as List<Feat>).run {
             this.forEach { feat ->
                 feat.features?.forEach { feature ->
-                    if (feature.choose.num(level) != 0) {
-                        feature.chosen = feature.options?.let {
-                            (
-                                    featChoiceDropDownStates.getDropDownState(
-                                        key = "${feature.name}$i",
-                                        maxSelections = feature.choose.num(level),
-                                        names = feature.options.let { featureList ->
-                                            val result = mutableListOf<String>()
-                                            featureList.forEach {
-                                                result.add(it.name)
-                                            }
-                                            result
-                                        },
-                                        choiceName = feature.name,
-                                        maxOfSameSelection = 1
-                                    )
-                                    ).getSelected(it)
-                        } as List<Feature>
+                    feature.choices?.forEach { featureChoice ->
+                        if (featureChoice.choose.num(level) != 0) {
+                            featureChoice.chosen = featureChoice.options?.let {
+                                (
+                                        featChoiceDropDownStates.getDropDownState(
+                                            key = "${feature.name}$i",
+                                            maxSelections = featureChoice.choose.num(level),
+                                            names = featureChoice.options.let { featureList ->
+                                                val result = mutableListOf<String>()
+                                                featureList.forEach {
+                                                    result.add(it.name)
+                                                }
+                                                result
+                                            },
+                                            choiceName = feature.name,
+                                            maxOfSameSelection = 1
+                                        )
+                                        ).getSelected(it)
+                            } as List<Feature>
+                        }
                     }
                 }
             }

@@ -29,7 +29,7 @@ fun FeatureView(
     assumedFeatures: List<Feature>,
     assumedStatBonuses: Map<String, Int>?
     ) {
-    val color = if (feature.choose.num(level) != 0) {
+    val color = if (feature.choices?.any { it.choose.num(level) != 0 } == true) {
         MaterialTheme.colors.surface
     } else {
         MaterialTheme.colors.noActionNeeded
@@ -48,19 +48,22 @@ fun FeatureView(
                 style = MaterialTheme.typography.caption
             )
 
-            if (feature.choose.num(level) != 0) {
-                MultipleChoiceDropdownView(
-                    state = dropDownStates.getDropDownState(
-                        feature = feature,
-                        character = character,
-                        assumedFeatures = assumedFeatures,
-                        assumedProficiencies = proficiencies,
-                        level = level,
-                        assumedClass = assumedClass,
-                        assumedStatBonuses = assumedStatBonuses,
-                        assumedSpells = assumedSpells
+            feature.choices?.forEachIndexed { index, it ->
+                if (it.choose.num(level) != 0 && it.options?.isNotEmpty() == true) {
+                    MultipleChoiceDropdownView(
+                        state = dropDownStates.getDropDownState(
+                            choiceIndex = index,
+                            feature = feature,
+                            character = character,
+                            assumedFeatures = assumedFeatures,
+                            assumedProficiencies = proficiencies,
+                            level = level,
+                            assumedClass = assumedClass,
+                            assumedStatBonuses = assumedStatBonuses,
+                            assumedSpells = assumedSpells
+                        )
                     )
-                )
+                }
             }
         }
     }

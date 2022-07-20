@@ -5,9 +5,7 @@ data class Feature(
     val description: String,
     val index : String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.
     val grantedAtLevel: Int = 1,
-    val choose: Choose = Choose(0),
     val maxTimesChosen : Int? = null, //If the feature is in another features options. This is the max amount of times the user can select it.
-    val options: MutableList<Feature>?,
     val prerequisite: Prerequisite? = null,
     val spells: List<Spell>? = null, //Spells granted by this feature
     val infusion: Infusion? = null,
@@ -20,32 +18,40 @@ data class Feature(
     val languages: List<Language>? = null,
     val extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
     val rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.
+    val choices: List<FeatureChoice>? = null
 ) {
-
-    var chosen : List<Feature>? = null
     var resource: Resource? = null
+    val allChosen: List<Feature>
+        get() {
+            val result = mutableListOf<Feature>()
+            choices?.forEach {
+                it.chosen?.let { chosen -> result.addAll(chosen) }
+            }
+            return result
+        }
 
     val grantsInfusions: Boolean
-    get() {
-        if(infusion != null) {
-            return true
-        }
-        chosen?.forEach {
-            if(it.grantsInfusions) {
+        get() {
+            if (infusion != null) {
                 return true
             }
+            allChosen.forEach {
+                if (it.grantsInfusions) {
+                    return true
+                }
+            }
+            return false
         }
-        return false
-    }
 
     fun recharge(basis: Int) {
         resource?.recharge(basis)
-        chosen?.forEach {
+        allChosen.forEach {
             it.resource?.recharge(basis)
         }
     }
 
-    fun getAvailableOptions(
+    fun getAvailableOptionsAt(
+        index: Int,
         character: Character?,
         assumedProficiencies: List<Proficiency>,
         assumedFeatures: List<Feature>,
@@ -56,9 +62,13 @@ data class Feature(
     ): MutableList<Feature> {
         val result = mutableListOf<Feature>()
 
-        options?.forEach {
-            if(
-                try {level >= it.grantedAtLevel} catch(e: NumberFormatException) {false} &&
+        choices?.get(index)?.options?.forEach {
+            if (
+                try {
+                    level >= it.grantedAtLevel
+                } catch (e: NumberFormatException) {
+                    false
+                } &&
                 it.prerequisite?.check(
                     character,
                     assumedFeatures,
@@ -79,7 +89,7 @@ data class Feature(
     fun getSpellsGiven(): List<Spell> {
         val result = mutableListOf<Spell>()
         spells?.let { result.addAll(it) }
-        chosen?.forEach {
+        allChosen.forEach {
             it.spells?.let { spells -> result.addAll(spells) }
         }
         return result
@@ -88,8 +98,8 @@ data class Feature(
     val currentActive: Int
     get() {
         var result = 0
-        for(item in chosen ?: listOf()) {
-            if(item.infusion?.active == true) {
+        for (item in allChosen) {
+            if (item.infusion?.active == true) {
                 result += 1
             }
         }
@@ -101,9 +111,9 @@ data class Feature(
             this.infusion.active = true
             return true
         } else {
-            this.chosen?.forEachIndexed { index, it ->
+            allChosen.forEach {
                 if (it.infusion == infusion) {
-                    chosen?.get(index)?.infusion?.active = true
+                    it.infusion.active = true
                     return true
                 }
             }
@@ -116,9 +126,9 @@ data class Feature(
             this.infusion.active = false
             return true
         } else {
-            this.chosen?.forEachIndexed { index, it ->
+            allChosen.forEach {
                 if (it.infusion == infusion) {
-                    chosen?.get(index)?.infusion?.active = false
+                    it.infusion.active = false
                     return true
                 }
             }

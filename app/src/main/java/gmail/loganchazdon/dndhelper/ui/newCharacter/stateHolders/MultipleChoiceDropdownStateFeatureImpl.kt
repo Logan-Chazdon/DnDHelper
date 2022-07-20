@@ -30,7 +30,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
     private val selectedFeatures: SnapshotStateMap<String, Int> = mutableStateMapOf()
 
     init {
-        feature.choices?.get(choiceIndex)?.chosen?.forEach {
+        feature.choices?.getOrNull(choiceIndex)?.chosen?.forEach {
             selectedFeatures[it.name] = (selectedFeatures[it.name] ?: 0) + 1
         }
     }
@@ -73,7 +73,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
         get() {
             val result = mutableListOf<String>()
             getSelectedWithoutSubFeatures().forEachIndexed { i, it ->
-                if ((it.choices?.get(choiceIndex)?.choose?.num(level) ?: 0) != 0) {
+                if ((it.choices?.getOrNull(choiceIndex)?.choose?.num(level) ?: 0) != 0) {
                     result += getOverrideKey(it, i)
                 }
             }

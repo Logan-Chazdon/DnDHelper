@@ -2142,7 +2142,9 @@
                             "choose" : 1,
                             "from" : [
                                 {
-                                    "index" : "all_spells"
+                                    "index" : "spells",
+                                    "levels" : [0],
+                                    "schools" : ["necromancy"]
                                 }
                             ]
                         },

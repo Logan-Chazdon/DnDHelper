@@ -71,7 +71,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                     viewModel.itemDesc.value = it
                 },
                 modifier = Modifier.padding(5.dp),
-                textStyle = MaterialTheme.typography.body1,
+                textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onBackground),
             )
 
             //If the item has no description prompt them to add one.
@@ -79,7 +79,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                 Text(
                     text = "Add a description",
                     modifier = Modifier.padding(5.dp),
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onBackground),
                 )
             }
         }
@@ -98,7 +98,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                         Text(
                             modifier = Modifier.padding(5.dp),
                             text = "Armor Class:",
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
                         )
 
                         BasicTextField(
@@ -106,7 +106,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                             modifier = Modifier
                                 .padding(top = 5.dp, bottom = 5.dp, start = 2.dp, end = 2.dp)
                                 .width(IntrinsicSize.Min),
-                            textStyle = MaterialTheme.typography.h6,
+                            textStyle = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
                             onValueChange = {
                                 viewModel.armorBaseAc.value = it
                             },
@@ -117,7 +117,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                             Text(
                                 text = "+ dex mod",
                                 modifier = Modifier.padding(top = 5.dp, bottom = 5.dp, start = 2.dp, end = 2.dp),
-                                style = MaterialTheme.typography.h6
+                                style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
                             )
                             if((item.value as Armor).dexCap < 5) {
                                 val maxDex = remember((item.value as Armor).dexCap) {
@@ -126,7 +126,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                                 Text(
                                     text = "(max",
                                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                                    style = MaterialTheme.typography.h6
+                                    style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
                                 )
 
                                 BasicTextField(
@@ -139,7 +139,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                                             end = 2.dp
                                         )
                                         .width(IntrinsicSize.Min),
-                                    textStyle = MaterialTheme.typography.h6,
+                                    textStyle = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
                                     onValueChange = {
                                         maxDex.value = it
                                     },
@@ -149,7 +149,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                                 Text(
                                     text = ")",
                                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
-                                    style = MaterialTheme.typography.h6
+                                    style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
                                 )
                             }
                         }
@@ -188,7 +188,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                     modifier = Modifier
                         .padding(top = 5.dp, bottom = 5.dp, start = 2.dp, end = 2.dp)
                         .width(IntrinsicSize.Min),
-                    textStyle = MaterialTheme.typography.h6,
+                    textStyle = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
                     onValueChange = {
                         viewModel.shieldBaseAc.value = it
                     },
@@ -208,7 +208,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
                         modifier = Modifier
                             .padding(top = 5.dp, bottom = 5.dp, start = 2.dp, end = 2.dp)
                             .width(IntrinsicSize.Min),
-                        textStyle = MaterialTheme.typography.h6,
+                        textStyle = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.onBackground),
                         onValueChange = {
                             viewModel.weaponDamage.value = it
                         },

@@ -22,9 +22,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import gmail.loganchazdon.dndhelper.model.Subclass
+import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
+import gmail.loganchazdon.dndhelper.ui.theme.noActionNeeded
 import gmail.loganchazdon.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -504,6 +508,49 @@ fun ConfirmClassView(
                         ).getSelected(it.subClasses) as List<Subclass>)
                             .getOrNull(0)
                     }?.let { subclass ->
+                        subclass.spells?.let {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(0.95f),
+                                backgroundColor = MaterialTheme.colors.noActionNeeded,
+                                elevation = 5.dp,
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(5.dp)
+                                ) {
+                                    Text(
+                                        text = "Spells",
+                                        style = MaterialTheme.typography.h6
+                                    )
+                                    it.forEach {
+                                        var expanded by remember { mutableStateOf(false) }
+                                        Text(
+                                            text = it.second.name,
+                                            modifier = Modifier.clickable {
+                                                expanded = true
+                                            }
+                                        )
+                                        if (expanded) {
+                                            Dialog(
+                                                onDismissRequest = {
+                                                    expanded = false
+                                                },
+                                                properties = DialogProperties(
+                                                    usePlatformDefaultWidth = false,
+                                                    dismissOnClickOutside = true
+                                                )
+                                            ) {
+                                                Card {
+                                                    SpellDetailsView(spell = it.second)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
                         subclass.features.forEach {
                             if (viewModel.levels.value.text.isNotBlank()) {
                                 if (it.grantedAtLevel <= viewModel.levels.value.text.toInt()) {

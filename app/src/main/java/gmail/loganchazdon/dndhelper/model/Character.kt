@@ -818,14 +818,14 @@ data class Character(
                 val level = it[clazz.level - 1].name.toInt()
                 val maxAmount = it[clazz.level - 1].maxAmountType.toInt()
                 val amount = it[clazz.level - 1].currentAmount
-                if(slots.size  == level + 1) {
-                    slots[level].currentAmount = slots[level].currentAmount + amount
-                    slots[level].maxAmountType = maxAmount.toString()
-                    slots[level].rechargeAmountType = maxAmount.toString()
+                if(slots.size  == level) {
+                    slots[level - 1].currentAmount = slots[level- 1].currentAmount + amount
+                    slots[level - 1].maxAmountType = maxAmount.toString()
+                    slots[level - 1].rechargeAmountType = maxAmount.toString()
                 } else {
                     slots.add(
                         Resource(
-                            name = Repository.allSpellLevels[level - 1].second,
+                            name = Repository.allSpellLevels[level].second,
                             currentAmount = amount,
                             maxAmountType = maxAmount.toString(),
                             rechargeAmountType = maxAmount.toString()

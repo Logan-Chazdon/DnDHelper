@@ -33,6 +33,19 @@ class MultipleChoiceDropdownStateFeatureImpl(
         feature.choices?.getOrNull(choiceIndex)?.chosen?.forEach {
             selectedFeatures[it.name] = (selectedFeatures[it.name] ?: 0) + 1
         }
+
+        if(feature.choices?.getOrNull(choiceIndex)?.chosen != null) {
+            //Update the name to only show the selected options.
+            var newNames = ""
+            for(i in names.indices) {
+                if(selectedList[i] > 0) {
+                    newNames += names[i] + " "
+                }
+            }
+            if(newNames.isNotBlank()) {
+                selectedNames.value = (newNames)
+            }
+        }
     }
 
     override val selectedList:  SnapshotStateList<Int>
@@ -88,7 +101,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
     private val subChoices: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl> = mutableStateMapOf()
     override fun getSubChoiceAt(key: String): MultipleChoiceDropdownState? {
        var subFeature : Feature? = null
-        getSelectedWithoutSubFeatures()
+
        for((i, it) in getSelectedWithoutSubFeatures().withIndex()) {
            if(getOverrideKey(it, i) == key) {
                subFeature = it
@@ -165,10 +178,12 @@ class MultipleChoiceDropdownStateFeatureImpl(
     fun getSelected() : List<Feature> {
         val result = getSelectedWithoutSubFeatures()
         result.forEachIndexed { index, it ->
-            if (feature.choices?.get(choiceIndex)?.choose?.num(level) != 0) {
-                feature.choices?.get(choiceIndex)?.chosen = (getSubChoiceAt(
-                    getOverrideKey(it, index)
-                ) as MultipleChoiceDropdownStateFeatureImpl).getSelected()
+            it.choices?.forEach { featureChoice ->
+                if (featureChoice.choose.num(level) > 0) {
+                    featureChoice.chosen = (getSubChoiceAt(
+                        getOverrideKey(it, index)
+                    ) as MultipleChoiceDropdownStateFeatureImpl).getSelected()
+                }
             }
         }
         return result

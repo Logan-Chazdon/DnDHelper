@@ -19,6 +19,9 @@ import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getFeatsAt
 import gmail.loganchazdon.dndhelper.ui.utils.allNames
 import javax.inject.Inject
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.set
 
 @HiltViewModel
 public class NewCharacterClassViewModel @Inject constructor(
@@ -485,6 +488,36 @@ public class NewCharacterClassViewModel @Inject constructor(
             ?.getOrDefault(className, null)?.let { clazz ->
                 //Apply level choice.
                 levels.value = TextFieldValue(clazz.level.toString())
+
+                //Apply feature choices.
+                clazz.levelPath.filter { it.grantedAtLevel <= clazz.level }
+                    .forEachIndexed { index, feature ->
+                        feature.choices?.forEachIndexed { choiceIndex, _ ->
+                            val featureToPass = classes.value?.get(classIndex)
+                                ?.levelPath?.filter { it.grantedAtLevel <= clazz.level }?.get(index)
+                                ?.copy()?.run {
+                                    this.choices?.forEachIndexed { choiceIndex, it ->
+                                        it.chosen = feature.choices[choiceIndex].chosen
+                                    }
+                                    this
+                                }
+
+                            featureToPass?.let {
+                                featureDropdownStates.getDropDownState(
+                                    choiceIndex = choiceIndex,
+                                    feature = it,
+                                    character = character.value,
+                                    level = clazz.level,
+                                    assumedClass = null,
+                                    assumedSpells = listOf(),
+                                    assumedFeatures = listOf(),
+                                    assumedProficiencies = listOf(),
+                                    assumedStatBonuses = null
+                                )
+                            }
+                        }
+                    }
+
 
                 //Apply base class choice
                 isBaseClass.value = clazz.isBaseClass

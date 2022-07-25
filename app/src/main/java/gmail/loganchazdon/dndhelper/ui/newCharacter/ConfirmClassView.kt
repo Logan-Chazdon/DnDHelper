@@ -82,11 +82,14 @@ fun ConfirmClassView(
         }
     }
 
-    LaunchedEffect(viewModel.character?.value?.id) {
-        viewModel.applyAlreadySelectedChoices()
-    }
 
     classes.value?.get(viewModel.classIndex)?.let { clazz ->
+        LaunchedEffect(viewModel.character?.observeAsState()?.value?.id) {
+            if(viewModel.character?.value != null) {
+                viewModel.applyAlreadySelectedChoices()
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

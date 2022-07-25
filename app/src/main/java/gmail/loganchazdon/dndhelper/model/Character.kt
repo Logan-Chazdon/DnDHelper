@@ -820,8 +820,8 @@ data class Character(
                 val amount = it[clazz.level - 1].currentAmount
                 if(slots.size  == level) {
                     slots[level - 1].currentAmount = slots[level- 1].currentAmount + amount
-                    slots[level - 1].maxAmountType = maxAmount.toString()
-                    slots[level - 1].rechargeAmountType = maxAmount.toString()
+                    slots[level - 1].maxAmountType = (maxAmount + slots[level - 1].maxAmountType.toInt()).toString()
+                    slots[level - 1].rechargeAmountType = (maxAmount + slots[level - 1].maxAmountType.toInt()).toString()
                 } else {
                     slots.add(
                         Resource(

@@ -1049,7 +1049,7 @@
             "languages": [
                 {
                     "name" : "Two languages of your choice",
-                    "choose" : 1,
+                    "choose" : 2,
                     "from" : [
                         {
                             "index" : "all_languages"

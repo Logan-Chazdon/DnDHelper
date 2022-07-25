@@ -254,8 +254,8 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                         Spacer(Modifier.height(8.dp))
 
                         LanguagesAndProficienciesView(
-                            languages = viewModel.character.observeAsState().value?.languages ?: listOf(),
-                            proficiencies = viewModel.character.observeAsState().value?.proficiencies ?: listOf(),
+                            languages = viewModel.character.observeAsState().value?.languages?.distinct() ?: listOf(),
+                            proficiencies = viewModel.character.observeAsState().value?.proficiencies?.distinct() ?: listOf(),
                             modifier = Modifier.fillMaxHeight()
                         )
                     }

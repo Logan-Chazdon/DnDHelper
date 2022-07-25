@@ -593,6 +593,32 @@ public class NewCharacterClassViewModel @Inject constructor(
                                 choiceName = "Feat"
                             )
                     }?.setSelected(mutableListOf(it.name))
+
+                    it.features?.forEach { feature ->
+                        feature.choices?.forEach { choice ->
+                            val selected = choice.chosen.run {
+                                val result = mutableListOf<String>()
+                                this?.forEach {
+                                    result.add(it.name)
+                                }
+                                result
+                            }
+
+                            featChoiceDropDownStates.getDropDownState(
+                                key = "${feature.name}$i",
+                                maxSelections = choice.choose.num(clazz.level),
+                                names = choice.options.let { featureList ->
+                                    val result = mutableListOf<String>()
+                                    featureList?.forEach {
+                                        result.add(it.name)
+                                    }
+                                    result
+                                },
+                                choiceName = feature.name,
+                                maxOfSameSelection = 1
+                            ).setSelected(selected)
+                        }
+                    }
                 }
                 val offset = isFeat.size
                 clazz.abilityImprovementsGranted.forEachIndexed { i, it ->

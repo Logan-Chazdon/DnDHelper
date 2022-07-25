@@ -84,8 +84,11 @@ fun ConfirmClassView(
 
 
     classes.value?.get(viewModel.classIndex)?.let { clazz ->
-        LaunchedEffect(viewModel.character?.observeAsState()?.value?.id) {
-            if(viewModel.character?.value != null) {
+        LaunchedEffect(
+            viewModel.character?.observeAsState()?.value?.id,
+            viewModel.featNames.observeAsState().value
+        ) {
+            if(viewModel.character?.value != null && viewModel.featNames.value != null) {
                 viewModel.applyAlreadySelectedChoices()
             }
         }

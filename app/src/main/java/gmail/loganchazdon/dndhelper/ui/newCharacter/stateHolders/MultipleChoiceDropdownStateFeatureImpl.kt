@@ -37,10 +37,8 @@ class MultipleChoiceDropdownStateFeatureImpl(
         if(feature.choices?.getOrNull(choiceIndex)?.chosen != null) {
             //Update the name to only show the selected options.
             var newNames = ""
-            for(i in names.indices) {
-                if(selectedList[i] > 0) {
-                    newNames += names[i] + " "
-                }
+            selectedFeatures.filter { it.value != 0}.forEach {
+                newNames += it.key + " "
             }
             if(newNames.isNotBlank()) {
                 selectedNames.value = (newNames)

@@ -2,7 +2,11 @@ package gmail.loganchazdon.dndhelper.ui
 
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -92,11 +96,17 @@ fun SpellDetailsView(
             }
         }
 
-        Text(
-            text = spell.desc,
-            style = MaterialTheme.typography.body2,
-            modifier = Modifier.padding(4.dp),
-        )
+        Column(
+            modifier = Modifier
+                .heightIn(min = 50.dp, max = 400.dp)
+                .verticalScroll(rememberScrollState())
+        ){
+            Text(
+                text = spell.desc,
+                style = MaterialTheme.typography.body2,
+                modifier = Modifier.padding(4.dp),
+            )
+        }
 
         if(spell.itemComponents.isNotEmpty()) {
             Text(

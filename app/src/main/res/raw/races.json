@@ -1853,6 +1853,55 @@
                     "ac_bonus" : 1
                 }
             ]
+        },
+        {
+            "name" : "Bugbear",
+            "ability_bonuses" : [
+                {
+                    "name" : "Strength",
+                    "bonus" : 2
+                },
+                {
+                    "name" : "Dexterity",
+                    "bonus" : 1
+                }
+            ],
+            "size" : "Medium",
+            "size_desc" : "Bugbears are between 6 and 8 feet tall and weigh between 250 and 350 pounds. Your size is Medium.",
+            "age" : "Bugbears reach adulthood at age 16 and live up to 80 years.",
+            "ground_speed" : 30,
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Goblin"
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Goblin.",
+            "proficiencies" : [
+                {
+                    "name" : "Stealth"
+                }
+            ],
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Long-Limbed",
+                    "desc" : "When you make a melee attack on your turn, your reach for it is 5 feet greater than normal."
+                },
+                {
+                    "name" : "Powerful Build",
+                    "desc" : "You count as one size larger when determining your carrying capacity and the weight you can push, drag, or lift."
+                },
+                {
+                    "name" : "Surprise Attack",
+                    "desc" : "If you surprise a creature and hit it with an attack on your first turn in combat, the attack deals an extra 2d6 damage to it. You can use this trait only once per combat."
+                }
+            ]
         }
     ]
 }

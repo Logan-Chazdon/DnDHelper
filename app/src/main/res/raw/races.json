@@ -1957,6 +1957,48 @@
                     "desc" : "You count as one size larger when determining your carrying capacity and the weight you can push or drag. In addition, any climb that requires hands and feet is especially difficult for you because of your equine legs. When you make such a climb, each foot of movement costs you 4 extra feet, instead of the normal 1 extra foot."
                 }
             ]
+        },
+        {
+            "name" : "Goblin",
+            "ability_bonuses" : [
+                {
+                    "name" : "Dexterity",
+                    "bonus" : 2
+                },
+                {
+                    "name" : "Constitution",
+                    "bonus" : 1
+                }
+            ],
+            "size" : "Small",
+            "size_desc" : "Goblins are between 3 and 4 feet tall and weigh between 40 and 80 pounds. Your size is Small.",
+            "age" : "Goblins reach adulthood at age 8 and live up to 60 years.",
+            "ground_speed" : 30,
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Goblin"
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Goblin.",
+            "proficiencies" : [
+            ],
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Fury of the Small",
+                    "desc" : " When you damage a creature with an attack or a spell and the creature's size is larger than yours, you can cause the attack or spell to deal extra damage to the creature. The extra damage equals your level. Once you use this trait, you can't use it again until you finish a short or long rest."
+                },
+                {
+                    "name" : "Nimble Escape",
+                    "desc" : "You can take the Disengage or Hide action as a bonus action on each of your turns."
+                }
+            ]
         }
     ]
 }

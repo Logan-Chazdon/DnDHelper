@@ -1999,6 +1999,134 @@
                     "desc" : "You can take the Disengage or Hide action as a bonus action on each of your turns."
                 }
             ]
+        },
+        {
+            "name" : "Kobold",
+            "ability_bonuses" : [
+                {
+                    "name" : "Dexterity",
+                    "bonus" : 2
+                }
+            ],
+            "size" : "Small",
+            "size_desc" : "Kobolds are between 2 and 3 feet tall and weigh between 25 and 35 pounds. Your size is Small.",
+            "age" : "Kobolds reach adulthood at age 6 and can live up to 120 years but rarely do so.",
+            "ground_speed" : 30,
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Draconic"
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Draconic.",
+            "proficiencies" : [
+            ],
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can't discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Grovel, Cower, and Beg",
+                    "desc" : "As an action on your turn, you can cower pathetically to distract nearby foes. Until the end of your next turn, your allies gain advantage on attack rolls against enemies within 10 feet of you that can see you. Once you use this trait, you can't use it again until you finish a short or long rest."
+                },
+                {
+                    "name" : "Pack Tactics",
+                    "desc" : "You have advantage on an attack roll against a creature if at least one of your allies is within 5 feet of the creature and the ally isn't incapacitated."
+                },
+                {
+                    "name" : "Sunlight Sensitivity",
+                    "desc" : "You have disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight when you, the target of your attack, or whatever you are trying to perceive is in direct sunlight."
+                }
+            ]
+        },
+        {
+            "name" : "Vampire (Ixalan)",
+            "ability_bonuses" : [
+                {
+                    "name" : "Charisma",
+                    "bonus" : 2
+                },
+                {
+                    "name" : "Intelligence",
+                    "bonus" : 1
+                }
+            ],
+            "size" : "Medium",
+            "size_desc" : "Vampires are about the same size and build as humans. Your size is Medium.",
+            "age" : "Vampires don’t mature and age in the same way that other races do.",
+            "ground_speed" : 30,
+            "alignment" : "Vampires might not have an innate tendency toward evil, but many of them end up there. Evil or not, their strict hierarchies incline them toward a lawful alignment.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Vampire"
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common (if it exists in your campaign) and Vampire.",
+            "proficiencies" : [
+            ],
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "Thanks to your heritage, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Vampiric Resistance",
+                    "desc" : "You have resistance to necrotic damage."
+                },
+                {
+                    "name" : "Bloodthirst",
+                    "desc" : "You can drain blood and life energy from a willing creature, or one that is grappled by you, incapacitated, or restrained. Make a melee attack against the target. If you hit, you deal 1 piercing damage and 1d6 necrotic damage. The target’s hit point maximum is reduced by an amount equal to the necrotic damage taken, and you regain hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0."
+                },
+                {
+                    "name" : "Feast of Blood",
+                    "desc" : "When you drain blood with your Bloodthirst ability, you experience a surge of vitality. Your speed increases by 10 feet, and you gain advantage on Strength and Dexterity checks and saving throws for 1 minute."
+                }
+            ]
+        },
+        {
+            "name" : "Vampire (Zendikar)",
+            "ability_bonuses" : [
+                {
+                    "name" : "Intelligence",
+                    "bonus" : 1
+                }
+            ],
+            "size" : "Medium",
+            "size_desc" : "Vampires are about the same size and build as humans. Your size is Medium.",
+            "age" : "Vampires don’t mature and age in the same way that other races do. Every living vampire is either a bloodchief, infected by the Eldrazi's influence in the distant reaches of history, or was spawned by a bloodchief from a living human. Most vampires are thus very old, but few have any memory of their earliest years.",
+            "ground_speed" : 30,
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Vampire"
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Vampire.",
+            "proficiencies" : [
+            ],
+            "features" : [
+                {
+                    "name" : "Darkvision",
+                    "desc" : "Thanks to your heritage, you have superior vision in dark and dim conditions. You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. You can’t discern color in darkness, only shades of gray."
+                },
+                {
+                    "name" : "Vampiric Resistance",
+                    "desc" : "You have resistance to necrotic damage."
+                },
+                {
+                    "name" : "Blood Thirst",
+                    "desc" : "You can drain blood and life energy from a willing creature, or one that is grappled by you, incapacitated, or restrained. Make a melee attack against the target, using either Strength or Dexterity for your attack roll. If you hit, you deal 1 piercing damage and 1d6 necrotic damage. The target’s hit point maximum is reduced by an amount equal to the necrotic damage taken, and you regain hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0. A humanoid killed in this way becomes a null."
+                }
+            ],
+            "alignment" : "Vampires have no innate tendency toward evil, but consuming the life energy of other creatures often pushes them to that end. Regardless of their moral bent, the strict hierarchies of their bloodchiefs inclines them toward a lawful alignment."
         }
     ]
 }

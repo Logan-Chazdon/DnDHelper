@@ -110,6 +110,13 @@ data class Character(
         if(backpack.equippedArmor.strengthPrerequisite ?: 0 > realStats["Str"] ?: 0) {
             result -= 10
         }
+
+        features.filter { it.second.speedBoost != null }.forEach {
+            if(it.second.activationRequirement.checkActivation(this)) {
+                result += it.second.speedBoost!!.calculate(totalClassLevels)
+            }
+        }
+
         return result
     }
     val armorClass: Int

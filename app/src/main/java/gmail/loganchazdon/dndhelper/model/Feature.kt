@@ -7,6 +7,8 @@ data class Feature(
     val grantedAtLevel: Int = 1,
     val maxTimesChosen : Int? = null, //If the feature is in another features options. This is the max amount of times the user can select it.
     val prerequisite: Prerequisite? = null,
+    val activationRequirement: ActivationRequirement = ActivationRequirement(),
+    val speedBoost: ScalingBonus? = null,
     val spells: List<Spell>? = null, //Spells granted by this feature
     val infusion: Infusion? = null,
     val maxActive: Choose = Choose(0),

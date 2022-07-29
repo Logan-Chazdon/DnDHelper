@@ -2160,10 +2160,27 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         null
                     }
 
+                    val activationRequirement = featureJson.optJSONObject("activation_requirement").let {
+                        if(it == null) {
+                            ActivationRequirement()
+                        } else {
+                            extractActivationRequirement(it)
+                        }
+                    }
+
+                    val speedBoost = featureJson.optJSONArray("speed_boost").let {
+                        if(it == null) {
+                            null
+                        } else {
+                            extractScalingBonus(it)
+                        }
+                    }
+
                     features.add(
                         Feature(
                             name = featureJson.getString("name"),
                             choices = choices,
+                            activationRequirement = activationRequirement,
                             rangedAttackBonus = rangedAttackBonus,
                             extraAttackAndDamageRollStat = extraAttackAndDamageRollStat,
                             maxTimesChosen = try {
@@ -2193,7 +2210,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             ac = ac,
                             armorContingentAcBonus = armorContingentAcBonus,
                             proficiencies = proficiencies,
-                            languages = languages
+                            languages = languages,
+                            speedBoost = speedBoost
                         )
                     )
                 }
@@ -2211,5 +2229,12 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             getSpellsByIndex(spellJson.getString("index"))?.let { spells.addAll(it) }
         }
         return spells
+    }
+
+    private fun extractActivationRequirement(json: JSONObject) : ActivationRequirement {
+        return ActivationRequirement(
+            armorReqIndex = json.optString("armor_index"),
+            shieldReq = json.optBoolean("shield")
+        )
     }
 }

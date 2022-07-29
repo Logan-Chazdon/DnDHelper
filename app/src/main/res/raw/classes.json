@@ -5311,7 +5311,32 @@
                     "name" : "Unarmored Movement",
                     "desc" : "Starting at 2nd level, your speed increases by 10 feet while you are not wearing armor or wielding a shield. This bonus increases when you reach certain monk levels, as shown in the Monk table.\n\nAt 9th level, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the move.",
                     "level" : 2,
-                    "comment" : "TODO scaling bonus"
+                    "activation_requirement" : {
+                        "shield" : false,
+                        "armor_index" : "none"
+                    },
+                    "speed_boost" : [
+                        {
+                            "prerequisite" : 2,
+                            "bonus" : 10
+                        },
+                        {
+                            "prerequisite" : 6,
+                            "bonus" : 15
+                        },
+                        {
+                            "prerequisite" : 10,
+                            "bonus" : 20
+                        },
+                        {
+                            "prerequisite" : 14,
+                            "bonus" : 25
+                        },
+                        {
+                            "prerequisite" : 18,
+                            "bonus" : 30
+                        }
+                    ]
                 },
                 {
                     "name" : "Dedicated Weapon (Optional)",

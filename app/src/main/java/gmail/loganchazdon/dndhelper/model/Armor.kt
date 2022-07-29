@@ -54,6 +54,7 @@ data class Armor(
     companion object {
         val none = Armor(
             name = "none",
+            index ="none",
             baseAc = 10,
             dexCap = 5,
             stealth = "-"

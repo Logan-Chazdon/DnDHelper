@@ -3483,7 +3483,47 @@
                             "name" : "Acolyte of Strength",
                             "desc" : "At 1st level, you learn one druid cantrip of your choice. You also gain proficiency in one of the following skills of your choice: Animal Handling, Athletics, Nature, or Survival.",
                             "level" : 1,
-                            "comment" : "TODO IMPL"
+                            "choices" : [
+                                {
+                                    "choose" : 1,
+                                    "from" : [
+                                        {
+                                            "index" : "spells",
+                                            "levels" : [0],
+                                            "classes" :  ["druid"]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "choose" : 1,
+                                    "from" : [
+                                        {
+                                            "name" : "Animal Handling",
+                                            "proficiencies" : [
+                                                "Animal Handling"
+                                            ]
+                                        },
+                                        {
+                                            "name" : "Nature",
+                                            "proficiencies" : [
+                                                "Nature"
+                                            ]
+                                        },
+                                        {
+                                            "name" : "Athletics",
+                                            "proficiencies" : [
+                                                "Athletics"
+                                            ]
+                                        },
+                                        {
+                                            "name" : "Survival",
+                                            "proficiencies" : [
+                                                "Survival"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "name" : "Channel Divinity: Feat of Strength",

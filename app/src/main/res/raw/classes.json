@@ -2385,8 +2385,46 @@
                         {
                             "name" : "Blessings of Knowledge",
                             "level" : 1,
-                            "comment" : "TODO IMPL",
-                            "desc" : "At 1st level, you learn two languages of your choice. You also become proficient in your choice of two of the following skills: Arcana, History, Nature, or Religion.\n\nYour proficiency bonus is doubled for any ability check you make that uses either of those skills."
+                            "desc" : "At 1st level, you learn two languages of your choice. You also become proficient in your choice of two of the following skills: Arcana, History, Nature, or Religion.\n\nYour proficiency bonus is doubled for any ability check you make that uses either of those skills.",
+                            "choices" : [
+                                {
+                                    "choose" : 2,
+                                    "from" : [
+                                        {
+                                            "index" : "all_languages"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "choose" : 2,
+                                    "from" : [
+                                        {
+                                            "name" : "Arcana",
+                                            "expertises" : [
+                                                "Arcana"
+                                            ]
+                                        },
+                                        {
+                                            "name" : "History",
+                                            "expertises" : [
+                                                "History"
+                                            ]
+                                        },
+                                        {
+                                            "name" : "Nature",
+                                            "expertises" : [
+                                                "Nature"
+                                            ]
+                                        },
+                                        {
+                                            "name" : "Religion",
+                                            "expertises" : [
+                                                "Religion"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "name" : "Channel Divinity: Knowledge of the Ages",

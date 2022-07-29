@@ -2176,6 +2176,18 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         }
                     }
 
+                    val expertises = featureJson.optJSONArray("expertises").let {
+                        if(it == null) {
+                            null
+                        } else {
+                            val result = mutableListOf<Proficiency>()
+                            for(i in 0 until it.length()) {
+                                result.add(Proficiency(name = it.getString(i)))
+                            }
+                            result
+                        }
+                    }
+
                     features.add(
                         Feature(
                             name = featureJson.getString("name"),
@@ -2211,7 +2223,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             armorContingentAcBonus = armorContingentAcBonus,
                             proficiencies = proficiencies,
                             languages = languages,
-                            speedBoost = speedBoost
+                            speedBoost = speedBoost,
+                            expertises = expertises
                         )
                     )
                 }

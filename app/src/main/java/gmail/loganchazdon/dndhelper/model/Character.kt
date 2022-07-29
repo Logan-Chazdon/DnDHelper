@@ -560,11 +560,25 @@ data class Character(
 
     private fun checkForExpertise(it: String) : Boolean {
         features.forEach { feature ->
+            //TODO replace this system with the new feature.expertises
             if(feature.second.name == "Expertise") {
                 feature.second.allChosen.forEach { item ->
                     if (item.name == it) {
                         return true
                     }
+                }
+            }
+            feature.second.allChosen.forEach { subFeature ->
+                subFeature.expertises?.forEach { expertise ->
+                    if(expertise.name == it)  {
+                        return true
+                    }
+                }
+            }
+
+            feature.second.expertises?.forEach { expertise ->
+                if(expertise.name == it)  {
+                    return true
                 }
             }
         }
@@ -573,10 +587,11 @@ data class Character(
 
     fun checkForProficiencyOrExpertise(it: String) : Int {
         proficiencies.forEach { prof ->
-            if(prof.name?.lowercase() ?: "" == it.lowercase()) {
+            if((prof.name?.lowercase() ?: "") == it.lowercase()) {
                 if(checkForExpertise(prof.name.toString())) {
                     return 2
                 }
+
                 return 1
             }
         }
@@ -664,6 +679,18 @@ data class Character(
         features.forEach { feature ->
             feature.second.proficiencies?.let {
                 result.addAll(it)
+            }
+            feature.second.expertises?.let {
+                result.addAll(it)
+            }
+
+            feature.second.allChosen.forEach { subFeature ->
+                subFeature.proficiencies?.let {
+                    result.addAll(it)
+                }
+                subFeature.expertises?.let {
+                    result.addAll(it)
+                }
             }
         }
         result.addAll(addedProficiencies)

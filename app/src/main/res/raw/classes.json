@@ -2662,8 +2662,42 @@
                         {
                             "name" : "Acolyte of Nature",
                             "level" : 1,
-                            "comment" : "TODO IMPL",
-                            "desc" : "At 1st level, you learn one cantrip of your choice from the druid spell list. This cantrip counts as a cleric cantrip for you, but it doesn’t count against the number of cleric cantrips you know. You also gain proficiency in one of the following skills of your choice: Animal Handling, Nature, or Survival.\n"
+                            "desc" : "At 1st level, you learn one cantrip of your choice from the druid spell list. This cantrip counts as a cleric cantrip for you, but it doesn’t count against the number of cleric cantrips you know. You also gain proficiency in one of the following skills of your choice: Animal Handling, Nature, or Survival.\n",
+                            "choices" : [
+                                {
+                                    "choose" : 1,
+                                    "from" : [
+                                        {
+                                            "index" : "spells",
+                                            "levels" : [0],
+                                            "classes" :  ["druid"]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "choose" : 1,
+                                    "from" : [
+                                        {
+                                            "name" : "Animal Handling",
+                                            "proficiencies" : [
+                                                "Animal Handling"
+                                            ]
+                                        },
+                                        {
+                                            "name" : "Nature",
+                                            "proficiencies" : [
+                                                "Nature"
+                                            ]
+                                        },
+                                        {
+                                            "name" : "Survival",
+                                            "proficiencies" : [
+                                                "Survival"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
                         },
                         {
                             "name" : "Bonus Proficiency",

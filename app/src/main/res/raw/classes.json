@@ -5034,7 +5034,7 @@
                             "from" : [
                                 {
                                     "name" : "History",
-                                    "profencies" : [
+                                    "proficiencies" : [
                                         {
                                             "name" : "History"
                                         }
@@ -5042,7 +5042,7 @@
                                 },
                                 {
                                     "name" : "Insight",
-                                    "profencies" : [
+                                    "proficiencies" : [
                                         {
                                             "name" : "Insight"
                                         }
@@ -5050,7 +5050,7 @@
                                 },
                                 {
                                     "name" : "Performance",
-                                    "profencies" : [
+                                    "proficiencies" : [
                                         {
                                             "name" : "Performance"
                                         }
@@ -5058,7 +5058,7 @@
                                 },
                                 {
                                     "name" : "Persuasion",
-                                    "profencies" : [
+                                    "proficiencies" : [
                                         {
                                             "name" : "Persuasion"
                                         }

@@ -434,6 +434,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun getItemsByIndex(index: String): List<ItemInterface>? {
 
         when (index) {
+            "simple_melee_weapons" -> {
+                return  _simpleWeapons.value!!.filter { it.range == "5ft"}
+            }
             "gaming_sets" -> {
                 val result = mutableListOf<ItemInterface>()
                 gamingSetIndexes.forEach {

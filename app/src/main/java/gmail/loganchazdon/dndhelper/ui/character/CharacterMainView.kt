@@ -90,77 +90,84 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                             } else {
                                 Modifier.fillMaxWidth(0.5f)
                             }
-                            Column {
-                                Box(
-                                    modifier = Modifier.fillMaxHeight(0.6f)
-                                ){
-                                    VariableOrientationView(
-                                        isVertical = isVertical,
-                                        verticalAlignment = Alignment.Top,
-                                        arrangement = Arrangement.spacedBy(0.dp)
-                                    ) {
-                                        Column(
-                                            modifier = if(isVertical) {
-                                                Modifier.fillMaxHeight(0.5f)
-                                            } else {
-                                                Modifier
-                                            }
+                            ReorderingColumnView(
+                                { modifier : Modifier, _: ColumnScope ->
+                                    Box(modifier = Modifier.fillMaxHeight(0.6f).then(modifier)) {
+                                        VariableOrientationView(
+                                            isVertical = isVertical,
+                                            verticalAlignment = Alignment.Top,
+                                            arrangement = Arrangement.spacedBy(0.dp)
                                         ) {
-                                            CharacterTextView(
-                                                modifier = topModifier.fillMaxHeight(0.5f),
-                                                name = "Personality Traits",
-                                                value = viewModel.personalityTraits.collectAsState().value,
-                                                onChange = { viewModel.personalityTraits.value = it}
-                                            )
-
-                                            CharacterTextView(
-                                                modifier = topModifier.fillMaxHeight(),
-                                                name = "Ideals",
-                                                value = viewModel.ideals.collectAsState().value,
-                                                onChange = {
-                                                    viewModel.ideals.value = it
+                                            Box(
+                                                modifier = if(isVertical) {
+                                                    Modifier.fillMaxHeight(0.5f)
+                                                } else {
+                                                    Modifier
                                                 }
-                                            )
-                                        }
+                                            ) {
+                                                ReorderingColumnView(
+                                                    { modifier : Modifier, _: ColumnScope ->
+                                                        CharacterTextView(
+                                                            modifier = topModifier.then(modifier),
+                                                            name = "Personality Traits",
+                                                            value = viewModel.personalityTraits.collectAsState().value,
+                                                            onChange = { viewModel.personalityTraits.value = it}
+                                                        )
+                                                    },
+                                                    { modifier : Modifier, _: ColumnScope ->
+                                                        CharacterTextView(
+                                                            modifier = topModifier.then(modifier),
+                                                            name = "Ideals",
+                                                            value = viewModel.ideals.collectAsState().value,
+                                                            onChange = {
+                                                                viewModel.ideals.value = it
+                                                            }
+                                                        )
+                                                    }
+                                                )
+                                            }
 
-                                        if (!isVertical)
-                                            Spacer(Modifier.width(5.dp))
+                                            if (!isVertical)
+                                                Spacer(Modifier.width(5.dp))
 
-                                        Column {
-                                            CharacterTextView(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .fillMaxHeight(0.5f),
-                                                name = "Bonds",
-                                                value = viewModel.bonds.collectAsState().value,
-                                                onChange = {
-                                                    viewModel.bonds.value = it
-                                                }
-                                            )
-
-                                            CharacterTextView(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .fillMaxHeight(),
-                                                name = "Flaws",
-                                                value = viewModel.flaws.collectAsState().value,
-                                                onChange = {
-                                                    viewModel.flaws.value = it
+                                            ReorderingColumnView(
+                                                { modifier : Modifier, _: ColumnScope ->
+                                                    CharacterTextView(
+                                                        modifier = modifier
+                                                            .fillMaxWidth(),
+                                                        name = "Bonds",
+                                                        value = viewModel.bonds.collectAsState().value,
+                                                        onChange = {
+                                                            viewModel.bonds.value = it
+                                                        }
+                                                    )
+                                                },
+                                                { modifier : Modifier, _: ColumnScope ->
+                                                    CharacterTextView(
+                                                        modifier = modifier
+                                                            .fillMaxWidth(),
+                                                        name = "Flaws",
+                                                        value = viewModel.flaws.collectAsState().value,
+                                                        onChange = {
+                                                            viewModel.flaws.value = it
+                                                        }
+                                                    )
                                                 }
                                             )
                                         }
                                     }
+                                },
+                                { modifier : Modifier, _: ColumnScope ->
+                                    CharacterTextView(
+                                        modifier = Modifier.fillMaxSize().weight(0.7f).then(modifier),
+                                        name = "Notes",
+                                        value = viewModel.notes.collectAsState().value,
+                                        onChange = {
+                                            viewModel.notes.value = it
+                                        }
+                                    )
                                 }
-
-                                CharacterTextView(
-                                    modifier = Modifier.fillMaxSize(),
-                                    name = "Notes",
-                                    value = viewModel.notes.collectAsState().value,
-                                    onChange = {
-                                        viewModel.notes.value = it
-                                    }
-                                )
-                            }
+                            )
 
                         } else {
                             //Row
@@ -261,6 +268,33 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ReorderingColumnView(
+    vararg content: @Composable (modifier : Modifier, ColumnScope) -> Unit
+) {
+    val mutableContent = remember {
+        mutableStateListOf<@Composable (modifier : Modifier, ColumnScope) -> Unit>().run {
+            this.addAll(content)
+            this
+        }
+    }
+    Column {
+        mutableContent.forEachIndexed { index, view ->
+            view(
+                modifier = Modifier
+                    .weight(1f)
+                    .onFocusChanged {
+                        if (it.hasFocus && index != 0) {
+                            mutableContent.removeAt(index)
+                            mutableContent.add(0, view)
+                        }
+                    },
+                this
+            )
         }
     }
 }

@@ -1,41 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="../../../layout/compose-model-1642321112647.xml" value="0.11296296296296296" />
-        <entry key="../../../layout/compose-model-1642854043423.xml" value="0.41818181818181815" />
-        <entry key="../../../layout/compose-model-1643113520603.xml" value="0.4727272727272727" />
-        <entry key="../../../layout/compose-model-1643230377293.xml" value="0.18876689189189189" />
-        <entry key="../../../layout/compose-model-1644886121280.xml" value="0.3091216216216216" />
-        <entry key="../../../layout/compose-model-1644962653062.xml" value="0.3091216216216216" />
-        <entry key="../../../layout/compose-model-1648756065021.xml" value="0.29771959459459457" />
-        <entry key="../../../layout/compose-model-1649061897303.xml" value="0.4962962962962963" />
-        <entry key="../../../layout/compose-model-1649371944575.xml" value="0.44074074074074077" />
-        <entry key="../../../layout/compose-model-1649379758003.xml" value="0.2643581081081081" />
-        <entry key="../../../layout/compose-model-1649380459213.xml" value="0.4682741116751269" />
-        <entry key="../../../layout/compose-model-1649382635309.xml" value="0.5" />
-        <entry key="../../../layout/compose-model-1650947343465.xml" value="0.37407407407407406" />
-        <entry key="../../../layout/compose-model-1651528826420.xml" value="1.469090909090909" />
-        <entry key="../../../layout/compose-model-1652874357473.xml" value="0.1" />
-        <entry key="../../../layout/compose-model-1655419863666.xml" value="1.410909090909091" />
-        <entry key="..\:/Programs/DnDHelper/app/src/main/res/drawable/ic_armour_class.xml" value="0.1712962962962963" />
-        <entry key="..\:/Programs/DnDHelper/app/src/main/res/drawable/ic_class_icon___artificer.xml" value="0.3769230769230769" />
-        <entry key="..\:/Programs/DnDHelper/app/src/main/res/drawable/ic_class_icon___cleric.xml" value="0.3769230769230769" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/DnDHelper/app/src/main/res/drawable/ic_stats_icon.xml" value="0.1685185185185185" />
-        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.194" />
-        <entry key="app/src/main/res/drawable/ic_class_icon___fighter.xml" value="0.36822916666666666" />
-        <entry key="app/src/main/res/drawable/ic_combat_icon.xml" value="0.10648148148148148" />
-        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.194" />
-        <entry key="app/src/main/res/drawable/ic_race_icon.xml" value="0.237" />
-        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.252" />
-      </map>
-    </option>
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/build/classes" />
-  </component>
-  <component name="ProjectType">
-    <option name="id" value="Android" />
-  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
 </project>

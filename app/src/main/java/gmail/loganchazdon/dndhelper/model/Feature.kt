@@ -7,6 +7,8 @@ data class Feature(
     val grantedAtLevel: Int = 1,
     val maxTimesChosen : Int? = null, //If the feature is in another features options. This is the max amount of times the user can select it.
     val prerequisite: Prerequisite? = null,
+    val activationRequirement: ActivationRequirement = ActivationRequirement(),
+    val speedBoost: ScalingBonus? = null,
     val spells: List<Spell>? = null, //Spells granted by this feature
     val infusion: Infusion? = null,
     val maxActive: Choose = Choose(0),
@@ -15,6 +17,7 @@ data class Feature(
     val acBonus: Int? = null,
     val ac: ArmorClass? = null, //This will only be applied when not wearing armor.
     val proficiencies: List<Proficiency>? = null,
+    val expertises: List<Proficiency>? = null,
     val languages: List<Language>? = null,
     val extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
     val rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.

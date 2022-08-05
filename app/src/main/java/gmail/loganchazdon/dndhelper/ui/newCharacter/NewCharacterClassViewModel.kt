@@ -108,6 +108,19 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
 
+    private fun getFeatures(features: List<Feature>, level: Int) : List<Feature> {
+        features.filter { it.grantedAtLevel <= level }.forEach { feature ->
+            feature.choices?.forEachIndexed { index, it ->
+                if (it.choose.num(level) != 0 && it.options?.isEmpty() == false) {
+                    it.chosen =
+                        featureDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
+                            ?.getSelected()
+                }
+            }
+        }
+        return features
+    }
+
     suspend fun addClassLevels(newClass: Class, level: Int) {
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
@@ -126,15 +139,9 @@ public class NewCharacterClassViewModel @Inject constructor(
             }
         }
 
-        newClass.levelPath.filter { it.grantedAtLevel <= level }.forEach { feature ->
-            feature.choices?.forEachIndexed { index, it ->
-                if (it.choose.num(level) != 0 && it.options?.isEmpty() == false) {
-                    it.chosen =
-                        featureDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
-                            ?.getSelected()
-                }
-            }
-        }
+        getFeatures(newClass.levelPath, level)
+
+
 
         for ((i, item) in isFeat.withIndex()) {
             if (item) {
@@ -166,16 +173,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                     }
                     this
                 }
-
-            newClass.subclass?.features?.filter { it.grantedAtLevel <= level }?.forEach { feature ->
-                feature.choices?.forEachIndexed { index, it ->
-                    if (it.choose.num(level) != 0 && it.options?.isEmpty() == false) {
-                        it.chosen =
-                            featureDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
-                                ?.getSelected()
-                    }
-                }
-            }
+            newClass.subclass?.features?.let { getFeatures(it, level) }
         }
 
         if (newClass.spellCasting?.type != 0.0) {
@@ -371,32 +369,15 @@ public class NewCharacterClassViewModel @Inject constructor(
         repository.insertCharacter(newChar!!)
     }
 
-    //TODO look into refactoring the parts of this that are similar to code snippets in addClass into separate functions.
     fun calculateAssumedFeatures() : List<Feature> {
         val result = mutableListOf<Feature>()
-        classes.value?.get(classIndex)?.levelPath?.filter { it.grantedAtLevel <= toNumber(levels) }
-            ?.forEach { feature ->
-                feature.choices?.forEach {
-                    if (it.choose.num(toNumber(levels)) != 0 && it.options?.isEmpty() == false) {
-                        it.chosen =
-                            featureDropdownStates[feature.name + feature.grantedAtLevel]?.getSelected()
-                    }
-                }
-                result.add(feature)
-            }
+        classes.value?.get(classIndex)?.levelPath?.let { getFeatures(it, toNumber(levels)) }?.let {
+            result.addAll(it)
+        }
+
         if (toNumber(levels) >= classes.value?.get(classIndex)?.subclassLevel!!) {
-            classes.value?.get(classIndex)?.subclass?.features?.filter {
-                it.grantedAtLevel <= toNumber(
-                    levels
-                )
-            }?.forEach { feature ->
-                feature.choices?.forEach {
-                    if (it.choose.num(toNumber(levels)) != 0 && it.options?.isEmpty() == false) {
-                        it.chosen =
-                            featureDropdownStates[feature.name + feature.grantedAtLevel]?.getSelected()
-                    }
-                }
-                result.add(feature)
+            classes.value?.get(classIndex)?.subclass?.features?.let { getFeatures(it, toNumber(levels)) }?.let {
+                result.addAll(it)
             }
         }
 

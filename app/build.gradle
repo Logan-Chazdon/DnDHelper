@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
     sourceSets {
         // Adds exported schema location as test app assets.
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "gmail.loganchazdon.dndhelper"
         minSdk 24
-        targetSdk 31
+        targetSdk 32
         versionCode 4
         versionName "1.2"
 
@@ -79,6 +79,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation "androidx.compose.foundation:foundation-layout:$compose_version"
 
     //LiveData
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'

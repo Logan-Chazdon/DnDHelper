@@ -6482,7 +6482,9 @@
                 },
                 {
                     "name" : "Two shortswords or two simple melee weapons",
-                    "choose" : 1,
+                    "choose" : 2,
+                    "lists_cost_one" : false,
+                    "max_same" : 2,
                     "from" : [
                         [
                             {
@@ -6495,8 +6497,7 @@
                             }
                         ],
                         {
-                            "name" : "two simple melee weapons",
-                            "comment" : "TODO"
+                            "index" : "simple_melee_weapons"
                         }
                     ]
                 },

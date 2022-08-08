@@ -1786,11 +1786,25 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     }
                 }
 
+                val listsCostOne = try {
+                    json.getBoolean("lists_cost_one")
+                } catch (_ : JSONException) {
+                    true
+                }
+
+                val maxSame = try {
+                    json.getInt("max_same")
+                } catch (_ : JSONException) {
+                    1
+                }
+
                 itemChoices.add(
                     ItemChoice(
                         name = json.getString("name"),
                         choose = choose,
-                        from = from
+                        from = from,
+                        listsCostOne = listsCostOne,
+                        maxSame = maxSame
                     )
                 )
             }

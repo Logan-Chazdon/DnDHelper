@@ -91,6 +91,10 @@ class MultipleChoiceDropdownStateFeatureImpl(
             return result
         }
 
+    override var costs: List<Int>
+        get() = listOf()
+        set(value) {}
+
     private fun getOverrideKey(feature: Feature, index: Int) : String {
         return feature.name + index
     }

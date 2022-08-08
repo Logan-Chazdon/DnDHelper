@@ -14,7 +14,7 @@ class MultipleChoiceDropdownStateImpl : MultipleChoiceDropdownState {
     override val selectedNames: LiveData<String> = _selectedNames
     var maxSameSelections = 1
     override var maxSelections = 0
-
+    override var costs = listOf<Int>()
 
     override var names : List<String> = listOf()
         set(newName: List<String>) {
@@ -39,14 +39,17 @@ class MultipleChoiceDropdownStateImpl : MultipleChoiceDropdownState {
     override fun incrementSelection(index:Int) {
         //Change the selection and make sure we stay below the max selections.
         var selections = 0
-        for(item in selectedList) {
-            selections += item
+        selectedList.forEachIndexed { i, item ->
+            selections += (costs.getOrNull(i) ?: 1) * item
         }
 
-        if(selections >= maxSelections) {
-            val firstIndex = selectedList.indexOfFirst{it -> it != 0}
-            selectedList[firstIndex] = selectedList[firstIndex] - 1
+        for(x in 0 until (costs.getOrNull(index) ?: 1)) {
+            if(selections >= maxSelections) {
+                val firstIndex = selectedList.indexOfFirst{ it != 0}
+                selectedList[firstIndex] = selectedList[firstIndex] - 1
+            }
         }
+
         selectedList[index] = selectedList[index] + 1
 
         //Update the name to only show the selected options.
@@ -70,12 +73,8 @@ class MultipleChoiceDropdownStateImpl : MultipleChoiceDropdownState {
     fun getSelected(from : List<Any>) : List<Any>{
         val returnList = mutableListOf<Any>()
         for(i in from.indices) {
-            if(selectedList[i] != 0) {
-                if(maxSameSelections == 1) {
-                    returnList.add(from[i])
-                } else {
-                    returnList.add(Pair(from[i], selectedList[i]))
-                }
+            for(x in 0 until selectedList[i]) {
+                returnList.add(from[i])
             }
         }
 

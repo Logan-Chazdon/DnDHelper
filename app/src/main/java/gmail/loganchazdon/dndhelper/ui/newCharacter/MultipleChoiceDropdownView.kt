@@ -27,14 +27,14 @@ fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
         ) {
             state.names.forEachIndexed { index, item ->
                 DropdownMenuItem(onClick = {
-                    if (state.selectedList[index] >= state.getMaxSameSelectionsAt(index)) {
+                    if (state.selectedList[index] * (state.costs.getOrNull(index) ?: 1 )  >= state.getMaxSameSelectionsAt(index)) {
                         state.decrementSelection(index)
                     } else {
                         state.incrementSelection(index)
                     }
                 }) {
                     //If we can only select each item once make a checkbox
-                    if (state.getMaxSameSelectionsAt(index) == 1) {
+                    if (state.getMaxSameSelectionsAt(index) == 1 || state.costs.getOrNull(index) == state.maxSelections) {
                         Checkbox(
                             checked = state.selectedList[index] != 0,
                             onCheckedChange = null
@@ -45,7 +45,7 @@ fun MultipleChoiceDropdownView(state : MultipleChoiceDropdownState) {
                     Text(text = item)
                     Spacer(modifier = Modifier.width(15.dp))
 
-                    if (state.getMaxSameSelectionsAt(index) != 1) {
+                    if (state.getMaxSameSelectionsAt(index) != 1 && state.costs.getOrNull(index) != state.maxSelections) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.End

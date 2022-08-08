@@ -9,6 +9,7 @@ interface MultipleChoiceDropdownState {
     val names: List<String>
     val maxSelections: Int
     val subChoiceKeys: List<String>?
+    var costs : List<Int>
 
     fun getSubChoiceAt(key : String) : MultipleChoiceDropdownState?
     fun incrementSelection(index:Int)

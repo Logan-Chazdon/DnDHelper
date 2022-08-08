@@ -9,6 +9,7 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>.getDropDownState (
     key: String,
     maxSelections : Int,
     names : MutableList<String>,
+    costs: MutableList<Int> = mutableListOf(),
     choiceName: String,
     maxOfSameSelection: Int = 1
 ) : MultipleChoiceDropdownStateImpl {
@@ -22,7 +23,8 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>.getDropDownState (
             maxSelections,
             names,
             choiceName,
-            maxOfSameSelection
+            maxOfSameSelection,
+            costs
         )
     }
 
@@ -35,6 +37,7 @@ fun SnapshotStateList<MultipleChoiceDropdownStateImpl>.getDropDownState (
     key: Int,
     maxSelections : Int,
     names : MutableList<String>,
+    costs: MutableList<Int> = mutableListOf(),
     choiceName: String,
     maxOfSameSelection: Int = 1
 ) : MultipleChoiceDropdownStateImpl {
@@ -47,7 +50,8 @@ fun SnapshotStateList<MultipleChoiceDropdownStateImpl>.getDropDownState (
                         maxSelections,
                         names,
                         choiceName,
-                        maxOfSameSelection
+                        maxOfSameSelection,
+                         costs
                      )
                 )
             }
@@ -63,7 +67,8 @@ fun SnapshotStateList<MultipleChoiceDropdownStateImpl>.getDropDownState (
             maxSelections,
             names,
             choiceName,
-            maxOfSameSelection
+            maxOfSameSelection,
+            costs
         )
         this.add(key, state)
     }
@@ -71,15 +76,17 @@ fun SnapshotStateList<MultipleChoiceDropdownStateImpl>.getDropDownState (
 }
 
 private fun generateDefault(
-    maxSelections : Int,
-    names : MutableList<String>,
+    maxSelections: Int,
+    names: MutableList<String>,
     choiceName: String,
-    maxOfSameSelection: Int
+    maxOfSameSelection: Int,
+    costs: MutableList<Int>
 ): MultipleChoiceDropdownStateImpl {
     val result = MultipleChoiceDropdownStateImpl()
     result.maxSelections = maxSelections
     result.choiceName = choiceName
     result.names = names
     result.maxSameSelections = maxOfSameSelection
+    result.costs = costs
     return result
 }

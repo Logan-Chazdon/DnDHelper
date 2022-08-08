@@ -308,13 +308,22 @@ fun ConfirmClassView(
                                         item.allNames.let { names.add(it) }
                                     }
 
+                                    val costs = mutableListOf<Int>()
+                                    if(!choice.listsCostOne) {
+                                        choice.from.forEachIndexed { index, item ->
+                                            costs.add(index, item.size)
+                                        }
+                                    }
+
 
                                     val multipleChoiceState =
                                         viewModel.dropDownStates.getDropDownState(
                                             key = choice.name,
+                                            maxOfSameSelection = choice.maxSame,
                                             maxSelections = choice.choose,
                                             names = names,
-                                            choiceName = choice.name
+                                            choiceName = choice.name,
+                                            costs = costs
                                         )
 
                                     //Create the view.

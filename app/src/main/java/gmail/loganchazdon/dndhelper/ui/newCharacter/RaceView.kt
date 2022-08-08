@@ -104,11 +104,6 @@ fun RaceView(
                                             text = trait.name,
                                             style = MaterialTheme.typography.subtitle1
                                         )
-                                        Spacer(Modifier.height(2.dp))
-                                        Text(
-                                            text = trait.description,
-                                            modifier = Modifier.padding(start = 5.dp)
-                                        )
                                     }
 
                                     Row()

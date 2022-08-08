@@ -2127,6 +2127,136 @@
                 }
             ],
             "alignment" : "Vampires have no innate tendency toward evil, but consuming the life energy of other creatures often pushes them to that end. Regardless of their moral bent, the strict hierarchies of their bloodchiefs inclines them toward a lawful alignment."
+        },
+        {
+            "name" : "Genasi",
+            "ability_bonuses" : [
+                {
+                    "name" : "Constitution",
+                    "bonus" : 2
+                }
+            ],
+            "size" : "Medium",
+            "size_desc" : "Genasi are as varied as their mortal parents but are generally built like humans, standing anywhere from 5 feet to over 6 feet tall. Your size is Medium.",
+            "age" : "Genasi mature at about the same rate as humans and reach adulthood in their late teens. They live somewhat longer than humans do, up to 120 years.",
+            "ground_speed" : 30,
+            "alignment" : "Independent and self-reliant, genasi tend toward a neutral alignment.",
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Primordial"
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Primordial. Primordial is a guttural language, filled with harsh syllables and hard consonants.",
+            "proficiencies" : [
+            ],
+            "features" : [
+            ],
+            "subraces" : [
+                {
+                    "name" : "Air Genasi",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Dexterity",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Unending Breath",
+                            "desc" : "You can hold your breath indefinitely while you’re not incapacitated."
+                        },
+                        {
+                            "name" : "Mingle with the Wind",
+                            "desc" : "You can cast the levitate spell once with this trait, requiring no material components, and you regain the ability to cast it this way when you finish a long rest. Constitution is your spellcasting ability for this spell."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Earth Genasi",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Strength",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Earth Walk",
+                            "desc" : "You can move across difficult terrain made of earth or stone without expending extra movement."
+                        },
+                        {
+                            "name" : "Merge with Stone",
+                            "desc" : "You can cast the pass without trace spell once with this trait, requiring no material components, and you regain the ability to cast it this way when you finish a long rest. Constitution is your spellcasting ability for this spell."
+                        }
+                    ]
+                },
+                {
+                    "name" : "Fire Genasi",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Intelligence",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Darkvision",
+                            "desc" : "You can see in dim light within 60 feet of you as if it were bright light, and in darkness as if it were dim light. Your ties to the Elemental Plane of Fire make your darkvision unusual: everything you see in darkness is in a shade of red."
+                        },
+                        {
+                            "name" : "Fire Resistance",
+                            "desc ": "You have resistance to fire damage."
+                        },
+                        {
+                            "name" : "Reach to the Blaze",
+                            "desc" : "You know the produce flame cantrip. Once you reach 3rd level, you can cast the burning hands spell once with this trait as a 1st-level spell, and you regain the ability to cast it this way when you finish a long rest. Constitution is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {
+                                    "index" : "produce flame"
+                                },
+                                {
+                                    "index" : "burning hands"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Water Genasi",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Wisdom",
+                            "bonus" : 1
+                        }
+                    ],
+                    "features" : [
+                        {
+                            "name" : "Acid Resistance",
+                            "desc" : "You have resistance to acid damage."
+                        },
+                        {
+                            "name" : "Amphibious",
+                            "desc": "You can breathe air and water."
+                        },
+                        {
+                            "name" : "Swim",
+                            "desc": "You have a swimming speed of 30 feet."
+                        },
+                        {
+                            "name" : "Call to the Wave",
+                            "desc" : "You know the shape water cantrip. When you reach 3rd level, you can cast the create or destroy water spell as a 2nd-level spell once with this trait, and you regain the ability to cast it this way when you finish a long rest. Constitution is your spellcasting ability for these spells.",
+                            "spells" : [
+                                {
+                                    "index" : "shape water"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

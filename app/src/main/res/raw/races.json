@@ -2353,7 +2353,7 @@
             ],
             "size" : "medium",
             "size_desc" : "Aasimar are built like well proportioned humans. Your size is medium.",
-            "age" : "Age. Aasimar age at the same rate as humans but live a few years longer.",
+            "age" : "Aasimar age at the same rate as humans but live a few years longer.",
             "ground_speed" : 30,
             "languages" : [
                 {

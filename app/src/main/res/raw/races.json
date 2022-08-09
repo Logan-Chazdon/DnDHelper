@@ -2434,6 +2434,125 @@
                     "desc" : "You have the ability to communicate in a limited manner with beasts and plants. They can understand the meaning of your words, though you have no special ability to understand them in return. You have advantage on all Charisma checks you make to influence them."
                 }
             ]
+        },
+        {
+            "name" : "Gith",
+            "ability_bonuses" : [
+                {
+                    "name" : "Intelligence",
+                    "bonus" : 1
+                }
+            ],
+            "size" : "Medium",
+            "size_desc" : "Gith are taller and leaner than humans, with most a slender 6 feet in height. Your size is Medium.",
+            "age" : "Gith reach adulthood in their late teens and live for about a century.",
+            "ground_speed" : 30,
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Gith"
+                }
+            ],
+            "language_desc" : "You can speak, read, and write Common and Gith.",
+            "proficiencies" : [
+            ],
+            "features" : [
+            ],
+            "subraces" : [
+                {
+                    "name" : "Githyanki",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Strength",
+                            "bonus" : 2
+                        }
+                    ],
+                    "alignment" : "Githyanki tend toward lawful evil. They are aggressive and arrogant, and they remain the faithful servants of their lich-queen, Vlaakith. Renegade githyanki tend toward chaos.",
+                    "features" : [
+                        {
+                            "name" : "Decadent Mastery",
+                            "desc" : "You learn one language of your choice, and you are proficient with one skill or tool of your choice. In the timeless city of Tu'narath, githyanki have bountiful time to master odd bits of knowledge.",
+                            "choices" : [
+                                {
+                                    "choose" : 1,
+                                    "from" : [
+                                        {
+                                            "index" : "all_languages"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "choose" : 1,
+                                    "from" : [
+                                        {
+                                            "index" : "skills"
+                                        },
+                                        {
+                                            "index" : "artisans_tools"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name" : "Martial Prodigy",
+                            "desc" : "You are proficient with light and medium armor and with shortswords, longswords, and greatswords.",
+                            "proficiencies" : [
+                                {
+                                    "name" : "light armor"
+                                },
+                                {
+                                    "name" : "medium armor"
+                                },
+                                {
+                                    "name" : "short swords",
+                                    "index" : "shortsword"
+                                },
+                                {
+                                    "name" : "greatswords",
+                                    "index" : "greatsword"
+                                }
+                            ]
+                        },
+                        {
+                            "name" : "Githyanki Psionics",
+                            "desc" : "You know the Mage Hand cantrip, and the hand is invisible when you cast the cantrip with this trait.\n\n    When you reach 3rd level, you can cast the Jump spell once with this trait, and you regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast the Misty Step spell once with this trait, and you regain the ability to do so when you finish a long rest.\n    Intelligence is your spellcasting ability for these spells. When you cast them with this trait, they don't require components.",
+                            "spells" : [
+                                {
+                                    "index" : "mage hand"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Githzerai",
+                    "ability_bonuses" : [
+                        {
+                            "name" : "Wisdom",
+                            "bonus" : 2
+                        }
+                    ],
+                    "alignment" : "Githzerai tend toward lawful neutral. Their rigorous training in psychic abilities requires an implacable mental discipline.",
+                    "features" : [
+                        {
+                            "name" : "Mental Discipline",
+                            "desc" : "You have advantage on saving throws against the charmed and frightened conditions. Under the tutelage of monastic masters, githzerai learn to govern their own minds."
+                        },
+                        {
+                            "name" : "Githzerai Psionics",
+                            "desc" : "You know the Mage Hand cantrip, and the hand is invisible when you cast the cantrip with this trait.\n\n    When you reach 3rd level, you can cast the Shield spell once with this trait, and you regain the ability to do so when you finish a long rest. When you reach 5th level, you can cast the Detect Thoughts spell once with this trait, and you regain the ability to do so when you finish a long rest.\n    Wisdom is your spellcasting ability for these spells. When you cast them with this trait, they don't require components.",
+                            "spells" : [
+                                {
+                                    "index" : "mage hand"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

@@ -2553,6 +2553,79 @@
                     ]
                 }
             ]
+        },
+        {
+            "name" : "Kenku",
+            "ability_bonuses" : [
+                {
+                    "name" : "Dexterity",
+                    "bonus" : 2
+                },
+                {
+                    "name" : "Wisdom",
+                    "bonus": 1
+                }
+             ],
+            "size" : "Medium",
+            "size_desc" : "Kenku are around 5 feet tall and weigh between 90 and 120 pounds. Your size is Medium.",
+            "age" : "Kenku have shorter lifespans than humans. They reach maturity at about 12 years old and can live to 60.",
+            "ground_speed" : 30,
+            "languages" : [
+                {
+                    "name" : "Common"
+                },
+                {
+                    "name" : "Auran"
+                }
+            ],
+            "language_desc" : "You can read and write Common and Auran, but you can speak only by using your Mimicry trait.",
+            "proficiencies" : [
+            ],
+            "features" : [
+                {
+                    "name" : "Kenku Training",
+                    "desc" : "You are proficient in your choice of two of the following skills: Acrobatics, Deception, Stealth, and Sleight of Hand.",
+                    "choose" : 2,
+                    "from" : [
+                        {
+                            "name" : "Acrobatics",
+                            "proficiencies" : [
+                                {
+                                    "name" : "Acrobatics"
+                                }
+                            ]
+                        },
+                        {
+                            "name" : "Deception",
+                            "proficiencies" : [
+                                {
+                                    "name" : "Deception"
+                                }
+                            ]
+                        },
+                        {
+                            "name" : "Stealth",
+                            "proficiencies" : [
+                                {
+                                    "name" : "Stealth"
+                                }
+                            ]
+                        },
+                        {
+                            "name" : "Sleight of Hand",
+                            "proficiencies" : [
+                                {
+                                    "name" : "Sleight of Hand"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name" : "Mimicry",
+                    "desc" : "You can mimic sounds you have heard, including voices. A creature that hears the sounds you make can tell they are imitations with a successful Wisdom (Insight) check opposed by your Charisma (Deception) check."
+                }
+            ]
         }
     ]
 }

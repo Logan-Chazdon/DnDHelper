@@ -24,6 +24,9 @@ public class NewCharacterRaceViewModel @Inject constructor(
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
+    val customizeStats = mutableStateOf(false)
+    val customRaceStatsMap = mutableStateMapOf<String, String>()
+    val customSubraceStatsMap = mutableStateMapOf<String, String>()
     lateinit var character: LiveData<Character>
     var raceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
     val raceProficiencyChoiceDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
@@ -36,6 +39,16 @@ public class NewCharacterRaceViewModel @Inject constructor(
     var id by Delegates.notNull<Int>()
     var raceIndex = 0
     var subraceIndex = mutableStateOf(0)
+
+    val statNames = listOf(
+        "Strength",
+        "Dexterity",
+        "Constitution",
+        "Intelligence",
+        "Wisdom",
+        "Charisma"
+    )
+
 
     init {
         try {
@@ -55,6 +68,10 @@ public class NewCharacterRaceViewModel @Inject constructor(
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
         val character = repository.getCharacterById(id)
+        newRace.abilityBonuses = getStateBonuses(
+            races.value!![raceIndex].abilityBonuses!!,
+            customRaceStatsMap
+        )
 
         filterRaceFeatures(newRace).forEach { feature ->
             feature.choices?.forEachIndexed { index, it ->
@@ -127,6 +144,13 @@ public class NewCharacterRaceViewModel @Inject constructor(
                     }
                 }
 
+                this.abilityBonuses = this.abilityBonuses?.let {
+                    getStateBonuses(
+                        it,
+                        customSubraceStatsMap
+                    )
+                }
+
                 this
             }
         }
@@ -169,6 +193,27 @@ public class NewCharacterRaceViewModel @Inject constructor(
         return result
     }
 
+    private fun getStateBonuses(
+        bonuses: List<AbilityBonus>,
+        targetMap: MutableMap<String, String>
+    ) : List<AbilityBonus> {
+        return if(customizeStats.value) {
+            val result = mutableListOf<AbilityBonus>()
+            targetMap.forEach { stat ->
+                val bonus = bonuses.first { it.ability == stat.key }.bonus
+                result.add(
+                        AbilityBonus(
+                                ability = stat.value,
+                                bonus = bonus
+                        )
+                )
+            }
+            result
+        } else {
+            bonuses
+        }
+    }
+
     fun calculateAssumedStatBonuses(): MutableMap<String, Int> {
         val result = mutableMapOf<String, Int>()
         val applyBonus = fun(name: String, amount: Int) {
@@ -176,12 +221,20 @@ public class NewCharacterRaceViewModel @Inject constructor(
                 (result[name.substring(0, 3)] ?: 0) + amount
         }
 
-        races.value?.getOrNull(raceIndex)?.abilityBonuses?.forEach {
+        getStateBonuses(
+            races.value!![raceIndex].abilityBonuses!!,
+            customRaceStatsMap
+        ).forEach {
             applyBonus(it.ability, it.bonus)
         }
 
-        races.value?.get(raceIndex)?.subraces?.getOrNull(subraceIndex.value)?.abilityBonuses?.forEach {
-            applyBonus(it.ability, it.bonus)
+        races.value!![raceIndex].subraces?.getOrNull(subraceIndex.value)?.abilityBonuses?.let { list ->
+            getStateBonuses(
+                list,
+                customSubraceStatsMap
+            ).forEach {
+                applyBonus(it.ability, it.bonus)
+            }
         }
 
         selectedSubraceASIs.forEach {
@@ -198,6 +251,16 @@ public class NewCharacterRaceViewModel @Inject constructor(
         val tempRace = race.copy()
         tempRace.subrace = tempRace.subraces?.getOrNull(subraceIndex.value)
         return tempRace.filterRaceFeatures()
+    }
+
+    fun getStatOptions(ability: String, targetMap: MutableMap<String, String>) : MutableList<String> {
+        val result = mutableListOf<String>()
+        statNames.forEach {
+            if(it == ability || !targetMap.values.contains(it)) {
+                result += it
+            }
+        }
+        return result
     }
 }
 

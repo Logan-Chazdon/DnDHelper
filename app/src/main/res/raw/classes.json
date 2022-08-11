@@ -268,7 +268,7 @@
             ],
             "equipment": [
                 {
-                    "name": "any two simple weapons",
+                    "name": "Any two simple weapons",
                     "choose": 2,
                     "from": [
                         {
@@ -687,7 +687,7 @@
             ],
             "equipment": [
                 {
-                    "name": "any two simple weapons",
+                    "name": "Any two simple weapons",
                     "choose": 2,
                     "from": [
                         {
@@ -1298,7 +1298,7 @@
                 },
                 {
                     "name": "Leather armor",
-                    "index": "Leather armor"
+                    "index": "leather"
                 },
                 {
                     "name": "Dagger",

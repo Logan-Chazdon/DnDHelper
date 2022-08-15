@@ -2095,6 +2095,10 @@
                 {
                     "name" : "Intelligence",
                     "bonus" : 1
+                },
+                {
+                    "name" : "Charisma",
+                    "bonus" : 2
                 }
             ],
             "size" : "Medium",

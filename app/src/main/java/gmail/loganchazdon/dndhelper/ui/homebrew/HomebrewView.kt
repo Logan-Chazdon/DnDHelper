@@ -36,7 +36,7 @@ fun HomebrewView(navController: NavController) {
                         }
                     },
                     {
-                        FloatingActionButton(onClick = { /*TODO*/ }) {
+                        FloatingActionButton(onClick = { navController.navigate("homebrewView/homebrewRaceView/-1") }) {
                             Icon(
                                 painterResource(R.drawable.ic_race_icon),
                                 "New race",

@@ -4,7 +4,7 @@ package gmail.loganchazdon.dndhelper.model
 
 data class Subrace(
     val name : String,
-    val abilityBonuses: List<AbilityBonus>?,
+    var abilityBonuses: List<AbilityBonus>?,
     val abilityBonusChoice: AbilityBonusChoice?,
     val startingProficiencies: List<Proficiency>?,
     val languages : List<Language>,

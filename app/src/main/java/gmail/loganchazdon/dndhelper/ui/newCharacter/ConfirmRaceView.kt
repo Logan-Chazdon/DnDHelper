@@ -2,7 +2,6 @@ package gmail.loganchazdon.dndhelper.ui.newCharacter
 
 import android.os.Handler
 import android.os.Looper
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -28,6 +27,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ConfirmRaceView(
     viewModel: NewCharacterRaceViewModel,
@@ -103,6 +103,45 @@ fun ConfirmRaceView(
             }
         }
 
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .padding(start = 5.dp, end = 15.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Customize stats:",
+                    modifier = Modifier.padding(5.dp),
+                    style = MaterialTheme.typography.h6
+                )
+                CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
+                    Checkbox(
+                        checked = viewModel.customizeStats.value,
+                        onCheckedChange = {
+                            viewModel.customizeStats.value = it
+                            if (viewModel.customRaceStatsMap.isEmpty()) {
+                                races.value!![raceIndex].abilityBonuses!!.forEach {
+                                    viewModel.customRaceStatsMap[it.ability] =
+                                        it.ability
+                                }
+                            }
+                        },
+                        modifier = Modifier.padding(5.dp)
+                    )
+                }
+            }
+            races.value?.get(raceIndex)?.let {
+                Text(
+                    text = "Speed: ${it.groundSpeed} feet",
+                    style = MaterialTheme.typography.h6
+                )
+            }
+        }
+
         races.value?.get(raceIndex)
             ?.let { Text(text = it.sizeDesc, Modifier.padding(start = 5.dp, top = 5.dp)) }
         races.value?.get(raceIndex)
@@ -114,12 +153,6 @@ fun ConfirmRaceView(
                     )
                 }
             }
-        races.value?.get(raceIndex)?.let {
-            Text(
-                text = "Speed: ${it.groundSpeed}",
-                Modifier.padding(start = 5.dp, top = 5.dp)
-            )
-        }
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -137,7 +170,7 @@ fun ConfirmRaceView(
                 )
 
             races.value?.get(raceIndex)?.abilityBonuses?.let { bonuses ->
-                RaceAbilityBonusesView(bonuses)
+                RaceAbilityBonusesView(bonuses, viewModel, viewModel.customRaceStatsMap)
             }
 
             races.value?.get(raceIndex)?.let { race ->
@@ -251,7 +284,7 @@ fun ConfirmRaceView(
                         )
 
                     subraces[viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
-                        RaceAbilityBonusesView(bonuses)
+                        RaceAbilityBonusesView(bonuses, viewModel, viewModel.customSubraceStatsMap)
                     }
 
                     subraces[viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->
@@ -419,24 +452,55 @@ private fun RaceLanguagesView(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RaceAbilityBonusesView(bonuses: List<AbilityBonus>) {
+fun RaceAbilityBonusesView(
+        bonuses: List<AbilityBonus>,
+        viewModel: NewCharacterRaceViewModel,
+        targetList: MutableMap<String, String>
+) {
+    @Composable
+    fun StatBonusView(bonus: AbilityBonus, modifier: Modifier = Modifier) {
+        if (viewModel.customizeStats.value) {
+            var expanded by remember {
+                mutableStateOf(false)
+            }
+            Box {
+                Row(modifier = modifier.clickable {
+                    expanded = !expanded
+                }) {
+                    Text(text = "+${bonus.bonus} ")
+                    Text(text = viewModel.customRaceStatsMap[bonus.ability] ?: "")
+                }
+
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    viewModel.getStatOptions(bonus.ability, targetList).forEach {
+                        DropdownMenuItem(onClick = {
+                            viewModel.customRaceStatsMap[bonus.ability] = it
+                            expanded = false
+                        }) {
+                            Text(text = it)
+                        }
+                    }
+                }
+            }
+        } else {
+            Text(
+                text = "+${bonus.bonus} ${bonus.ability}",
+                modifier = modifier
+            )
+        }
+    }
+
     if (bonuses.isNotEmpty())
-        RaceContentCard("Ability bonuses", false) {
+        RaceContentCard("Ability bonuses", viewModel.customizeStats.value) {
             Column {
                 var i = 0
-                while(i < bonuses.size) {
+                while (i < bonuses.size) {
                     Row {
-                        Text(
-                            text = "+${bonuses[i].bonus} ${bonuses[i].ability}",
-                            modifier = Modifier.fillMaxWidth(0.45f)
-                        )
+                        StatBonusView(bonuses[i], Modifier.fillMaxWidth(0.45f))
                         i += 1
-                        if(i < bonuses.size) {
-                            Text(
-                                text = "+${bonuses[i].bonus} ${bonuses[i].ability}"
-                            )
+                        if (i < bonuses.size) {
+                            StatBonusView(bonuses[i])
                         }
                         i += 1
                     }

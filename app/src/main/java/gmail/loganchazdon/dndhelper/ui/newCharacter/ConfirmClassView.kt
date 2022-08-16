@@ -1,5 +1,6 @@
 package gmail.loganchazdon.dndhelper.ui.newCharacter
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.foundation.background
@@ -25,15 +26,18 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import gmail.loganchazdon.dndhelper.model.Subclass
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.theme.noActionNeeded
 import gmail.loganchazdon.dndhelper.ui.utils.allNames
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
+@OptIn(DelicateCoroutinesApi::class)
 @ExperimentalComposeUiApi
 @Composable
 fun ConfirmClassView(
@@ -92,6 +96,17 @@ fun ConfirmClassView(
                 viewModel.applyAlreadySelectedChoices()
             }
         }
+        AutoSave(
+            "ConfirmClassView",
+            { id ->
+                viewModel.addClassLevels(
+                    clazz,
+                    viewModel.toNumber(viewModel.levels)
+                )
+                id.value = viewModel.id
+            },
+            navController,
+        )
 
         Column(
             modifier = Modifier

@@ -19,6 +19,9 @@ fun PreferencesView() {
                 prefsItem { SwitchPref(key = "dark_mode", title = "Dark mode") }
                 prefsItem { SwitchPref(key = "grid_not_row", title = "Full size personality details") }
             }
+            prefsGroup("Character Creation") {
+                prefsItem { SwitchPref(key = "auto_save", title = "Auto Save", defaultChecked = true) }
+            }
         }
     }
 }

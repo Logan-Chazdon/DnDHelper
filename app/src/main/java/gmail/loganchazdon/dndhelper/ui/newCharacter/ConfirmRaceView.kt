@@ -64,6 +64,15 @@ fun ConfirmRaceView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             races.value?.get(raceIndex)?.let {
+                AutoSave(
+                    "ConfirmRaceView",
+                    { id ->
+                        viewModel.setRace(it)
+                        id.value = viewModel.id
+                    },
+                    navController
+                )
+
                 Text(
                     text = it.name,
                     style = MaterialTheme.typography.h4,

@@ -43,6 +43,15 @@ fun ConfirmBackgroundView(
     viewModel.backgroundIndex = backgroundIndex
 
     if (background != null) {
+        AutoSave(
+            "ConfirmBackgroundView",
+            { id ->
+                viewModel.setBackGround(background)
+                id.value = viewModel.id
+            },
+            navController
+        )
+
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier

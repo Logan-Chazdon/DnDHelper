@@ -21,7 +21,7 @@ fun AutoSave(
     val autoSaveFlow: Flow<Boolean> = LocalContext.current.dataStore.data.let {
         remember {
             it.map { preferences ->
-                preferences[booleanPreferencesKey("dark_mode")] ?: false
+                preferences[booleanPreferencesKey("auto_save")] ?: false
             }
         }
     }

@@ -62,6 +62,12 @@ fun RootView(allCharactersViewModel: AllCharactersViewModel = hiltViewModel()) {
                             icon = Icons.Default.Add
                         ),
                         NavItem(
+                            name = "Homebrew",
+                            route = "homebrewView",
+                            baseRoute = "homebrewView",
+                            icon = Icons.Default.Home
+                        ),
+                        NavItem(
                             name = "Settings",
                             route = "preferences",
                             baseRoute = "preferences",

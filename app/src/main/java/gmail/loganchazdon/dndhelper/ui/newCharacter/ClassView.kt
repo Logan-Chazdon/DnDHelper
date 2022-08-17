@@ -178,10 +178,17 @@ fun ClassView(
                                 all = 10.dp
                             )
                         )
-                        Text(
-                            item.name,
-                            fontSize = 24.sp,
-                        )
+                        Column {
+                            Text(
+                                text = item.name,
+                                style = MaterialTheme.typography.h5
+                            )
+
+                            Text(
+                                text = "d${item.hitDie}",
+                                style = MaterialTheme.typography.subtitle1
+                            )
+                        }
                     }
                 }
             }

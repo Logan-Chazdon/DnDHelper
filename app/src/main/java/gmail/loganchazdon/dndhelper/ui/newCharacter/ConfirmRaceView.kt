@@ -35,6 +35,16 @@ fun ConfirmRaceView(
     raceIndex: Int,
     characterId: Int
 ) {
+    val setupSubraceCustomization = fun() {
+        val subrace = viewModel.races.value?.get(raceIndex)?.subraces?.get(viewModel.subraceIndex.value)
+        if(viewModel.customizeStats.value && viewModel.customSubraceStatsMap.isEmpty()) {
+            subrace?.abilityBonuses?.forEach {
+                viewModel.customSubraceStatsMap[it.ability] =
+                    it.ability
+            }
+        }
+    }
+
     viewModel.raceIndex = raceIndex
     val races = viewModel.races.observeAsState()
     val scrollState = rememberScrollState(0)
@@ -129,6 +139,7 @@ fun ConfirmRaceView(
                                         it.ability
                                 }
                             }
+                            setupSubraceCustomization()
                         },
                         modifier = Modifier.padding(5.dp)
                     )
@@ -251,6 +262,8 @@ fun ConfirmRaceView(
                                 ) {
                                     races.value?.get(raceIndex)?.subraces!!.forEachIndexed { index, item ->
                                         DropdownMenuItem(onClick = {
+                                            viewModel.customSubraceStatsMap.clear()
+                                            setupSubraceCustomization()
                                             viewModel.subraceIndex.value = index
                                             expanded = false
                                         }) {
@@ -284,6 +297,7 @@ fun ConfirmRaceView(
                         )
 
                     subraces[viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
+                        setupSubraceCustomization()
                         RaceAbilityBonusesView(bonuses, viewModel, viewModel.customSubraceStatsMap)
                     }
 
@@ -469,13 +483,13 @@ fun RaceAbilityBonusesView(
                     expanded = !expanded
                 }) {
                     Text(text = "+${bonus.bonus} ")
-                    Text(text = viewModel.customRaceStatsMap[bonus.ability] ?: "")
+                    Text(text = targetList[bonus.ability] ?: "")
                 }
 
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     viewModel.getStatOptions(bonus.ability, targetList).forEach {
                         DropdownMenuItem(onClick = {
-                            viewModel.customRaceStatsMap[bonus.ability] = it
+                            targetList[bonus.ability] = it
                             expanded = false
                         }) {
                             Text(text = it)

@@ -200,13 +200,17 @@ public class NewCharacterRaceViewModel @Inject constructor(
         return if(customizeStats.value) {
             val result = mutableListOf<AbilityBonus>()
             targetMap.forEach { stat ->
-                val bonus = bonuses.first { it.ability == stat.key }.bonus
-                result.add(
-                        AbilityBonus(
-                                ability = stat.value,
-                                bonus = bonus
-                        )
-                )
+                val bonus = bonuses.firstOrNull { it.ability == stat.key }?.bonus
+                bonus?.let {
+                    AbilityBonus(
+                        ability = stat.value,
+                        bonus = it
+                    )
+                }?.let {
+                    result.add(
+                        it
+                    )
+                }
             }
             result
         } else {

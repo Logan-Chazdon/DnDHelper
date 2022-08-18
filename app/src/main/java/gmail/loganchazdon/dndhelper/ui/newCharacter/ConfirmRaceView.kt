@@ -23,11 +23,12 @@ import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceD
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.theme.noActionNeeded
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, DelicateCoroutinesApi::class)
 @Composable
 fun ConfirmRaceView(
     viewModel: NewCharacterRaceViewModel,
@@ -134,9 +135,9 @@ fun ConfirmRaceView(
                         onCheckedChange = {
                             viewModel.customizeStats.value = it
                             if (viewModel.customRaceStatsMap.isEmpty()) {
-                                races.value!![raceIndex].abilityBonuses!!.forEach {
-                                    viewModel.customRaceStatsMap[it.ability] =
-                                        it.ability
+                                races.value!![raceIndex].abilityBonuses!!.forEach { abilityBonus ->
+                                    viewModel.customRaceStatsMap[abilityBonus.ability] =
+                                        abilityBonus.ability
                                 }
                             }
                             setupSubraceCustomization()
@@ -194,8 +195,8 @@ fun ConfirmRaceView(
                     assumedStatBonuses = assumedStatBonuses.value
                 )
 
-                if (!(race.proficiencyChoices.isNullOrEmpty() && race.startingProficiencies.isNullOrEmpty())) {
-                    RaceContentCard(title = "Proficiencies", race.proficiencyChoices.size > 0) {
+                if (!(race.proficiencyChoices.isEmpty() && race.startingProficiencies.isEmpty())) {
+                    RaceContentCard(title = "Proficiencies", race.proficiencyChoices.isNotEmpty()) {
                         race.startingProficiencies.let {
                             var string = ""
                             it.forEachIndexed { index, prof ->
@@ -286,8 +287,8 @@ fun ConfirmRaceView(
                         }
                     }
 
-                    if (!(subraces[viewModel.subraceIndex.value].languages.isNullOrEmpty() &&
-                                subraces[viewModel.subraceIndex.value].languageChoices.isNullOrEmpty())
+                    if (!(subraces[viewModel.subraceIndex.value].languages.isEmpty() &&
+                                subraces[viewModel.subraceIndex.value].languageChoices.isEmpty())
                     )
                         RaceLanguagesView(
                             languageDesc = null,
@@ -328,8 +329,8 @@ fun ConfirmRaceView(
                                     val newState = MultipleChoiceDropdownStateImpl()
                                     newState.names = choice.from.let { list ->
                                         val names = mutableListOf<String>()
-                                        list.forEach {
-                                            names.add(it.ability)
+                                        list.forEach { abilityBonus ->
+                                            names.add(abilityBonus.ability)
                                         }
                                         names
                                     }

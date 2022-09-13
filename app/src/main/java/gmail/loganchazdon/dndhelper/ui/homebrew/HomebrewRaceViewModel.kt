@@ -15,4 +15,11 @@ class HomebrewRaceViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
     val newRaceName = mutableStateOf("")
+    val id = savedStateHandle.let {
+        try {
+            it.get<Int>("id")
+        } catch(_ : Exception) {
+            repository.createDefaultRace()
+        }
+    }
 }

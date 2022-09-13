@@ -41,7 +41,7 @@ interface DatabaseDao {
     fun getAllRaces(): List<Race>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRace(newClass: Race)
+    fun insertRace(newClass: Race) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRaces(newClasses: List<Race>)

@@ -106,6 +106,11 @@ class Repository @Inject constructor(
         return dao?.insertCharacter(newCharacter)?.toInt()
     }
 
+    fun createDefaultRace() : Int {
+        val newRace = Race()
+        return dao!!.insertRace(newRace).toInt()
+    }
+
     fun getAllItems(): LiveData<List<ItemInterface>> {
         return _items
     }

@@ -10,21 +10,21 @@ import gmail.loganchazdon.dndhelper.model.database.Converters
 @Entity(tableName="races")
 @TypeConverters(Converters::class)
 data class Race (
-    val name : String,
-    val groundSpeed: Int,
-    var abilityBonuses: List<AbilityBonus>?,
-    val abilityBonusChoice: AbilityBonusChoice?,
-    val alignment: String?,
-    val age : String,
-    val size: String,
-    val sizeDesc: String,
-    val startingProficiencies: List<Proficiency>,
-    val proficiencyChoices : List<ProficiencyChoice>,
-    val languages: List<Language>,
-    val languageChoices: List<LanguageChoice>,
-    val languageDesc: String,
-    val traits: List<Feature>,
-    val subraces: List<Subrace>?,
+    val name : String = "",
+    val groundSpeed: Int = 30,
+    var abilityBonuses: List<AbilityBonus>? = null,
+    val abilityBonusChoice: AbilityBonusChoice? = null,
+    val alignment: String? = null,
+    val age : String = "",
+    val size: String = "Medium",
+    val sizeDesc: String = "",
+    val startingProficiencies: List<Proficiency> = listOf(),
+    val proficiencyChoices : List<ProficiencyChoice> = listOf(),
+    val languages: List<Language> = listOf(),
+    val languageChoices: List<LanguageChoice> = listOf(),
+    val languageDesc: String = "",
+    val traits: List<Feature> = listOf(),
+    val subraces: List<Subrace>? = listOf(),
     var subrace: Subrace? = null
 ) {
     @PrimaryKey(autoGenerate = true)

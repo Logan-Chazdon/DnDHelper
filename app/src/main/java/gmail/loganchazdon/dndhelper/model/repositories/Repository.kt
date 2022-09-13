@@ -100,6 +100,10 @@ class Repository @Inject constructor(
         return dao?.findLiveCharacterById(id)
     }
 
+    fun getLiveRaceById(id: Int) : LiveData<Race>? {
+        return dao?.findLiveRaceById(id)
+    }
+
     //Inserts a new character into the database and returns its ID
     fun createDefaultCharacter(): Int? {
         val newCharacter = Character(name = "My Character")

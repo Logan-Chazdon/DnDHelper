@@ -45,4 +45,7 @@ interface DatabaseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRaces(newClasses: List<Race>)
+
+    @Query("SELECT * FROM races WHERE id = :id")
+    fun findLiveRaceById(id: Int) : LiveData<Race>
 }

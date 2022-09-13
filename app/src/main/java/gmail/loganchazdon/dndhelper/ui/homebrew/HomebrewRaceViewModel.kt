@@ -20,6 +20,7 @@ class HomebrewRaceViewModel @Inject constructor(
             it.get<Int>("id")
         } catch(_ : Exception) {
             repository.createDefaultRace()
-        }
+        }!!
     }
+    val race = repository.getLiveRaceById(id)
 }

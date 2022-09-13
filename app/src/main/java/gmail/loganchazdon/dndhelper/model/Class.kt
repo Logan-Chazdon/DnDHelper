@@ -10,9 +10,6 @@ import gmail.loganchazdon.dndhelper.model.database.Converters
 @Entity(tableName = "classes")
 @TypeConverters(Converters::class)
 class Class(
-    @PrimaryKey(autoGenerate = false)
-    @NonNull
-    @ColumnInfo(name = "name")
     var name: String,
     var hitDie: Int = 8,
     var subClasses: List<Subclass> = emptyList(),
@@ -27,6 +24,8 @@ class Class(
     val startingGoldD4s: Int,
     val startingGoldMultiplier : Int = 10
 ) {
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0
     var isBaseClass: Boolean = false
     var level: Int = 1
     var subclass: Subclass? = null

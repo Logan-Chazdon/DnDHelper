@@ -10,26 +10,26 @@ import gmail.loganchazdon.dndhelper.model.database.Converters
 @Entity(tableName="races")
 @TypeConverters(Converters::class)
 data class Race (
-        @PrimaryKey(autoGenerate = false)
-    @NonNull
-    @ColumnInfo(name="name")
     val name : String,
-        val groundSpeed: Int,
-        var abilityBonuses: List<AbilityBonus>?,
-        val abilityBonusChoice: AbilityBonusChoice?,
-        val alignment: String?,
-        val age : String,
-        val size: String,
-        val sizeDesc: String,
-        val startingProficiencies: List<Proficiency>,
-        val proficiencyChoices : List<ProficiencyChoice>,
-        val languages: List<Language>,
-        val languageChoices: List<LanguageChoice>,
-        val languageDesc: String,
-        val traits: List<Feature>,
-        val subraces: List<Subrace>?,
-        var subrace: Subrace? = null
+    val groundSpeed: Int,
+    var abilityBonuses: List<AbilityBonus>?,
+    val abilityBonusChoice: AbilityBonusChoice?,
+    val alignment: String?,
+    val age : String,
+    val size: String,
+    val sizeDesc: String,
+    val startingProficiencies: List<Proficiency>,
+    val proficiencyChoices : List<ProficiencyChoice>,
+    val languages: List<Language>,
+    val languageChoices: List<LanguageChoice>,
+    val languageDesc: String,
+    val traits: List<Feature>,
+    val subraces: List<Subrace>?,
+    var subrace: Subrace? = null
 ) {
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0
+
     val totalGroundSpeed: Int?
     get() {
         return maxOf(groundSpeed, subrace?.groundSpeed ?: 0)

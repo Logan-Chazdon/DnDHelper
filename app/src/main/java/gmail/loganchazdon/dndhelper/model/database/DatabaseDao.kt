@@ -4,9 +4,10 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import gmail.loganchazdon.dndhelper.model.Character
-import gmail.loganchazdon.dndhelper.model.Class
-import gmail.loganchazdon.dndhelper.model.Race
+import androidx.room.RawQuery
+import androidx.room.Transaction
+import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 
 @Dao
 interface DatabaseDao {
@@ -38,14 +39,26 @@ interface DatabaseDao {
 
     //Race Table
     @Query("SELECT * FROM races")
-    fun getAllRaces(): List<Race>
+    @Transaction
+    fun getAllRaces(): LiveData<List<Race>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRace(newClass: Race) : Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRaces(newClasses: List<Race>)
+    fun insertRace(newRace: RaceEntity) : Long
 
     @Query("SELECT * FROM races WHERE id = :id")
+    @Transaction
     fun findLiveRaceById(id: Int) : LiveData<Race>
+
+    @Insert
+    fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
+
+    //Feature Table
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertFeature(feature: Feature) : Long
+
+    @Query("SELECT * FROM features WHERE featureId = :id")
+    fun getLiveFeatureById(id: Int) : LiveData<Feature>
+
+    @Query("SELECT * FROM features WHERE featureId = :id")
+    fun getFeatureById(id: Int) : Feature
 }

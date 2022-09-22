@@ -25,7 +25,7 @@ class Class(
     val startingGoldMultiplier : Int = 10
 ) {
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0
+    var id: Int = 0
     var isBaseClass: Boolean = false
     var level: Int = 1
     var subclass: Subclass? = null

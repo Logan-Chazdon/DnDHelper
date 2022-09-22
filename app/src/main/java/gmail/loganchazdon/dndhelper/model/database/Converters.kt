@@ -152,7 +152,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun abilityBonusToStoredString(myObjects: List<AbilityBonus>): String? {
+    fun abilityBonusToStoredString(myObjects: List<AbilityBonus>?): String? {
         return gson.toJson(myObjects)
     }
 
@@ -175,12 +175,12 @@ class Converters {
         if (data == null) {
             return null
         }
-        val listType: Type = object : TypeToken<List<Proficiency>>() {}.type
+        val listType: Type = object : TypeToken<List<Proficiency>?>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun proficiencyToStoredString(myObjects: List<Proficiency>): String? {
+    fun proficiencyToStoredString(myObjects: List<Proficiency>?): String? {
         return gson.toJson(myObjects)
     }
 
@@ -189,12 +189,12 @@ class Converters {
         if (data == null) {
             return null
         }
-        val listType: Type = object : TypeToken<List<Language>>() {}.type
+        val listType: Type = object : TypeToken<List<Language>?>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun languageToStoredString(myObjects: List<Language>): String? {
+    fun languageToStoredString(myObjects: List<Language>?): String? {
         return gson.toJson(myObjects)
     }
 
@@ -218,12 +218,12 @@ class Converters {
         if (data == null) {
             return null
         }
-        val listType: Type = object : TypeToken<List<Subrace>>() {}.type
+        val listType: Type = object : TypeToken<List<Subrace>?>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun subracesToStoredString(myObjects: List<Subrace>): String? {
+    fun subracesToStoredString(myObjects: List<Subrace>?): String? {
         return gson.toJson(myObjects)
     }
 
@@ -232,12 +232,12 @@ class Converters {
         if (data == null) {
             return null
         }
-        val listType: Type = object : TypeToken<Subrace>() {}.type
+        val listType: Type = object : TypeToken<Subrace?>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun subraceToStoredString(myObjects: Subrace): String? {
+    fun subraceToStoredString(myObjects: Subrace?): String? {
         return gson.toJson(myObjects)
     }
 
@@ -417,6 +417,106 @@ class Converters {
 
     @TypeConverter
     fun featsToStoredString(myObjects: List<Feat>): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToPrerequisite(data: String?): Prerequisite? {
+        return gson.fromJson(data, object : TypeToken<Prerequisite?>() {}.type)
+    }
+
+    @TypeConverter
+    fun prerequisiteToStoredString(myObjects: Prerequisite?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToActivationRequirement(data: String?): ActivationRequirement? {
+        return gson.fromJson(data, object : TypeToken<ActivationRequirement?>() {}.type)
+    }
+
+    @TypeConverter
+    fun activationRequirementToStoredString(myObjects: ActivationRequirement?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToScalingBonus(data: String?): ScalingBonus? {
+        return gson.fromJson(data, object : TypeToken<ScalingBonus?>() {}.type)
+    }
+
+    @TypeConverter
+    fun scalingBonusToStoredString(myObjects: ScalingBonus?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToSpells(data: String?): List<Spell>?  {
+        return gson.fromJson(data, object : TypeToken<List<Spell>?>() {}.type)
+    }
+
+    @TypeConverter
+    fun spellsToStoredString(myObjects: List<Spell>?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToInfusion(data: String?): Infusion? {
+        return gson.fromJson(data, object : TypeToken<Infusion?>() {}.type)
+    }
+
+    @TypeConverter
+    fun infusionToStoredString(myObjects: Infusion?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToChoose(data: String?): Choose? {
+        return gson.fromJson(data, object : TypeToken<Choose?>() {}.type)
+    }
+
+    @TypeConverter
+    fun chooseToStoredString(myObjects: Choose?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToArmorClass(data: String?): ArmorClass? {
+        return gson.fromJson(data, object : TypeToken<ArmorClass?>() {}.type)
+    }
+
+    @TypeConverter
+    fun armorClassToStoredString(myObjects: ArmorClass?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToFeatureChoices(data: String?): List<FeatureChoice>? {
+        return gson.fromJson(data, object : TypeToken<List<FeatureChoice>?>() {}.type)
+    }
+
+    @TypeConverter
+    fun featureChoicesToStoredString(myObjects: List<FeatureChoice>?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToResource(data: String?): Resource? {
+        return gson.fromJson(data, object : TypeToken<Resource?>() {}.type)
+    }
+
+    @TypeConverter
+    fun resourceChoicesToStoredString(myObjects: Resource?): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToMutableIntList(data: String?): MutableList<Int> {
+        return gson.fromJson(data, object : TypeToken<MutableList<Int>>() {}.type)
+    }
+
+    @TypeConverter
+    fun mutableIntListToStoredString(myObjects: MutableList<Int>): String? {
         return gson.toJson(myObjects)
     }
 

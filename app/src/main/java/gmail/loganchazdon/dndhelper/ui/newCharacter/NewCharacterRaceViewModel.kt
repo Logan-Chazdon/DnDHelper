@@ -100,7 +100,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
         }
 
         if(!newRace.subraces.isNullOrEmpty()) {
-            newRace.subrace = newRace.subraces[subraceIndex.value].run {
+            newRace.subrace = newRace.subraces!![subraceIndex.value].run {
                 this.traits.forEachIndexed { index, feature ->
                     feature.choices?.forEach {
                         if (it.choose.num(

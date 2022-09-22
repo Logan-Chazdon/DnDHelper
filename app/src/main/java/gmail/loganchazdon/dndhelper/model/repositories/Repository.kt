@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
+import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -42,6 +43,10 @@ class Repository @Inject constructor(
             }
         }
         return -1
+    }
+
+    fun getHomebrewRaces() : LiveData<List<Race>> {
+        return dao!!.getAllRaces()
     }
 
     fun getLanguages(): LiveData<List<Language>> {
@@ -110,9 +115,18 @@ class Repository @Inject constructor(
         return dao?.insertCharacter(newCharacter)?.toInt()
     }
 
-    fun createDefaultRace() : Int {
-        val newRace = Race()
-        return dao!!.insertRace(newRace).toInt()
+    fun createDefaultRace() : Int? {
+        val newRace = RaceEntity()
+        return dao?.insertRace(newRace)?.toInt()
+    }
+
+    fun createDefaultFeature(): Int? {
+        val newFeature = Feature(name = "", description ="")
+        return dao?.insertFeature(newFeature)?.toInt()
+    }
+
+    fun insertRace(race: RaceEntity) {
+        dao?.insertRace(race)
     }
 
     fun getAllItems(): LiveData<List<ItemInterface>> {
@@ -229,6 +243,18 @@ class Repository @Inject constructor(
             }
         }
 
+    }
+
+    fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef) {
+        dao?.insertRaceFeatureCrossRef(ref)
+    }
+
+    fun insertFeature(newFeature: Feature) {
+        dao?.insertFeature(newFeature)
+    }
+
+    fun getFeature(id: Int): Feature? {
+        return dao?.getFeatureById(id)
     }
 
     companion object {

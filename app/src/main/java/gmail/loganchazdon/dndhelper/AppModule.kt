@@ -3,7 +3,9 @@ package gmail.loganchazdon.dndhelper
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.room.AutoMigration
 import androidx.room.Room
+import androidx.room.migration.AutoMigrationSpec
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

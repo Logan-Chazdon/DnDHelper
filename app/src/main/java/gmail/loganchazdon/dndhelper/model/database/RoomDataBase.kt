@@ -1,16 +1,13 @@
 package gmail.loganchazdon.dndhelper.model.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import gmail.loganchazdon.dndhelper.model.Character
-import gmail.loganchazdon.dndhelper.model.Class
-import gmail.loganchazdon.dndhelper.model.Race
+import androidx.room.*
+import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 
 
 @Database(
-    entities = [(Character::class), (Class::class), (Race::class)],
-    version = 57,
+    entities = [(Character::class), (Class::class), (RaceEntity::class), (Feature::class), (RaceFeatureCrossRef::class)],
+    version = 58,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

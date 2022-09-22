@@ -1,6 +1,14 @@
 package gmail.loganchazdon.dndhelper.model
 
+import androidx.room.*
+import gmail.loganchazdon.dndhelper.model.database.Converters
+
+@Entity(tableName="features")
+@TypeConverters(Converters::class)
 data class Feature(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(index = true)
+    var featureId: Int = 0,
     val name: String,
     val description: String,
     val index : String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.

@@ -1127,7 +1127,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val subraces = try {
                 extractSubraces(raceJson.getJSONArray("subraces"))
             } catch (e: JSONException) {
-                null
+                listOf()
             }
             val languages = mutableListOf<Language>()
             val languageChoices = mutableListOf<LanguageChoice>()

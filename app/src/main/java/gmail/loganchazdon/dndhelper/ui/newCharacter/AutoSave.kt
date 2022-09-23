@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 fun AutoSave(
     name: String,
     onSave: suspend (MutableState<Int>) -> Unit,
-    navController: NavController
+    navController: NavController,
+    saveRegardless: Boolean = false
 ) {
     val autoSaveFlow: Flow<Boolean> = LocalContext.current.dataStore.data.let {
         remember {
@@ -25,7 +26,7 @@ fun AutoSave(
             }
         }
     }
-    if(autoSaveFlow.collectAsState(initial = true).value) {
+    if(autoSaveFlow.collectAsState(initial = true).value || saveRegardless) {
         DisposableEffect(true) {
             val listener =
                 NavController.OnDestinationChangedListener { _, destination, arguments ->

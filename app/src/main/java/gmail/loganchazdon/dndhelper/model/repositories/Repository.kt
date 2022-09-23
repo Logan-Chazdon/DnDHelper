@@ -294,5 +294,15 @@ class Repository @Inject constructor(
             "Huge",
             "Gargantuan"
         )
+
+
+        val statNames = listOf(
+            "Strength",
+            "Dexterity",
+            "Constitution",
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+        )
     }
 }

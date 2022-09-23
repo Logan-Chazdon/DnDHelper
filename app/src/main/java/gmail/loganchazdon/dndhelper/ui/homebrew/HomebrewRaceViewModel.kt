@@ -1,12 +1,15 @@
 package gmail.loganchazdon.dndhelper.ui.homebrew
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gmail.loganchazdon.dndhelper.model.AbilityBonus
+import gmail.loganchazdon.dndhelper.model.AbilityBonusChoice
 import gmail.loganchazdon.dndhelper.model.Race
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
@@ -59,6 +62,9 @@ class HomebrewRaceViewModel @Inject constructor(
     val speed = mutableStateOf("")
     val sizeClass = mutableStateOf("")
     var id by Delegates.notNull<Int>()
+    val abilityBonuses = mutableStateListOf<AbilityBonus>()
+    val abilityBonusChoice = mutableStateOf<AbilityBonusChoice?>(null)
+
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -76,6 +82,13 @@ class HomebrewRaceViewModel @Inject constructor(
                 name.value = it.name
                 speed.value = it.groundSpeed.toString()
                 sizeClass.value = it.size
+
+                it.abilityBonuses?.let { bonuses ->
+                    if(abilityBonuses.isEmpty()) {
+                        abilityBonuses.addAll(bonuses)
+                    }
+                }
+                abilityBonusChoice.value = it.abilityBonusChoice
             }
         }
     }

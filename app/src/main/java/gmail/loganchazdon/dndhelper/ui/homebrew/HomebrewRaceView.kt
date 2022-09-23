@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import gmail.loganchazdon.dndhelper.model.AbilityBonus
+import gmail.loganchazdon.dndhelper.model.AbilityBonusChoice
+import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.AutoSave
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,21 +38,21 @@ fun HomebrewRaceView(
 
     navController?.let {
         AutoSave(
-        "homebrewRaceView",
-        { id ->
-            viewModel.saveRace()
-            id.value = viewModel.id
-        },
+            "homebrewRaceView",
+            { id ->
+                viewModel.saveRace()
+                id.value = viewModel.id
+            },
             it,
-        true
-    )
+            true
+        )
     }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 scope.launch(Dispatchers.IO) {
-                    val id  =viewModel.createDefaultFeature()
+                    val id = viewModel.createDefaultFeature()
                     Handler(mainLooper).post {
                         navController?.navigate("homebrewView/homebrewFeature/$id")
                     }
@@ -93,10 +96,10 @@ fun HomebrewRaceView(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                    //TODO add ft.
+                        //TODO add ft.
                         OutlinedTextField(
                             value = viewModel.speed.value,
-                            onValueChange = {viewModel.speed.value = it},
+                            onValueChange = { viewModel.speed.value = it },
                             singleLine = true,
                             label = { Text("Speed") },
                             modifier = Modifier.weight(1f, true)
@@ -124,7 +127,9 @@ fun HomebrewRaceView(
                                 )
                             }
 
-                            DropdownMenu(expanded = expanded , onDismissRequest = { expanded= false }) {
+                            DropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }) {
                                 viewModel.sizeClassOptions.forEach {
                                     DropdownMenuItem(onClick = {
                                         expanded = false
@@ -145,7 +150,7 @@ fun HomebrewRaceView(
                     var expanded by remember {
                         mutableStateOf(false)
                     }
-                    if(expanded) {
+                    if (expanded) {
                         Dialog(
                             onDismissRequest = { expanded = false },
                             properties = DialogProperties(
@@ -160,10 +165,17 @@ fun HomebrewRaceView(
                             var choose by remember {
                                 mutableStateOf("")
                             }
+                            val stats = remember {
+                                mutableStateMapOf<String, String>()
+                            }
+
                             Card(
-                                modifier = Modifier.fillMaxSize(0.8f)
+                                modifier = Modifier.fillMaxWidth(0.8f)
                             ) {
-                                Column {
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                                    modifier = Modifier.padding(top = 2.dp, bottom = 2.dp)
+                                ) {
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -173,12 +185,14 @@ fun HomebrewRaceView(
                                     ) {
                                         Row(
                                             horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                            verticalAlignment = Alignment.CenterVertically
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.padding(top = 5.dp)
                                         ) {
                                             Text(
-                                                "Contains choice"
+                                                text = "Contains choice",
+                                                style = MaterialTheme.typography.h6
                                             )
-                                            Switch(
+                                            Checkbox(
                                                 checked = containsChoice,
                                                 onCheckedChange = { containsChoice = it }
                                             )
@@ -196,6 +210,94 @@ fun HomebrewRaceView(
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
                                         )
                                     }
+
+                                    Repository.statNames.forEach {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                                        ) {
+                                            Checkbox(
+                                                checked = true,
+                                                onCheckedChange = { }
+                                            )
+                                            LaunchedEffect(true) {
+                                                stats[it] = "1"
+                                            }
+
+                                            OutlinedTextField(
+                                                modifier = Modifier.fillMaxWidth(0.4f),
+                                                leadingIcon = {
+                                                    Icon(
+                                                        Icons.Default.Add,
+                                                        "Plus"
+                                                    )
+                                                },
+                                                value = stats[it] ?: "1",
+                                                onValueChange = { value ->
+                                                    stats[it] = value
+                                                },
+                                            )
+
+                                            Text(text = it, style = MaterialTheme.typography.h6)
+                                        }
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.End
+                                    ) {
+                                        Button(
+                                            onClick = {
+                                                expanded = false
+                                                if (containsChoice) {
+                                                    viewModel.abilityBonusChoice.value =
+                                                        AbilityBonusChoice(
+                                                            choose = try {
+                                                                choose.toInt()
+                                                            } catch (_: java.lang.NumberFormatException) {
+                                                                1
+                                                            },
+                                                            from = stats.let {
+                                                                val result =
+                                                                    mutableListOf<AbilityBonus>()
+                                                                it.forEach { (stat, bonus) ->
+                                                                    result += AbilityBonus(
+                                                                        ability = stat,
+                                                                        bonus = try {
+                                                                            bonus.toInt()
+                                                                        } catch (_: java.lang.NumberFormatException) {
+                                                                            1
+                                                                        }
+                                                                    )
+                                                                }
+                                                                result
+                                                            }
+                                                        )
+                                                } else {
+                                                    viewModel.abilityBonuses.clear()
+                                                    viewModel.abilityBonuses.addAll(
+                                                        stats.let {
+                                                            val result =
+                                                                mutableListOf<AbilityBonus>()
+                                                            it.forEach { (stat, bonus) ->
+                                                                result += AbilityBonus(
+                                                                    ability = stat,
+                                                                    bonus = try {
+                                                                        bonus.toInt()
+                                                                    } catch (_: java.lang.NumberFormatException) {
+                                                                        1
+                                                                    }
+                                                                )
+                                                            }
+                                                            result
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        ) {
+                                            Text("DONE")
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -206,11 +308,37 @@ fun HomebrewRaceView(
                     ) {
                         Column {
                             Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(start =5.dp)
                             ) {
+                                Text(
+                                    text = "Ability bonuses and feats",
+                                    style = MaterialTheme.typography.h6
+                                )
 
+                                //TODO implement race feats
+                                /*
+                                Text(
+                                    text= "Grants feat"
+                                )
+                                Switch(
+                                    checked = true,
+                                    onCheckedChange = { }
+                                )
+                                */
                             }
+                            viewModel.abilityBonuses.forEach {
+                                Text(text= it.toString())
+                            }
+                            viewModel.abilityBonusChoice.value?.let { choice ->
+                                Text("Choose ${choice.choose} from")
+                                choice.from.forEach {
+                                    Text(text= it.toString())
+                                }
+                            }
+
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End
@@ -229,7 +357,7 @@ fun HomebrewRaceView(
 
                 //Features
                 race.value?.traits?.let {
-                    if(it.isNotEmpty()) {
+                    if (it.isNotEmpty()) {
                         item {
                             FeaturesView(
                                 features = it,

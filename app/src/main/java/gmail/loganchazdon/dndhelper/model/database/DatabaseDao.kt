@@ -1,11 +1,6 @@
 package gmail.loganchazdon.dndhelper.model.database
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.RawQuery
-import androidx.room.Transaction
+import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 
@@ -45,12 +40,18 @@ interface DatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRace(newRace: RaceEntity) : Long
 
+    @Query("DELETE FROM races WHERE id = :id")
+    fun deleteRace(id: Int)
+
     @Query("SELECT * FROM races WHERE id = :id")
     @Transaction
     fun findLiveRaceById(id: Int) : LiveData<Race>
 
     @Insert
     fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
+
+    @Delete
+    fun removeRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
 
     //Feature Table
     @Insert(onConflict = OnConflictStrategy.REPLACE)

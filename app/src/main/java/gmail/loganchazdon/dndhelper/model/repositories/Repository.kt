@@ -149,6 +149,14 @@ class Repository @Inject constructor(
         return _spells.value ?: listOf()
     }
 
+    fun getLiveSpells() : LiveData<List<Spell>> {
+        return _spells
+    }
+
+    fun removeRaceFeatureCrossRef(ref: RaceFeatureCrossRef) {
+        dao?.removeRaceFeatureCrossRef(ref)
+    }
+
     //Returns a list of booleans to spells
     //If the boolean is null the spell does not require preparation.
     //Else the boolean represents whether or not the spell is prepared.
@@ -257,6 +265,14 @@ class Repository @Inject constructor(
         return dao?.getFeatureById(id)
     }
 
+    fun getLiveFeature(id: Int): LiveData<Feature>? {
+        return dao?.getLiveFeatureById(id)
+    }
+
+    fun deleteRace(id: Int) {
+        dao?.deleteRace(id)
+    }
+
     companion object {
         val allSpellLevels = listOf(
             Pair(1, "First Level"),
@@ -268,6 +284,15 @@ class Repository @Inject constructor(
             Pair(7, "Seventh Level"),
             Pair(8, "Eighth Level"),
             Pair(9, "Ninth Level"),
+        )
+
+        val sizeClasses = listOf(
+            "Tiny",
+            "Small",
+            "Medium",
+            "Large",
+            "Huge",
+            "Gargantuan"
         )
     }
 }

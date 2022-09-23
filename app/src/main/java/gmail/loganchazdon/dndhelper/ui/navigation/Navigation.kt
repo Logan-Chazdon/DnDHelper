@@ -8,8 +8,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.ui.character.*
+import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewFeatureView
 import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewRaceView
 import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.*
@@ -28,7 +28,11 @@ fun Navigation(navController: NavHostController) {
 
 
         composable("homebrewView") {
-            HomebrewView(navController = navController)
+            HomebrewView(navController = navController, viewModel = hiltViewModel())
+        }
+
+        composable("homebrewView/homebrewFeature/{featureId}") {
+            HomebrewFeatureView(viewModel = hiltViewModel(), navController= navController)
         }
 
         composable("homebrewView/homebrewRaceView/{raceId}") {

@@ -4,7 +4,6 @@ package gmail.loganchazdon.dndhelper.ui.homebrew
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,29 +13,34 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import gmail.loganchazdon.dndhelper.MyApplication
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSourceImpl
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.AutoSave
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun HomebrewFeatureView(
     viewModel: HomebrewFeatureViewModel,
-    navController : NavController? = null
+    navController: NavController? = null
 ) {
     navController?.let {
         AutoSave(
@@ -49,6 +53,109 @@ fun HomebrewFeatureView(
             true,
         )
     }
+    var spellsIsExpanded by remember {
+        mutableStateOf(false)
+    }
+    //Spell selection popup.
+    if (spellsIsExpanded) {
+        Dialog(
+            onDismissRequest = { spellsIsExpanded = false },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            Card(
+                modifier = Modifier.fillMaxSize(0.9f)
+            ) {
+                Column {
+                    var search by remember {
+                        mutableStateOf("")
+                    }
+                    TextField(
+                        value = search,
+                        onValueChange = {
+                            search = it
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = {
+                            Text("Search")
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Default.Search,
+                                "Search"
+                            )
+                        }
+                    )
+
+                    val allSpells = viewModel.allSpells.observeAsState(listOf())
+                    LazyColumn(
+                        state = rememberLazyListState(),
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        items(allSpells.value.let {
+                            if (search.isNotBlank()) {
+                                it.filter { spell ->
+                                    spell.name.contains(search, true)
+                                }
+                            } else {
+                                it
+                            }
+                        }) { spell ->
+                            var expanded by remember {
+                                mutableStateOf(false)
+                            }
+
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RectangleShape,
+                                backgroundColor = if (viewModel.spells.contains(spell)) {
+                                    MaterialTheme.colors.primary
+                                } else {
+                                    MaterialTheme.colors.surface
+                                }
+                            ) {
+                                Text(
+                                    text = spell.name,
+                                    modifier = Modifier.combinedClickable(
+                                        onClick = {
+                                            if (viewModel.spells.contains(spell)) {
+                                                viewModel.spells.remove(spell)
+                                            } else {
+                                                viewModel.spells.add(spell)
+                                            }
+                                        },
+                                        onLongClick = {
+                                            expanded = true
+                                        }
+                                    )
+                                )
+                            }
+
+                            if (expanded) {
+                                Popup(
+                                    onDismissRequest = { expanded = false },
+                                    properties = PopupProperties(
+                                        dismissOnClickOutside = true
+                                    ),
+                                    alignment = Alignment.Center
+                                ) {
+                                    Card(
+                                        modifier = Modifier.fillMaxWidth(0.9f)
+                                    ) {
+                                        SpellDetailsView(spell = spell)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     LazyColumn(
         modifier = Modifier
@@ -66,7 +173,7 @@ fun HomebrewFeatureView(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = MaterialTheme.typography.h6,
-                    label = { Text("Feature name")}
+                    label = { Text("Feature name") }
                 )
             }
         }
@@ -106,18 +213,16 @@ fun HomebrewFeatureView(
             }
         }
 
+
         //Effects
         item {
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column (
+                Column(
                     modifier = Modifier.padding(start = 8.dp, end = 8.dp)
-                ){
+                ) {
                     AttributeView(title = "Grants spells", active = viewModel.grantsSpells) {
-                        var spellsIsExpanded by remember {
-                            mutableStateOf(false)
-                        }
                         LazyColumn(
                             modifier = Modifier
                                 .padding(start = 8.dp, end = 8.dp)
@@ -127,13 +232,14 @@ fun HomebrewFeatureView(
                         ) {
                             items(viewModel.spells) { spell ->
                                 Row(
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth(0.7f)
                                 ) {
-                                    Text(text = spell.level.toString())
                                     Text(text = spell.name)
                                     IconButton(
                                         onClick = {
-
+                                            viewModel.spells.remove(spell)
                                         }
                                     ) {
                                         Icon(Icons.Default.Delete, "Remove spell")
@@ -153,108 +259,56 @@ fun HomebrewFeatureView(
                                 Text("ADD")
                             }
                         }
+                    }
 
-                        if(spellsIsExpanded) {
-                            Popup(
-                                onDismissRequest = { spellsIsExpanded = false }
-                            ){
-                                Card(
-                                    modifier = Modifier.fillMaxSize()
-                                ) {
-                                    Column {
-                                        var search by remember {
-                                            mutableStateOf("")
-                                        }
-                                        TextField(
-                                            value = search,
-                                            onValueChange = {
-                                                search = it
-                                            },
-                                            modifier = Modifier.fillMaxWidth(),
-                                            label = {
-                                                Text("Search")
-                                            }
-                                        )
+                    AttributeView(
+                        title = "Grants infusions",
+                        active = viewModel.grantsInfusions
+                    ) {
 
-                                        LazyColumn(
-                                            state = rememberLazyListState()
-                                        ) {
-                                            items(viewModel.allSpells.let {
-                                                if(search.isNotBlank()) {
-                                                    it.filter { spell ->
-                                                        spell.name.contains(search)
-                                                    }
-                                                } else {
-                                                    it
-                                                }
-                                            }) { spell ->
-                                                var expanded by remember {
-                                                    mutableStateOf(false)
-                                                }
+                    }
 
-                                                Card(
-                                                    shape = RectangleShape,
-                                                    backgroundColor = if(viewModel.spells.contains(spell)) {
-                                                        MaterialTheme.colors.primary
-                                                    } else {
-                                                        MaterialTheme.colors.surface
-                                                    }
-                                                ) {
-                                                    Text(
-                                                        text = spell.name,
-                                                        modifier = Modifier.combinedClickable(
-                                                            onClick = {
-                                                                viewModel.spells.add(spell)
-                                                            },
-                                                            onLongClick = {
-                                                                expanded = true
-                                                            }
-                                                        )
-                                                    )
-                                                }
+                    AttributeView(
+                        title = "Replaces armor class",
+                        active = viewModel.replacesAc
+                    ) {
+                        Row {
 
-                                                if(expanded) {
-                                                    Popup(
-                                                        onDismissRequest = {expanded = false}
-                                                    ) {
-                                                        Card {
-                                                            SpellDetailsView(spell = spell)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
                         }
                     }
-                    
-                    AttributeView(title = "Grants infusions", active = viewModel.grantsInfusions) {
-                            
-                    }
 
-                    AttributeView(title = "Replaces armor class", active = viewModel.replacesAc) {
-
-                    }
-
-                    AttributeView(title = "Grants armor class bonus", active = viewModel.grantsAcBonus) {
+                    AttributeView(
+                        title = "Grants armor class bonus",
+                        active = viewModel.grantsAcBonus
+                    ) {
 
                     }
 
-                    AttributeView(title = "Contains choices", active = viewModel.containsChoices) {
+                    AttributeView(
+                        title = "Contains choices",
+                        active = viewModel.containsChoices
+                    ) {
 
                     }
 
-                    AttributeView(title = "Grants languages", active = viewModel.grantsLanguages) {
+                    AttributeView(
+                        title = "Grants languages",
+                        active = viewModel.grantsLanguages
+                    ) {
 
                     }
 
-                    AttributeView(title = "Grants proficiencies", active = viewModel.grantsProficiencies) {
+                    AttributeView(
+                        title = "Grants proficiencies",
+                        active = viewModel.grantsProficiencies
+                    ) {
 
                     }
 
-                    AttributeView(title = "Grants expertise", active = viewModel.grantsExpertise) {
+                    AttributeView(
+                        title = "Grants expertise",
+                        active = viewModel.grantsExpertise
+                    ) {
 
                     }
                 }
@@ -262,6 +316,7 @@ fun HomebrewFeatureView(
         }
     }
 }
+
 
 @Composable
 private fun AttributeView(
@@ -286,7 +341,7 @@ private fun AttributeView(
                 }
             )
         }
-        if(active.value) {
+        if (active.value) {
             content()
         }
     }

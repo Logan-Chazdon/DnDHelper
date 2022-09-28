@@ -53,13 +53,13 @@ fun HomebrewFeatureView(
             true,
         )
     }
-    var spellsIsExpanded by remember {
+    val spellsIsExpanded = remember {
         mutableStateOf(false)
     }
     //Spell selection popup.
-    if (spellsIsExpanded) {
+    if (spellsIsExpanded.value) {
         Dialog(
-            onDismissRequest = { spellsIsExpanded = false },
+            onDismissRequest = { spellsIsExpanded.value = false },
             properties = DialogProperties(
                 dismissOnBackPress = true,
                 dismissOnClickOutside = true,
@@ -223,42 +223,19 @@ fun HomebrewFeatureView(
                     modifier = Modifier.padding(start = 8.dp, end = 8.dp)
                 ) {
                     AttributeView(title = "Grants spells", active = viewModel.grantsSpells) {
-                        LazyColumn(
-                            modifier = Modifier
-                                .padding(start = 8.dp, end = 8.dp)
-                                .fillMaxWidth()
-                                .heightIn(min = 0.dp, max = 300.dp),
-                            state = rememberLazyListState()
-                        ) {
-                            items(viewModel.spells) { spell ->
-                                Row(
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.fillMaxWidth(0.7f)
-                                ) {
-                                    Text(text = spell.name)
-                                    IconButton(
-                                        onClick = {
-                                            viewModel.spells.remove(spell)
-                                        }
-                                    ) {
-                                        Icon(Icons.Default.Delete, "Remove spell")
-                                    }
+                        GenericSelectionView(
+                            chosen = viewModel.spells.let {
+                                val result = mutableListOf<String>()
+                                it.forEach { spell ->
+                                    result.add(spell.name)
                                 }
-                            }
-                        }
-                        Row(
-                            modifier = Modifier
-                                .padding(start = 8.dp, end = 8.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            Button(onClick = {
-                                spellsIsExpanded = !spellsIsExpanded
-                            }) {
-                                Text("ADD")
-                            }
-                        }
+                                result
+                            },
+                            onDelete = {
+                                viewModel.spells.removeAt(it)
+                            },
+                            expanded = spellsIsExpanded
+                        )
                     }
 
                     AttributeView(

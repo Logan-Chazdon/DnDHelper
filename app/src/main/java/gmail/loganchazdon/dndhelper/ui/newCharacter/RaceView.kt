@@ -60,7 +60,7 @@ fun RaceView(
         ) {
             races.value?.forEachIndexed { i, race ->
                 //TODO upgrade search
-                if (search == "" || race.name.lowercase().contains(search.lowercase())) {
+                if (search == "" || race.raceName.lowercase().contains(search.lowercase())) {
                     item {
                         Card(
                             backgroundColor = MaterialTheme.colors.surface,
@@ -79,7 +79,7 @@ fun RaceView(
                                 Row(
                                     verticalAlignment = Alignment.Bottom
                                 ) {
-                                    Text(text = race.name, fontSize = 24.sp)
+                                    Text(text = race.raceName, fontSize = 24.sp)
                                     Spacer(Modifier.fillMaxWidth(0.1f))
                                     Text(text = race.size, fontSize = 18.sp)
                                 }

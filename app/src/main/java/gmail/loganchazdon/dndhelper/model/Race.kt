@@ -3,25 +3,20 @@ package gmail.loganchazdon.dndhelper.model
 import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 
-
-data class Race(
-    override var id: Int = 0,
-    override var name : String = "",
-    override var groundSpeed: Int = 30,
-    override var abilityBonuses: List<AbilityBonus>? = null,
-    override var abilityBonusChoice: AbilityBonusChoice? = null,
-    override var alignment: String? = null,
-    override var age : String = "",
-    override var size: String = "Medium",
-    override var sizeDesc: String = "",
-    override var startingProficiencies: List<Proficiency> = listOf(),
-    override var proficiencyChoices : List<ProficiencyChoice> = listOf(),
-    override var languages: List<Language> = listOf(),
-    override var languageChoices: List<LanguageChoice> = listOf(),
-    override var languageDesc: String = "",
+@DatabaseView("SELECT * FROM races")
+class Race(
+    id: Int = 0,
+    name : String = "",
+    groundSpeed: Int = 30,
+    abilityBonuses: List<AbilityBonus>? = null,
+    abilityBonusChoice: AbilityBonusChoice? = null,
+    alignment: String? = null,
+    age : String = "",
+    size: String = "Medium",
+    sizeDesc: String = "",
     @Relation(
         entity = Feature::class,
-        parentColumn = "id",
+        parentColumn = "raceId",
         entityColumn = "featureId",
         associateBy = Junction(RaceFeatureCrossRef::class)
     )

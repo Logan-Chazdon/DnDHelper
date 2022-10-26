@@ -3,16 +3,16 @@ package gmail.loganchazdon.dndhelper.model
 
 
 data class Subrace(
-    val name : String,
+    var name : String,
     var abilityBonuses: List<AbilityBonus>?,
-    val abilityBonusChoice: AbilityBonusChoice?,
-    val startingProficiencies: List<Proficiency>?,
-    val languages : List<Language>,
-    val languageChoices: List<LanguageChoice>,
-    val traits: List<Feature>,
-    val size: String?,
-    val groundSpeed: Int?,
-    val featChoices: List<FeatChoice>? = null
+    var abilityBonusChoice: AbilityBonusChoice?,
+    var startingProficiencies: List<Proficiency>?,
+    var languages : List<Language>,
+    var languageChoices: List<LanguageChoice>,
+    var traits: List<Feature>,
+    var size: String?,
+    var groundSpeed: Int?,
+    var featChoices: List<FeatChoice>? = null
 ) {
     val totalAbilityBonuses: List<AbilityBonus>
     get() {

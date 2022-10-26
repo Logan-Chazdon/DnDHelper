@@ -87,7 +87,7 @@ class Repository @Inject constructor(
         return dao?.getAllCharacters()
     }
 
-    fun insertCharacter(character: Character) {
+    fun insertCharacter(character: CharacterEntity) {
         dao?.insertCharacter(character)
     }
 

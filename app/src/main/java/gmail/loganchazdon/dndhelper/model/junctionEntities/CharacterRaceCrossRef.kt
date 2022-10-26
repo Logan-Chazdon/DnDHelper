@@ -5,8 +5,8 @@ import androidx.room.TypeConverters
 import gmail.loganchazdon.dndhelper.model.database.Converters
 
 @TypeConverters(Converters::class)
-@Entity(primaryKeys = ["raceId", "featureId"])
-data class RaceFeatureCrossRef(
-    val featureId: Int,
-    val raceId: Int
+@Entity(primaryKeys = ["id", "raceId"])
+data class CharacterRaceCrossRef(
+    val raceId: Int,
+    val id: Int
 )

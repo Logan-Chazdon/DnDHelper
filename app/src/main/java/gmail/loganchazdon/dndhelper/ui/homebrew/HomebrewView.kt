@@ -130,17 +130,17 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                 //Races
                 if(showRaces.value) {
                     items(races.value?.filter {
-                        if (search.isBlank()) true else it.name.contains(
+                        if (search.isBlank()) true else it.raceName.contains(
                             search
                         )
                     } ?: listOf()) { race: Race ->
                         HomebrewItem(
-                            name = race.name,
+                            name = race.raceName,
                             onClick = {
-                                navController.navigate("homebrewView/homebrewRaceView/${race.id}")
+                                navController.navigate("homebrewView/homebrewRaceView/${race.raceId}")
                             },
                             onDelete = {
-                                viewModel.deleteRace(race.id)
+                                viewModel.deleteRace(race.raceId)
                             }
                         )
                     }

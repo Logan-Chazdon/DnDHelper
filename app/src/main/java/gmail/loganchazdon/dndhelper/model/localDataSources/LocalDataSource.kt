@@ -24,7 +24,7 @@ interface LocalDataSource {
     fun getSpells(spells :MutableLiveData<List<Spell>>): MutableLiveData<List<Spell>>
     fun getLanguages(languages : MutableLiveData<List<Language>>): MutableLiveData<List<Language>>
     fun getBackgrounds(backgrounds : MutableLiveData<List<Background>>): MutableLiveData<List<Background>>
-    fun getRaces(races : MutableLiveData<List<Race>>): MutableLiveData<List<Race>>
+    fun getRaces(races : MutableLiveData<List<RaceEntity>>): MutableLiveData<List<RaceEntity>>
     fun getClasses(classes : MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>>): MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>>
     fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>>
     fun getFeats(feats : MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>>
@@ -63,7 +63,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         MutableLiveData()
     private val _backgrounds: MutableLiveData<List<Background>> =
         MutableLiveData()
-    private val _races: MutableLiveData<List<Race>> =
+    private val _races: MutableLiveData<List<RaceEntity>> =
         MutableLiveData()
     private val _classes: MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>> =
         MutableLiveData()
@@ -128,7 +128,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     override fun getSpells(spells: MutableLiveData<List<Spell>>): MutableLiveData<List<Spell>> = _spells
     override fun getLanguages(languages: MutableLiveData<List<Language>>): MutableLiveData<List<Language>> = _languages
     override fun getBackgrounds(backgrounds: MutableLiveData<List<Background>>): MutableLiveData<List<Background>> =_backgrounds
-    override fun getRaces(races: MutableLiveData<List<Race>>): MutableLiveData<List<Race>> = _races
+    override fun getRaces(races: MutableLiveData<List<RaceEntity>>): MutableLiveData<List<RaceEntity>> = _races
     override fun getClasses(classes: MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>>): MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>> = _classes
     override fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>> =  _metaMagics
     override fun getFeats(feats: MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>> = _feats
@@ -1097,7 +1097,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun generateRaces() {
         val dataAsString =
             context.resources.openRawResource(R.raw.races).bufferedReader().readText()
-        val races = mutableListOf<Race>()
+        val races = mutableListOf<RaceEntity>()
         val rootJson = JSONObject(dataAsString)
         val racesJson = rootJson.getJSONArray("races")
         for (raceIndex in 0 until racesJson.length()) {

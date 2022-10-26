@@ -148,7 +148,7 @@ fun AllCharactersView(
                             }
                         }
                         Row() {
-                            Text(text = character.race?.name.toString(), style = MaterialTheme.typography.body1)
+                            Text(text = character.race?.raceName.toString(), style = MaterialTheme.typography.body1)
                             Spacer(modifier = Modifier.width(5.dp))
                             Text(text = character.getFormattedClasses(), style = MaterialTheme.typography.body1)
                         }

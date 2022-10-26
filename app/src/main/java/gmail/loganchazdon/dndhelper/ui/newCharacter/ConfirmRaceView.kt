@@ -74,7 +74,7 @@ fun ConfirmRaceView(
                 )
 
                 Text(
-                    text = it.name,
+                    text = it.raceName,
                     style = MaterialTheme.typography.h4,
                 )
                 Spacer(Modifier.width(15.dp))

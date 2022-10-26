@@ -28,7 +28,7 @@ class HomebrewRaceViewModel @Inject constructor(
         val featureId = repository.createDefaultFeature()!!
         repository.insertRaceFeatureCrossRef(
             RaceFeatureCrossRef(
-                id = id,
+                raceId = id,
                 featureId = featureId
             )
         )
@@ -39,7 +39,7 @@ class HomebrewRaceViewModel @Inject constructor(
     fun removeFeature(featureId: Int) {
         repository.removeRaceFeatureCrossRef(
             RaceFeatureCrossRef(
-                id = id,
+                raceId = id,
                 featureId = featureId
             )
         )
@@ -79,7 +79,7 @@ class HomebrewRaceViewModel @Inject constructor(
                 race.value = it
 
                 //Set all data in the viewModel to match the race.
-                name.value = it.name
+                name.value = it.raceName
                 speed.value = it.groundSpeed.toString()
                 sizeClass.value = it.size
 

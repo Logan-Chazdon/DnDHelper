@@ -1,46 +1,70 @@
 package gmail.loganchazdon.dndhelper.model
 
 
-import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import gmail.loganchazdon.dndhelper.model.database.Converters
+import androidx.room.Embedded
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlin.math.floor
 
-@Entity(tableName="characters")
-@TypeConverters(Converters::class)
-data class Character(
-    @ColumnInfo(name="name")
-    var name: String,
-    var personalityTraits: String = "",
-    var ideals: String = "",
-    var bonds: String = "",
-    var flaws: String = "",
-    var notes: String = "",
-    var race: Race? = null,
-    var currentHp: Int = 0,
-    var tempHp: Int = 0,
-    var conditions: MutableList<String> = mutableListOf<String>(),
-    var resistances: MutableList<String> = mutableListOf<String>(),
-    var classes: MutableMap<String, Class> = mutableMapOf(),
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    @ColumnInfo(name="id")
-    var id: Int = 0,
-    var statGenerationMethodIndex: Int = 0,
-    var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
-    var background: Background? = null,
-    var backpack: Backpack = Backpack(),
-    var inspiration: Boolean = false,
-    var positiveDeathSaves: Int = 0,
-    var negativeDeathSaves: Int = 0,
-    var spellSlots: List<Resource> = listOf(),
-    val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
-    val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
+
+data class Character (
+    override var name: String = "",
+    override var personalityTraits: String = "",
+    override var ideals: String = "",
+    override var bonds: String = "",
+    override var flaws: String = "",
+    override var notes: String = "",
+    override var currentHp: Int = 0,
+    override var tempHp: Int = 0,
+    override var conditions: MutableList<String> = mutableListOf<String>(),
+    override var resistances: MutableList<String> = mutableListOf<String>(),
+    override var classes: MutableMap<String, Class> = mutableMapOf(),
+    override var id: Int = 0,
+    override var statGenerationMethodIndex: Int = 0,
+    override var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
+    override var background: Background? = null,
+    override var backpack: Backpack = Backpack(),
+    override var inspiration: Boolean = false,
+    override var positiveDeathSaves: Int = 0,
+    override var negativeDeathSaves: Int = 0,
+    override var spellSlots: List<Resource> = listOf(),
+    override var addedLanguages: MutableList<Language> = mutableListOf<Language>(),
+    override var addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
+) : CharacterEntity(
+    name,
+    personalityTraits,
+    ideals,
+    bonds,
+    flaws,
+    notes,
+    currentHp,
+    tempHp,
+    conditions,
+    resistances,
+    classes,
+    id,
+    statGenerationMethodIndex,
+    baseStats,
+    background,
+    backpack,
+    inspiration,
+    positiveDeathSaves,
+    negativeDeathSaves,
+    spellSlots,
+    addedLanguages,
+    addedProficiencies
 ){
+    /*@Relation(
+        entity = Race::class,
+        associateBy = Junction(
+            CharacterRaceCrossRef::class,
+        ),
+        parentColumn = "id",
+        entityColumn = "raceId"
+    )*/
+
+    @Embedded
+    var race: Race? = null
+
     val hasSpells: Boolean
     get() {
         classes.forEach { (_, clazz) ->

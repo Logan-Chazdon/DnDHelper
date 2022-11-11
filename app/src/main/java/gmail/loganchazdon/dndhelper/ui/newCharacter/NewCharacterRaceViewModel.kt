@@ -4,18 +4,28 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
-import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getFeatsAt
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.List
+import kotlin.collections.MutableList
+import kotlin.collections.MutableMap
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.emptyList
+import kotlin.collections.first
+import kotlin.collections.forEach
+import kotlin.collections.getOrNull
+import kotlin.collections.listOf
+import kotlin.collections.mutableListOf
+import kotlin.collections.mutableMapOf
+import kotlin.collections.plusAssign
+import kotlin.collections.set
 import kotlin.properties.Delegates
 
 @HiltViewModel
@@ -27,7 +37,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
     val customizeStats = mutableStateOf(false)
     val customRaceStatsMap = mutableStateMapOf<String, String>()
     val customSubraceStatsMap = mutableStateMapOf<String, String>()
-    lateinit var character: LiveData<Character>
+    val character: MediatorLiveData<Character> = MediatorLiveData()
     var raceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
     val raceProficiencyChoiceDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     var subraceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
@@ -53,7 +63,12 @@ public class NewCharacterRaceViewModel @Inject constructor(
     init {
         try {
             id = savedStateHandle.get<String>("characterId")!!.toInt()
-            character = repository.getLiveCharacterById(id)!!
+            if(id !=-1) {
+                repository.getLiveCharacterById(
+                    savedStateHandle.get<String>("characterId")!!.toInt(),
+                    character
+                )
+            }
         } catch (E: Exception) {
             id = -1
         }
@@ -67,6 +82,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
     suspend fun setRace(newRace: Race) {
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
+        /*
         val character = repository.getCharacterById(id)
         newRace.abilityBonuses = getStateBonuses(
             races.value!![raceIndex].abilityBonuses!!,
@@ -154,9 +170,9 @@ public class NewCharacterRaceViewModel @Inject constructor(
                 this
             }
         }
-
-        character!!.race = newRace
-        repository.insertCharacter(character)
+        *///TODO replace me
+        //character!!.race = newRace
+        //repository.insertCharacter(character)
     }
 
     private val selectedSubraceASIs : List<Pair<String, Int>>

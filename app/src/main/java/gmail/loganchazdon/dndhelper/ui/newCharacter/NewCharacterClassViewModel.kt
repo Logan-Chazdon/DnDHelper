@@ -35,7 +35,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     var takeGold = mutableStateOf(false)
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     val featureDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
-    val character: LiveData<Character>?
+    val character: MediatorLiveData<Character> = MediatorLiveData()
     val classSpells = mutableStateListOf<Spell>()
     val subclassSpells = mutableStateListOf<Spell>()
     val levels = mutableStateOf(TextFieldValue("1"))
@@ -100,10 +100,11 @@ public class NewCharacterClassViewModel @Inject constructor(
             -1
         }
 
-        character = try {
-            repository.getLiveCharacterById(id)!!
-        } catch (e: NullPointerException) {
-            null
+        if(id !=-1) {
+            repository.getLiveCharacterById(
+                savedStateHandle.get<String>("characterId")!!.toInt(),
+                character
+            )
         }
     }
 
@@ -135,7 +136,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                 it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
             }
             newClass.proficiencyChoices.forEach {
-                it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>
+                //it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>
             }
         }
 

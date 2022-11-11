@@ -5,5 +5,11 @@ data class LanguageChoice(
     var choose: Int,
     var from: List<Language>
 ) {
-    var chosen: List<Language>? = null
+    val chosen: List<Language>
+    get() {
+        return from.filter {
+            chosenByString.contains(it.name)
+        }
+    }
+    var chosenByString = emptyList<String>()
 }

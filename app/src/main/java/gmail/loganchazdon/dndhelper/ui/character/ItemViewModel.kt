@@ -1,10 +1,7 @@
 package gmail.loganchazdon.dndhelper.ui.character
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Armor
 import gmail.loganchazdon.dndhelper.model.Character
@@ -20,15 +17,16 @@ public class ItemViewModel @Inject constructor(
     val repository: Repository, application: Application
 ) : AndroidViewModel(application) {
 
-    var character: LiveData<Character>? = null
+    var character: MediatorLiveData<Character> = MediatorLiveData()
     var allItems: LiveData<List<ItemInterface>>? = null
 
 
     init {
-        val id = savedStateHandle.get<String>("characterId")!!.toInt()
-
+        repository.getLiveCharacterById(
+            savedStateHandle.get<String>("characterId")!!.toInt(),
+            character
+        )
         viewModelScope.launch {
-            character = repository.getLiveCharacterById(id)
             allItems = repository.getAllItems()
 
         }
@@ -37,10 +35,10 @@ public class ItemViewModel @Inject constructor(
 
 
     suspend fun addItem(item: ItemInterface) {
-        character?.value?.backpack?.addItem(
+        character.value?.backpack?.addItem(
             item
         )
-        character?.value.let { newCharacter ->
+        character.value.let { newCharacter ->
             if (newCharacter != null) {
                 repository.insertCharacter(newCharacter)
             }
@@ -49,38 +47,38 @@ public class ItemViewModel @Inject constructor(
 
     suspend fun buyItem(item: ItemInterface) {
         val cost = item.cost
-        if (character?.value?.backpack?.subtractCurrency(cost!!) == true) {
+        if (character.value?.backpack?.subtractCurrency(cost!!) == true) {
             addItem(item)
-            val newChar = character!!.value!!.copy(backpack = character!!.value!!.backpack)
-            newChar.id = character!!.value!!.id
+            val newChar = character.value!!.copy(backpack = character.value!!.backpack)
+            newChar.id = character.value!!.id
             repository.insertCharacter(newChar)
         }
     }
 
     suspend fun addCurrency(name: String?, newAmount: Int) {
         var nonAddedCurrency: Int =
-            character?.value?.backpack!!.backgroundCurrency[name]?.copy()?.amount ?: 0
-        nonAddedCurrency += character?.value?.backpack!!.classCurrency[name]?.copy()?.amount ?: 0
-        character?.value?.backpack!!.addedCurrency[name]!!.amount = newAmount - nonAddedCurrency
+            character.value?.backpack!!.backgroundCurrency[name]?.copy()?.amount ?: 0
+        nonAddedCurrency += character.value?.backpack!!.classCurrency[name]?.copy()?.amount ?: 0
+        character.value?.backpack!!.addedCurrency[name]!!.amount = newAmount - nonAddedCurrency
 
-        character?.value?.let {
+        character.value?.let {
             repository.insertCharacter(it)
         }
     }
 
      fun equip(armor: Armor) {
-        character?.value?.backpack?.equippedArmor = armor
-        repository.insertCharacter(character?.value!!)
+        character.value?.backpack?.equippedArmor = armor
+        repository.insertCharacter(character.value!!)
     }
 
     fun equip(shield: Shield) {
-        character?.value?.backpack?.equippedShield = shield
-        repository.insertCharacter(character?.value!!)
+        character.value?.backpack?.equippedShield = shield
+        repository.insertCharacter(character.value!!)
     }
 
     suspend fun deleteItemAt(itemToDeleteIndex: Int) {
-        character?.value?.backpack?.deleteItemAtIndex(itemToDeleteIndex)
-        repository.insertCharacter(character?.value!!)
+        character.value?.backpack?.deleteItemAtIndex(itemToDeleteIndex)
+        repository.insertCharacter(character.value!!)
     }
 
 }

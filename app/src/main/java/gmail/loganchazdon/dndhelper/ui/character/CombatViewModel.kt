@@ -2,16 +2,14 @@ package gmail.loganchazdon.dndhelper.ui.character
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.Resource
 import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.model.repositories.Repository.Companion.allSpellLevels
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -191,17 +189,16 @@ public class CombatViewModel @Inject constructor(
                 }
             }
         }
-        character?.value?.let { repository.insertCharacter(it) }
+        character.value?.let { repository.insertCharacter(it) }
     }
 
-    var character : LiveData<Character>? = null
+    val character : MediatorLiveData<Character> = MediatorLiveData()
 
 
     init {
-        val id = savedStateHandle.get<String>("characterId")!!.toInt()
-        viewModelScope.launch {
-            character = repository.getLiveCharacterById(id)
-        }
-
+        repository.getLiveCharacterById(
+            savedStateHandle.get<String>("characterId")!!.toInt(),
+            character
+        )
     }
 }

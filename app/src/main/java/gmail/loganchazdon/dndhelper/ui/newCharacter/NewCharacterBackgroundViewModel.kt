@@ -2,10 +2,7 @@ package gmail.loganchazdon.dndhelper.ui.newCharacter
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateMapOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
@@ -25,7 +22,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
     var id = -1
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     var featureDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
-    val character: LiveData<Character>?
+    val character: MediatorLiveData<Character> = MediatorLiveData()
 
     init {
         viewModelScope.launch {
@@ -37,10 +34,11 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
             -1
         }
 
-        character = try {
-            repository.getLiveCharacterById(id)!!
-        } catch (e: NullPointerException) {
-            null
+        if(id !=-1) {
+            repository.getLiveCharacterById(
+                savedStateHandle.get<String>("characterId")!!.toInt(),
+                character
+            )
         }
     }
 
@@ -50,7 +48,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
             id = repository.createDefaultCharacter() ?: -1
         val character = repository.getCharacterById(id)
         newBackground.languageChoices.forEach {
-            it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Language>
+            //it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Language>
         }
         newBackground.equipmentChoices.forEach {
             it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>

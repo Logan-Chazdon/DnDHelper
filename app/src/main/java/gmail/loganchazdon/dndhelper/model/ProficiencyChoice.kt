@@ -5,5 +5,12 @@ data class ProficiencyChoice(
     val choose: Int,
     val from: List<Proficiency>
 ){
-    var chosen: List<Proficiency>? = null
+    val chosen: List<Proficiency>
+    get() {
+        return from.filter {
+            chosenByString.contains(it.name)
+        }
+    }
+
+    var chosenByString: List<String> = emptyList()
 }

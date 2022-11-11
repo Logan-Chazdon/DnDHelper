@@ -1,11 +1,19 @@
 package gmail.loganchazdon.dndhelper.model
 
+import java.util.*
+
 data class AbilityBonusChoice(
     val choose: Int,
     val from : List<AbilityBonus>,
     val maxOccurrencesOfAbility: Int = 1
 ) {
-    var chosen: List<AbilityBonus>? = null
+    var chosenByString: List<String> = LinkedList()
+    val chosen: List<AbilityBonus>
+    get() {
+        return from.filter {
+            chosenByString.contains(it.toString())
+        }
+    }
 
     companion object {
         val allStatsArray = listOf(

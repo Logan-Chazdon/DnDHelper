@@ -24,6 +24,21 @@ class Converters {
 
 
     @TypeConverter
+    fun storedStringToListListString(data: String?): List<List<String>> {
+        if (data == null || data.isBlank()) {
+            return mutableListOf()
+        }
+        val listType: Type = object : TypeToken<List<List<String>>>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+
+    @TypeConverter
+    fun listListStringToStoredString(myObjects: List<List<String>>): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
     fun stringToMutableListOfMapOfStringToInt(data: String?): MutableList<Map<String, Int>> {
         if (data == null || data.isBlank()) {
             return mutableListOf()

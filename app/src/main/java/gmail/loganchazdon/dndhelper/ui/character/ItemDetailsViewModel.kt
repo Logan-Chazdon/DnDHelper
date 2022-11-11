@@ -6,20 +6,15 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.Armor
-import gmail.loganchazdon.dndhelper.model.ItemInterface
-import gmail.loganchazdon.dndhelper.model.Shield
-import gmail.loganchazdon.dndhelper.model.Weapon
+import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -28,7 +23,7 @@ public class ItemDetailsViewModel @Inject constructor(
     val repository: Repository, application: Application
 ): AndroidViewModel(application) {
     private val debounceTime:Long = 1000
-    val character = repository.getLiveCharacterById(savedStateHandle.get<String>("characterId")!!.toInt())!!
+    val character = MediatorLiveData<Character>()
     private val itemIndex: Int = savedStateHandle.get<String>("itemIndex")!!.toInt()
     //Mediator live data that gets an item from the characters backpack by index.
     val item = MediatorLiveData<ItemInterface>().run {
@@ -48,6 +43,11 @@ public class ItemDetailsViewModel @Inject constructor(
     val armorStealthDisadvantage = MutableStateFlow(false)
 
     init {
+        repository.getLiveCharacterById(
+            savedStateHandle.get<String>("characterId")!!.toInt(),
+            character
+        )
+
         //Update the db if the user has not edited any of the values in the last debounceTime millis.
         viewModelScope.launch(Dispatchers.IO) {
             itemName.debounce(debounceTime)

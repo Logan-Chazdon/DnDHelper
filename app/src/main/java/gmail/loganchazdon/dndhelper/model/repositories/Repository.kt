@@ -1,6 +1,7 @@
 package gmail.loganchazdon.dndhelper.model.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
@@ -101,8 +102,8 @@ class Repository @Inject constructor(
         return dao?.findCharacterById(id)
     }
 
-    fun getLiveCharacterById(id: Int): LiveData<Character>? {
-        return dao?.findLiveCharacterById(id)
+    fun getLiveCharacterById(id: Int, character: MediatorLiveData<Character>) {
+        dao?.findLiveCharacterById(id, character)
     }
 
     fun getLiveRaceById(id: Int) : LiveData<Race>? {

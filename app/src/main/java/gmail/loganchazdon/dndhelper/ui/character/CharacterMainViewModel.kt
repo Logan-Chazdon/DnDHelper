@@ -1,7 +1,10 @@
 package gmail.loganchazdon.dndhelper.ui.character
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.Feature
@@ -11,7 +14,6 @@ import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,10 +26,7 @@ class CharacterMainViewModel @Inject constructor(
 ): AndroidViewModel(application) {
     private val debounceTime: Long = 1000
     val characterFeatures: MediatorLiveData<List<Pair<Int, Feature>>> = MediatorLiveData()
-    var character : LiveData<Character> =
-        repository.getLiveCharacterById(
-            savedStateHandle.get<String>("characterId")!!.toInt()
-        )!!
+    var character : MediatorLiveData<Character> = MediatorLiveData()
 
     //Character Information.
     val name = MutableStateFlow("")
@@ -47,6 +46,11 @@ class CharacterMainViewModel @Inject constructor(
     )
 
     init {
+        repository.getLiveCharacterById(
+            savedStateHandle.get<String>("characterId")!!.toInt(),
+            character
+        )
+
         characterFeatures.addSource(character) {
             characterFeatures.value = it.displayFeatures
         }

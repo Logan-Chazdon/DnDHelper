@@ -1,6 +1,5 @@
 package gmail.loganchazdon.dndhelper.ui.newCharacter
 
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.foundation.background
@@ -26,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import gmail.loganchazdon.dndhelper.model.Subclass
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
@@ -478,7 +476,7 @@ fun ConfirmClassView(
 
 
 
-                for (choice in clazz.levelPath) {
+                for (choice in clazz.levelPath!!) {
                     if (viewModel.levels.value.text.isNotBlank()) {
                         if (choice.grantedAtLevel <= viewModel.levels.value.text.toInt()) {
                             FeatureView(

@@ -152,7 +152,7 @@ private fun FeatureDisplayView(
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Button({
-                                    disableInfusion(subFeature.infusion)
+                                    disableInfusion(subFeature.infusion!!)
                                     activationExpanded = false
                                 }) {
                                     Text("Disable infusion")

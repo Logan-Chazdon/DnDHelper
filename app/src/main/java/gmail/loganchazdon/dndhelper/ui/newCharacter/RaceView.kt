@@ -99,7 +99,7 @@ fun RaceView(
                                         }
                                     }
 
-                                    for (trait in race.traits) {
+                                    for (trait in race.traits!!) {
                                         Text(
                                             text = trait.name,
                                             style = MaterialTheme.typography.subtitle1

@@ -3,9 +3,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.OptionsFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
+
 private const val fullCharacterSql =
     """SELECT * FROM characters 
 INNER JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id
@@ -31,8 +35,34 @@ abstract class DatabaseDao {
                 race.languageChoices.forEachIndexed { index, choice ->
                     choice.chosenByString = data.languageChoice.getOrNull(index) ?: emptyList()
                 }
+
+                val features = getRaceFeatures(race.raceId)
+                features.forEach { feature ->
+                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
+                }
+                race.traits = features
             }
         }
+    }
+
+    //This only fills out chosen not options.
+    //We don't want options as it is not used inside of the character object.
+    private fun fillOutChoices(choiceEntities: List<FeatureChoiceEntity>, characterId: Int) : List<FeatureChoice> {
+        val choices = mutableListOf<FeatureChoice>()
+        choiceEntities.forEach { featureChoiceEntity ->
+            val features = getFeatureChoiceChosen(choiceId = featureChoiceEntity.id, characterId = characterId)
+            features.forEach {
+                it.choices = fillOutChoices(it.choices ?: emptyList(), characterId)
+            }
+            choices.add(
+                FeatureChoice(
+                    entity = featureChoiceEntity,
+                    options = emptyList(),
+                    chosen = features
+                )
+            )
+        }
+        return choices
     }
 
     @RewriteQueriesToDropUnusedColumns
@@ -81,15 +111,15 @@ abstract class DatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceChoice(choice: RaceChoiceEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertFeatureChoiceEntity(choice : FeatureChoiceChoiceEntity) : Long
+
     //Class Table
     @Query("SELECT * FROM classes")
     abstract fun getAllClasses(): List<Class>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertClass(newClass: Class)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertClasses(newClasses: List<Class>)
+    abstract fun insertClass(newClass: ClassEntity)
 
     //Race Table
     @Query("SELECT * FROM races")
@@ -112,13 +142,56 @@ abstract class DatabaseDao {
     @Delete
     abstract fun removeRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
 
+    @Transaction
+    @RewriteQueriesToDropUnusedColumns
+    @Query("""SELECT * FROM features 
+JOIN RaceFeatureCrossRef ON raceId IS :raceId 
+WHERE RaceFeatureCrossRef.featureId is features.featureId""")
+    protected abstract fun getRaceFeatures(raceId: Int) : List<Feature>
+
     //Feature Table
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFeature(feature: Feature) : Long
+    abstract fun insertFeature(feature: FeatureEntity) : Long
 
     @Query("SELECT * FROM features WHERE featureId = :id")
     abstract fun getLiveFeatureById(id: Int) : LiveData<Feature>
 
     @Query("SELECT * FROM features WHERE featureId = :id")
     abstract fun getFeatureById(id: Int) : Feature
+
+    @Insert
+    abstract fun insertFeatureOptionsCrossRef(ref: FeatureOptionsCrossRef)
+
+    @Delete
+    abstract fun removeFeatureOptionsCrossRef(ref: FeatureOptionsCrossRef)
+
+    @Insert
+    abstract fun insertOptionsFeatureCrossRef(ref: OptionsFeatureCrossRef)
+
+    @Delete
+    abstract fun removeOptionsFeatureCrossRef(ref: OptionsFeatureCrossRef)
+
+    @Insert
+    abstract fun insertFeatureChoice(option: FeatureChoiceEntity) : Long
+
+    @Query("DELETE FROM features WHERE featureId = :id")
+    abstract fun removeFeatureChoice(id : Int)
+
+    //This returns all featureChoices associate with a feature. It doesn't not contain the options or the chosen fields.
+    @Query("""SELECT * FROM FeatureChoiceEntity 
+JOIN FeatureOptionsCrossRef ON FeatureOptionsCrossRef.id IS FeatureChoiceEntity.id
+WHERE FeatureOptionsCrossRef.featureId IS :featureId""")
+    protected abstract fun getFeatureChoices(featureId: Int) : List<FeatureChoiceEntity>
+
+    //This returns all features which belong in the options field of a featureChoice.
+    @Query("""SELECT * FROM features
+JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
+WHERE OptionsFeatureCrossRef.choiceId IS :featureChoiceId""")
+    protected abstract fun getFeatureChoiceOptions(featureChoiceId: Int) : List<Feature>
+
+    //This returns all features which belong in the chosen field of a featureChoice.
+    @Query("""SELECT * FROM features 
+JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId
+WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId""")
+    protected abstract fun getFeatureChoiceChosen(characterId: Int, choiceId: Int) : List<Feature>
 }

@@ -198,7 +198,7 @@ data class Character (
         }
 
         classes.values.forEach {
-            it.levelPath.forEach { feature ->
+            it.levelPath!!.forEach { feature ->
                 if(feature.grantedAtLevel <= it.level) {
                     result.add(it.level to feature)
                 }
@@ -309,7 +309,7 @@ data class Character (
 
     fun addClass(newClass: Class, takeGold: Boolean) {
         //Clear out the unused level path too save memory.
-        newClass.levelPath.forEach { feature ->
+        newClass.levelPath!!.forEach { feature ->
             feature.choices?.forEach {
                 it.options?.clear()
             }
@@ -854,7 +854,7 @@ data class Character (
         var bonusFromFeatures = 0
         val applyFeature = fun(it : Feature) {
             if(it.rangedAttackBonus != null && weapon.range != "5 ft") {
-                bonusFromFeatures += it.rangedAttackBonus
+                bonusFromFeatures += it.rangedAttackBonus!!
             }
         }
         features.forEach {

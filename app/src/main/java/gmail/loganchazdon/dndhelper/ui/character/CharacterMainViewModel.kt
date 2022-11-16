@@ -146,9 +146,9 @@ class CharacterMainViewModel @Inject constructor(
     private fun activateInfusion(infusion: Infusion, character: Character) : Character? {
         //TODO check for other possible sources of infusions.
         character.classes.values.forEachIndexed { classIndex, clazz  ->
-            clazz.levelPath.forEachIndexed { index, it ->
+            clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
-                    if(character.classes.values.elementAt(classIndex).levelPath[index].activateInfusion(infusion))
+                    if(character.classes.values.elementAt(classIndex).levelPath!![index].activateInfusion(infusion))
                         return character
                 }
             }
@@ -160,15 +160,13 @@ class CharacterMainViewModel @Inject constructor(
     fun deactivateInfusion(infusion: Infusion, character: Character): Character? {
         //TODO check for other possible sources of infusions.
         character.classes.values.forEachIndexed { classIndex, clazz  ->
-            clazz.levelPath.forEachIndexed { index, it ->
+            clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
-                    if(character.classes.values.elementAt(classIndex).levelPath[index].deactivateInfusion(infusion))
+                    if(character.classes.values.elementAt(classIndex).levelPath!![index].deactivateInfusion(infusion))
                         return character
                 }
             }
         }
         return null
     }
-
-
 }

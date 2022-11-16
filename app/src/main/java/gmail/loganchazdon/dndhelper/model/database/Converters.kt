@@ -69,17 +69,14 @@ class Converters {
     }
 
     @TypeConverter
-    fun storedStringToBackpack(data: String?): Backpack? {
-        if (data == null ) {
-            return null
-        }
-        val listType: Type = object : TypeToken<Backpack?>() {}.getType()
+    fun storedStringToBackpack(data: String?): Backpack {
+        val listType: Type = object : TypeToken<Backpack>() {}.getType()
         return gson.fromJson(data, listType)
     }
 
 
     @TypeConverter
-    fun backpackToStoredString(myObjects: Backpack?): String? {
+    fun backpackToStoredString(myObjects: Backpack): String? {
         return gson.toJson(myObjects)
     }
 
@@ -142,16 +139,16 @@ class Converters {
 
 
     @TypeConverter
-    fun storedStringToLevelPath(data: String?): MutableList<Feature> {
+    fun storedStringToFeatureList(data: String?): MutableList<Feature>? {
         if (data == null) {
             return mutableListOf()
         }
-        val listType: Type = object : TypeToken<MutableList<Feature>>() {}.getType()
+        val listType: Type = object : TypeToken<MutableList<Feature>?>() {}.getType()
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun levelPathToStoredString(myObjects: MutableList<Feature>): String? {
+    fun featureListToStoredString(myObjects: MutableList<Feature>?): String? {
         return gson.toJson(myObjects)
     }
 

@@ -46,10 +46,10 @@ class MigrationTest {
 
         //Check that the artificers infusions have been preserved.
         classes.forEach {
-            assert(it.value.levelPath[1].choices!![0].chosen!!.size == 4)
+            assert(it.value.levelPath!![1].choices!![0].chosen!!.size == 4)
         }
 
         //Check that the dragonborn's type has been preserved.
-        assert(race!!.traits[0].choices!![0].chosen!!.size == 1)
+        assert(race!!.traits!![0].choices!![0].chosen!!.size == 1)
     }
 }

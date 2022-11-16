@@ -15,9 +15,7 @@ import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
-import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getFeatsAt
-import gmail.loganchazdon.dndhelper.ui.utils.allNames
 import javax.inject.Inject
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -140,7 +138,7 @@ public class NewCharacterClassViewModel @Inject constructor(
             }
         }
 
-        getFeatures(newClass.levelPath, level)
+        getFeatures(newClass.levelPath!!, level)
 
 
 
@@ -464,7 +462,7 @@ public class NewCharacterClassViewModel @Inject constructor(
         return profs
     }
 
-    fun applyAlreadySelectedChoices() {
+    fun applyAlreadySelectedChoices() {/*
         val className = classes.value?.get(classIndex)?.name
         character?.value?.classes
             ?.getOrDefault(className, null)?.let { clazz ->
@@ -640,6 +638,7 @@ public class NewCharacterClassViewModel @Inject constructor(
                     }
                 }
             }
+            */
     }
 }
 

@@ -1,8 +1,5 @@
 package gmail.loganchazdon.dndhelper.model
 
-import androidx.room.*
-import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
-
 @DatabaseView("SELECT * FROM races")
 class Race(
     id: Int = 0,
@@ -56,7 +53,7 @@ class Race(
     }
 
     fun longRest() {
-        traits.forEach {
+        traits!!.forEach {
             it.recharge(1)
         }
     }
@@ -70,7 +67,7 @@ class Race(
     }
 
     fun filterRaceFeatures(): List<Feature> {
-        return traits.filter { feature ->
+        return traits!!.filter { feature ->
             subrace?.traits?.none { it.index == feature.index }
                 ?: true
         }

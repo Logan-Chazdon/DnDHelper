@@ -1,41 +1,34 @@
 package gmail.loganchazdon.dndhelper.model
 
-import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import gmail.loganchazdon.dndhelper.model.database.Converters
 
-@Entity(tableName = "classes")
-@TypeConverters(Converters::class)
-class Class(
-    var name: String,
-    var hitDie: Int = 8,
-    var subClasses: List<Subclass> = emptyList(),
-    var subclassLevel: Int,
-    var levelPath: MutableList<Feature> = mutableListOf<Feature>(),
-    var proficiencyChoices: List<ProficiencyChoice> = emptyList(),
-    var proficiencies: List<Proficiency> = emptyList(),
-    var equipmentChoices: List<ItemChoice> = emptyList(),
-    var equipment: List<ItemInterface> = emptyList(),
-    val spellCasting : SpellCasting? = null,
-    val pactMagic: PactMagic? = null,
-    val startingGoldD4s: Int,
-    val startingGoldMultiplier : Int = 10
+class Class (
+    id: Int = 0,
+    isBaseClass: Boolean = false,
+    level: Int = 1,
+    subclass: Subclass? = null,
+    tookGold: Boolean? = null,
+    totalNumOnGoldDie : Int? = null,
+    featsGranted: MutableList<Feat> = mutableListOf(),
+    abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf(),
+    name: String,
+    hitDie: Int = 8,
+    subClasses: List<Subclass> = emptyList(),
+    subclassLevel: Int,
+    var levelPath: MutableList<Feature>? = mutableListOf(),
+    proficiencyChoices: List<ProficiencyChoice> = emptyList(),
+    proficiencies: List<Proficiency> = emptyList(),
+    equipmentChoices: List<ItemChoice> = emptyList(),
+    equipment: List<ItemInterface> = emptyList(),
+    spellCasting : SpellCasting? = null,
+    pactMagic: PactMagic? = null,
+    startingGoldD4s: Int,
+    startingGoldMultiplier : Int = 10
+) : ClassEntity(
+    name, hitDie, subClasses, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, id, isBaseClass, level, subclass, tookGold, totalNumOnGoldDie, featsGranted, abilityImprovementsGranted
 ) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-    var isBaseClass: Boolean = false
-    var level: Int = 1
-    var subclass: Subclass? = null
-    var tookGold: Boolean? = null
-    var totalNumOnGoldDie : Int? = null
-    var featsGranted: MutableList<Feat> = mutableListOf()
-    var abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf()
 
     fun longRest() {
-        levelPath.forEach{
+        levelPath!!.forEach{
             it.recharge(level)
         }
         pactMagic?.pactSlots?.get(level - 1)?.recharge(level)

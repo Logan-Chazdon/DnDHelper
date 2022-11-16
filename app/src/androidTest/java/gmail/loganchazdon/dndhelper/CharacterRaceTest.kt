@@ -6,10 +6,13 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.test.core.app.ApplicationProvider
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
 import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
 import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -60,7 +63,22 @@ class CharacterRaceTest{
                 Language("Draconic")
             )
         )
+        val feature = FeatureEntity(
+            name = "Test name",
+            description = "Test desc"
+        )
+        val featureChoice = FeatureChoice(
+            choose = Choose(1),
+            options = mutableListOf()
+        )
+        val option = FeatureEntity(
+            name = "Choice Feature",
+            description = "Test"
+        )
 
+        val choiceId = dao.insertFeatureChoice(featureChoice).toInt()
+        val featureId = dao.insertFeature(feature).toInt()
+        val optionId = dao.insertFeature(option).toInt()
 
         val charId = dao.insertCharacter(CharacterEntity()).toInt()
         val raceId = dao.insertRace(RaceEntity(
@@ -68,6 +86,27 @@ class CharacterRaceTest{
             proficiencyChoices = listOf(proficiencyChoice),
             languageChoices = listOf(languageChoice)
         )).toInt()
+
+        dao.insertFeatureChoiceEntity(
+            FeatureChoiceChoiceEntity(
+                featureId = optionId,
+                choiceId = choiceId,
+                characterId = charId
+            )
+        )
+        dao.insertFeatureOptionsCrossRef(
+            FeatureOptionsCrossRef(
+                featureId = featureId,
+                id = choiceId
+            )
+        )
+
+        dao.insertRaceFeatureCrossRef(
+            RaceFeatureCrossRef(
+                raceId = raceId,
+                featureId = featureId
+            )
+        )
 
         dao.insertCharacterRaceCrossRef(
             CharacterRaceCrossRef(
@@ -97,6 +136,8 @@ class CharacterRaceTest{
         assert(character.race?.abilityBonusChoice?.chosen != null)
         assert(character.race?.proficiencyChoices?.get(0)?.chosen != null)
         assert(character.race?.languageChoices?.get(0)?.chosen != null)
+        assert(character.race!!.traits!![0].allChosen.size == 1)
+        assert(character.race!!.traits!![0].allChosen[0].name == "Choice Feature")
     }
 
     @After

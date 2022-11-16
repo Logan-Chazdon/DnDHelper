@@ -4,19 +4,17 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 
 
 @Database(
     entities = [
-        (CharacterEntity::class), (Class::class), (RaceEntity::class), (Feature::class),
-        (RaceFeatureCrossRef::class), (CharacterRaceCrossRef::class),
-        (RaceChoiceEntity::class)
-    ],
-    views = [
-        (Race::class)
+        (CharacterEntity::class), (ClassEntity::class), (RaceEntity::class), (FeatureEntity::class), (FeatureChoiceEntity::class),
+        (RaceFeatureCrossRef::class), (CharacterRaceCrossRef::class), (FeatureOptionsCrossRef::class),
+        (OptionsFeatureCrossRef::class), (ClassFeatureCrossRef::class),
+        (RaceChoiceEntity::class), (FeatureChoiceChoiceEntity::class),
     ],
     version = 58,
     exportSchema = true

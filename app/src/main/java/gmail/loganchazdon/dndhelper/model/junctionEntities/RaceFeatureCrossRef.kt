@@ -1,10 +1,8 @@
 package gmail.loganchazdon.dndhelper.model.junctionEntities
 
 import androidx.room.Entity
-import androidx.room.TypeConverters
-import gmail.loganchazdon.dndhelper.model.database.Converters
 
-@TypeConverters(Converters::class)
+//This is used to fetch all features relating to a race.
 @Entity(primaryKeys = ["raceId", "featureId"])
 data class RaceFeatureCrossRef(
     val featureId: Int,

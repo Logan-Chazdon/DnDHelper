@@ -153,7 +153,7 @@ WHERE RaceFeatureCrossRef.featureId is features.featureId""")
     @Query("""SELECT * FROM subraces
 JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.subraceId IS subraces.id
 JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.subraceId IS subraces.id
-JOIN features ON featureId IS SubraceFeatureCrossRef.featureId
+JOIN features ON features.featureId IS SubraceFeatureCrossRef.featureId
 WHERE raceId IS :raceId
     """)
     @Transaction

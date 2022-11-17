@@ -219,5 +219,5 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     //Feats
     @Insert
-    abstract fun insertFeat(feat: Feat)
+    abstract fun insertFeat(feat: FeatEntity)
 }

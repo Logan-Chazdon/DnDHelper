@@ -5,10 +5,8 @@ import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.OptionsFeatureCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.choiceEntities.SubraceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 
 private const val fullCharacterSql =
     """SELECT * FROM characters 
@@ -148,6 +146,30 @@ abstract class DatabaseDao {
 JOIN RaceFeatureCrossRef ON raceId IS :raceId 
 WHERE RaceFeatureCrossRef.featureId is features.featureId""")
     protected abstract fun getRaceFeatures(raceId: Int) : List<Feature>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertSubrace(subrace: Subrace)
+
+    @Query("""SELECT * FROM subraces
+JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.subraceId IS subraces.id
+JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.subraceId IS subraces.id
+JOIN features ON featureId IS SubraceFeatureCrossRef.featureId
+WHERE raceId IS :raceId
+    """)
+    @Transaction
+    abstract fun getSubraceOptions(raceId: Int): List<Subrace>
+
+    @Insert
+    abstract fun insertSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef)
+
+    @Delete
+    abstract fun removeSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef)
+
+    @Insert
+    abstract fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity)
+
+    @Delete
+    abstract fun removeSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity)
 
     //Feature Table
     @Insert(onConflict = OnConflictStrategy.REPLACE)

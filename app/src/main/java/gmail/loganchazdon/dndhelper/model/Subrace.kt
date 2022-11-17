@@ -2,18 +2,18 @@ package gmail.loganchazdon.dndhelper.model
 
 
 
-data class Subrace(
-    var name : String,
-    var abilityBonuses: List<AbilityBonus>?,
-    var abilityBonusChoice: AbilityBonusChoice?,
-    var startingProficiencies: List<Proficiency>?,
-    var languages : List<Language>,
-    var languageChoices: List<LanguageChoice>,
-    var traits: List<Feature>,
-    var size: String?,
-    var groundSpeed: Int?,
+class Subrace(
+    name : String,
+    abilityBonuses: List<AbilityBonus>?,
+    abilityBonusChoice: AbilityBonusChoice?,
+    startingProficiencies: List<Proficiency>?,
+    languages : List<Language>,
+    languageChoices: List<LanguageChoice>,
+    val traits: List<Feature>,
+    size: String?,
+    groundSpeed: Int?,
     var featChoices: List<FeatChoice>? = null
-) {
+) : SubraceEntity(name, abilityBonuses, abilityBonusChoice, startingProficiencies, languages, languageChoices, size, groundSpeed){
     val totalAbilityBonuses: List<AbilityBonus>
     get() {
         val result = mutableListOf<AbilityBonus>()

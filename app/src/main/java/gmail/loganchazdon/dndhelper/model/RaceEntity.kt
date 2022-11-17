@@ -22,7 +22,6 @@ open class RaceEntity (
     open var languages: List<Language> = listOf(),
     open var languageChoices: List<LanguageChoice> = listOf(),
     open var languageDesc: String = "",
-    open var subraces: List<Subrace>? = listOf(),
-    open var subrace: Subrace? = null,
-    open var traits: List<Feature> = listOf()
+    //TODO remove this after updating LocalDataSource.
+    open var subraces: List<Subrace>? = listOf()
 )

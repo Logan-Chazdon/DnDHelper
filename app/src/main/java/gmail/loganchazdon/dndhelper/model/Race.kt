@@ -1,5 +1,7 @@
 package gmail.loganchazdon.dndhelper.model
 
+import androidx.room.Embedded
+
 @DatabaseView("SELECT * FROM races")
 class Race(
     id: Int = 0,

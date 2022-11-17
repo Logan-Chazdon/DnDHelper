@@ -1,10 +1,10 @@
 package gmail.loganchazdon.dndhelper.model
 
-data class Feat(
-    val name: String,
-    val desc: String,
-    val prerequisite: Prerequisite? = null,
-    val features: List<Feature>? = null,
-    val abilityBonuses: List<AbilityBonus>? = null,
-    val abilityBonusChoice: AbilityBonusChoice? = null
-)
+class Feat(
+    name: String,
+    desc: String,
+    prerequisite: Prerequisite? = null,
+    var features: List<Feature>? = null,
+    abilityBonuses: List<AbilityBonus>? = null,
+    abilityBonusChoice: AbilityBonusChoice? = null
+) : FeatEntity(name, desc, prerequisite, abilityBonuses, abilityBonusChoice)

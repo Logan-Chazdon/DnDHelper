@@ -216,4 +216,8 @@ WHERE OptionsFeatureCrossRef.choiceId IS :featureChoiceId""")
 JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId
 WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId""")
     protected abstract fun getFeatureChoiceChosen(characterId: Int, choiceId: Int) : List<Feature>
+
+    //Feats
+    @Insert
+    abstract fun insertFeat(feat: Feat)
 }

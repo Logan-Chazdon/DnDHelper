@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "867ab0207370160202448d5bac507aff",
+    "identityHash": "a2865ed8768ddd7b52850eecfc2e3fda",
     "entities": [
       {
         "tableName": "characters",
@@ -286,7 +286,7 @@
       },
       {
         "tableName": "races",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`raceId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `raceName` TEXT NOT NULL, `groundSpeed` INTEGER NOT NULL, `abilityBonuses` TEXT, `alignment` TEXT, `age` TEXT NOT NULL, `size` TEXT NOT NULL, `sizeDesc` TEXT NOT NULL, `startingProficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `languageDesc` TEXT NOT NULL, `subraces` TEXT, `subrace` TEXT, `abcchoose` INTEGER, `abcfrom` TEXT, `abcmaxOccurrencesOfAbility` INTEGER, `abcchosenByString` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`raceId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `raceName` TEXT NOT NULL, `groundSpeed` INTEGER NOT NULL, `abilityBonuses` TEXT, `alignment` TEXT, `age` TEXT NOT NULL, `size` TEXT NOT NULL, `sizeDesc` TEXT NOT NULL, `startingProficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `languageDesc` TEXT NOT NULL, `subraces` TEXT, `abcchoose` INTEGER, `abcfrom` TEXT, `abcmaxOccurrencesOfAbility` INTEGER, `abcchosenByString` TEXT)",
         "fields": [
           {
             "fieldPath": "raceId",
@@ -369,12 +369,6 @@
           {
             "fieldPath": "subraces",
             "columnName": "subraces",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "subrace",
-            "columnName": "subrace",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -589,6 +583,74 @@
         "foreignKeys": []
       },
       {
+        "tableName": "subraces",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `abilityBonuses` TEXT, `abilityBonusChoice` TEXT, `startingProficiencies` TEXT, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `size` TEXT, `groundSpeed` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityBonuses",
+            "columnName": "abilityBonuses",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "abilityBonusChoice",
+            "columnName": "abilityBonusChoice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startingProficiencies",
+            "columnName": "startingProficiencies",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "languages",
+            "columnName": "languages",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "languageChoices",
+            "columnName": "languageChoices",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "groundSpeed",
+            "columnName": "groundSpeed",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "RaceFeatureCrossRef",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`featureId` INTEGER NOT NULL, `raceId` INTEGER NOT NULL, PRIMARY KEY(`raceId`, `featureId`))",
         "fields": [
@@ -663,6 +725,60 @@
           "columnNames": [
             "id",
             "featureId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "SubraceFeatureCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subraceId` INTEGER NOT NULL, `featureId` INTEGER NOT NULL, PRIMARY KEY(`subraceId`, `featureId`))",
+        "fields": [
+          {
+            "fieldPath": "subraceId",
+            "columnName": "subraceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "featureId",
+            "columnName": "featureId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "subraceId",
+            "featureId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "RaceSubraceCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subraceId` INTEGER NOT NULL, `raceId` INTEGER NOT NULL, PRIMARY KEY(`subraceId`, `raceId`))",
+        "fields": [
+          {
+            "fieldPath": "subraceId",
+            "columnName": "subraceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "raceId",
+            "columnName": "raceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "subraceId",
+            "raceId"
           ],
           "autoGenerate": false
         },
@@ -801,21 +917,51 @@
         },
         "indices": [],
         "foreignKeys": []
-      }
-    ],
-    "views": [
-      {
-        "viewName": "Race",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH traits AS (SELECT JSON_GROUP_ARRAY(JSON_OBJECT('featureId',featureId)) AS 'traits' FROM features) SELECT traits, * FROM traits, races JOIN RaceFeatureCrossRef ON RaceFeatureCrossRef.raceId IS races.raceId JOIN features ON features.featureId IS RaceFeatureCrossRef.featureId"
       },
       {
-        "viewName": "Class",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS WITH levelPath AS (SELECT JSON_GROUP_ARRAY(JSON_OBJECT('featureId',featureId)) AS 'levelPath' FROM features) SELECT levelPath, * FROM levelPath, classes JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.id IS Classes.id JOIN features ON features.featureId IS ClassFeatureCrossRef.featureId"
+        "tableName": "SubraceChoiceEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subraceId` INTEGER NOT NULL, `characterId` INTEGER NOT NULL, `languageChoice` TEXT NOT NULL, `abcchosenByString` TEXT NOT NULL, PRIMARY KEY(`subraceId`, `characterId`))",
+        "fields": [
+          {
+            "fieldPath": "subraceId",
+            "columnName": "subraceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "characterId",
+            "columnName": "characterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "languageChoice",
+            "columnName": "languageChoice",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityBonusChoice",
+            "columnName": "abcchosenByString",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "subraceId",
+            "characterId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
+    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '867ab0207370160202448d5bac507aff')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a2865ed8768ddd7b52850eecfc2e3fda')"
     ]
   }
 }

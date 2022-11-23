@@ -148,16 +148,28 @@ WHERE RaceFeatureCrossRef.featureId is features.featureId""")
     protected abstract fun getRaceFeatures(raceId: Int) : List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSubrace(subrace: Subrace)
+    abstract fun insertSubrace(subrace: SubraceEntity)
 
     @Query("""SELECT * FROM subraces
 JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.subraceId IS subraces.id
-JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.subraceId IS subraces.id
-JOIN features ON features.featureId IS SubraceFeatureCrossRef.featureId
 WHERE raceId IS :raceId
     """)
     @Transaction
-    abstract fun getSubraceOptions(raceId: Int): List<Subrace>
+    protected abstract fun getSubraceOptionsWithoutFeatures(raceId: Int): List<SubraceEntity>
+
+    @Query("""SELECT * FROM features
+JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.featureId IS features.featureId
+WHERE subraceId IS :subraceId
+    """)
+    protected abstract fun getSubraceTraits(subraceId: Int) : List<Feature>
+
+    fun getSubraceOptions(raceId: Int) : List<Subrace> {
+        val result : List<Subrace> = getSubraceOptionsWithoutFeatures(raceId) as List<Subrace>
+        result.forEach {
+            it.traits = getSubraceTraits(it.id)
+        }
+        return result
+    }
 
     @Insert
     abstract fun insertSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef)

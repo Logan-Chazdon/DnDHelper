@@ -532,4 +532,14 @@ class Converters {
         return gson.toJson(myObjects)
     }
 
+
+    @TypeConverter
+    fun storedStringToFeatChoiceList(data: String?): MutableList<FeatChoice> {
+        return gson.fromJson(data, object : TypeToken<MutableList<FeatChoice>>() {}.type)
+    }
+
+    @TypeConverter
+    fun featChoiceListToStoredString(myObjects: MutableList<FeatChoice>): String? {
+        return gson.toJson(myObjects)
+    }
 }

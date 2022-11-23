@@ -23,7 +23,7 @@ import java.io.IOException
 
 
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
-class CharacterRaceTest{
+class CharacterRelationsTest{
     private lateinit var database: RoomDatabase
     private lateinit var dao: DatabaseDao
 

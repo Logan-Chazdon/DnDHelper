@@ -1,14 +1,14 @@
 package gmail.loganchazdon.dndhelper.model
 
-data class Background (
-    val name: String,
-    val desc: String,
-    var spells: List<Spell>?,
-    val proficiencies : List<Proficiency>,
+class Background (
+    name: String,
+    desc: String,
+    spells: List<Spell>?,
+    proficiencies : List<Proficiency>,
     val proficiencyChoices : List<ProficiencyChoice>,
     val features : List<Feature>,
-    val languages : List<Language>,
+    languages : List<Language>,
     val languageChoices : List<LanguageChoice>,
-    val equipment : List<ItemInterface>,
-    val equipmentChoices: List<ItemChoice>
-)
+    equipment : List<ItemInterface>,
+    equipmentChoices: List<ItemChoice>
+) : BackgroundEntity(name, desc, spells, proficiencies, languages, equipment, equipmentChoices)

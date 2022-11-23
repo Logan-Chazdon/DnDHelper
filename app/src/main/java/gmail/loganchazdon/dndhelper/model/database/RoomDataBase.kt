@@ -13,10 +13,10 @@ import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 
 @Database(
     entities = [
-        CharacterEntity::class, ClassEntity::class, RaceEntity::class, FeatureEntity::class, FeatureChoiceEntity::class,
+        CharacterEntity::class, ClassEntity::class, RaceEntity::class, FeatureEntity::class, FeatureChoiceEntity::class, SubclassEntity::class,
         SubraceEntity::class, FeatEntity::class, FeatChoiceEntity::class, FeatChoiceChoiceEntity::class,
         RaceFeatureCrossRef::class, CharacterRaceCrossRef::class, FeatureOptionsCrossRef::class, SubraceFeatureCrossRef::class, RaceSubraceCrossRef::class,
-        OptionsFeatureCrossRef::class, ClassFeatureCrossRef::class,
+        OptionsFeatureCrossRef::class, ClassFeatureCrossRef::class, CharacterSubclassCrossRef::class,
         RaceChoiceEntity::class, FeatureChoiceChoiceEntity::class, SubraceChoiceEntity::class
     ],
     version = 58,

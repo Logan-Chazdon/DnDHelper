@@ -119,6 +119,9 @@ abstract class DatabaseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClass(newClass: ClassEntity)
 
+    @Insert
+    abstract fun insertSubclass(subClass: Subclass)
+
     //Race Table
     @Query("SELECT * FROM races")
     @Transaction

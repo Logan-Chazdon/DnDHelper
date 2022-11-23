@@ -1,10 +1,10 @@
 package gmail.loganchazdon.dndhelper.model
 
-data class Subclass (
-    var name: String,
-    var spells: List<Pair<Int, Spell>>?,
-    val spellAreFree: Boolean,
+class Subclass (
+    name: String,
+    spells: List<Pair<Int, Spell>>?,
+    spellAreFree: Boolean,
     var features: List<Feature>,
-    var spellCasting: SpellCasting?
-)
+    spellCasting: SpellCasting?
+) : SubclassEntity(name, spells, spellAreFree, spellCasting)
 

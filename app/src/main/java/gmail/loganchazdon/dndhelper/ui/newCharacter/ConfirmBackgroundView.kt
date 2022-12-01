@@ -185,7 +185,7 @@ fun ConfirmBackgroundView(
                         }
                     }
 
-                    if (background.languageChoices.isNotEmpty()) {
+                    if (background.languageChoices?.isNotEmpty() == true) {
                         background.languageChoices.forEach { choice ->
                             Card(
                                 modifier = Modifier.fillMaxWidth(0.95f),
@@ -266,13 +266,13 @@ fun ConfirmBackgroundView(
                     }
 
                     //TODO update assumptions.
-                    background.features.forEach {
+                    background.features?.forEach {
                         FeatureView(
                             feature = it,
                             level = 1,
                             proficiencies = listOf(),
                             assumedFeatures = listOf(),
-                            character =viewModel.character?.observeAsState()?.value,
+                            character = viewModel.character.observeAsState().value,
                             dropDownStates = viewModel.featureDropDownStates,
                             assumedClass = null,
                             assumedSpells = listOf(),

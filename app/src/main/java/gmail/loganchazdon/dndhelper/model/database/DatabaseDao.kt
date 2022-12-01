@@ -3,21 +3,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.*
-import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatChoiceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.SubraceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 
 private const val fullCharacterSql =
     """WITH subrace AS (SELECT id AS subraceid, name AS subracename, abilityBonuses AS subraceabilityBonuses, abilityBonusChoice AS subraceabilityBonusChoice, 
 startingProficiencies AS subracestartingProficiencies, languages AS subracelanguages, languageChoices AS subracelanguageChoices, size AS subracesize, 
-groundSpeed AS subracegroundSpeed FROM subraces)        
+groundSpeed AS subracegroundSpeed FROM subraces),
+
+background AS (SELECT id AS backgroundid, name AS backgroundname, [desc] AS backgrounddesc, spells AS backgroundspells, proficiencies AS backgroundproficiencies, 
+languages AS backgroundlanguages, equipment AS backgroundequipment, equipmentChoices AS backgroundequipmentChoices
+FROM backgrounds)
+
 SELECT * FROM characters 
 INNER JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id
 INNER JOIN races ON CharacterRaceCrossRef.raceId IS races.raceId
 INNER JOIN CharacterSubraceCrossRef ON CharacterSubraceCrossRef.characterId IS characters.id
 INNER JOIN subrace ON subrace.subraceid IS CharacterSubraceCrossRef.subraceId
+INNER JOIN CharacterBackgroundCrossRef ON CharacterBackgroundCrossRef.characterId IS characters.id
+INNER JOIN background ON background.backgroundid IS CharacterBackgroundCrossRef.backgroundId
 WHERE characters.id = :id"""
 
 @Dao
@@ -68,6 +72,16 @@ abstract class DatabaseDao {
                     )
                 }
                 subrace.featChoices =featChoices
+            }
+        }
+
+        character.background?.let { background ->
+            getBackgroundChoiceData(charId= character.id).let { data ->
+                val features = getBackgroundFeatures(background.id)
+                features.forEach { feature ->
+                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
+                }
+                background.features = features
             }
         }
     }
@@ -303,4 +317,27 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     @Insert
     abstract fun insertFeatChoiceChoiceEntity(featChoiceChoiceEntity: FeatChoiceChoiceEntity)
+
+    //Backgrounds
+    @Insert
+    abstract fun insertBackground(backgroundEntity: BackgroundEntity): Long
+
+    @Query("DELETE FROM backgrounds WHERE id = :id")
+    abstract fun removeBackgroundById(id: Int)
+
+    @Insert
+    abstract fun insertCharacterBackgroundCrossRef(ref: CharacterBackgroundCrossRef)
+
+    @Insert
+    abstract fun insertBackgroundFeatureCrossRef(ref: BackgroundFeatureCrossRef)
+
+    @Query("SELECT * FROM BackgroundChoiceEntity WHERE characterId IS :charId")
+    abstract fun getBackgroundChoiceData(charId: Int) : BackgroundChoiceEntity
+
+    @Query("""SELECT * FROM features 
+JOIN BackgroundFeatureCrossRef ON features.featureId IS BackgroundFeatureCrossRef.featureId
+WHERE backgroundId IS :id
+    """)
+    abstract fun getBackgroundFeatures(id: Int): List<Feature>
+
 }

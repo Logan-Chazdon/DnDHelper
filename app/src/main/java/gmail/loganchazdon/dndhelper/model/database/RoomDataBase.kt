@@ -4,10 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import gmail.loganchazdon.dndhelper.model.*
-import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatChoiceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.SubraceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 
 
@@ -16,9 +13,9 @@ import gmail.loganchazdon.dndhelper.model.junctionEntities.*
         CharacterEntity::class, ClassEntity::class, RaceEntity::class, FeatureEntity::class, FeatureChoiceEntity::class, SubclassEntity::class, BackgroundEntity::class,
         SubraceEntity::class, FeatEntity::class, FeatChoiceEntity::class, FeatChoiceChoiceEntity::class,
         RaceFeatureCrossRef::class, CharacterRaceCrossRef::class, FeatureOptionsCrossRef::class, SubraceFeatureCrossRef::class, RaceSubraceCrossRef::class,
-        SubraceFeatChoiceCrossRef::class, FeatChoiceFeatCrossRef::class,
+        SubraceFeatChoiceCrossRef::class, FeatChoiceFeatCrossRef::class, BackgroundFeatureCrossRef::class,
         OptionsFeatureCrossRef::class, ClassFeatureCrossRef::class, CharacterSubclassCrossRef::class, CharacterBackgroundCrossRef::class, CharacterSubraceCrossRef::class,
-        RaceChoiceEntity::class, FeatureChoiceChoiceEntity::class, SubraceChoiceEntity::class
+        RaceChoiceEntity::class, FeatureChoiceChoiceEntity::class, SubraceChoiceEntity::class, BackgroundChoiceEntity::class
     ],
     version = 58,
     exportSchema = true

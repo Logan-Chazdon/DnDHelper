@@ -205,7 +205,7 @@ class Character (
 
 
         background?.let { background ->
-            background.features.forEach {
+            background.features?.forEach {
                 result.add(totalClassLevels to it)
             }
         }

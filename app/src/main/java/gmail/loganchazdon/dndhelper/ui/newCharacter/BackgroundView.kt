@@ -89,7 +89,7 @@ fun BackgroundView(
                                         maxLines = 2
                                     )
 
-                                    it.features.forEach { feature ->
+                                    it.features?.forEach { feature ->
                                         Text(
                                             text = feature.name,
                                             style = MaterialTheme.typography.h6

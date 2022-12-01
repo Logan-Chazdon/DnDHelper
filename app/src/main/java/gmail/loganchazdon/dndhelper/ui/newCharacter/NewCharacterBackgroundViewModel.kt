@@ -47,14 +47,14 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
         val character = repository.getCharacterById(id)
-        newBackground.languageChoices.forEach {
+        newBackground.languageChoices?.forEach {
             //it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Language>
         }
         newBackground.equipmentChoices.forEach {
             it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
         }
 
-        newBackground.features.forEach { feature ->
+        newBackground.features?.forEach { feature ->
             feature.choices?.forEach {
                 it.chosen =
                     featureDropDownStates[feature.name + feature.grantedAtLevel]?.getSelected()

@@ -155,6 +155,26 @@ class CharacterRelationsTest{
         dao.insertFeatChoiceFeatCrossRef(FeatChoiceFeatCrossRef(featChoiceId = featChoiceId, featId= featId))
         dao.insertFeatChoiceChoiceEntity(FeatChoiceChoiceEntity(characterId = charId, choiceId = featChoiceId, featId = featId))
 
+        val backgroundId = dao.insertBackground(
+            BackgroundEntity(name = "Test", desc = "desc",spells = null, languages = listOf(), equipment = listOf(), equipmentChoices = listOf(), proficiencies = listOf())
+        ).toInt()
+        dao.insertCharacterBackgroundCrossRef(CharacterBackgroundCrossRef(
+            backgroundId = backgroundId,
+            characterId = charId
+        ))
+        val backgroundFeatureId = dao.insertFeature(
+            FeatureEntity(
+                name = "Background feature",
+                description = ""
+            )
+        ).toInt()
+        dao.insertBackgroundFeatureCrossRef(
+            BackgroundFeatureCrossRef(
+                featureId = backgroundFeatureId,
+                backgroundId = backgroundId
+            )
+        )
+
         val character = dao.findCharacterById(charId)
         assert(character.race?.abilityBonusChoice?.chosen != null)
         assert(character.race?.proficiencyChoices?.get(0)?.chosen != null)
@@ -163,6 +183,7 @@ class CharacterRelationsTest{
         assert(character.race!!.traits!![0].allChosen[0].name == "Choice Feature")
         assert(character.race!!.subrace!!.traits!![0].name == "subrace feature")
         assert(character.race!!.subrace!!.featChoices!![0].chosen!![0].name == "Test feat")
+        assert(character.background!!.features!![0].name == "Background feature")
     }
 
     @After

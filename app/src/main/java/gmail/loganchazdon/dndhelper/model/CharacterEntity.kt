@@ -24,7 +24,6 @@ open class CharacterEntity (
     open var id: Int = 0,
     open var statGenerationMethodIndex: Int = 0,
     open var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
-    open var background: Background? = null,
     open var backpack: Backpack = Backpack(),
     open var inspiration: Boolean = false,
     open var positiveDeathSaves: Int = 0,

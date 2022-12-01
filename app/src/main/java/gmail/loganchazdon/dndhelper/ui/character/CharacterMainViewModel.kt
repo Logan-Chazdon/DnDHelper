@@ -68,10 +68,10 @@ class CharacterMainViewModel @Inject constructor(
 
 
     fun longRest() {
-        val newChar = character.value!!.copy()
+        /*val newChar = character.value!!.copy()
         newChar.id = character.value!!.id
         newChar.longRest()
-        repository.insertCharacter(newChar)
+        repository.insertCharacter(newChar)*/
     }
 
     fun shortRest() {
@@ -79,67 +79,67 @@ class CharacterMainViewModel @Inject constructor(
     }
 
     private fun setName(it: String) {
-        val newChar = character.value?.copy(name = it)
+        /*val newChar = character.value?.copy(name = it)
         if (newChar != null) {
             newChar.id = character.value!!.id
             repository.insertCharacter(newChar)
-        }
+        }*/
     }
 
     private fun setPersonalityTraits(it: String) {
-        val newChar = character.value?.copy(personalityTraits = it)
+        /*val newChar = character.value?.copy(personalityTraits = it)
         if (newChar != null) {
             newChar.id = character.value!!.id
             repository.insertCharacter(newChar)
-        }
+        }*/
     }
 
     private fun setIdeals(it: String) {
-        val newChar = character.value?.copy(ideals = it)
+      /*  val newChar = character.value?.copy(ideals = it)
         if (newChar != null) {
             newChar.id = character.value!!.id
             repository.insertCharacter(newChar)
-        }
+        }*/
     }
 
     private fun setBonds(it: String) {
-        val newChar = character.value?.copy(bonds = it)
+        /*val newChar = character.value?.copy(bonds = it)
         if (newChar != null) {
             newChar.id = character.value!!.id
             repository.insertCharacter(newChar)
-        }
+        }*/
     }
 
     private fun setFlaws(it: String) {
-        val newChar = character.value?.copy(flaws = it)
+        /*val newChar = character.value?.copy(flaws = it)
         if (newChar != null) {
             newChar.id = character.value!!.id
             repository.insertCharacter(newChar)
-        }
+        }*/
     }
 
     private fun setNotes(it: String) {
-        val newChar = character.value?.copy(notes = it)
+        /*val newChar = character.value?.copy(notes = it)
         if (newChar != null) {
             newChar.id = character.value!!.id
             repository.insertCharacter(newChar)
-        }
+        }*/
     }
 
     fun infuse(targetItem: ItemInterface?, infusion: Infusion) {
-        val newChar = activateInfusion(infusion, character.value!!.copy())
+        /*val newChar = activateInfusion(infusion, character.value!!.copy())
         if(targetItem != null) {
             newChar?.backpack?.applyInfusion(targetItem, infusion)
         }
         newChar?.id = character.value!!.id
-        newChar?.let { character -> repository.insertCharacter(character) }
+        newChar?.let { character -> repository.insertCharacter(character) }*/
     }
 
     fun disableInfusion(infusion: Infusion) {
-        val newChar = deactivateInfusion(infusion, character.value!!.copy())
+        /*val newChar = deactivateInfusion(infusion, character.value!!.copy())
         newChar?.backpack?.removeInfusion(infusion)
         newChar?.id = character.value!!.id
-        newChar?.let { character -> repository.insertCharacter(character) }
+        newChar?.let { character -> repository.insertCharacter(character) }*/
     }
 
     //This function just returns the character passed in with the target infusion set to active or null.

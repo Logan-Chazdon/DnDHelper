@@ -183,16 +183,16 @@ class Converters {
     }
 
     @TypeConverter
-    fun storedStringToProficiency(data: String?): List<Proficiency>? {
-        if (data == null) {
-            return null
+    fun storedStringToProficiency(data: String?): List<Proficiency> {
+        if (data == null || data == "null") {
+            return emptyList()
         }
-        val listType: Type = object : TypeToken<List<Proficiency>?>() {}.type
+        val listType: Type = object : TypeToken<List<Proficiency>>() {}.type
         return gson.fromJson(data, listType)
     }
 
     @TypeConverter
-    fun proficiencyToStoredString(myObjects: List<Proficiency>?): String? {
+    fun proficiencyToStoredString(myObjects: List<Proficiency>?): String {
         return gson.toJson(myObjects)
     }
 
@@ -540,6 +540,16 @@ class Converters {
 
     @TypeConverter
     fun featChoiceListToStoredString(myObjects: MutableList<FeatChoice>): String? {
+        return gson.toJson(myObjects)
+    }
+
+    @TypeConverter
+    fun storedStringToListPairIntSpell(data: String?): List<Pair<Int, Spell>>? {
+        return gson.fromJson(data, object : TypeToken<List<Pair<Int, Spell>>?>() {}.type)
+    }
+
+    @TypeConverter
+    fun listPairIntSpellToStoredString(myObjects: List<Pair<Int, Spell>>?): String? {
         return gson.toJson(myObjects)
     }
 }

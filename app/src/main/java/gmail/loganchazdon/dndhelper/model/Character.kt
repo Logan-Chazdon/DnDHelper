@@ -6,29 +6,28 @@ import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlin.math.floor
 
 
-data class Character (
-    override var name: String = "",
-    override var personalityTraits: String = "",
-    override var ideals: String = "",
-    override var bonds: String = "",
-    override var flaws: String = "",
-    override var notes: String = "",
-    override var currentHp: Int = 0,
-    override var tempHp: Int = 0,
-    override var conditions: MutableList<String> = mutableListOf<String>(),
-    override var resistances: MutableList<String> = mutableListOf<String>(),
-    override var classes: MutableMap<String, Class> = mutableMapOf(),
-    override var id: Int = 0,
-    override var statGenerationMethodIndex: Int = 0,
-    override var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
-    override var background: Background? = null,
-    override var backpack: Backpack = Backpack(),
-    override var inspiration: Boolean = false,
-    override var positiveDeathSaves: Int = 0,
-    override var negativeDeathSaves: Int = 0,
-    override var spellSlots: List<Resource> = listOf(),
-    override var addedLanguages: MutableList<Language> = mutableListOf<Language>(),
-    override var addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
+class Character (
+    name: String = "",
+    personalityTraits: String = "",
+    ideals: String = "",
+    bonds: String = "",
+    flaws: String = "",
+    notes: String = "",
+    currentHp: Int = 0,
+    tempHp: Int = 0,
+    conditions: MutableList<String> = mutableListOf<String>(),
+    resistances: MutableList<String> = mutableListOf<String>(),
+    classes: MutableMap<String, Class> = mutableMapOf(),
+    id: Int = 0,
+    statGenerationMethodIndex: Int = 0,
+    baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
+    backpack: Backpack = Backpack(),
+    inspiration: Boolean = false,
+    positiveDeathSaves: Int = 0,
+    negativeDeathSaves: Int = 0,
+    spellSlots: List<Resource> = listOf(),
+    addedLanguages: MutableList<Language> = mutableListOf<Language>(),
+    addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
 ) : CharacterEntity(
     name,
     personalityTraits,
@@ -44,7 +43,6 @@ data class Character (
     id,
     statGenerationMethodIndex,
     baseStats,
-    background,
     backpack,
     inspiration,
     positiveDeathSaves,
@@ -53,14 +51,8 @@ data class Character (
     addedLanguages,
     addedProficiencies
 ){
-    /*@Relation(
-        entity = Race::class,
-        associateBy = Junction(
-            CharacterRaceCrossRef::class,
-        ),
-        parentColumn = "id",
-        entityColumn = "raceId"
-    )*/
+    @Embedded(prefix = "background")
+    var background: Background? = null
 
     @Embedded
     var race: Race? = null

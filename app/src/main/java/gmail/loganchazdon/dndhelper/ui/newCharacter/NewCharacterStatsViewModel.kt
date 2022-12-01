@@ -212,13 +212,13 @@ public class NewCharacterStatsViewModel @Inject constructor(
     }
 
     suspend fun longRest() {
-        updateStats()
+        /*updateStats()
         val tempChar = character?.copy()
         tempChar?.id = character?.id!!
         tempChar?.longRest()
         if (tempChar != null) {
             repository.insertCharacter(tempChar)
-        }
+        }*/
     }
 }
 

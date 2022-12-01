@@ -82,7 +82,7 @@ public class ItemDetailsViewModel @Inject constructor(
 
 
     private fun updateItem() {
-        val tempChar = character.value?.copy()
+        val tempChar = character.value
         item.value?.let { tempChar?.backpack?.replaceItemAt(it, itemIndex) }
         tempChar?.let { repository.insertCharacter(it) }
     }

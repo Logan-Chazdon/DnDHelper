@@ -359,13 +359,13 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun removeClass(name: String) {
-        val newClasses = character?.value?.classes?.run {
+        /*val newClasses = character?.value?.classes?.run {
             this.remove(name)
             this
         }
         val newChar = character?.value?.copy(classes = newClasses!!)
         newChar?.id = character?.value?.id!!
-        repository.insertCharacter(newChar!!)
+        repository.insertCharacter(newChar!!)*/
     }
 
     fun calculateAssumedFeatures() : List<Feature> {

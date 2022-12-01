@@ -335,7 +335,7 @@ fun ConfirmRaceView(
 
                     RaceFeaturesView(
                         character = viewModel.character.observeAsState().value,
-                        features = subraces[viewModel.subraceIndex.value].traits,
+                        features = subraces[viewModel.subraceIndex.value].traits ?: listOf(),
                         dropDownStates = viewModel.subraceFeaturesDropdownStates,
                         proficiencies = viewModel.proficiencies,
                         assumedSpells = assumedSpells.value,

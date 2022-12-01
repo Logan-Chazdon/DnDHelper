@@ -19,30 +19,30 @@ public class CombatViewModel @Inject constructor(
 ): AndroidViewModel(application) {
 
     fun addTemp(temp: String) {
-        val tempChar = character!!.value!!.copy(tempHp = temp.toInt())
+        /*val tempChar = character!!.value!!.copy(tempHp = temp.toInt())
         tempChar.id = character!!.value!!.id
-        repository.insertCharacter(tempChar)
+        repository.insertCharacter(tempChar)*/
     }
 
     fun heal(temp: String) {
-        var newHp = character!!.value!!.currentHp + temp.toInt()
+       /* var newHp = character!!.value!!.currentHp + temp.toInt()
         if(newHp > character!!.value!!.maxHp) {
             newHp = character!!.value!!.maxHp
         }
 
         val tempChar = character!!.value!!.copy(currentHp = newHp)
         tempChar.id = character!!.value!!.id
-        repository.insertCharacter(tempChar)
+        repository.insertCharacter(tempChar)*/
     }
 
     fun setHp(it: String) {
-        val tempChar = character!!.value!!.copy(currentHp = it.toInt())
+       /* val tempChar = character!!.value!!.copy(currentHp = it.toInt())
         tempChar.id = character!!.value!!.id
-        repository.insertCharacter(tempChar)
+        repository.insertCharacter(tempChar)*/
     }
 
     fun damage(temp: String) {
-        var currentHp = character!!.value!!.currentHp
+        /*var currentHp = character!!.value!!.currentHp
         var tempHp = 0
         if(character!!.value!!.tempHp < temp.toInt()) {
             val amountRemoved = character!!.value!!.tempHp
@@ -55,25 +55,25 @@ public class CombatViewModel @Inject constructor(
         val tempChar = character!!.value!!.copy(currentHp = currentHp, tempHp = tempHp)
         tempChar.id = character!!.value!!.id
 
-        repository.insertCharacter(tempChar)
+        repository.insertCharacter(tempChar)*/
     }
 
     fun updateDeathSaveSuccesses(it: Boolean) {
-        val tempChar : Character = if(it){
+        /*val tempChar : Character = if(it){
             character!!.value!!.copy(positiveDeathSaves = character!!.value!!.positiveDeathSaves + 1)
         } else {
             character!!.value!!.copy(positiveDeathSaves = character!!.value!!.positiveDeathSaves - 1)
         }
-        repository.insertCharacter(tempChar)
+        repository.insertCharacter(tempChar)*/
     }
 
     fun updateDeathSaveFailures(it: Boolean) {
-        val tempChar : Character = if(it){
+        /*val tempChar : Character = if(it){
             character!!.value!!.copy(negativeDeathSaves = character!!.value!!.negativeDeathSaves + 1)
         } else {
             character!!.value!!.copy(negativeDeathSaves = character!!.value!!.negativeDeathSaves - 1)
         }
-        repository.insertCharacter(tempChar)
+        repository.insertCharacter(tempChar)*/
     }
 
     fun getCastingOptions(spell: Spell): List<Pair<Int, String>> {
@@ -102,7 +102,7 @@ public class CombatViewModel @Inject constructor(
     }
 
     private fun getCharacterMinusSlot(slot: Int): Character {
-        var result : Character? = null
+       /* var result : Character? = null
         val newSlots = character!!.value!!.spellSlots
         if(newSlots.getOrNull(slot - 1)?.currentAmount ?: 0 != 0) {
             newSlots[slot - 1].currentAmount -= 1
@@ -116,11 +116,12 @@ public class CombatViewModel @Inject constructor(
                 }
             }
         }
-        return result!!
+        return result!!*/
+        return Character()
     }
 
     private fun getCharacterPlusSlot(slot: Int): Character {
-        var result : Character? = null
+        /*var result : Character? = null
         val newSlots = character!!.value!!.spellSlots
         if(
             newSlots.getOrNull(slot - 1)?.currentAmount ?: 0
@@ -140,7 +141,8 @@ public class CombatViewModel @Inject constructor(
                 }
             }
         }
-        return result!!
+        return result!!*/
+        return Character()
     }
 
     fun getSpellSlotsAndCantrips(): MutableList<Resource> {

@@ -6,13 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.test.core.app.ApplicationProvider
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
 import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
-import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -132,12 +131,38 @@ class CharacterRelationsTest{
             )
         )
 
+        val subraceId = dao.insertSubrace(SubraceEntity(
+            name = "Subrace",
+            abilityBonusChoice = null,
+            abilityBonuses = null,
+            startingProficiencies = null,
+            languages = listOf(),
+            languageChoices = listOf(),
+            size = "Medium",
+            groundSpeed = 30
+        )).toInt()
+
+        val subraceFeatureId = dao.insertFeature(Feature(name = "subrace feature", description = "test desc")).toInt()
+
+        dao.insertCharacterSubRaceCrossRef(CharacterSubraceCrossRef(subraceId = subraceId, characterId = charId))
+        dao.insertSubraceFeatureCrossRef(
+            SubraceFeatureCrossRef(subraceId, subraceFeatureId)
+        )
+
+        val featChoiceId = dao.insertFeatChoice(FeatChoiceEntity(name = "", choose = 1)).toInt()
+        val featId = dao.insertFeat(FeatEntity(name = "Test feat", desc = "")).toInt()
+        dao.insertSubraceFeatChoiceCrossRef(SubraceFeatChoiceCrossRef(subraceId = subraceId, featChoiceId))
+        dao.insertFeatChoiceFeatCrossRef(FeatChoiceFeatCrossRef(featChoiceId = featChoiceId, featId= featId))
+        dao.insertFeatChoiceChoiceEntity(FeatChoiceChoiceEntity(characterId = charId, choiceId = featChoiceId, featId = featId))
+
         val character = dao.findCharacterById(charId)
         assert(character.race?.abilityBonusChoice?.chosen != null)
         assert(character.race?.proficiencyChoices?.get(0)?.chosen != null)
         assert(character.race?.languageChoices?.get(0)?.chosen != null)
         assert(character.race!!.traits!![0].allChosen.size == 1)
         assert(character.race!!.traits!![0].allChosen[0].name == "Choice Feature")
+        assert(character.race!!.subrace!!.traits!![0].name == "subrace feature")
+        assert(character.race!!.subrace!!.featChoices!![0].chosen!![0].name == "Test feat")
     }
 
     @After

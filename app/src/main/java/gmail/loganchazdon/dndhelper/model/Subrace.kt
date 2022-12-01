@@ -9,7 +9,7 @@ class Subrace(
     startingProficiencies: List<Proficiency>?,
     languages : List<Language>,
     languageChoices: List<LanguageChoice>,
-    var traits: List<Feature>,
+    var traits: List<Feature>? = emptyList(),
     size: String?,
     groundSpeed: Int?,
     var featChoices: List<FeatChoice>? = null

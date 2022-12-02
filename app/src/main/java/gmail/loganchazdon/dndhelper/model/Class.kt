@@ -1,15 +1,18 @@
 package gmail.loganchazdon.dndhelper.model
 
+import androidx.room.Embedded
+
 
 class Class (
     id: Int = 0,
-    isBaseClass: Boolean = false,
-    level: Int = 1,
-    subclass: Subclass? = null,
-    tookGold: Boolean? = null,
-    totalNumOnGoldDie : Int? = null,
-    featsGranted: MutableList<Feat> = mutableListOf(),
-    abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf(),
+    var isBaseClass: Boolean = false,
+    var level: Int = 1,
+    @Embedded
+    var subclass: Subclass? = null,
+    var tookGold: Boolean? = null,
+    var totalNumOnGoldDie : Int? = null,
+    var featsGranted: MutableList<Feat>? = mutableListOf(),
+    var abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf(),
     name: String,
     hitDie: Int = 8,
     subClasses: List<Subclass> = emptyList(),
@@ -24,7 +27,7 @@ class Class (
     startingGoldD4s: Int,
     startingGoldMultiplier : Int = 10
 ) : ClassEntity(
-    name, hitDie, subClasses, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, id, isBaseClass, level, subclass, tookGold, totalNumOnGoldDie, featsGranted, abilityImprovementsGranted
+    name, hitDie, subClasses, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, id
 ) {
 
     fun longRest() {

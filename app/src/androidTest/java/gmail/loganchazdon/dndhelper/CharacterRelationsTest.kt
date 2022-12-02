@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.test.core.app.ApplicationProvider
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.choiceEntities.ClassChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
@@ -175,6 +176,60 @@ class CharacterRelationsTest{
             )
         )
 
+        val classId = dao.insertClass(
+            ClassEntity(
+                name = "Test class",
+                hitDie = 8,
+                startingGoldD4s = 1,
+                subclassLevel = 1
+            )
+        ).toInt()
+
+        dao.insertCharacterClassCrossRef(
+            CharacterClassCrossRef(characterId = charId, classId = classId)
+        )
+
+        val classFeatureId = dao.insertFeature(
+            FeatureEntity(
+                name = "class feature",
+                description = ""
+            )
+        ).toInt()
+
+        dao.insertClassFeatureCrossRef(
+            ClassFeatureCrossRef(
+                id = classId,
+                featureId = classFeatureId
+            )
+        )
+
+        dao.insertClassChoiceEntity(
+            ClassChoiceEntity(
+                characterId = charId,
+                classId = classId,
+                isBaseClass = true,
+                level = 1,
+                totalNumOnGoldDie = 10,
+                abilityImprovementsGranted = mutableListOf(),
+                tookGold = true
+            )
+        )
+
+        val subClassId = dao.insertSubclass(SubclassEntity(
+            name = "Subclass",
+            spells = emptyList(),
+            spellAreFree = false,
+            spellCasting = null
+        )).toInt()
+
+        dao.insertCharacterSubclassCrossRef(
+            CharacterSubclassCrossRef(
+                characterId = charId,
+                subClassId = subClassId,
+                classId = classId
+            )
+        )
+
         val character = dao.findCharacterById(charId)
         assert(character.race?.abilityBonusChoice?.chosen != null)
         assert(character.race?.proficiencyChoices?.get(0)?.chosen != null)
@@ -184,6 +239,7 @@ class CharacterRelationsTest{
         assert(character.race!!.subrace!!.traits!![0].name == "subrace feature")
         assert(character.race!!.subrace!!.featChoices!![0].chosen!![0].name == "Test feat")
         assert(character.background!!.features!![0].name == "Background feature")
+        assert(character.classes["Test class"]!!.subclass!!.name == "Subclass")
     }
 
     @After

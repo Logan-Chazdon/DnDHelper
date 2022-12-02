@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "a6c0e82243740b8505d77ba8a8fb565f",
+    "identityHash": "47a9e29c41cf8ec17bec5864da73336b",
     "entities": [
       {
         "tableName": "characters",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `personalityTraits` TEXT NOT NULL, `ideals` TEXT NOT NULL, `bonds` TEXT NOT NULL, `flaws` TEXT NOT NULL, `notes` TEXT NOT NULL, `currentHp` INTEGER NOT NULL, `tempHp` INTEGER NOT NULL, `conditions` TEXT NOT NULL, `resistances` TEXT NOT NULL, `classes` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `statGenerationMethodIndex` INTEGER NOT NULL, `baseStats` TEXT NOT NULL, `backpack` TEXT NOT NULL, `inspiration` INTEGER NOT NULL, `positiveDeathSaves` INTEGER NOT NULL, `negativeDeathSaves` INTEGER NOT NULL, `spellSlots` TEXT NOT NULL, `addedLanguages` TEXT NOT NULL, `addedProficiencies` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `personalityTraits` TEXT NOT NULL, `ideals` TEXT NOT NULL, `bonds` TEXT NOT NULL, `flaws` TEXT NOT NULL, `notes` TEXT NOT NULL, `currentHp` INTEGER NOT NULL, `tempHp` INTEGER NOT NULL, `conditions` TEXT NOT NULL, `resistances` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `statGenerationMethodIndex` INTEGER NOT NULL, `baseStats` TEXT NOT NULL, `backpack` TEXT NOT NULL, `inspiration` INTEGER NOT NULL, `positiveDeathSaves` INTEGER NOT NULL, `negativeDeathSaves` INTEGER NOT NULL, `spellSlots` TEXT NOT NULL, `addedLanguages` TEXT NOT NULL, `addedProficiencies` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -65,12 +65,6 @@
           {
             "fieldPath": "resistances",
             "columnName": "resistances",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "classes",
-            "columnName": "classes",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -146,7 +140,7 @@
       },
       {
         "tableName": "classes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `hitDie` INTEGER NOT NULL, `subClasses` TEXT NOT NULL, `subclassLevel` INTEGER NOT NULL, `proficiencyChoices` TEXT NOT NULL, `proficiencies` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `equipment` TEXT NOT NULL, `spellCasting` TEXT, `pactMagic` TEXT, `startingGoldD4s` INTEGER NOT NULL, `startingGoldMultiplier` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `isBaseClass` INTEGER NOT NULL, `level` INTEGER NOT NULL, `subclass` TEXT, `tookGold` INTEGER, `totalNumOnGoldDie` INTEGER, `featsGranted` TEXT NOT NULL, `abilityImprovementsGranted` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `hitDie` INTEGER NOT NULL, `subClasses` TEXT NOT NULL, `subclassLevel` INTEGER NOT NULL, `proficiencyChoices` TEXT NOT NULL, `proficiencies` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `equipment` TEXT NOT NULL, `spellCasting` TEXT, `pactMagic` TEXT, `startingGoldD4s` INTEGER NOT NULL, `startingGoldMultiplier` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -224,48 +218,6 @@
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isBaseClass",
-            "columnName": "isBaseClass",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "level",
-            "columnName": "level",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "subclass",
-            "columnName": "subclass",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "tookGold",
-            "columnName": "tookGold",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "totalNumOnGoldDie",
-            "columnName": "totalNumOnGoldDie",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "featsGranted",
-            "columnName": "featsGranted",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "abilityImprovementsGranted",
-            "columnName": "abilityImprovementsGranted",
-            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -578,11 +530,11 @@
       },
       {
         "tableName": "subclasses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `spells` TEXT, `spellAreFree` INTEGER NOT NULL, `spellCasting` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subclass_name` TEXT NOT NULL, `spells` TEXT, `spellAreFree` INTEGER NOT NULL, `subclass_spell_casting` TEXT, `subclassId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
-            "columnName": "name",
+            "columnName": "subclass_name",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -600,20 +552,20 @@
           },
           {
             "fieldPath": "spellCasting",
-            "columnName": "spellCasting",
+            "columnName": "subclass_spell_casting",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "subclassId",
+            "columnName": "subclassId",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "subclassId"
           ],
           "autoGenerate": true
         },
@@ -867,6 +819,63 @@
         "foreignKeys": []
       },
       {
+        "tableName": "ClassChoiceEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `level` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `totalNumOnGoldDie` INTEGER, `abilityImprovementsGranted` TEXT NOT NULL, `tookGold` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `classId`))",
+        "fields": [
+          {
+            "fieldPath": "characterId",
+            "columnName": "characterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "classId",
+            "columnName": "classId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBaseClass",
+            "columnName": "isBaseClass",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalNumOnGoldDie",
+            "columnName": "totalNumOnGoldDie",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "abilityImprovementsGranted",
+            "columnName": "abilityImprovementsGranted",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tookGold",
+            "columnName": "tookGold",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "characterId",
+            "classId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "RaceFeatureCrossRef",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`featureId` INTEGER NOT NULL, `raceId` INTEGER NOT NULL, PRIMARY KEY(`raceId`, `featureId`))",
         "fields": [
@@ -1083,6 +1092,33 @@
         "foreignKeys": []
       },
       {
+        "tableName": "CharacterClassCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `classId`))",
+        "fields": [
+          {
+            "fieldPath": "characterId",
+            "columnName": "characterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "classId",
+            "columnName": "classId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "characterId",
+            "classId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "OptionsFeatureCrossRef",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`featureId` INTEGER NOT NULL, `choiceId` INTEGER NOT NULL, PRIMARY KEY(`featureId`, `choiceId`))",
         "fields": [
@@ -1138,7 +1174,7 @@
       },
       {
         "tableName": "CharacterSubclassCrossRef",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subClassId` INTEGER NOT NULL, `characterId` INTEGER NOT NULL, PRIMARY KEY(`subClassId`, `characterId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subClassId` INTEGER NOT NULL, `characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, PRIMARY KEY(`subClassId`, `characterId`, `classId`))",
         "fields": [
           {
             "fieldPath": "subClassId",
@@ -1151,12 +1187,19 @@
             "columnName": "characterId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "classId",
+            "columnName": "classId",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
             "subClassId",
-            "characterId"
+            "characterId",
+            "classId"
           ],
           "autoGenerate": false
         },
@@ -1211,6 +1254,40 @@
           "columnNames": [
             "subraceId",
             "characterId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ClassFeatCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `featId` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `classId`, `featId`))",
+        "fields": [
+          {
+            "fieldPath": "characterId",
+            "columnName": "characterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "classId",
+            "columnName": "classId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "featId",
+            "columnName": "featId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "characterId",
+            "classId",
+            "featId"
           ],
           "autoGenerate": false
         },
@@ -1359,7 +1436,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a6c0e82243740b8505d77ba8a8fb565f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '47a9e29c41cf8ec17bec5864da73336b')"
     ]
   }
 }

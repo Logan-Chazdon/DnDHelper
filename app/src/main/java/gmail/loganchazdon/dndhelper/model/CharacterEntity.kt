@@ -19,7 +19,6 @@ open class CharacterEntity (
     open var tempHp: Int = 0,
     open var conditions: MutableList<String> = mutableListOf<String>(),
     open var resistances: MutableList<String> = mutableListOf<String>(),
-    open var classes: MutableMap<String, Class> = mutableMapOf(),
     @PrimaryKey(autoGenerate = true)
     open var id: Int = 0,
     open var statGenerationMethodIndex: Int = 0,

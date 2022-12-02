@@ -2,6 +2,7 @@ package gmail.loganchazdon.dndhelper.model
 
 
 import androidx.room.Embedded
+import androidx.room.Ignore
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlin.math.floor
 
@@ -17,7 +18,6 @@ class Character (
     tempHp: Int = 0,
     conditions: MutableList<String> = mutableListOf<String>(),
     resistances: MutableList<String> = mutableListOf<String>(),
-    classes: MutableMap<String, Class> = mutableMapOf(),
     id: Int = 0,
     statGenerationMethodIndex: Int = 0,
     baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
@@ -39,7 +39,6 @@ class Character (
     tempHp,
     conditions,
     resistances,
-    classes,
     id,
     statGenerationMethodIndex,
     baseStats,
@@ -56,6 +55,9 @@ class Character (
 
     @Embedded
     var race: Race? = null
+
+    @Ignore
+    var classes: MutableMap<String, Class> = mutableMapOf()
 
     val hasSpells: Boolean
     get() {
@@ -83,7 +85,7 @@ class Character (
 
         //Classes
         classes.forEach { (_, clazz) ->
-            result.addAll(clazz.featsGranted)
+            result.addAll(clazz.featsGranted ?: emptyList())
         }
         return result
     }

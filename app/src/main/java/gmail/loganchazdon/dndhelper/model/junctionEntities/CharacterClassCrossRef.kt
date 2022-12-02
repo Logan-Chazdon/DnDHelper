@@ -2,9 +2,8 @@ package gmail.loganchazdon.dndhelper.model.junctionEntities
 
 import androidx.room.Entity
 
-@Entity(primaryKeys = ["subClassId", "characterId", "classId"])
-data class CharacterSubclassCrossRef(
-    val subClassId: Int,
+@Entity(primaryKeys = ["characterId", "classId"])
+data class CharacterClassCrossRef(
     val characterId: Int,
     val classId: Int
 )

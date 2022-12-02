@@ -22,11 +22,4 @@ open class ClassEntity(
     open val startingGoldMultiplier : Int = 10,
     @PrimaryKey(autoGenerate = true)
     open var id: Int = 0,
-    open var isBaseClass: Boolean = false,
-    open var level: Int = 1,
-    open var subclass: Subclass? = null,
-    open var tookGold: Boolean? = null,
-    open var totalNumOnGoldDie : Int? = null,
-    open var featsGranted: MutableList<Feat> = mutableListOf(),
-    open var abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf()
 )

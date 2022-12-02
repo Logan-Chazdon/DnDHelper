@@ -84,7 +84,53 @@ abstract class DatabaseDao {
                 background.features = features
             }
         }
+
+        val classes = getCharactersClasses(character.id)
+        classes.forEach { (_, clazz) ->
+            val data = getClassChoiceData(characterId = character.id, classId = clazz.id)
+            clazz.level = data.level
+            clazz.abilityImprovementsGranted = data.abilityImprovementsGranted
+            clazz.totalNumOnGoldDie = data.totalNumOnGoldDie
+            clazz.tookGold =  data.tookGold
+            clazz.isBaseClass = data.isBaseClass
+
+            val features = getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
+            features.forEach { feature ->
+                feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
+            }
+            clazz.levelPath = features
+            clazz.featsGranted = getClassFeats(classId = clazz.id, characterId = character.id)
+            clazz.featsGranted?.forEach {
+                it.features?.forEach { feature ->
+                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
+                }
+            }
+
+            clazz.subclass?.let {
+
+            }
+        }
+
+        character.classes = classes
     }
+
+
+    @Query("""SELECT * FROM feats
+JOIN ClassFeatCrossRef ON ClassFeatCrossRef.featId IS feats.id
+WHERE ClassFeatCrossRef.classId IS :classId AND ClassFeatCrossRef.characterId IS :characterId
+    """)
+    abstract fun getClassFeats(classId: Int, characterId: Int): MutableList<Feat>
+
+    @Query("""SELECT * FROM features
+JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
+WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLevel
+    """)
+    abstract fun getClassFeatures(classId: Int, maxLevel: Int = 20): MutableList<Feature>
+
+    @Query("""SELECT * FROM ClassChoiceEntity
+WHERE characterId IS :characterId AND classId IS :classId
+    """)
+    abstract fun getClassChoiceData(characterId: Int, classId: Int): ClassChoiceEntity
 
     @Query("""SELECT * FROM feats
 JOIN FeatChoiceChoiceEntity ON FeatChoiceChoiceEntity.featId IS feats.id
@@ -176,13 +222,45 @@ WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
 
     //Class Table
     @Query("SELECT * FROM classes")
-    abstract fun getAllClasses(): List<Class>
+    abstract fun getAllClasses(): List<ClassEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertClass(newClass: ClassEntity)
+    abstract fun insertClass(newClass: ClassEntity) : Long
 
     @Insert
-    abstract fun insertSubclass(subClass: SubclassEntity)
+    abstract fun insertSubclass(subClass: SubclassEntity) : Long
+
+    @Insert
+    abstract fun insertCharacterClassCrossRef(ref: CharacterClassCrossRef)
+
+    @Delete
+    abstract fun removeCharacterClassCrossRef(ref: CharacterClassCrossRef)
+
+    @Insert
+    abstract fun insertClassChoiceEntity(entity: ClassChoiceEntity)
+
+    @Delete
+    abstract fun removeClassChoiceEntity(entity: ClassChoiceEntity)
+
+    @Insert
+    abstract fun insertClassFeatureCrossRef(ref: ClassFeatureCrossRef)
+
+    @Delete
+    abstract fun removeClassFeatureCrossRef(ref: ClassFeatureCrossRef)
+
+
+    @MapInfo(keyColumn = "name")
+    @Query("""SELECT * FROM classes
+JOIN CharacterClassCrossRef ON CharacterClassCrossRef.classId IS classes.id
+JOIN ClassChoiceEntity ON ClassChoiceEntity.classId IS CharacterClassCrossRef.classId AND ClassChoiceEntity.characterId IS CharacterClassCrossRef.characterId
+JOIN CharacterSubclassCrossRef ON CharacterSubclassCrossRef.characterId IS CharacterClassCrossRef.characterId AND CharacterSubclassCrossRef.classId IS classes.id
+JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subClassId
+WHERE CharacterClassCrossRef.characterId IS :characterId
+    """)
+    protected abstract fun getCharactersClasses(characterId: Int) : MutableMap<String, Class>
+
+    @Insert
+    abstract fun insertCharacterSubclassCrossRef(ref: CharacterSubclassCrossRef)
 
     //Race Table
     @Query("SELECT * FROM races")

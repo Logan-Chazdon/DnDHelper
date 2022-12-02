@@ -579,7 +579,7 @@ fun ConfirmClassView(
                         }
 
 
-                        subclass.features.forEach {
+                        subclass.features?.forEach {
                             if (viewModel.levels.value.text.isNotBlank()) {
                                 if (it.grantedAtLevel <= viewModel.levels.value.text.toInt()) {
                                     FeatureView(

@@ -144,7 +144,7 @@ public class NewCharacterClassViewModel @Inject constructor(
 
         for ((i, item) in isFeat.withIndex()) {
             if (item) {
-                newClass.featsGranted.addAll(
+                newClass.featsGranted?.addAll(
                     getFeatsAt(
                         i,
                         level,

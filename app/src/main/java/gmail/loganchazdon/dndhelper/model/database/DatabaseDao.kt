@@ -82,6 +82,8 @@ abstract class DatabaseDao {
                     feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
                 }
                 background.features = features
+
+                background.spells = getBackgroundSpells(backgroundId = background.id)
             }
         }
 
@@ -106,13 +108,23 @@ abstract class DatabaseDao {
                 }
             }
 
-            clazz.subclass?.let {
-
+            clazz.subclass?.let { subclass ->
+                val subClassFeatures = getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
+                subClassFeatures.forEach { feature ->
+                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
+                }
+                subclass.features = subClassFeatures
             }
         }
 
         character.classes = classes
     }
+
+    @Query("""SELECT * FROM spells 
+JOIN BackgroundSpellCrossRef ON BackgroundSpellCrossRef.spellId IS spells.id
+WHERE backgroundId IS :backgroundId
+    """)
+    abstract fun getBackgroundSpells(backgroundId: Int): List<Spell>?
 
 
     @Query("""SELECT * FROM feats
@@ -418,4 +430,34 @@ WHERE backgroundId IS :id
     """)
     abstract fun getBackgroundFeatures(id: Int): List<Feature>
 
+    //Spells
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertSpell(spell: Spell) : Long
+
+    @Query("DELETE FROM spells WHERE id IS :id")
+    abstract fun removeSpellById(id: Int)
+
+    @Insert
+    abstract fun insertFeatureSpellCrossRef(ref: FeatureSpellCrossRef)
+
+    @Delete
+    abstract fun removeFeatureSpellCrossRef(ref: FeatureSpellCrossRef)
+
+    @Insert
+    abstract fun insertBackgroundSpellCrossRef(ref: BackgroundSpellCrossRef)
+
+    @Delete
+    abstract fun removeBackgroundSpellCrossRef(ref: BackgroundSpellCrossRef)
+
+    @Insert
+    abstract fun insertClassSpellCrossRef(ref: ClassSpellCrossRef)
+
+    @Delete
+    abstract fun removeClassSpellCrossRef(ref: ClassSpellCrossRef)
+
+    @Insert
+    abstract fun insertSubclassSpellCrossRef(ref: SubclassSpellCrossRef)
+
+    @Delete
+    abstract fun removeSubclassSpellCrossRef(ref: SubclassSpellCrossRef)
 }

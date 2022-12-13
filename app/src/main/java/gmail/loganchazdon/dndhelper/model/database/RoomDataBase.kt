@@ -16,7 +16,7 @@ import gmail.loganchazdon.dndhelper.model.junctionEntities.*
         SubraceFeatChoiceCrossRef::class, FeatChoiceFeatCrossRef::class, BackgroundFeatureCrossRef::class, CharacterClassCrossRef::class,
         OptionsFeatureCrossRef::class, ClassFeatureCrossRef::class, CharacterSubclassCrossRef::class, CharacterBackgroundCrossRef::class, CharacterSubraceCrossRef::class,
         ClassFeatCrossRef::class, FeatureSpellCrossRef::class, BackgroundSpellCrossRef::class, SubclassSpellCrossRef::class, ClassSpellCrossRef::class,
-        CharacterClassSpellCrossRef::class,
+        CharacterClassSpellCrossRef::class, SubclassSpellCastingSpellCrossRef::class,
         RaceChoiceEntity::class, FeatureChoiceChoiceEntity::class, SubraceChoiceEntity::class, BackgroundChoiceEntity::class
     ],
     version = 58,

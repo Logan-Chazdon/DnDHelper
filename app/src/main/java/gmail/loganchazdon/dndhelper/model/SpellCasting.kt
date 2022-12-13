@@ -10,8 +10,9 @@ data class SpellCasting (
     val preparationModMultiplier : Double?,
     val spellsKnown: List<Int>?,
     val cantripsKnown: List<Int>?,
-    val prepared: MutableList<Spell> = mutableListOf(),
-    val known: MutableList<Spell> = mutableListOf(),
+    //Boolean representing the prepared state of the spell,
+    //to the spell.
+    var known: List<Pair<Spell, Boolean?>> = listOf(),
     val spellSlotsByLevel: List<List<Resource>>? = null,
     val learnFrom: List<String>? = null, //Only used when the list of spells to present is not implied.
     val schoolRestriction : SchoolRestriction? = null

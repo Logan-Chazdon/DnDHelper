@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "47a9e29c41cf8ec17bec5864da73336b",
+    "identityHash": "4fb026c16eb37f0419a5b4c894ee9e71",
     "entities": [
       {
         "tableName": "characters",
@@ -876,6 +876,104 @@
         "foreignKeys": []
       },
       {
+        "tableName": "spells",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `level` INTEGER NOT NULL, `components` TEXT NOT NULL, `itemComponents` TEXT NOT NULL, `school` TEXT NOT NULL, `desc` TEXT NOT NULL, `range` TEXT NOT NULL, `area` TEXT NOT NULL, `castingTime` TEXT NOT NULL, `duration` TEXT NOT NULL, `classes` TEXT NOT NULL, `damage` TEXT NOT NULL, `isRitual` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "components",
+            "columnName": "components",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "itemComponents",
+            "columnName": "itemComponents",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "school",
+            "columnName": "school",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "desc",
+            "columnName": "desc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "range",
+            "columnName": "range",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "area",
+            "columnName": "area",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "castingTime",
+            "columnName": "castingTime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "classes",
+            "columnName": "classes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "damage",
+            "columnName": "damage",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRitual",
+            "columnName": "isRitual",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "RaceFeatureCrossRef",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`featureId` INTEGER NOT NULL, `raceId` INTEGER NOT NULL, PRIMARY KEY(`raceId`, `featureId`))",
         "fields": [
@@ -1295,6 +1393,194 @@
         "foreignKeys": []
       },
       {
+        "tableName": "FeatureSpellCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`spellId` INTEGER NOT NULL, `featureId` INTEGER NOT NULL, PRIMARY KEY(`spellId`, `featureId`))",
+        "fields": [
+          {
+            "fieldPath": "spellId",
+            "columnName": "spellId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "featureId",
+            "columnName": "featureId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "spellId",
+            "featureId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "BackgroundSpellCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`backgroundId` INTEGER NOT NULL, `spellId` INTEGER NOT NULL, PRIMARY KEY(`backgroundId`, `spellId`))",
+        "fields": [
+          {
+            "fieldPath": "backgroundId",
+            "columnName": "backgroundId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spellId",
+            "columnName": "spellId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "backgroundId",
+            "spellId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "SubclassSpellCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subclassId` INTEGER NOT NULL, `spellId` INTEGER NOT NULL, PRIMARY KEY(`subclassId`, `spellId`))",
+        "fields": [
+          {
+            "fieldPath": "subclassId",
+            "columnName": "subclassId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spellId",
+            "columnName": "spellId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "subclassId",
+            "spellId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ClassSpellCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`classId` INTEGER NOT NULL, `spellId` INTEGER NOT NULL, PRIMARY KEY(`classId`, `spellId`))",
+        "fields": [
+          {
+            "fieldPath": "classId",
+            "columnName": "classId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spellId",
+            "columnName": "spellId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "classId",
+            "spellId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "CharacterClassSpellCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `spellId` INTEGER NOT NULL, `isPrepared` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `classId`, `spellId`))",
+        "fields": [
+          {
+            "fieldPath": "characterId",
+            "columnName": "characterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "classId",
+            "columnName": "classId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spellId",
+            "columnName": "spellId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isPrepared",
+            "columnName": "isPrepared",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "characterId",
+            "classId",
+            "spellId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "SubclassSpellCastingSpellCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subclassId` INTEGER NOT NULL, `spellId` INTEGER NOT NULL, `characterId` INTEGER NOT NULL, `isPrepared` INTEGER, PRIMARY KEY(`subclassId`, `spellId`, `characterId`))",
+        "fields": [
+          {
+            "fieldPath": "subclassId",
+            "columnName": "subclassId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spellId",
+            "columnName": "spellId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "characterId",
+            "columnName": "characterId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isPrepared",
+            "columnName": "isPrepared",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "subclassId",
+            "spellId",
+            "characterId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
         "tableName": "RaceChoiceEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`raceId` INTEGER NOT NULL, `characterId` INTEGER NOT NULL, `abcchosenByString` TEXT NOT NULL, `proficiencyChoice` TEXT NOT NULL, `languageChoice` TEXT NOT NULL, PRIMARY KEY(`raceId`, `characterId`))",
         "fields": [
@@ -1436,7 +1722,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '47a9e29c41cf8ec17bec5864da73336b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4fb026c16eb37f0419a5b4c894ee9e71')"
     ]
   }
 }

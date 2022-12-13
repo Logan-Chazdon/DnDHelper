@@ -121,7 +121,7 @@ public class NewCharacterClassViewModel @Inject constructor(
     }
 
     suspend fun addClassLevels(newClass: Class, level: Int) {
-        if (id == -1)
+        /*if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
         val character = repository.getCharacterById(id)
         newClass.level = level
@@ -200,6 +200,8 @@ public class NewCharacterClassViewModel @Inject constructor(
 
         character!!.addClass(newClass, takeGold.value)
         character.let { repository.insertCharacter(it) }
+        */
+        //TODO
     }
 
     fun getAsiNum(levels: Int): Int {

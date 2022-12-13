@@ -45,9 +45,7 @@ abstract class DatabaseDao {
                 }
 
                 val features = getRaceFeatures(race.raceId)
-                features.forEach { feature ->
-                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
-                }
+                fillOutFeatureList(features, character.id)
                 race.traits = features
             }
         }
@@ -59,9 +57,7 @@ abstract class DatabaseDao {
                 }
 
                 val features = getSubraceFeatures(subrace.id)
-                features.forEach { feature ->
-                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
-                }
+                fillOutFeatureList(features, character.id)
                 subrace.traits = features
 
                 val featChoiceEntities = getSubraceFeatChoices(subrace.id)
@@ -78,9 +74,7 @@ abstract class DatabaseDao {
         character.background?.let { background ->
             getBackgroundChoiceData(charId= character.id).let { data ->
                 val features = getBackgroundFeatures(background.id)
-                features.forEach { feature ->
-                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
-                }
+                fillOutFeatureList(features, character.id)
                 background.features = features
 
                 background.spells = getBackgroundSpells(backgroundId = background.id)
@@ -95,30 +89,48 @@ abstract class DatabaseDao {
             clazz.totalNumOnGoldDie = data.totalNumOnGoldDie
             clazz.tookGold =  data.tookGold
             clazz.isBaseClass = data.isBaseClass
+            clazz.spellCasting?.known =
+                getSpellCastingSpellsForClass(characterId = character.id, classId = clazz.id).toList()
 
             val features = getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
-            features.forEach { feature ->
-                feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
-            }
+            fillOutFeatureList(features, character.id)
             clazz.levelPath = features
             clazz.featsGranted = getClassFeats(classId = clazz.id, characterId = character.id)
             clazz.featsGranted?.forEach {
-                it.features?.forEach { feature ->
-                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
-                }
+                it.features?.let { it1 -> fillOutFeatureList(it1, character.id) }
             }
 
             clazz.subclass?.let { subclass ->
+                subclass.spellCasting?.known =
+                    getSpellCastingSpellsForSubclass(characterId = character.id, subclassId = subclass.subclassId).toList()
+
                 val subClassFeatures = getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
-                subClassFeatures.forEach { feature ->
-                    feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = character.id)
-                }
+                fillOutFeatureList(subClassFeatures, character.id)
                 subclass.features = subClassFeatures
             }
         }
 
         character.classes = classes
     }
+
+
+    @MapInfo(valueColumn = "isPrepared")
+    @Query("""SELECT * FROM spells
+JOIN SubclassSpellCastingSpellCrossRef ON SubclassSpellCastingSpellCrossRef.spellId IS spells.id
+WHERE characterId IS :characterId AND subclassId IS :subclassId
+""")
+    abstract fun getSpellCastingSpellsForSubclass(characterId: Int, subclassId: Int) : Map<Spell, Boolean?>
+
+
+    @MapInfo(valueColumn = "isPrepared")
+    @Query("""SELECT * FROM spells
+JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spellId
+WHERE characterId IS :characterId AND classId IS :classId
+""")
+    abstract fun getSpellCastingSpellsForClass(characterId: Int, classId: Int) : Map<Spell, Boolean?>
+
+    @Insert
+    abstract fun insertCharacterClassSpellCrossRef(ref: CharacterClassSpellCrossRef)
 
     @Query("""SELECT * FROM spells 
 JOIN BackgroundSpellCrossRef ON BackgroundSpellCrossRef.spellId IS spells.id
@@ -157,15 +169,26 @@ WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
     abstract fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
 
 
+    private fun fillOutFeatureList(features: List<Feature>, characterId: Int) {
+        features.forEach { feature ->
+            feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = characterId)
+            feature.spells = getFeatureSpells(feature.featureId)
+        }
+    }
+
+    @Query("""SELECT * FROM spells
+JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.spellId IS spells.id
+WHERE featureId IS :featureId
+""")
+    abstract fun getFeatureSpells(featureId: Int): List<Spell>?
+
     //This only fills out chosen not options.
     //We don't want options as it is not used inside of the character object.
     private fun fillOutChoices(choiceEntities: List<FeatureChoiceEntity>, characterId: Int) : List<FeatureChoice> {
         val choices = mutableListOf<FeatureChoice>()
         choiceEntities.forEach { featureChoiceEntity ->
             val features = getFeatureChoiceChosen(choiceId = featureChoiceEntity.id, characterId = characterId)
-            features.forEach {
-                it.choices = fillOutChoices(it.choices ?: emptyList(), characterId)
-            }
+            fillOutFeatureList(features, characterId)
             choices.add(
                 FeatureChoice(
                     entity = featureChoiceEntity,

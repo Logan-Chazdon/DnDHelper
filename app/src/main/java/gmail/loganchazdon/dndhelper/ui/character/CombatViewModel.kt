@@ -166,7 +166,7 @@ public class CombatViewModel @Inject constructor(
 
 
     fun togglePreparation(spell: Spell) {
-        for (item in character?.value!!.classes.values) {
+        /*for (item in character?.value!!.classes.values) {
             if (
             //This class prepares spells.
                 item.spellCasting?.prepareFrom != null &&
@@ -192,6 +192,8 @@ public class CombatViewModel @Inject constructor(
             }
         }
         character.value?.let { repository.insertCharacter(it) }
+        */
+        //TODO refactor
     }
 
     val character : MediatorLiveData<Character> = MediatorLiveData()

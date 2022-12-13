@@ -194,7 +194,7 @@ class Repository @Inject constructor(
     ) {
         //Preparation casters
         //TODO the time complexity here is really bad. Refactor this
-        when(spellCasting?.prepareFrom) {
+        /*when(spellCasting?.prepareFrom) {
             null -> {
                 //Non preparation casters
                 spellCasting?.known?.forEach { spell ->
@@ -251,7 +251,7 @@ class Repository @Inject constructor(
                 }
             }
         }
-
+        */
     }
 
     fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef) {

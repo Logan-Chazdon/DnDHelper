@@ -181,9 +181,46 @@ class CharacterRelationsTest{
                 name = "Test class",
                 hitDie = 8,
                 startingGoldD4s = 1,
-                subclassLevel = 1
+                subclassLevel = 1,
+                spellCasting = SpellCasting(
+                    type = 1.0,
+                    hasSpellBook = true,
+                    castingAbility = "Int",
+                    prepareFrom = "known",
+                    preparationModMultiplier = 1.0,
+                    spellsKnown = listOf(),
+                    known = listOf(),
+                    cantripsKnown = listOf()
+                )
             )
         ).toInt()
+
+        val spellId = dao.insertSpell(
+            Spell(
+                name = "Test spell",
+                level = 1,
+                area = "",
+                range = "",
+                damage = "",
+                desc = "",
+                duration = "",
+                isRitual = false,
+                castingTime = "",
+                classes = listOf("Test class"),
+                components = listOf(),
+                school ="Necromancy",
+                itemComponents = listOf()
+            )
+        ).toInt()
+
+        dao.insertCharacterClassSpellCrossRef(
+            CharacterClassSpellCrossRef(
+                characterId = charId,
+                classId = classId,
+                spellId = spellId,
+                isPrepared = true
+            )
+        )
 
         dao.insertCharacterClassCrossRef(
             CharacterClassCrossRef(characterId = charId, classId = classId)
@@ -230,16 +267,43 @@ class CharacterRelationsTest{
             )
         )
 
+        val featureSpellId = dao.insertSpell(
+            Spell(
+                name = "Feature Spell",
+                level = 1,
+                area = "",
+                range = "",
+                damage = "",
+                desc = "",
+                duration = "",
+                isRitual = false,
+                castingTime = "",
+                classes = listOf("Test class"),
+                components = listOf(),
+                school ="Necromancy",
+                itemComponents = listOf()
+            )
+        ).toInt()
+
+        dao.insertFeatureSpellCrossRef(
+            FeatureSpellCrossRef(
+                featureId = featureId,
+                spellId = featureSpellId
+            )
+        )
+
         val character = dao.findCharacterById(charId)
         assert(character.race?.abilityBonusChoice?.chosen != null)
         assert(character.race?.proficiencyChoices?.get(0)?.chosen != null)
         assert(character.race?.languageChoices?.get(0)?.chosen != null)
         assert(character.race!!.traits!![0].allChosen.size == 1)
+        assert(character.race!!.traits!![0].spells!![0].name == "Feature Spell")
         assert(character.race!!.traits!![0].allChosen[0].name == "Choice Feature")
         assert(character.race!!.subrace!!.traits!![0].name == "subrace feature")
         assert(character.race!!.subrace!!.featChoices!![0].chosen!![0].name == "Test feat")
         assert(character.background!!.features!![0].name == "Background feature")
         assert(character.classes["Test class"]!!.subclass!!.name == "Subclass")
+        assert(character.classes["Test class"]!!.spellCasting!!.known[0].second == true)
     }
 
     @After

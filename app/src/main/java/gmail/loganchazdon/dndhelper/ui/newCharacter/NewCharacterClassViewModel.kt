@@ -235,9 +235,9 @@ public class NewCharacterClassViewModel @Inject constructor(
             subclassDropdownState!!.maxSelections = 1
             subclassDropdownState!!.choiceName = "Subclass"
             val names = mutableListOf<String>()
-            it.subClasses.forEach {
-                names.add(it.name)
-            }
+            //it.subClasses.forEach {
+            //    names.add(it.name)
+            //} TODO reimpl
             subclassDropdownState!!.names = names
             subclassDropdownState!!.maxSameSelections = 1
             subclassDropdownState!!

@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
+import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import kotlinx.coroutines.GlobalScope

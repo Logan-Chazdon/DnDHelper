@@ -226,8 +226,10 @@ WHERE featureId IS :featureId
     fun findLiveCharacterById(id: Int, character : MediatorLiveData<Character> ) {
         val characterLiveData  =findLiveCharacterWithoutListChoices(id)
         character.addSource(characterLiveData) {
-            fillOutCharacterChoiceLists(it)
-            character.value = it
+            if(it != null) {
+                fillOutCharacterChoiceLists(it)
+                character.value = it
+            }
         }
     }
 

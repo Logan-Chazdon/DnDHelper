@@ -75,6 +75,7 @@ class HomebrewRaceViewModel @Inject constructor(
                     repository.createDefaultRace()
                 }
             }!!
+
             race.addSource(repository.getLiveRaceById(id)!!) {
                 race.value = it
 

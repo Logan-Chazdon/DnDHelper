@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "4fb026c16eb37f0419a5b4c894ee9e71",
+    "identityHash": "e11b079bf2a942d61ae065b635043deb",
     "entities": [
       {
         "tableName": "characters",
@@ -140,7 +140,7 @@
       },
       {
         "tableName": "classes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `hitDie` INTEGER NOT NULL, `subClasses` TEXT NOT NULL, `subclassLevel` INTEGER NOT NULL, `proficiencyChoices` TEXT NOT NULL, `proficiencies` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `equipment` TEXT NOT NULL, `spellCasting` TEXT, `pactMagic` TEXT, `startingGoldD4s` INTEGER NOT NULL, `startingGoldMultiplier` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `hitDie` INTEGER NOT NULL, `subclassLevel` INTEGER NOT NULL, `proficiencyChoices` TEXT NOT NULL, `proficiencies` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `equipment` TEXT NOT NULL, `spellCasting` TEXT, `pactMagic` TEXT, `startingGoldD4s` INTEGER NOT NULL, `startingGoldMultiplier` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -152,12 +152,6 @@
             "fieldPath": "hitDie",
             "columnName": "hitDie",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "subClasses",
-            "columnName": "subClasses",
-            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -1722,7 +1716,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4fb026c16eb37f0419a5b4c894ee9e71')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e11b079bf2a942d61ae065b635043deb')"
     ]
   }
 }

@@ -1575,7 +1575,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 Class(
                     name = name,
                     hitDie = hitDie,
-                    subClasses = subClasses,
+                    //subClasses = subClasses,
                     levelPath = levelPath,
                     proficiencyChoices = proficiencyChoices,
                     proficiencies = proficiencies,

@@ -5,11 +5,18 @@ data class ProficiencyChoice(
     val choose: Int,
     val from: List<Proficiency>
 ){
-    val chosen: List<Proficiency>
+    var chosen: List<Proficiency>
     get() {
         return from.filter {
             chosenByString.contains(it.name)
         }
+    }
+    set(value : List<Proficiency>) {
+        val newChosen = mutableListOf<String>()
+        value.forEach {
+            newChosen += it.toString()
+        }
+        chosenByString = newChosen
     }
 
     var chosenByString: List<String> = emptyList()

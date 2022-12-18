@@ -10,7 +10,6 @@ import gmail.loganchazdon.dndhelper.model.database.Converters
 open class ClassEntity(
     open var name: String,
     open var hitDie: Int = 8,
-    open var subClasses: List<Subclass> = emptyList(),
     open var subclassLevel: Int,
     open var proficiencyChoices: List<ProficiencyChoice> = emptyList(),
     open var proficiencies: List<Proficiency> = emptyList(),
@@ -22,4 +21,21 @@ open class ClassEntity(
     open val startingGoldMultiplier : Int = 10,
     @PrimaryKey(autoGenerate = true)
     open var id: Int = 0,
-)
+) {
+    fun toClass(
+        tookGold : Boolean? = null,
+        isBaseClass: Boolean = false,
+        level: Int = 1,
+        featsGranted : MutableList<Feat>? = mutableListOf(),
+        levelPath: MutableList<Feature>? = mutableListOf(),
+    ) : Class {
+        return (this as Class).run {
+            this.tookGold = tookGold
+            this.isBaseClass = isBaseClass
+            this.level = level
+            this.featsGranted = featsGranted
+            this.levelPath = levelPath
+            this
+        }
+    }
+}

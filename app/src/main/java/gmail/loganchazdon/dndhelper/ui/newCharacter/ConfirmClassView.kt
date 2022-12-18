@@ -22,13 +22,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
-import gmail.loganchazdon.dndhelper.model.Subclass
-import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
-import gmail.loganchazdon.dndhelper.ui.theme.noActionNeeded
 import gmail.loganchazdon.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -222,7 +217,7 @@ fun ConfirmClassView(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val subclass = clazz.let {
+                /*val subclass = clazz.let {
                     (viewModel.getSubclassDropdownState(
                         it
                     ).getSelected(it.subClasses) as List<Subclass>)
@@ -255,7 +250,7 @@ fun ConfirmClassView(
                         ),
                         toggleSpell = { viewModel.toggleClassSpell(it) }
                     )
-                }
+                }*/ //TODO
 
 
                 if (viewModel.isBaseClass.value) {
@@ -502,6 +497,7 @@ fun ConfirmClassView(
 
 
                 //Subclass
+                /*
                 if (
                     clazz.subclassLevel
                     <= try {
@@ -616,7 +612,7 @@ fun ConfirmClassView(
                             )
                         }
                     }
-                }
+                }*/ //TODO
             }
         }
     }

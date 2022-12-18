@@ -15,7 +15,6 @@ class Class (
     var abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf(),
     name: String,
     hitDie: Int = 8,
-    subClasses: List<Subclass> = emptyList(),
     subclassLevel: Int,
     var levelPath: MutableList<Feature>? = mutableListOf(),
     proficiencyChoices: List<ProficiencyChoice> = emptyList(),
@@ -27,7 +26,7 @@ class Class (
     startingGoldD4s: Int,
     startingGoldMultiplier : Int = 10
 ) : ClassEntity(
-    name, hitDie, subClasses, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, id
+    name, hitDie, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, id
 ) {
 
     fun longRest() {

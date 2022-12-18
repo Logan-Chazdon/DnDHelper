@@ -4,27 +4,21 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
+import gmail.loganchazdon.dndhelper.ui.utils.toStringList
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.MutableMap
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.emptyList
-import kotlin.collections.first
-import kotlin.collections.forEach
-import kotlin.collections.getOrNull
-import kotlin.collections.listOf
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableMapOf
-import kotlin.collections.plusAssign
 import kotlin.collections.set
 import kotlin.properties.Delegates
 
@@ -173,6 +167,58 @@ public class NewCharacterRaceViewModel @Inject constructor(
         *///TODO replace me
         //character!!.race = newRace
         //repository.insertCharacter(character)
+
+        repository.insertCharacterRaceCrossRef(
+            CharacterRaceCrossRef(
+                raceId = newRace.raceId,
+                id = id
+            )
+        )
+
+        newRace.proficiencyChoices.forEach {
+            it.chosen = raceProficiencyChoiceDropdownStates[it.name]
+                ?.getSelected(it.from) as List<Proficiency>
+        }
+
+        repository.insertRaceChoiceEntity(
+            RaceChoiceEntity(
+                raceId = newRace.raceId,
+                characterId = id,
+                abilityBonusChoice = getStateBonuses(
+                    races.value!![raceIndex].abilityBonuses!!,
+                    customRaceStatsMap
+                ).toStringList(),
+                proficiencyChoice = newRace.proficiencyChoices.toStringList(),
+                languageChoice = newRace.languageChoices.toStringList()
+            )
+        )
+
+        storeFeatureChoices(filterRaceFeatures(newRace),raceFeaturesDropdownStates)
+    }
+
+    private fun storeFeatureChoices(features: List<Feature>, dropdownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>) {
+        features.forEach { feature ->
+            feature.choices?.forEachIndexed { index, it ->
+                if (it.choose.num(
+                        character.value?.totalClassLevels ?: 0
+                    ) != 0 && it.options?.isEmpty() == false
+                ) {
+                    it.chosen =
+                        dropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
+                            ?.getSelected()
+                    it.chosen?.let { chosen -> storeFeatureChoices(chosen, dropdownStates) }
+                    it.chosen?.forEach { chosen ->
+                        repository.insertFeatureChoiceChoiceEntity(
+                            FeatureChoiceChoiceEntity(
+                                featureId = chosen.featureId,
+                                choiceId = it.id,
+                                characterId = id
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private val selectedSubraceASIs : List<Pair<String, Int>>

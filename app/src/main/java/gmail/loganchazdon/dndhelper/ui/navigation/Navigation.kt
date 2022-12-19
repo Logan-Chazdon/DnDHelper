@@ -102,26 +102,17 @@ fun Navigation(navController: NavHostController) {
                 backgroundIndex = backgroundIndex ?: 0
             )
         }
-        composable("newCharacterView/RaceView/ConfirmRaceView/{raceIndex}/{characterId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("raceIndex")?.toInt()?.let { raceIndex ->
-                backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
-                    val viewModel = hiltViewModel<NewCharacterRaceViewModel>()
-                    ConfirmRaceView(
-                        viewModel = viewModel,
-                        navController = navController,
-                        raceIndex = raceIndex,
-                        characterId = characterId
-                    )
-                }
-            }
+        composable("newCharacterView/RaceView/ConfirmRaceView/{raceId}/{characterId}") { 
+            ConfirmRaceView(
+                viewModel = hiltViewModel(),
+                navController = navController
+            )
         }
-        composable("newCharacterView/RaceView/{characterId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("characterId")?.toInt().let { characterId ->
+        composable("newCharacterView/RaceView/{characterId}") {
                 val viewModel = hiltViewModel<NewCharacterRaceViewModel>()
-                RaceView(viewModel, navController = navController, characterId = characterId ?: -1)
-            }
+                RaceView(viewModel, navController = navController)
         }
-        composable("newCharacterView/StatsView/{characterId}") { backStackEntry ->
+        composable("newCharacterView/StatsView/{characterId}") {
             val viewModel = hiltViewModel<NewCharacterStatsViewModel>()
             StatsView(viewModel, navController)
         }

@@ -30,17 +30,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ConfirmRaceView(
-    viewModel: NewCharacterRaceViewModel,
+    viewModel: NewCharacterConfirmRaceViewModel,
     navController: NavController,
-    raceIndex: Int,
-    characterId: Int
 ) {
-    viewModel.raceIndex = raceIndex
-    val races = viewModel.races.observeAsState()
     val scrollState = rememberScrollState(0)
-    viewModel.id = characterId
     val mainLooper = Looper.getMainLooper()
-
+    val race = viewModel.race.observeAsState()
+    val subraces = viewModel.subraces.observeAsState()
     val assumedStatBonuses = remember(
         viewModel.subraceASIDropdownState
     ) {
@@ -63,23 +59,22 @@ fun ConfirmRaceView(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            races.value?.get(raceIndex)?.let {
-                AutoSave(
-                    "ConfirmRaceView",
-                    { id ->
-                        viewModel.setRace(it)
-                        id.value = viewModel.id
-                    },
-                    navController
-                )
+            AutoSave(
+                "ConfirmRaceView",
+                { id ->
+                    viewModel.setRace()
+                    id.value = viewModel.id
+                },
+                navController
+            )
 
                 Text(
-                    text = it.raceName,
+                    text = race.value?.raceName ?: "",
                     style = MaterialTheme.typography.h4,
                 )
                 Spacer(Modifier.width(15.dp))
                 Text(
-                    text = it.size,
+                    text = race.value?.size ?: "",
                     fontSize = 16.sp
                 )
                 Row(
@@ -89,7 +84,7 @@ fun ConfirmRaceView(
                     Button(onClick = {
                         //Change the race
                         GlobalScope.launch {
-                            viewModel.setRace(it)
+                            viewModel.setRace()
                             //Navigate to the next step
                             Handler(mainLooper).post {
                                 navController.navigate("newCharacterView/BackgroundView/${viewModel.id}")
@@ -124,7 +119,7 @@ fun ConfirmRaceView(
                         onCheckedChange = {
                             viewModel.customizeStats.value = it
                             if (viewModel.customRaceStatsMap.isEmpty()) {
-                                races.value!![raceIndex].abilityBonuses!!.forEach {
+                                race.value?.abilityBonuses!!.forEach {
                                     viewModel.customRaceStatsMap[it.ability] =
                                         it.ability
                                 }
@@ -134,7 +129,7 @@ fun ConfirmRaceView(
                     )
                 }
             }
-            races.value?.get(raceIndex)?.let {
+            race.value?.let {
                 Text(
                     text = "Speed: ${it.groundSpeed} feet",
                     style = MaterialTheme.typography.h6
@@ -142,52 +137,52 @@ fun ConfirmRaceView(
             }
         }
 
-        races.value?.get(raceIndex)
-            ?.let { Text(text = it.sizeDesc, Modifier.padding(start = 5.dp, top = 5.dp)) }
-        races.value?.get(raceIndex)
-            ?.let {
-                it.alignment?.let { it1 ->
-                    Text(
-                        text = it1,
-                        Modifier.padding(start = 5.dp, top = 5.dp)
-                    )
-                }
-            }
+
+        Text(text = race.value?.sizeDesc ?: "", Modifier.padding(start = 5.dp, top = 5.dp))
+         race.value?.alignment?.let { alignment ->
+             Text(
+                 text = alignment,
+                 Modifier.padding(start = 5.dp, top = 5.dp)
+             )
+         }
+
 
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (races.value?.getOrNull(raceIndex)?.subraces?.getOrNull(viewModel.subraceIndex.value)?.languages.isNullOrEmpty() &&
-                races.value?.getOrNull(raceIndex)?.subraces?.getOrNull(viewModel.subraceIndex.value)?.languageChoices.isNullOrEmpty()
+            if (subraces.value?.getOrNull(viewModel.subraceIndex.value)?.languages.isNullOrEmpty() &&
+                subraces.value?.getOrNull(viewModel.subraceIndex.value)?.languageChoices.isNullOrEmpty()
             )
                 RaceLanguagesView(
-                    languageDesc = races.value?.get(raceIndex)?.languageDesc,
-                    languages = races.value?.get(raceIndex)?.languages,
-                    languageChoices = races.value?.get(raceIndex)?.languageChoices,
+                    languageDesc = race.value?.languageDesc,
+                    languages = race.value?.languages,
+                    languageChoices = race.value?.languageChoices,
                     dropDownStates = viewModel.languageDropdownStates
                 )
 
-            races.value?.get(raceIndex)?.abilityBonuses?.let { bonuses ->
+            race.value?.abilityBonuses?.let { bonuses ->
                 RaceAbilityBonusesView(bonuses, viewModel, viewModel.customRaceStatsMap)
             }
 
-            races.value?.get(raceIndex)?.let { race ->
                 RaceFeaturesView(
                     character = viewModel.character.observeAsState().value,
-                    features = viewModel.filterRaceFeatures(race),
+                    features = viewModel.filterRaceFeatures(race.value),
                     dropDownStates = viewModel.raceFeaturesDropdownStates,
                     proficiencies = viewModel.proficiencies,
                     assumedSpells = assumedSpells.value,
                     assumedStatBonuses = assumedStatBonuses.value
                 )
 
-                if (!(race.proficiencyChoices.isNullOrEmpty() && race.startingProficiencies.isNullOrEmpty())) {
-                    RaceContentCard(title = "Proficiencies", race.proficiencyChoices.size > 0) {
-                        race.startingProficiencies.let {
+                if (!(race.value?.proficiencyChoices.isNullOrEmpty() && race.value?.startingProficiencies.isNullOrEmpty())) {
+                    RaceContentCard(
+                        title = "Proficiencies",
+                        race.value?.proficiencyChoices?.isNotEmpty() == true
+                    ) {
+                        race.value?.startingProficiencies.let {
                             var string = ""
-                            it.forEachIndexed { index, prof ->
+                            it?.forEachIndexed { index, prof ->
                                 string += prof.name
                                 if (index != it.size - 1) {
                                     string += ", "
@@ -202,7 +197,7 @@ fun ConfirmRaceView(
                             Text(it)
                         }
 
-                        race.proficiencyChoices.forEach { proficiencyChoice ->
+                        race.value?.proficiencyChoices?.forEach { proficiencyChoice ->
                             MultipleChoiceDropdownView(
                                 state = viewModel.raceProficiencyChoiceDropdownStates.getDropDownState(
                                     key = proficiencyChoice.name,
@@ -221,14 +216,11 @@ fun ConfirmRaceView(
                         }
                     }
                 }
-            }
 
 
-
-            races.value?.get(raceIndex)?.subraces?.let { subraces ->
-                if (races.value?.get(raceIndex)?.subraces?.isNotEmpty() == true) {
+                if (subraces.value?.isNotEmpty() == true) {
                     RaceContentCard("Subrace", true) {
-                        subraces[viewModel.subraceIndex.value].let { subrace ->
+                        subraces.value?.get(viewModel.subraceIndex.value)?.let { subrace ->
                             Box {
                                 var expanded by remember { mutableStateOf(false) }
                                 Row(
@@ -249,7 +241,7 @@ fun ConfirmRaceView(
                                     expanded = expanded,
                                     onDismissRequest = { expanded = false }
                                 ) {
-                                    races.value?.get(raceIndex)?.subraces!!.forEachIndexed { index, item ->
+                                    subraces.value?.forEachIndexed { index, item ->
                                         DropdownMenuItem(onClick = {
                                             viewModel.subraceIndex.value = index
                                             expanded = false
@@ -273,21 +265,21 @@ fun ConfirmRaceView(
                         }
                     }
 
-                    if (!(subraces[viewModel.subraceIndex.value].languages.isNullOrEmpty() &&
-                                subraces[viewModel.subraceIndex.value].languageChoices.isNullOrEmpty())
+                    if (!(subraces.value!![viewModel.subraceIndex.value].languages.isEmpty() &&
+                                subraces.value!![viewModel.subraceIndex.value].languageChoices.isEmpty())
                     )
                         RaceLanguagesView(
                             languageDesc = null,
-                            languages = subraces[viewModel.subraceIndex.value].languages,
-                            languageChoices = subraces[viewModel.subraceIndex.value].languageChoices,
+                            languages = subraces.value!![viewModel.subraceIndex.value].languages,
+                            languageChoices = subraces.value!![viewModel.subraceIndex.value].languageChoices,
                             dropDownStates = viewModel.languageDropdownStates
                         )
 
-                    subraces[viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
+                    subraces.value!![viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
                         RaceAbilityBonusesView(bonuses, viewModel, viewModel.customSubraceStatsMap)
                     }
 
-                    subraces[viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->
+                    subraces.value!![viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->
                         RaceContentCard(it.name, containsChoice = true) {
                             FeatView(
                                 level = 1,
@@ -307,7 +299,7 @@ fun ConfirmRaceView(
                     }
 
 
-                    subraces[viewModel.subraceIndex.value].abilityBonusChoice?.let { choice ->
+                    subraces.value!![viewModel.subraceIndex.value].abilityBonusChoice?.let { choice ->
                         RaceContentCard("Ability bonuses", true) {
                             val state = viewModel.subraceASIDropdownState.value.let {
                                 if (it == null) {
@@ -335,15 +327,14 @@ fun ConfirmRaceView(
 
                     RaceFeaturesView(
                         character = viewModel.character.observeAsState().value,
-                        features = subraces[viewModel.subraceIndex.value].traits ?: listOf(),
+                        features = subraces.value!![viewModel.subraceIndex.value].traits ?: listOf(),
                         dropDownStates = viewModel.subraceFeaturesDropdownStates,
                         proficiencies = viewModel.proficiencies,
                         assumedSpells = assumedSpells.value,
                         assumedStatBonuses = assumedStatBonuses.value
                     )
                 }
-            }
-        }
+
     }
 }
 
@@ -455,7 +446,7 @@ private fun RaceLanguagesView(
 @Composable
 fun RaceAbilityBonusesView(
         bonuses: List<AbilityBonus>,
-        viewModel: NewCharacterRaceViewModel,
+        viewModel: NewCharacterConfirmRaceViewModel,
         targetList: MutableMap<String, String>
 ) {
     @Composable

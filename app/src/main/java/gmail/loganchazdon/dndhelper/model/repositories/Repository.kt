@@ -6,8 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.choiceEntities.SubraceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
 import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import kotlinx.coroutines.GlobalScope
@@ -275,6 +277,36 @@ class Repository @Inject constructor(
 
     fun deleteRace(id: Int) {
         dao?.deleteRace(id)
+    }
+
+    fun getAllInfusions(): LiveData<List<Infusion>> {
+        return _infusions
+    }
+
+    fun insertCharacterRaceCrossRef(characterRaceCrossRef: CharacterRaceCrossRef) {
+        dao?.insertCharacterRaceCrossRef(characterRaceCrossRef)
+    }
+
+    fun insertRaceChoiceEntity(raceChoiceEntity: RaceChoiceEntity) {
+        dao?.insertRaceChoice(raceChoiceEntity)
+    }
+
+    fun insertFeatureChoiceChoiceEntity(featureChoiceChoiceEntity: FeatureChoiceChoiceEntity) {
+        dao?.insertFeatureChoiceEntity(featureChoiceChoiceEntity)
+    }
+
+    fun getSubracesByRaceId(id: Int): LiveData<List<Subrace>> {
+        val result = MediatorLiveData<List<Subrace>>()
+        dao?.bindSubraceOptions(id, result)
+        return result
+    }
+
+    fun insertCharacterSubraceCrossRef(characterSubraceCrossRef: CharacterSubraceCrossRef) {
+        dao?.insertCharacterSubRaceCrossRef(characterSubraceCrossRef)
+    }
+
+    fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
+        dao?.insertSubraceChoiceEntity(subraceChoiceEntity)
     }
 
     companion object {

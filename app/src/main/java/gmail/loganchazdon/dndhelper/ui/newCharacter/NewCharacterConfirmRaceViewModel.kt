@@ -12,7 +12,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.choiceEntities.SubraceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.model.repositories.Repository.Companion.statNames
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
@@ -60,98 +62,6 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
     suspend fun setRace() {
         if (id == -1)
             id = repository.createDefaultCharacter() ?: -1
-        //Insert
-        /*
-        val character = repository.getCharacterById(id)
-        newRace.abilityBonuses = getStateBonuses(
-            races.value!![raceIndex].abilityBonuses!!,
-            customRaceStatsMap
-        )
-
-        filterRaceFeatures(newRace).forEach { feature ->
-            feature.choices?.forEachIndexed { index, it ->
-                if (it.choose.num(
-                        character?.totalClassLevels ?: 0
-                    ) != 0 && it.options?.isEmpty() == false
-                ) {
-                    it.chosen =
-                        raceFeaturesDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
-                            ?.getSelected()
-                }
-            }
-        }
-
-        if (newRace.subrace?.languages.isNullOrEmpty() &&
-            newRace.subrace?.languageChoices.isNullOrEmpty()
-        )
-            newRace.languageChoices.forEach {
-                it.chosen = languageDropdownStates[it.name]
-                    ?.getSelected(it.from) as List<Language>
-            }
-
-        newRace.proficiencyChoices.forEach {
-            it.chosen = raceProficiencyChoiceDropdownStates[it.name]
-                ?.getSelected(it.from) as List<Proficiency>
-        }
-
-        if(!newRace.subraces.isNullOrEmpty()) {
-            newRace.subrace = newRace.subraces!![subraceIndex.value].run {
-                this.traits.forEachIndexed { index, feature ->
-                    feature.choices?.forEach {
-                        if (it.choose.num(
-                                character?.totalClassLevels ?: 0
-                            ) != 0 && it.options?.isNullOrEmpty() == false
-                        ) {
-                            it.chosen =
-                                subraceFeaturesDropdownStates[index.toString() + feature.name + feature.grantedAtLevel]
-                                    ?.getSelected()
-                        }
-                    }
-                }
-
-                this.languageChoices.forEach {
-                    it.chosen = languageDropdownStates[it.name]
-                        ?.getSelected(it.from) as List<Language>
-                }
-
-                selectedSubraceASIs.let { result ->
-                    val chosen = mutableListOf<AbilityBonus>()
-                    result.forEach {
-                        chosen.add(
-                            AbilityBonus(
-                                ability = it.first,
-                                bonus= it.second
-                            )
-                        )
-                    }
-                    this.abilityBonusChoice?.chosen = chosen
-                }
-
-                featChoices?.let { choices ->
-                    subraceFeatDropdownStates.forEachIndexed { index, _ ->
-                        choices[index].chosen = getFeatsAt(
-                            index,
-                            1,
-                            subraceFeatDropdownStates,
-                            subraceFeatChoiceDropDownStates,
-                            choices[index].from
-                        )
-                    }
-                }
-
-                this.abilityBonuses = this.abilityBonuses?.let {
-                    getStateBonuses(
-                        it,
-                        customSubraceStatsMap
-                    )
-                }
-
-                this
-            }
-        }
-        *///TODO replace me
-        //character!!.race = newRace
-        //repository.insertCharacter(character)
 
         repository.insertCharacterRaceCrossRef(
             CharacterRaceCrossRef(
@@ -179,6 +89,37 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
         )
 
         storeFeatureChoices(filterRaceFeatures(race.value!!),raceFeaturesDropdownStates)
+
+
+        subraces.value?.get(subraceIndex.value)?.let { subrace ->
+            repository.insertCharacterSubraceCrossRef(
+                CharacterSubraceCrossRef(
+                    characterId = id,
+                    subraceId = subrace.id
+                )
+            )
+
+            subrace.languageChoices.forEach {
+                it.chosen = languageDropdownStates[it.name]
+                    ?.getSelected(it.from) as List<Language>
+            }
+
+            subrace.abilityBonuses = subrace.abilityBonuses?.let {
+                getStateBonuses(
+                    it,
+                    customSubraceStatsMap
+                )
+            }
+
+            repository.insertSubraceChoiceEntity(
+                SubraceChoiceEntity(
+                    subraceId = subrace.id,
+                    characterId = id,
+                    languageChoice = subrace.languageChoices.toStringList(),
+                    abilityBonusChoice = subrace.abilityBonuses?.toStringList() ?: emptyList()
+                )
+            )
+        }
     }
 
     private fun storeFeatureChoices(features: List<Feature>, dropdownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>) {

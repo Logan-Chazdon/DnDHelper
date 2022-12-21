@@ -9,6 +9,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Feature
+import gmail.loganchazdon.dndhelper.model.Infusion
 import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,7 @@ class HomebrewFeatureViewModel @Inject constructor(
         }
     }
 
+    val infusions = mutableStateListOf<Infusion>()
     val spells = mutableStateListOf<Spell>()
     val featureName = mutableStateOf("")
     val featureDesc = mutableStateOf("")
@@ -49,6 +51,7 @@ class HomebrewFeatureViewModel @Inject constructor(
     val grantsInfusions = mutableStateOf(true)
     val grantsSpells = mutableStateOf(true)
     val allSpells = repository.getLiveSpells()
+    val allInfusions = repository.getAllInfusions()
     var id by Delegates.notNull<Int>()
     var feature: MediatorLiveData<Feature> = MediatorLiveData()
 

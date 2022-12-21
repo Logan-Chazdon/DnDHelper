@@ -14,6 +14,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -97,13 +98,19 @@ fun HomebrewRaceView(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        //TODO add ft.
                         OutlinedTextField(
                             value = viewModel.speed.value,
                             onValueChange = { viewModel.speed.value = it },
                             singleLine = true,
                             label = { Text("Speed") },
-                            modifier = Modifier.weight(1f, true)
+                            modifier = Modifier.weight(1f, true),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.NumberPassword,
+                                imeAction = ImeAction.Next
+                            ),
+                            trailingIcon = {
+                                Text("ft")
+                            }
                         )
 
                         var expanded by remember {
@@ -211,15 +218,26 @@ fun HomebrewRaceView(
                                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
                                         )
                                     }
-
-                                    Repository.statNames.forEach {
+                                    val enableStatMap = remember {
+                                        mutableStateMapOf(
+                                            0 to true,
+                                            1 to true,
+                                            2 to true,
+                                            3 to true,
+                                            4 to true,
+                                            5 to true
+                                        )
+                                    }
+                                    Repository.statNames.forEachIndexed { index, it ->
                                         Row(
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.spacedBy(5.dp)
                                         ) {
                                             Checkbox(
-                                                checked = true,
-                                                onCheckedChange = { }
+                                                checked = enableStatMap[index]!!,
+                                                onCheckedChange = {
+                                                    enableStatMap[index] = it
+                                                }
                                             )
                                             LaunchedEffect(true) {
                                                 stats[it] = "1"
@@ -260,16 +278,20 @@ fun HomebrewRaceView(
                                                             },
                                                             from = stats.let {
                                                                 val result =
-                                                                    mutableListOf<AbilityBonus>()
-                                                                it.forEach { (stat, bonus) ->
-                                                                    result += AbilityBonus(
-                                                                        ability = stat,
-                                                                        bonus = try {
-                                                                            bonus.toInt()
-                                                                        } catch (_: java.lang.NumberFormatException) {
-                                                                            1
-                                                                        }
-                                                                    )
+                                                                    LinkedList<AbilityBonus>()
+                                                                var i = 0
+                                                                it.forEach{ (stat, bonus) ->
+                                                                    if(enableStatMap[i] == true) {
+                                                                        result += AbilityBonus(
+                                                                            ability = stat,
+                                                                            bonus = try {
+                                                                                bonus.toInt()
+                                                                            } catch (_: java.lang.NumberFormatException) {
+                                                                                1
+                                                                            }
+                                                                        )
+                                                                    }
+                                                                    i++
                                                                 }
                                                                 result
                                                             }
@@ -280,15 +302,19 @@ fun HomebrewRaceView(
                                                         stats.let {
                                                             val result =
                                                                 mutableListOf<AbilityBonus>()
+                                                            var i = 0
                                                             it.forEach { (stat, bonus) ->
-                                                                result += AbilityBonus(
-                                                                    ability = stat,
-                                                                    bonus = try {
-                                                                        bonus.toInt()
-                                                                    } catch (_: java.lang.NumberFormatException) {
-                                                                        1
-                                                                    }
-                                                                )
+                                                                if(enableStatMap[i] == true) {
+                                                                    result += AbilityBonus(
+                                                                        ability = stat,
+                                                                        bonus = try {
+                                                                            bonus.toInt()
+                                                                        } catch (_: java.lang.NumberFormatException) {
+                                                                            1
+                                                                        }
+                                                                    )
+                                                                }
+                                                                i++
                                                             }
                                                             result
                                                         }
@@ -305,13 +331,12 @@ fun HomebrewRaceView(
                     }
 
                     Card(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth().padding(start = 5.dp)
                     ) {
                         Column {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                                 verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(start =5.dp)
                             ) {
                                 Text(
                                     text = "Ability bonuses and feats",

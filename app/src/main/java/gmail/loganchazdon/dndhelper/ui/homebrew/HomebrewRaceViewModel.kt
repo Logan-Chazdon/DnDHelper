@@ -50,7 +50,9 @@ class HomebrewRaceViewModel @Inject constructor(
             name = name.value,
             id = id,
             groundSpeed = try { speed.value.toInt() } catch(_: NumberFormatException) { 30 },
-            size = sizeClass.value
+            size = sizeClass.value,
+            abilityBonusChoice = abilityBonusChoice.value,
+            abilityBonuses = abilityBonuses
         )
         repository.insertRace(newRace)
     }

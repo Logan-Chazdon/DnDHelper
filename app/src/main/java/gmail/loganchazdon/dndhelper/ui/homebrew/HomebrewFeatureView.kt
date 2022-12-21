@@ -56,6 +56,10 @@ fun HomebrewFeatureView(
     val spellsIsExpanded = remember {
         mutableStateOf(false)
     }
+    val infusionIsExpanded = remember {
+        mutableStateOf(false)
+    }
+
     //Spell selection popup.
     if (spellsIsExpanded.value) {
         Dialog(
@@ -242,7 +246,19 @@ fun HomebrewFeatureView(
                         title = "Grants infusions",
                         active = viewModel.grantsInfusions
                     ) {
-
+                        GenericSelectionView(
+                            chosen = viewModel.infusions.let {
+                                val result = mutableListOf<String>()
+                                it.forEach { infusion ->
+                                    result.add(infusion.name)
+                                }
+                                result
+                            },
+                            onDelete = {
+                                viewModel.infusions.removeAt(it)
+                            },
+                            expanded = infusionIsExpanded
+                        )
                     }
 
                     AttributeView(

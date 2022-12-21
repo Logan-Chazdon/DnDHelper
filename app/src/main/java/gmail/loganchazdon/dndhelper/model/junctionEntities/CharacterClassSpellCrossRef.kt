@@ -7,5 +7,5 @@ data class CharacterClassSpellCrossRef(
     val characterId: Int,
     val classId: Int,
     val spellId: Int,
-    val isPrepared: Boolean
+    val isPrepared: Boolean?
 )

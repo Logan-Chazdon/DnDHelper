@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "e11b079bf2a942d61ae065b635043deb",
+    "identityHash": "6824ca830a424f3961b0215221e9c380",
     "entities": [
       {
         "tableName": "characters",
@@ -814,7 +814,7 @@
       },
       {
         "tableName": "ClassChoiceEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `level` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `totalNumOnGoldDie` INTEGER, `abilityImprovementsGranted` TEXT NOT NULL, `tookGold` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `classId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `level` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `totalNumOnGoldDie` INTEGER, `abilityImprovementsGranted` TEXT NOT NULL, `tookGold` INTEGER NOT NULL, `proficiencyChoices` TEXT NOT NULL, PRIMARY KEY(`characterId`, `classId`))",
         "fields": [
           {
             "fieldPath": "characterId",
@@ -856,6 +856,12 @@
             "fieldPath": "tookGold",
             "columnName": "tookGold",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "proficiencyChoices",
+            "columnName": "proficiencyChoices",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -1496,7 +1502,7 @@
       },
       {
         "tableName": "CharacterClassSpellCrossRef",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `spellId` INTEGER NOT NULL, `isPrepared` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `classId`, `spellId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `spellId` INTEGER NOT NULL, `isPrepared` INTEGER, PRIMARY KEY(`characterId`, `classId`, `spellId`))",
         "fields": [
           {
             "fieldPath": "characterId",
@@ -1520,7 +1526,7 @@
             "fieldPath": "isPrepared",
             "columnName": "isPrepared",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -1568,6 +1574,60 @@
             "subclassId",
             "spellId",
             "characterId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ClassSubclassCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`classId` INTEGER NOT NULL, `subclassId` INTEGER NOT NULL, PRIMARY KEY(`classId`, `subclassId`))",
+        "fields": [
+          {
+            "fieldPath": "classId",
+            "columnName": "classId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subclassId",
+            "columnName": "subclassId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "classId",
+            "subclassId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "SubclassFeatureCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subclassId` INTEGER NOT NULL, `featureId` INTEGER NOT NULL, PRIMARY KEY(`subclassId`, `featureId`))",
+        "fields": [
+          {
+            "fieldPath": "subclassId",
+            "columnName": "subclassId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "featureId",
+            "columnName": "featureId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "subclassId",
+            "featureId"
           ],
           "autoGenerate": false
         },
@@ -1716,7 +1776,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e11b079bf2a942d61ae065b635043deb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6824ca830a424f3961b0215221e9c380')"
     ]
   }
 }

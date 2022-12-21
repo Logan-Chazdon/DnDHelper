@@ -10,5 +10,6 @@ data class ClassChoiceEntity(
     val isBaseClass : Boolean,
     val totalNumOnGoldDie : Int? = null,
     val abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf(),
-    val tookGold: Boolean
+    val tookGold: Boolean,
+    val proficiencyChoices: List<List<String>>,
 )

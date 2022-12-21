@@ -49,7 +49,7 @@ fun ClassView(
         painterResource(R.drawable.ic_class_icon___wizard)
     )
 
-    val liveCharacter = viewModel.character?.observeAsState()
+    val liveCharacter = viewModel.character.observeAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -59,7 +59,7 @@ fun ClassView(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         state = rememberLazyListState()
     ) {
-        liveCharacter?.value?.let { character ->
+        liveCharacter.value?.let { character ->
             if (character.classes.isNotEmpty()) {
                 character.classes.forEach { (_, clazz) ->
                     item {
@@ -70,7 +70,7 @@ fun ClassView(
                                 .fillMaxWidth(0.95f)
                                 .height(50.dp)
                                 .clickable {
-                                    navController.navigate("newCharacterView/ClassView/ConfirmClassView/$classIndex/$characterId")
+                                    navController.navigate("newCharacterView/ClassView/ConfirmClassView/${clazz.id}/$characterId")
                                 }
                         ) {
                             var deleteClassIsExpanded by remember {
@@ -130,7 +130,7 @@ fun ClassView(
                                                 Button(
                                                     onClick = {
                                                         scope.launch {
-                                                            viewModel.removeClass(clazz.name)
+                                                            viewModel.removeClass(clazz.id)
                                                         }
                                                         deleteClassIsExpanded = false
                                                     }

@@ -108,6 +108,12 @@ abstract class DatabaseDao {
                 fillOutFeatureList(subClassFeatures, character.id)
                 subclass.features = subClassFeatures
             }
+
+            if(data.isBaseClass) {
+                clazz.proficiencyChoices.forEachIndexed { i, it ->
+                    it.chosenByString = data.proficiencyChoices[i]
+                }
+            }
         }
 
         character.classes = classes
@@ -276,8 +282,8 @@ WHERE featureId IS :featureId
     @Insert
     abstract fun insertClassChoiceEntity(entity: ClassChoiceEntity)
 
-    @Delete
-    abstract fun removeClassChoiceEntity(entity: ClassChoiceEntity)
+    @Query("DELETE FROM ClassChoiceEntity WHERE classId IS :classId AND characterId IS :characterId")
+    abstract fun removeClassChoiceEntity(classId: Int, characterId: Int)
 
     @Insert
     abstract fun insertClassFeatureCrossRef(ref: ClassFeatureCrossRef)
@@ -485,4 +491,55 @@ WHERE backgroundId IS :id
 
     @Delete
     abstract fun removeSubclassSpellCrossRef(ref: SubclassSpellCrossRef)
+
+    @Query("SELECT * FROM classes WHERE id IS :id")
+    protected abstract fun getUnfilledClass(id: Int) : LiveData<ClassEntity>
+
+    fun getClass(id : Int): LiveData<Class> {
+        val result = MediatorLiveData<Class>()
+        result.addSource(getUnfilledClass(id)) { entity ->
+            entity as Class
+            entity.levelPath = getLevelPath(id)
+            result.value = entity
+        }
+        return result
+    }
+
+    @Query("""SELECT * FROM spells
+JOIN ClassSpellCrossRef ON spells.id IS ClassSpellCrossRef.spellId
+WHERE classId IS :classId""")
+    abstract fun getSpellsByClassId(classId: Int): MutableList<Spell>
+
+    @Query("""SELECT * FROM subclasses
+JOIN ClassSubclassCrossRef ON ClassSubclassCrossRef.subclassId IS subclasses.subclassId
+WHERE classId IS :id""")
+    protected abstract fun getUnfilledSubclassesByClassId(id: Int) : LiveData<List<SubclassEntity>>
+
+    fun getSubclassesByClassId(id: Int): LiveData<List<Subclass>> {
+        val result = MediatorLiveData<List<Subclass>>()
+        result.addSource(getUnfilledSubclassesByClassId(id)) { entities ->
+            (entities as List<Subclass>).forEach {
+                it.features = getSubclassFeaturesById(it.subclassId)
+            }
+            result.value = entities
+        }
+        return result
+    }
+
+    @Query("""SELECT * FROM features 
+JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.featureId
+WHERE subclassId IS :id""")
+    protected abstract fun getSubclassFeaturesById(id: Int) : List<Feature>
+
+    @Insert
+    abstract fun insertCharacterClassFeatCrossRef(classFeatCrossRef: ClassFeatCrossRef)
+
+    @Insert
+    abstract fun insertSubClassSpellCastingCrossRef(subclassSpellCastingSpellCrossRef: SubclassSpellCastingSpellCrossRef)
+
+    @Query("SELECT backpack FROM characters WHERE id IS :id")
+    abstract fun getCharacterBackPack(id: Int) : Backpack
+
+    @Query("UPDATE characters SET backpack = :backpack WHERE id IS :id")
+    abstract fun insertCharacterBackPack(backpack: Backpack, id: Int)
 }

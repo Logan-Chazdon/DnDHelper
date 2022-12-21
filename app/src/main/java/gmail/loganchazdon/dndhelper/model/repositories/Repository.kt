@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.choiceEntities.ClassChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.SubraceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
-import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterSubraceCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -42,22 +41,11 @@ class Repository @Inject constructor(
     private val _feats = LocalDataSource.getFeats(MutableLiveData())
     private val _spells = LocalDataSource.getSpells(MutableLiveData())
 
-    fun getClassIndex(name: String): Int {
-        _classes.value?.forEachIndexed { index, it ->
-            if (it.name == name) {
-                return index
-            }
-        }
-        return -1
-    }
 
     fun getHomebrewRaces() : LiveData<List<Race>> {
         return dao!!.getAllRaces()
     }
 
-    fun getLanguages(): LiveData<List<Language>> {
-        return _languages
-    }
 
     fun getSkillsByIndex(index: String): MutableLiveData<Map<String, List<String>>>? {
         if (index == "skill_proficiencies") {
@@ -139,16 +127,8 @@ class Repository @Inject constructor(
         return _items
     }
 
-    fun getAllSpellsByClassIndex(classIndex: Int): MutableList<Spell> {
-        val result = mutableListOf<Spell>()
-        _spells.value?.forEach { spell ->
-            if (_classes.value?.get(classIndex)
-                    ?.let { it1 -> spell.classes.contains(it1.name.lowercase()) } == true
-            ) {
-                result.add(spell)
-            }
-        }
-        return result
+    fun getSpellsByClassId(classId: Int): MutableList<Spell> {
+        return dao?.getSpellsByClassId(classId) ?: mutableListOf()
     }
 
     fun getAllSpells(): List<Spell> {
@@ -267,10 +247,6 @@ class Repository @Inject constructor(
         dao?.insertFeature(newFeature)
     }
 
-    fun getFeature(id: Int): Feature? {
-        return dao?.getFeatureById(id)
-    }
-
     fun getLiveFeature(id: Int): LiveData<Feature>? {
         return dao?.getLiveFeatureById(id)
     }
@@ -309,6 +285,106 @@ class Repository @Inject constructor(
         dao?.insertSubraceChoiceEntity(subraceChoiceEntity)
     }
 
+    fun getClass(id: Int): LiveData<Class> {
+        return dao!!.getClass(id)
+    }
+
+    fun getSubclassesByClassId(id: Int): LiveData<List<Subclass>> {
+        return dao!!.getSubclassesByClassId(id)
+    }
+
+    fun removeClassFromCharacter(classId: Int, characterId: Int) {
+        //TODO update me when tests ui tests are completed.
+        dao?.removeCharacterClassCrossRef(
+            CharacterClassCrossRef(
+                characterId = characterId,
+                classId = classId
+            )
+        )
+    }
+
+    fun insertCharacterClassCrossRef(characterId: Int, classId: Int) {
+        dao?.insertCharacterClassCrossRef(
+            CharacterClassCrossRef(
+                characterId = characterId,
+                classId = classId
+            )
+        )
+    }
+
+    fun insertClassChoiceEntity(classChoiceEntity: ClassChoiceEntity) {
+        dao?.insertClassChoiceEntity(classChoiceEntity)
+    }
+
+    fun addFeatsToCharacterClass(characterId: Int, classId: Int, feats: List<Feat>) {
+        feats.forEach {
+            dao?.insertCharacterClassFeatCrossRef(
+                ClassFeatCrossRef(
+                    characterId = characterId,
+                    featId = it.id,
+                    classId = classId
+                )
+            )
+        }
+    }
+
+    fun insertClassSubclassCrossRef(characterSubclassCrossRef: CharacterSubclassCrossRef) {
+        dao?.insertCharacterSubclassCrossRef(
+            characterSubclassCrossRef
+        )
+    }
+
+    fun insertCharacterClassSpellCrossRef(
+        classId: Int,
+        spellId: Int,
+        characterId: Int,
+        prepared: Boolean?
+    ) {
+        dao?.insertCharacterClassSpellCrossRef(
+            CharacterClassSpellCrossRef(
+                classId = classId,
+                spellId = spellId,
+                characterId = characterId,
+                isPrepared = prepared
+            )
+        )
+    }
+
+    fun insertSubclassSpellCastingSpellCrossRef(
+        subclassId: Int,
+        spellId: Int,
+        characterId: Int,
+        isPrepared: Boolean?
+    ) {
+        dao?.insertSubClassSpellCastingCrossRef(
+            SubclassSpellCastingSpellCrossRef(
+                subclassId = subclassId,
+                spellId = spellId,
+                characterId = characterId,
+                isPrepared = isPrepared
+            )
+        )
+    }
+
+    fun insertCharacterClassEquipment(
+        equipmentChoices: List<ItemChoice>,
+        equipment: List<ItemInterface>,
+        characterId: Int
+    ) {
+        val backpack = dao?.getCharacterBackPack(characterId)
+        if(backpack?.classItems?.isEmpty() == true) {
+            backpack.classItems.addAll(equipment)
+            //TODO consider adding some form of override system here.
+            equipmentChoices.forEach {
+                backpack.classItems.addAll(it.chosen?.flatten() ?: emptyList())
+            }
+        }
+
+        if (backpack != null) {
+            dao?.insertCharacterBackPack(backpack, characterId)
+        }
+    }
+
     companion object {
         val allSpellLevels = listOf(
             Pair(1, "First Level"),
@@ -340,5 +416,10 @@ class Repository @Inject constructor(
             "Wisdom",
             "Charisma"
         )
+
+        val shortStatNames = statNames.onEach {
+            it.subSequence(0, 2)
+        }
+
     }
 }

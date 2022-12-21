@@ -18,13 +18,11 @@ class Repository @Inject constructor(
     private val dao: DatabaseDao?
 ) {
     private val _classes =
-        LocalDataSource.getClasses(MutableLiveData())
+        dao!!.getAllClasses()
     private val _races =
-        LocalDataSource.getRaces(MutableLiveData())
+        dao!!.getAllRaces()
     private val _backgrounds =
-        LocalDataSource.getBackgrounds(
-            MutableLiveData()
-        )
+        dao!!.getAllBackgrounds()
     private val _languages = LocalDataSource.getLanguages(
         MutableLiveData()
     )
@@ -37,6 +35,7 @@ class Repository @Inject constructor(
     )
     private val _feats = LocalDataSource.getFeats(MutableLiveData())
     private val _spells = LocalDataSource.getSpells(MutableLiveData())
+    private val _infusions = LocalDataSource.getInfusions(MutableLiveData())
 
 
     fun getHomebrewRaces() : LiveData<List<Race>> {

@@ -2,7 +2,7 @@ package gmail.loganchazdon.dndhelper.model
 
 import androidx.room.Embedded
 
-@DatabaseView("SELECT * FROM races")
+
 class Race(
     id: Int = 0,
     name : String = "",
@@ -13,18 +13,33 @@ class Race(
     age : String = "",
     size: String = "Medium",
     sizeDesc: String = "",
-    @Relation(
-        entity = Feature::class,
-        parentColumn = "raceId",
-        entityColumn = "featureId",
-        associateBy = Junction(RaceFeatureCrossRef::class)
-    )
-    override var traits: List<Feature> = listOf(),
-    override var subraces: List<Subrace>? = listOf(),
-    override var subrace: Subrace? = null
-) : RaceEntity() {
-
-    val totalGroundSpeed: Int?
+    var traits: List<Feature>? = listOf(),
+    startingProficiencies: List<Proficiency> = listOf(),
+    proficiencyChoices : List<ProficiencyChoice> = listOf(),
+    languages: List<Language> = listOf(),
+    languageChoices: List<LanguageChoice> = listOf(),
+    languageDesc: String = "",
+    subraces: List<Subrace>? = listOf(),
+    @Embedded(prefix = "subrace")
+    var subrace: Subrace? = null
+) : RaceEntity(
+    raceId = id,
+    raceName = name,
+    groundSpeed = groundSpeed,
+    abilityBonuses = abilityBonuses,
+    abilityBonusChoice = abilityBonusChoice,
+    alignment = alignment,
+    age = age,
+    size = size,
+    sizeDesc = sizeDesc,
+    startingProficiencies = startingProficiencies,
+    proficiencyChoices = proficiencyChoices,
+    languages = languages,
+    languageChoices = languageChoices,
+    languageDesc = languageDesc,
+    subraces = subraces,
+) {
+    val totalGroundSpeed: Int
     get() {
         return maxOf(groundSpeed, subrace?.groundSpeed ?: 0)
     }

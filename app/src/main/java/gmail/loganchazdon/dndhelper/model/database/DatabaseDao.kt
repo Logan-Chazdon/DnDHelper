@@ -613,4 +613,20 @@ WHERE backgroundId IS :id""")
 
     @Insert
     abstract fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity)
+
+    @Query("SELECT * FROM backgrounds")
+    protected abstract fun getUnfilledBackgrounds() : LiveData<List<BackgroundEntity>>
+
+    fun getAllBackgrounds(): LiveData<List<Background>> {
+        val result = MediatorLiveData<List<Background>>()
+        result.addSource(getUnfilledBackgrounds()) { backgroundEntities ->
+            val backgrounds = mutableListOf<Background>()
+            backgroundEntities.forEach {
+                it as Background
+                it.features = getBackgroundFeatures(it.id)
+                backgrounds.add(it)
+            }
+        }
+        return result
+    }
 }

@@ -1,9 +1,10 @@
 package gmail.loganchazdon.dndhelper.model.choiceEntities
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
-@Entity
+
+@Entity(primaryKeys = ["characterId", "backgroundId"])
 data class BackgroundChoiceEntity(
-    @PrimaryKey
     val characterId: Int,
+    val backgroundId: Int,
+    val languageChoices : List<List<String>>
 )

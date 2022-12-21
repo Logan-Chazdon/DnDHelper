@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import gmail.loganchazdon.dndhelper.model.*
-import gmail.loganchazdon.dndhelper.model.choiceEntities.ClassChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.choiceEntities.SubraceChoiceEntity
+import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
@@ -385,6 +382,25 @@ class Repository @Inject constructor(
         }
     }
 
+    fun getBackground(id: Int): LiveData<Background> {
+        val result = MediatorLiveData<Background>()
+        dao?.getBackground(id, result)
+        return result
+    }
+
+    fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int) {
+        dao?.insertCharacterBackgroundCrossRef(
+            CharacterBackgroundCrossRef(
+                backgroundId = backgroundId,
+                characterId = characterId
+            )
+        )
+    }
+
+    fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity) {
+        dao?.insertBackgroundChoiceEntity(backgroundChoiceEntity)
+    }
+
     companion object {
         val allSpellLevels = listOf(
             Pair(1, "First Level"),
@@ -420,6 +436,5 @@ class Repository @Inject constructor(
         val shortStatNames = statNames.onEach {
             it.subSequence(0, 2)
         }
-
     }
 }

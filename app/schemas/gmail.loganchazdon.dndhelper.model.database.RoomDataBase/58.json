@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "6824ca830a424f3961b0215221e9c380",
+    "identityHash": "202c71ac65a583576708bd3f0aa3b163",
     "entities": [
       {
         "tableName": "characters",
@@ -1754,18 +1754,31 @@
       },
       {
         "tableName": "BackgroundChoiceEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, PRIMARY KEY(`characterId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `backgroundId` INTEGER NOT NULL, `languageChoices` TEXT NOT NULL, PRIMARY KEY(`characterId`, `backgroundId`))",
         "fields": [
           {
             "fieldPath": "characterId",
             "columnName": "characterId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "backgroundId",
+            "columnName": "backgroundId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "languageChoices",
+            "columnName": "languageChoices",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "characterId"
+            "characterId",
+            "backgroundId"
           ],
           "autoGenerate": false
         },
@@ -1776,7 +1789,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6824ca830a424f3961b0215221e9c380')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '202c71ac65a583576708bd3f0aa3b163')"
     ]
   }
 }

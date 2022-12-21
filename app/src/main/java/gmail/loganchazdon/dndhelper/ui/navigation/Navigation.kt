@@ -91,14 +91,10 @@ fun Navigation(navController: NavHostController) {
             ConfirmClassView(viewModel = hiltViewModel(), navController = navController)
         }
 
-        composable("newCharacterView/BackgroundView/ConfirmBackGroundView/{backgroundIndex}/{characterId}") { backStackEntry ->
-            val backgroundIndex =
-                backStackEntry.arguments?.getString("backgroundIndex")?.toInt()
-            val viewModel = hiltViewModel<NewCharacterBackgroundViewModel>()
+        composable("newCharacterView/BackgroundView/ConfirmBackGroundView/{backgroundId}/{characterId}") {
             ConfirmBackgroundView(
                 navController = navController,
-                viewModel = viewModel,
-                backgroundIndex = backgroundIndex ?: 0
+                viewModel = hiltViewModel(),
             )
         }
         composable("newCharacterView/RaceView/ConfirmRaceView/{raceId}/{characterId}") { 

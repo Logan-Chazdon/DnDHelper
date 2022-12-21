@@ -64,7 +64,7 @@ fun BackgroundView(
                 state = rememberLazyListState(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                backgrounds.value?.forEachIndexed { i, it ->
+                backgrounds.value?.forEach { it ->
                     //TODO upgrade search
                     if (search == "" || it.name.lowercase().contains(search.lowercase())) {
                         item {
@@ -74,7 +74,7 @@ fun BackgroundView(
                                 modifier = Modifier
                                     .fillMaxWidth(0.95f)
                                     .clickable {
-                                        navController.navigate("newCharacterView/BackgroundView/ConfirmBackGroundView/$i/${viewModel.id}")
+                                        navController.navigate("newCharacterView/BackgroundView/ConfirmBackGroundView/${it.id}/${viewModel.id}")
                                     },
                                 elevation = 10.dp
                             ) {

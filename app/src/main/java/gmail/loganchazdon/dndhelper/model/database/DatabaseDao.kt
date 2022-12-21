@@ -542,4 +542,27 @@ WHERE subclassId IS :id""")
 
     @Query("UPDATE characters SET backpack = :backpack WHERE id IS :id")
     abstract fun insertCharacterBackPack(backpack: Backpack, id: Int)
+
+    @Query("SELECT * FROM backgrounds WHERE id IS :id")
+    protected abstract fun getUnfilledBackground(id: Int) : LiveData<BackgroundEntity>
+
+    @Query("""SELECT * FROM features
+JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.featureId IS features.featureId 
+WHERE backgroundId IS :id""")
+    protected abstract fun getUnfilledBackgroundFeatures(id: Int) : List<Feature>
+
+    fun getBackground(id: Int, result: MediatorLiveData<Background>) {
+        result.addSource(getUnfilledBackground(id)) {
+            if(it != null) {
+                val background = it as Background
+                background.features = getUnfilledBackgroundFeatures(id)
+                fillOutFeatureListWithoutChosen(background.features!!)
+                result.value = background
+            }
+
+        }
+    }
+
+    @Insert
+    abstract fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity)
 }

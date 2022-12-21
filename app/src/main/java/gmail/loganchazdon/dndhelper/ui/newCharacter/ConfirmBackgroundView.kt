@@ -32,21 +32,18 @@ import java.util.*
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ConfirmBackgroundView(
-    viewModel: NewCharacterBackgroundViewModel,
+    viewModel: NewCharacterConfirmBackgroundViewModel,
     navController: NavHostController,
-    backgroundIndex: Int
 ) {
-    val backgrounds = viewModel.backgrounds.observeAsState()
-    val background = backgrounds.value?.get(backgroundIndex)
     val scrollState = rememberScrollState(0)
     val mainLooper = Looper.getMainLooper()
-    viewModel.backgroundIndex = backgroundIndex
+    val background = viewModel.background.observeAsState()
 
-    if (background != null) {
+    if (background.value != null) {
         AutoSave(
             "ConfirmBackgroundView",
             { id ->
-                viewModel.setBackGround(background)
+                viewModel.setBackGround()
                 id.value = viewModel.id
             },
             navController
@@ -66,7 +63,7 @@ fun ConfirmBackgroundView(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = background.name, style = MaterialTheme.typography.h4)
+                    Text(text = background.value?.name ?: "", style = MaterialTheme.typography.h4)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
@@ -74,7 +71,7 @@ fun ConfirmBackgroundView(
                         Button(
                             onClick = {
                                 GlobalScope.launch {
-                                    viewModel.setBackGround(background)
+                                    viewModel.setBackGround()
                                     //Navigate to the next step
                                     Handler(mainLooper).post {
                                         navController.navigate("newCharacterView/StatsView/${viewModel.id}")
@@ -89,7 +86,7 @@ fun ConfirmBackgroundView(
                     }
                 }
                 Text(
-                    text = background.desc,
+                    text = background.value?.desc ?: "",
                     fontSize = 16.sp,
                     modifier = Modifier.padding(start = 10.dp)
                 )
@@ -98,7 +95,7 @@ fun ConfirmBackgroundView(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    if(background.equipment.isNotEmpty()) {
+                    if(background.value?.equipment?.isEmpty() == false) {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
                             backgroundColor = MaterialTheme.colors.noActionNeeded,
@@ -110,7 +107,7 @@ fun ConfirmBackgroundView(
                                     text = "Equipment",
                                     style = MaterialTheme.typography.h6
                                 )
-                                Text(background.equipment.let { items ->
+                                Text(background.value?.equipment?.let { items ->
                                     var result = ""
                                     items.forEachIndexed { i, item ->
                                         result += item.name
@@ -123,12 +120,12 @@ fun ConfirmBackgroundView(
                                             Locale.getDefault()
                                         ) else it.toString()
                                     }
-                                })
+                                } ?: "")
                             }
                         }
                     }
 
-                    background.equipmentChoices.forEach { choice ->
+                    background.value?.equipmentChoices?.forEach { choice ->
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
                             backgroundColor = MaterialTheme.colors.surface,
@@ -162,7 +159,7 @@ fun ConfirmBackgroundView(
                         }
                     }
 
-                    if (background.proficiencies.isNotEmpty()) {
+                    if (background.value?.proficiencies?.isEmpty() == false) {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
                             backgroundColor = MaterialTheme.colors.noActionNeeded,
@@ -177,7 +174,7 @@ fun ConfirmBackgroundView(
                                     style = MaterialTheme.typography.h6
                                 )
                                 var proficiencies = ""
-                                background.proficiencies.forEach {
+                                background.value!!.proficiencies.forEach {
                                     proficiencies += it.name + " "
                                 }
                                 Text(text = proficiencies)
@@ -185,8 +182,8 @@ fun ConfirmBackgroundView(
                         }
                     }
 
-                    if (background.languageChoices?.isNotEmpty() == true) {
-                        background.languageChoices.forEach { choice ->
+                    if (background.value?.languageChoices?.isNotEmpty() == true) {
+                        background.value?.languageChoices?.forEach { choice ->
                             Card(
                                 modifier = Modifier.fillMaxWidth(0.95f),
                                 backgroundColor = MaterialTheme.colors.surface,
@@ -223,7 +220,7 @@ fun ConfirmBackgroundView(
                     }
 
 
-                    background.spells?.let {
+                    background.value?.spells?.let {
                         Card(
                             modifier = Modifier.fillMaxWidth(0.95f),
                             backgroundColor = MaterialTheme.colors.noActionNeeded,
@@ -266,7 +263,7 @@ fun ConfirmBackgroundView(
                     }
 
                     //TODO update assumptions.
-                    background.features?.forEach {
+                    background.value?.features?.forEach {
                         FeatureView(
                             feature = it,
                             level = 1,

@@ -39,7 +39,7 @@ class Repository @Inject constructor(
 
 
     fun getHomebrewRaces() : LiveData<List<Race>> {
-        return dao!!.getAllRaces()
+        return dao!!.getHomebrewRaces()
     }
 
 

@@ -356,6 +356,10 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
     @Transaction
     abstract fun getAllRaces(): LiveData<List<Race>>
 
+    @Query("SELECT * FROM races WHERE isHomebrew IS 1")
+    @Transaction
+    abstract fun getHomebrewRaces(): LiveData<List<Race>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRace(newRace: RaceEntity) : Long
 

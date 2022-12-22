@@ -27,5 +27,6 @@ open class RaceEntity (
     open var languageChoices: List<LanguageChoice> = listOf(),
     open var languageDesc: String = "",
     //TODO remove this after updating LocalDataSource.
-    open var subraces: List<Subrace>? = listOf()
+    open var subraces: List<Subrace>? = listOf(),
+    val isHomebrew : Boolean = false
 )

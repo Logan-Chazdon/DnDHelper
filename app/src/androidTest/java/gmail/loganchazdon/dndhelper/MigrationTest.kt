@@ -1,8 +1,11 @@
 package gmail.loganchazdon.dndhelper
 
+import android.content.Context
+import androidx.room.Room
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.platform.app.InstrumentationRegistry
+import dagger.hilt.android.qualifiers.ApplicationContext
 import gmail.loganchazdon.dndhelper.model.database.Converters
 import gmail.loganchazdon.dndhelper.model.database.MIGRATION_56_57
 import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
@@ -51,5 +54,15 @@ class MigrationTest {
 
         //Check that the dragonborn's type has been preserved.
         assert(race!!.traits!![0].choices!![0].chosen!!.size == 1)
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun migrate57_58( @ApplicationContext appContext: Context ) {
+        Room.databaseBuilder(
+            appContext,
+            RoomDataBase::class.java,
+            "database"
+        ).addMigrations(MIGRATION_56_57).build()
     }
 }

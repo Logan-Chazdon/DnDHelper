@@ -21,7 +21,7 @@ open class ClassEntity(
     open val startingGoldMultiplier : Int = 10,
     @PrimaryKey(autoGenerate = true)
     open var id: Int = 0,
-    val isHomebrew : Boolean = false
+    var isHomebrew : Boolean = false
 ) {
     fun toClass(
         tookGold : Boolean? = null,

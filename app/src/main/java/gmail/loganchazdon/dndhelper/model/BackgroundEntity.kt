@@ -12,7 +12,7 @@ open class BackgroundEntity(
     val languages : List<Language>,
     val equipment : List<ItemInterface>,
     val equipmentChoices: List<ItemChoice>, //TODO extract me to a table when items get a table
-    val isHomebrew : Boolean = false
+    var isHomebrew : Boolean = false
 ) {
     @PrimaryKey(autoGenerate = true)
     var id : Int = 0

@@ -248,7 +248,8 @@ class CharacterRelationsTest{
                 level = 1,
                 totalNumOnGoldDie = 10,
                 abilityImprovementsGranted = mutableListOf(),
-                tookGold = true
+                tookGold = true,
+                proficiencyChoices = emptyList()
             )
         )
 

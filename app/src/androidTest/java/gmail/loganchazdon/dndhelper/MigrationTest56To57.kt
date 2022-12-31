@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import java.io.IOException
 
 @RunWith(androidx.test.ext.junit.runners.AndroidJUnit4::class)
-class MigrationTest {
+class MigrationTest5657 {
     private val TEST_DB = "migration-test"
     private val converters = Converters()
 
@@ -37,11 +37,9 @@ class MigrationTest {
         cursor.moveToFirst()
 
         val raceJson = cursor.getString(6)
-        val backgroundJson = cursor.getString(15)
         val classesJson = cursor.getString(11)
 
         val race = converters.storedStringToRace(raceJson)
-        val background = converters.storedStringToBackground(backgroundJson)
         val classes = converters.storedStringToClasses(classesJson)
 
         //Check that the artificers infusions have been preserved.

@@ -3,7 +3,6 @@ package gmail.loganchazdon.dndhelper.ui.homebrew
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,7 +13,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
@@ -28,7 +26,6 @@ import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.AutoSave
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun HomebrewFeatureView(
     viewModel: HomebrewFeatureViewModel,
@@ -198,8 +195,29 @@ fun HomebrewFeatureView(
                         title = "Replaces armor class",
                         active = viewModel.replacesAc
                     ) {
-                        Row {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            val allFields = mapOf(
+                                viewModel.baseAc to "base AC",
+                                viewModel.dexMax to "dex max",
+                                viewModel.conMax to "con max",
+                                viewModel.wisMax to "wis max"
+                            )
 
+                            allFields.forEach { (field, name) ->
+                                OutlinedTextField(
+                                    value = field.value,
+                                    onValueChange = {
+                                        field.value = it
+                                    },
+                                    modifier =  Modifier.weight(1F).padding(start = 5.dp),
+                                    label = {
+                                        Text(name)
+                                    }
+                                )
+                            }
                         }
                     }
 

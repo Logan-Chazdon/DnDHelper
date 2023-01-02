@@ -55,6 +55,11 @@ class HomebrewFeatureViewModel @Inject constructor(
     var id by Delegates.notNull<Int>()
     var feature: MediatorLiveData<Feature> = MediatorLiveData()
 
+    val baseAc = mutableStateOf("10")
+    val dexMax = mutableStateOf("0")
+    val wisMax = mutableStateOf("0")
+    val conMax = mutableStateOf("0")
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             id = savedStateHandle.get<String>("featureId")?.toInt().let {

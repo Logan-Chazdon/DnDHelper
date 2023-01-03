@@ -225,7 +225,15 @@ fun HomebrewFeatureView(
                         title = "Grants armor class bonus",
                         active = viewModel.grantsAcBonus
                     ) {
-
+                        OutlinedTextField(
+                            value = viewModel.acBonus.value,
+                            onValueChange = {
+                                viewModel.acBonus.value = it
+                            },
+                            label = {
+                                Text("AC bonus")
+                            }
+                        )
                     }
 
                     AttributeView(

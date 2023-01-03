@@ -59,6 +59,7 @@ class HomebrewFeatureViewModel @Inject constructor(
     val dexMax = mutableStateOf("0")
     val wisMax = mutableStateOf("0")
     val conMax = mutableStateOf("0")
+    val acBonus = mutableStateOf("0")
 
     init {
         viewModelScope.launch(Dispatchers.IO) {

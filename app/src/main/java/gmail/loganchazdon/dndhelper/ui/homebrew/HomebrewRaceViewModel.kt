@@ -14,7 +14,8 @@ import gmail.loganchazdon.dndhelper.model.Race
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -24,7 +25,7 @@ class HomebrewRaceViewModel @Inject constructor(
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
-    fun createDefaultFeature() : Int{
+    fun createDefaultFeature(): Int {
         val featureId = repository.createDefaultFeature()!!
         repository.insertRaceFeatureCrossRef(
             RaceFeatureCrossRef(
@@ -49,7 +50,11 @@ class HomebrewRaceViewModel @Inject constructor(
         val newRace = Race(
             name = name.value,
             id = id,
-            groundSpeed = try { speed.value.toInt() } catch(_: NumberFormatException) { 30 },
+            groundSpeed = try {
+                speed.value.toInt()
+            } catch (_: NumberFormatException) {
+                30
+            },
             size = sizeClass.value,
             abilityBonusChoice = abilityBonusChoice.value,
             abilityBonuses = abilityBonuses
@@ -59,7 +64,7 @@ class HomebrewRaceViewModel @Inject constructor(
 
 
     val sizeClassOptions = Repository.sizeClasses
-    val race : MediatorLiveData<Race> = MediatorLiveData()
+    val race: MediatorLiveData<Race> = MediatorLiveData()
     val name = mutableStateOf("")
     val speed = mutableStateOf("")
     val sizeClass = mutableStateOf("")
@@ -67,32 +72,34 @@ class HomebrewRaceViewModel @Inject constructor(
     val abilityBonuses = mutableStateListOf<AbilityBonus>()
     val abilityBonusChoice = mutableStateOf<AbilityBonusChoice?>(null)
 
-
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            id  = savedStateHandle.get<String>("raceId")?.toInt().let {
-                if ((it ?: 0) > 0) {
-                    it
-                } else {
-                    repository.createDefaultRace()
-                }
-            }!!
-
-            race.addSource(repository.getLiveRaceById(id)!!) {
-                race.value = it
-
-                //Set all data in the viewModel to match the race.
-                name.value = it.raceName
-                speed.value = it.groundSpeed.toString()
-                sizeClass.value = it.size
-
-                it.abilityBonuses?.let { bonuses ->
-                    if(abilityBonuses.isEmpty()) {
-                        abilityBonuses.addAll(bonuses)
+        runBlocking {
+            viewModelScope.async(Dispatchers.IO) {
+                id = savedStateHandle.get<String>("raceId")?.toInt().let {
+                    if ((it ?: 0) > 0) {
+                        it
+                    } else {
+                        repository.createDefaultRace()
                     }
+                }!!
+            }.invokeOnCompletion {
+                race.addSource(repository.getLiveRaceById(id)!!) {
+                    race.value = it
+
+                    //Set all data in the viewModel to match the race.
+                    name.value = it.raceName
+                    speed.value = it.groundSpeed.toString()
+                    sizeClass.value = it.size
+
+                    it.abilityBonuses?.let { bonuses ->
+                        if (abilityBonuses.isEmpty()) {
+                            abilityBonuses.addAll(bonuses)
+                        }
+                    }
+                    abilityBonusChoice.value = it.abilityBonusChoice
                 }
-                abilityBonusChoice.value = it.abilityBonusChoice
             }
+
         }
     }
 }

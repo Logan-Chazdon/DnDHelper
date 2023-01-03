@@ -191,7 +191,7 @@ fun HomebrewFeatureView(
                             onDelete = {
                                 viewModel.spells.removeAt(it)
                             },
-                            expanded = spellsIsExpanded
+                            onExpanded = {spellsIsExpanded.value = !spellsIsExpanded.value}
                         )
                     }
 
@@ -210,7 +210,7 @@ fun HomebrewFeatureView(
                             onDelete = {
                                 viewModel.infusions.removeAt(it)
                             },
-                            expanded = infusionIsExpanded
+                            onExpanded = {infusionIsExpanded.value = !infusionIsExpanded.value}
                         )
                     }
 
@@ -283,7 +283,7 @@ fun HomebrewFeatureView(
                             onDelete = {
                                 viewModel.languages.removeAt(it)
                             },
-                            expanded = languagesIsExpanded
+                            onExpanded = {languagesIsExpanded.value = !languagesIsExpanded .value}
                         )
                     }
 

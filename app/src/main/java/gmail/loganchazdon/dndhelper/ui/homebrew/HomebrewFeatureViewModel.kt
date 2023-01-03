@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.Infusion
+import gmail.loganchazdon.dndhelper.model.Language
 import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,7 @@ class HomebrewFeatureViewModel @Inject constructor(
 
     val infusions = mutableStateListOf<Infusion>()
     val spells = mutableStateListOf<Spell>()
+    val languages = mutableStateListOf<Language>()
     val featureName = mutableStateOf("")
     val featureDesc = mutableStateOf("")
     val featureLevel = mutableStateOf("")
@@ -51,6 +53,7 @@ class HomebrewFeatureViewModel @Inject constructor(
     val grantsInfusions = mutableStateOf(true)
     val grantsSpells = mutableStateOf(true)
     val allSpells = repository.getLiveSpells()
+    val allLanguages = repository.getLanguagesByIndex("all_languages")!!
     val allInfusions = repository.getAllInfusions()
     var id by Delegates.notNull<Int>()
     var feature: MediatorLiveData<Feature> = MediatorLiveData()

@@ -48,6 +48,9 @@ fun HomebrewFeatureView(
     val infusionIsExpanded = remember {
         mutableStateOf(false)
     }
+    val languagesIsExpanded = remember {
+        mutableStateOf(false)
+    }
 
     //Spell selection popup.
     GenericSelectionPopupView(
@@ -88,6 +91,26 @@ fun HomebrewFeatureView(
         },
         isSelected = {
             viewModel.infusions.contains(it)
+        }
+    )
+
+    //Language selection popup.
+    GenericSelectionPopupView(
+        isExpanded = languagesIsExpanded,
+        onItemClick = {
+            if(viewModel.languages.contains(it)) {
+                viewModel.languages.remove(it)
+            } else {
+                viewModel.languages.add(it)
+            }
+        },
+        items = viewModel.allLanguages.observeAsState(emptyList()).value,
+        detailsView = null,
+        getName = {
+            it.name ?: ""
+        },
+        isSelected = {
+            viewModel.languages.contains(it)
         }
     )
 
@@ -212,7 +235,9 @@ fun HomebrewFeatureView(
                                     onValueChange = {
                                         field.value = it
                                     },
-                                    modifier =  Modifier.weight(1F).padding(start = 5.dp),
+                                    modifier = Modifier
+                                        .weight(1F)
+                                        .padding(start = 5.dp),
                                     label = {
                                         Text(name)
                                     }
@@ -247,7 +272,19 @@ fun HomebrewFeatureView(
                         title = "Grants languages",
                         active = viewModel.grantsLanguages
                     ) {
-
+                        GenericSelectionView(
+                            chosen = viewModel.languages.let {
+                                val result = mutableListOf<String>()
+                                it.forEach { language ->
+                                    result.add(language.name.toString())
+                                }
+                                result
+                            },
+                            onDelete = {
+                                viewModel.languages.removeAt(it)
+                            },
+                            expanded = languagesIsExpanded
+                        )
                     }
 
                     AttributeView(

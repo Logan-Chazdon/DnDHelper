@@ -578,6 +578,20 @@ WHERE classId IS :id""")
         return result
     }
 
+    @Query("SELECT * FROM subraces WHERE id = :id")
+    protected abstract fun getUnfilledSubrace(id: Int) : LiveData<SubraceEntity>
+
+    fun getSubrace(id: Int) : LiveData<Subrace> {
+        val result = MediatorLiveData<Subrace>()
+        result.addSource(getUnfilledSubrace(id)) { entity ->
+            entity as Subrace
+            entity.traits = getSubraceTraits(id)
+            result.value = entity
+        }
+        return result
+    }
+
+
     @Query("""SELECT * FROM features 
 JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.featureId
 WHERE subclassId IS :id""")
@@ -633,4 +647,7 @@ WHERE backgroundId IS :id""")
         }
         return result
     }
+
+    @Insert
+    abstract fun insertRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
 }

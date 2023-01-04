@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import gmail.loganchazdon.dndhelper.ui.character.*
 import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewFeatureView
 import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewRaceView
+import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewSubraceView
 import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.*
 import gmail.loganchazdon.dndhelper.ui.preferences.PreferencesView
@@ -110,6 +111,10 @@ fun Navigation(navController: NavHostController) {
         composable("newCharacterView/StatsView/{characterId}") {
             val viewModel = hiltViewModel<NewCharacterStatsViewModel>()
             StatsView(viewModel, navController)
+        }
+
+        composable("homebrew/homebrewSubraceView/{id}"){
+            HomebrewSubraceView(viewModel = hiltViewModel(), navController = navController)
         }
     }
 }

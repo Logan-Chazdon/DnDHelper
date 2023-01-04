@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -19,27 +18,24 @@ import gmail.loganchazdon.dndhelper.ui.newCharacter.AutoSave
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun HomebrewRaceView(
-    navController: NavController?,
-    viewModel: HomebrewRaceViewModel
+fun HomebrewSubraceView(
+    viewModel: SubraceViewModel,
+    navController: NavController
 ) {
     val scope = rememberCoroutineScope()
     val mainLooper = Looper.getMainLooper()
-    val race = viewModel.race.observeAsState()
+    val subrace = viewModel.subrace.observeAsState()
 
-    navController?.let {
-        AutoSave(
-            "homebrewRaceView",
-            { id ->
-                viewModel.saveRace()
-                id.value = viewModel.id
-            },
-            it,
-            true
-        )
-    }
+    AutoSave(
+        "homebrewSubraceView",
+        { id ->
+            viewModel.saveSubrace()
+            id.value = viewModel.id
+        },
+        navController,
+        true
+    )
 
     Scaffold(
         floatingActionButton = {
@@ -47,7 +43,7 @@ fun HomebrewRaceView(
                 scope.launch(Dispatchers.IO) {
                     val id = viewModel.createDefaultFeature()
                     Handler(mainLooper).post {
-                        navController?.navigate("homebrewView/homebrewFeature/$id")
+                        navController.navigate("homebrewView/homebrewFeature/$id")
                     }
                 }
             }) {
@@ -72,7 +68,7 @@ fun HomebrewRaceView(
                         value = viewModel.name.value,
                         onValueChange = { viewModel.name.value = it },
                         placeholder = {
-                            Text(text = "Homebrew race name")
+                            Text(text = "Homebrew subrace name")
                         },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
@@ -98,7 +94,7 @@ fun HomebrewRaceView(
                 }
 
                 //Features
-                race.value?.traits?.let {
+                subrace.value?.traits?.let {
                     if (it.isNotEmpty()) {
                         item {
                             FeaturesView(
@@ -107,38 +103,12 @@ fun HomebrewRaceView(
                                     viewModel.removeFeature(id)
                                 },
                                 onClick = { id ->
-                                    navController?.navigate("homebrewView/homebrewFeature/$id")
+                                    navController.navigate("homebrewView/homebrewFeature/$id")
                                 }
                             )
                         }
                     }
                 }
-
-
-                //Subraces
-                item {
-                    GenericSelectionView(
-                        chosen = viewModel.subraces?.observeAsState(emptyList())?.value.let {
-                            val result = mutableListOf<String>()
-                            it?.forEach {
-                                result.add(it.name)
-                            }
-                            result
-                        },
-                        onDelete =  {
-                            viewModel.deleteSubraceAt(it)
-                        },
-                        onExpanded = {
-                            scope.launch(Dispatchers.IO) {
-                                val id = viewModel.createDefaultSubrace()
-                                Handler(mainLooper).post {
-                                    navController?.navigate("homebrewView/homebrewSubraceView/$id")
-                                }
-                            }
-                        }
-                    )
-                }
-
             }
         }
     }

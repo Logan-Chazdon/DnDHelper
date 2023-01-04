@@ -38,7 +38,7 @@ class Repository @Inject constructor(
     private val _infusions = LocalDataSource.getInfusions(MutableLiveData())
 
 
-    fun getHomebrewRaces() : LiveData<List<Race>> {
+    fun getHomebrewRaces(): LiveData<List<Race>> {
         return dao!!.getHomebrewRaces()
     }
 
@@ -95,7 +95,7 @@ class Repository @Inject constructor(
         dao?.findLiveCharacterById(id, character)
     }
 
-    fun getLiveRaceById(id: Int) : LiveData<Race>? {
+    fun getLiveRaceById(id: Int): LiveData<Race>? {
         return dao?.findLiveRaceById(id)
     }
 
@@ -105,13 +105,13 @@ class Repository @Inject constructor(
         return dao?.insertCharacter(newCharacter)?.toInt()
     }
 
-    fun createDefaultRace() : Int? {
+    fun createDefaultRace(): Int? {
         val newRace = RaceEntity()
         return dao?.insertRace(newRace)?.toInt()
     }
 
     fun createDefaultFeature(): Int? {
-        val newFeature = Feature(name = "", description ="")
+        val newFeature = Feature(name = "", description = "")
         return dao?.insertFeature(newFeature)?.toInt()
     }
 
@@ -131,7 +131,7 @@ class Repository @Inject constructor(
         return _spells.value ?: listOf()
     }
 
-    fun getLiveSpells() : LiveData<List<Spell>> {
+    fun getLiveSpells(): LiveData<List<Spell>> {
         return _spells
     }
 
@@ -158,7 +158,7 @@ class Repository @Inject constructor(
         character.classes.forEach { clazz ->
             clazz.value.pactMagic?.known?.let { known ->
                 known.forEach {
-                    if(spells.getOrDefault(it.level, null) == null) {
+                    if (spells.getOrDefault(it.level, null) == null) {
                         spells[it.level] = mutableListOf()
                     }
                     spells[it.level]?.add(Pair(null, it))
@@ -368,7 +368,7 @@ class Repository @Inject constructor(
         characterId: Int
     ) {
         val backpack = dao?.getCharacterBackPack(characterId)
-        if(backpack?.classItems?.isEmpty() == true) {
+        if (backpack?.classItems?.isEmpty() == true) {
             backpack.classItems.addAll(equipment)
             //TODO consider adding some form of override system here.
             equipmentChoices.forEach {
@@ -398,6 +398,30 @@ class Repository @Inject constructor(
 
     fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity) {
         dao?.insertBackgroundChoiceEntity(backgroundChoiceEntity)
+    }
+
+    fun insertSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef) {
+        dao?.insertSubraceFeatureCrossRef(subraceFeatureCrossRef)
+    }
+
+    fun getSubrace(id: Int): LiveData<Subrace> {
+        return dao!!.getSubrace(id)
+    }
+
+    fun removeSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef) {
+        dao!!.removeSubraceFeatureCrossRef(subraceFeatureCrossRef)
+    }
+
+    fun insertRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef) {
+        dao?.insertRaceSubraceCrossRef(raceSubraceCrossRef)
+    }
+
+    fun createDefaultSubrace(): Int {
+        return dao!!.insertSubrace(
+            SubraceEntity(
+                name = "Homebrew Subrace"
+            )
+        ).toInt()
     }
 
     companion object {

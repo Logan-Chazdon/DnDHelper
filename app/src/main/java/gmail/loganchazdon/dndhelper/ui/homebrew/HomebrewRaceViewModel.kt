@@ -3,15 +3,14 @@ package gmail.loganchazdon.dndhelper.ui.homebrew
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.AbilityBonus
 import gmail.loganchazdon.dndhelper.model.AbilityBonusChoice
 import gmail.loganchazdon.dndhelper.model.Race
+import gmail.loganchazdon.dndhelper.model.Subrace
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -36,6 +35,16 @@ class HomebrewRaceViewModel @Inject constructor(
         return featureId
     }
 
+    fun createDefaultSubrace() : Int {
+        val subraceId = repository.createDefaultSubrace()
+        repository.insertRaceSubraceCrossRef(
+            RaceSubraceCrossRef(
+                raceId = id,
+                subraceId = subraceId
+            )
+        )
+        return subraceId
+    }
 
     fun removeFeature(featureId: Int) {
         repository.removeRaceFeatureCrossRef(
@@ -62,7 +71,12 @@ class HomebrewRaceViewModel @Inject constructor(
         repository.insertRace(newRace)
     }
 
+    fun deleteSubraceAt(it: Int) {
 
+    }
+
+
+    var subraces : LiveData<List<Subrace>>? = null
     val sizeClassOptions = Repository.sizeClasses
     val race: MediatorLiveData<Race> = MediatorLiveData()
     val name = mutableStateOf("")
@@ -98,6 +112,8 @@ class HomebrewRaceViewModel @Inject constructor(
                     }
                     abilityBonusChoice.value = it.abilityBonusChoice
                 }
+
+                subraces = repository.getSubracesByRaceId(id)
             }
 
         }

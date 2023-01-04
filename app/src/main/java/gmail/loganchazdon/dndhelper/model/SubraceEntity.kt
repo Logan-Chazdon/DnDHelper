@@ -6,13 +6,13 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "subraces")
 open class SubraceEntity(
     var name : String,
-    var abilityBonuses: List<AbilityBonus>?,
-    var abilityBonusChoice: AbilityBonusChoice?,
-    var startingProficiencies: List<Proficiency>?,
-    var languages : List<Language>,
-    var languageChoices: List<LanguageChoice>,
-    var size: String?,
-    var groundSpeed: Int?,
+    var abilityBonuses: List<AbilityBonus>? = null,
+    var abilityBonusChoice: AbilityBonusChoice?= null,
+    var startingProficiencies: List<Proficiency>?= null,
+    var languages : List<Language> = emptyList(),
+    var languageChoices: List<LanguageChoice> = emptyList(),
+    var size: String? = "Medium",
+    var groundSpeed: Int? = null,
 )  {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

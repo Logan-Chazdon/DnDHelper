@@ -49,7 +49,7 @@ fun GenericSelectionView(
 
         Row(
             modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp)
+                .padding(start = 8.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {

@@ -451,6 +451,10 @@ class Repository @Inject constructor(
         dao?.removeClassSubclassCrossRef(classSubclassCrossRef)
     }
 
+    fun removeClassFeatureCrossRef(classFeatureCrossRef: ClassFeatureCrossRef) {
+        dao?.removeClassFeatureCrossRef(classFeatureCrossRef)
+    }
+
     companion object {
         val allSpellLevels = listOf(
             Pair(1, "First Level"),

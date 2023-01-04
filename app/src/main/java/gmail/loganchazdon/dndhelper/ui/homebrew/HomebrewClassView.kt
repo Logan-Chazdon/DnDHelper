@@ -129,6 +129,23 @@ fun HomebrewClassView(
                     }
                 }
 
+                //Features
+                clazz?.value?.levelPath?.let {
+                    if (it.isNotEmpty()) {
+                        item {
+                            FeaturesView(
+                                features = it,
+                                onDelete = { id ->
+                                    viewModel.removeFeature(id)
+                                },
+                                onClick = { id ->
+                                    navController.navigate("homebrewView/homebrewFeature/$id")
+                                }
+                            )
+                        }
+                    }
+                }
+
                 //Subclasses
                 item {
                     Card {

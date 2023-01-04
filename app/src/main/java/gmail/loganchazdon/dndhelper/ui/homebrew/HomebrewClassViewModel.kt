@@ -62,6 +62,15 @@ class HomebrewClassViewModel @Inject constructor(
         )
     }
 
+    fun removeFeature(featureId: Int) {
+        repository.removeClassFeatureCrossRef(
+            ClassFeatureCrossRef(
+                featureId = featureId,
+                id= id
+            )
+        )
+    }
+
     val goldMultiplier= mutableStateOf("10")
     val goldDie = mutableStateOf("4")
     val hitDie = mutableStateOf("8")

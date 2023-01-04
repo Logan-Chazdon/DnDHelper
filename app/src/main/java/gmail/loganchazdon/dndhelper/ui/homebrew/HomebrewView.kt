@@ -32,7 +32,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                 },
                 items = listOf(
                     {
-                        FloatingActionButton(onClick = { /*TODO*/ }) {
+                        FloatingActionButton(onClick = { navController.navigate("homebrewView/homebrewClassView/-1")  }) {
                             Icon(
                                 painterResource(R.drawable.ic_class_icon___ranger),
                                 "New class",

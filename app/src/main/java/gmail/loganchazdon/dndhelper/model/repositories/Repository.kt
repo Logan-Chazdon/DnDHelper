@@ -428,6 +428,29 @@ class Repository @Inject constructor(
         dao?.insertSubrace(subraceEntity)
     }
 
+    fun createDefaultClass(): Int {
+        return dao!!.insertClass(
+            ClassEntity(
+                name = "Homebrew class",
+                startingGoldD4s = 4,
+                startingGoldMultiplier = 10,
+                subclassLevel = 1
+            )
+        ).toInt()
+    }
+
+    fun insertClassFeatureCrossRef(classFeatureCrossRef: ClassFeatureCrossRef) {
+        dao?.insertClassFeatureCrossRef(classFeatureCrossRef)
+    }
+
+    fun insertClass(classEntity: ClassEntity) {
+        dao?.insertClass(classEntity)
+    }
+
+    fun removeClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef) {
+        dao?.removeClassSubclassCrossRef(classSubclassCrossRef)
+    }
+
     companion object {
         val allSpellLevels = listOf(
             Pair(1, "First Level"),

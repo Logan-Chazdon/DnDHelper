@@ -9,10 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import gmail.loganchazdon.dndhelper.ui.character.*
-import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewFeatureView
-import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewRaceView
-import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewSubraceView
-import gmail.loganchazdon.dndhelper.ui.homebrew.HomebrewView
+import gmail.loganchazdon.dndhelper.ui.homebrew.*
 import gmail.loganchazdon.dndhelper.ui.newCharacter.*
 import gmail.loganchazdon.dndhelper.ui.preferences.PreferencesView
 
@@ -115,6 +112,10 @@ fun Navigation(navController: NavHostController) {
 
         composable("homebrew/homebrewSubraceView/{id}"){
             HomebrewSubraceView(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable("homebrewView/homebrewClassView/{id}") {
+            HomebrewClassView(viewModel = hiltViewModel(), navController = navController)
         }
     }
 }

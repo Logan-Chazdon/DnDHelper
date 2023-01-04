@@ -654,4 +654,7 @@ WHERE backgroundId IS :id""")
 
     @Insert
     abstract fun insertRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
+
+    @Delete
+    abstract fun removeClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef)
 }

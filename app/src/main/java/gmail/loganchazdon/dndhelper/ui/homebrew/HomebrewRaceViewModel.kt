@@ -5,10 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.AbilityBonus
-import gmail.loganchazdon.dndhelper.model.AbilityBonusChoice
-import gmail.loganchazdon.dndhelper.model.Race
-import gmail.loganchazdon.dndhelper.model.Subrace
+import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
@@ -56,9 +53,9 @@ class HomebrewRaceViewModel @Inject constructor(
     }
 
     fun saveRace() {
-        val newRace = Race(
-            name = name.value,
-            id = id,
+        val newRace = RaceEntity(
+            raceName = name.value,
+            raceId = id,
             groundSpeed = try {
                 speed.value.toInt()
             } catch (_: NumberFormatException) {
@@ -66,7 +63,8 @@ class HomebrewRaceViewModel @Inject constructor(
             },
             size = sizeClass.value,
             abilityBonusChoice = abilityBonusChoice.value,
-            abilityBonuses = abilityBonuses
+            abilityBonuses = abilityBonuses,
+            isHomebrew = true
         )
         repository.insertRace(newRace)
     }

@@ -45,8 +45,8 @@ class HomebrewClassViewModel @Inject constructor(
                 proficiencies = emptyList(), //TODO
                 equipmentChoices = emptyList(), //TODO
                 equipment = emptyList(), //TODO
-                startingGoldD4s =  try { goldDie.value.toInt() } catch(e: Exception) { 4 }, //TODO
-                startingGoldMultiplier = try { goldMultiplier.value.toInt() } catch(e: Exception) { 10 }, //TODO
+                startingGoldD4s =  try { goldDie.value.toInt() } catch(e: Exception) { 4 },
+                startingGoldMultiplier = try { goldMultiplier.value.toInt() } catch(e: Exception) { 10 },
                 spellCasting = null, //TODO
                 pactMagic = null //TODO
             )

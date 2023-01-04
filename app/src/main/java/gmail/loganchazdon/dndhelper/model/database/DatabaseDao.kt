@@ -412,11 +412,13 @@ WHERE subraceId IS :subraceId
 
     fun bindSubraceOptions(raceId: Int, subraces:  MediatorLiveData<List<Subrace>>)  {
         subraces.addSource(getSubraceOptionsWithoutFeatures(raceId)) { entityList ->
-            val temp : List<Subrace> = entityList as List<Subrace>
-            temp.forEach {
-                it.traits = getSubraceTraits(it.id)
+            if(entityList != null) {
+                val temp: List<Subrace> = entityList as List<Subrace>
+                temp.forEach {
+                    it.traits = getSubraceTraits(it.id)
+                }
+                subraces.value = temp
             }
-            subraces.value = temp
         }
     }
 

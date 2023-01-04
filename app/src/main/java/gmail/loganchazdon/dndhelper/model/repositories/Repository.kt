@@ -424,6 +424,10 @@ class Repository @Inject constructor(
         ).toInt()
     }
 
+    fun insertSubrace(subraceEntity: SubraceEntity) {
+        dao?.insertSubrace(subraceEntity)
+    }
+
     companion object {
         val allSpellLevels = listOf(
             Pair(1, "First Level"),

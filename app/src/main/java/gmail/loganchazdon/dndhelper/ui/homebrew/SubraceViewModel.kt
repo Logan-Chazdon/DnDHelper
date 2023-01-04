@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.AbilityBonus
 import gmail.loganchazdon.dndhelper.model.AbilityBonusChoice
 import gmail.loganchazdon.dndhelper.model.Subrace
+import gmail.loganchazdon.dndhelper.model.SubraceEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubraceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import javax.inject.Inject
@@ -42,7 +43,13 @@ class SubraceViewModel @Inject constructor(
     }
 
     fun saveSubrace() {
-
+        repository.insertSubrace(
+            SubraceEntity(
+                name = name.value,
+                abilityBonuses = abilityBonuses,
+                abilityBonusChoice = abilityBonusChoice.value,
+            )
+        )
     }
 
     val abilityBonuses = mutableStateListOf<AbilityBonus>()

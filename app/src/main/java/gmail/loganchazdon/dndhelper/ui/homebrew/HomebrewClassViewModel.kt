@@ -45,8 +45,8 @@ class HomebrewClassViewModel @Inject constructor(
                 proficiencies = emptyList(), //TODO
                 equipmentChoices = emptyList(), //TODO
                 equipment = emptyList(), //TODO
-                startingGoldD4s = 0, //TODO
-                startingGoldMultiplier = 0, //TODO
+                startingGoldD4s =  try { goldDie.value.toInt() } catch(e: Exception) { 4 }, //TODO
+                startingGoldMultiplier = try { goldMultiplier.value.toInt() } catch(e: Exception) { 10 }, //TODO
                 spellCasting = null, //TODO
                 pactMagic = null //TODO
             )
@@ -62,6 +62,8 @@ class HomebrewClassViewModel @Inject constructor(
         )
     }
 
+    val goldMultiplier= mutableStateOf("10")
+    val goldDie = mutableStateOf("4")
     val hitDie = mutableStateOf("8")
     var subclasses : LiveData<List<Subclass>>? = null
     val name = mutableStateOf("")

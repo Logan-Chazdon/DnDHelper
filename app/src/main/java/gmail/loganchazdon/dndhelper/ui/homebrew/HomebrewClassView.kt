@@ -93,6 +93,42 @@ fun HomebrewClassView(
                     )
                 }
 
+                //Gold
+                item {
+                    Column {
+                        Text("Starting gold")
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        ) {
+                            OutlinedTextField(
+                                value = viewModel.goldDie.value,
+                                onValueChange = {
+                                    viewModel.goldDie.value = it
+                                },
+                                label = {
+                                    Text("Die")
+                                },
+                                trailingIcon = {
+                                    Text("d4")
+                                },
+                                modifier = Modifier.weight(weight = 1f, fill = true)
+                            )
+
+                            OutlinedTextField(
+                                value = viewModel.goldMultiplier.value,
+                                onValueChange = {
+                                    viewModel.goldMultiplier.value = it
+                                },
+                                label = {
+                                    Text("Multiplier")
+                                },
+                                modifier = Modifier.weight(weight = 1f, fill = true)
+                            )
+                        }
+                    }
+                }
+
                 //Subclasses
                 item {
                     Card {

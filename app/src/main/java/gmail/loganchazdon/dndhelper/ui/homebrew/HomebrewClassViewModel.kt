@@ -40,7 +40,7 @@ class HomebrewClassViewModel @Inject constructor(
                 name = name.value,
                 isHomebrew = true,
                 hitDie = try { hitDie.value.toInt() } catch(e: Exception) { 8 },
-                subclassLevel = 0, //TODO
+                subclassLevel = try { subclassLevel.value.toInt() } catch(e: Exception) { 1 },
                 proficiencyChoices = emptyList(), //TODO
                 proficiencies = emptyList(), //TODO
                 equipmentChoices = emptyList(), //TODO

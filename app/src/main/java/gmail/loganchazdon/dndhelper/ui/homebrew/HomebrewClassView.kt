@@ -76,6 +76,23 @@ fun HomebrewClassView(
                     )
                 }
 
+                //Hit die
+                item {
+                    OutlinedTextField(
+                        value = viewModel.hitDie.value,
+                        onValueChange = {
+                            viewModel.hitDie.value = it
+                        },
+                        label = {
+                            Text("Hit die")
+                        },
+                        leadingIcon = {
+                            Text("1d")
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
                 //Subclasses
                 item {
                     Card {

@@ -39,7 +39,7 @@ class HomebrewClassViewModel @Inject constructor(
             ClassEntity(
                 name = name.value,
                 isHomebrew = true,
-                hitDie = 0, //TODO
+                hitDie = try { hitDie.value.toInt() } catch(e: Exception) { 8 },
                 subclassLevel = 0, //TODO
                 proficiencyChoices = emptyList(), //TODO
                 proficiencies = emptyList(), //TODO
@@ -62,6 +62,7 @@ class HomebrewClassViewModel @Inject constructor(
         )
     }
 
+    val hitDie = mutableStateOf("8")
     var subclasses : LiveData<List<Subclass>>? = null
     val name = mutableStateOf("")
     var clazz: LiveData<Class>? = null

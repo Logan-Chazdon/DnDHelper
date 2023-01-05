@@ -34,53 +34,61 @@ class HomebrewClassViewModel @Inject constructor(
     }
 
     fun saveClass() {
-        val pactSlots = mutableListOf<Resource>()
-        pactMagicSlots.forEach { (levelString, amountString) ->
-            val level = try {
-                levelString.toInt()
-            } catch (E: java.lang.Exception) {
-                1
-            }
-            val amount = try {
-                amountString.toInt()
-            } catch (E: java.lang.Exception) {
-                1
-            }
-            pactSlots.add(
-                Resource(
-                    name = Repository.allSpellLevels[level - 1].second,
-                    currentAmount = amount,
-                    maxAmountType = amount.toString(),
-                    rechargeAmountType = amount.toString()
+        var pactMagic: PactMagic? = null
+        if(hasPactMagic.value) {
+            val pactSlots = mutableListOf<Resource>()
+            pactMagicSlots.forEach { (levelString, amountString) ->
+                val level = try {
+                    levelString.toInt()
+                } catch (E: java.lang.Exception) {
+                    1
+                }
+                val amount = try {
+                    amountString.toInt()
+                } catch (E: java.lang.Exception) {
+                    1
+                }
+                pactSlots.add(
+                    Resource(
+                        name = Repository.allSpellLevels[level - 1].second,
+                        currentAmount = amount,
+                        maxAmountType = amount.toString(),
+                        rechargeAmountType = amount.toString()
+                    )
                 )
+            }
+
+            val cantripsKnown = mutableListOf<Int>()
+            val spellsKnown = mutableListOf<Int>()
+            pactMagicCantripsKnown.forEachIndexed { index, it ->
+                cantripsKnown.add(
+                    index, try {
+                        it.toInt()
+                    } catch (e: java.lang.Exception) {
+                        cantripsKnown.getOrNull(index - 1) ?: 0
+                    }
+                )
+            }
+
+            pactMagicSpellsKnown.forEachIndexed { index, it ->
+                spellsKnown.add(
+                    index, try {
+                        it.toInt()
+                    } catch (e: java.lang.Exception) {
+                        spellsKnown.getOrNull(index - 1) ?: 0
+                    }
+                )
+            }
+
+            pactMagic = PactMagic(
+                castingAbility = pactMagicAbility.value.substring(0, 3),
+                spellsKnown = spellsKnown,
+                cantripsKnown = cantripsKnown,
+                pactSlots = pactSlots
             )
         }
 
-        val cantripsKnown = mutableListOf<Int>()
-        val spellsKnown = mutableListOf<Int>()
-        pactMagicCantripsKnown.forEachIndexed { index, it ->
-            cantripsKnown.add(index, try {
-                it.toInt()
-            } catch (e: java.lang.Exception) {
-                cantripsKnown.getOrNull(index - 1) ?: 0
-            })
-        }
 
-        pactMagicSpellsKnown.forEachIndexed { index, it ->
-            spellsKnown.add(index, try {
-                it.toInt()
-            } catch (e: java.lang.Exception) {
-                spellsKnown.getOrNull(index - 1) ?: 0
-            })
-        }
-
-
-        val pactMagic = PactMagic(
-            castingAbility = pactMagicAbility.value.substring(0, 3),
-            spellsKnown = spellsKnown,
-            cantripsKnown = cantripsKnown,
-            pactSlots = pactSlots
-        )
 
         repository.insertClass(
             ClassEntity(
@@ -168,6 +176,7 @@ class HomebrewClassViewModel @Inject constructor(
             "3",
             "3",
             "3",
+            "4",
             "4",
             "4",
             "4",

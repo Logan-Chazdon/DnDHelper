@@ -228,7 +228,8 @@ fun HomebrewClassView(
                                             label = {
                                                 Text("Slot level")
                                             },
-                                            modifier = Modifier.weight(weight = 1f, fill = true)
+                                            modifier = Modifier.weight(weight = 1f, fill = true),
+                                            singleLine = true
                                         )
 
                                         OutlinedTextField(
@@ -240,7 +241,8 @@ fun HomebrewClassView(
                                             label = {
                                                 Text("Amount")
                                             },
-                                            modifier = Modifier.weight(weight = 1f, fill = true)
+                                            modifier = Modifier.weight(weight = 1f, fill = true),
+                                            singleLine = true
                                         )
 
                                         OutlinedTextField(
@@ -251,7 +253,8 @@ fun HomebrewClassView(
                                             label = {
                                                 Text("Cantrips")
                                             },
-                                            modifier = Modifier.weight(weight = 1f, fill = true)
+                                            modifier = Modifier.weight(weight = 1f, fill = true),
+                                            singleLine = true
                                         )
 
                                         OutlinedTextField(
@@ -262,7 +265,8 @@ fun HomebrewClassView(
                                             label = {
                                                 Text("Spells")
                                             },
-                                            modifier = Modifier.weight(weight = 1f, fill = true)
+                                            modifier = Modifier.weight(weight = 1f, fill = true),
+                                            singleLine = true
                                         )
                                     }
                                 }

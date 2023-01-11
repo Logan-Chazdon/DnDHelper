@@ -2,6 +2,7 @@ package gmail.loganchazdon.dndhelper.ui.homebrew
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -35,7 +36,7 @@ class HomebrewClassViewModel @Inject constructor(
 
     fun saveClass() {
         var pactMagic: PactMagic? = null
-        if(hasPactMagic.value) {
+        if (hasPactMagic.value) {
             val pactSlots = mutableListOf<Resource>()
             pactMagicSlots.forEach { (levelString, amountString) ->
                 val level = try {
@@ -88,7 +89,62 @@ class HomebrewClassViewModel @Inject constructor(
             )
         }
 
+        var spellCasting : SpellCasting? = null
+        if(hasSpellCasting.value) {
+            val spellKnown = if(spellCastingLearnsSpells.value) {
+                mutableListOf<Int>()
+            } else {
+                null
+            }
+            val cantripsKnown = mutableListOf<Int>()
 
+
+            var levelSpellsKnown = 0
+            var levelCantripsKnown = 0
+            var currentIndex = 0
+            for(currentLevel in 1 until 21) {
+                if(
+                    (spellCastingSpellsAndCantripsKnown.keys.elementAtOrNull(currentIndex)
+                        ?.toIntOrNull() ?: 0) <= currentLevel
+                ) {
+                    levelSpellsKnown = spellCastingSpellsAndCantripsKnown[currentLevel.toString()]?.second?.toIntOrNull()
+                        ?: spellKnown?.getOrNull(currentLevel - 1) ?: 0
+
+                    levelCantripsKnown = spellCastingSpellsAndCantripsKnown[currentLevel.toString()]?.first?.toIntOrNull()
+                        ?: cantripsKnown.getOrNull(currentLevel - 1) ?: 0
+                    currentIndex += 1
+                }
+
+                spellKnown?.add(currentLevel - 1, levelSpellsKnown)
+                cantripsKnown.add(currentLevel - 1, levelCantripsKnown)
+            }
+
+            spellCasting = SpellCasting(
+                type = if(spellCastingIsHalfCaster.value) {
+                    0.5
+                } else {
+                    1.0
+                },
+                hasSpellBook = false, //TODO
+                castingAbility = spellCastingAbility.value.substring(0 ,3),
+                prepareFrom = if(spellCastingPrepares.value) {
+                    if(spellCastingLearnsSpells.value) {
+                        "known"
+                    } else {
+                        "all"
+                    }
+                } else {
+                    null
+                },
+                preparationModMultiplier = if(spellCastingPrepares.value) {
+                    spellCastingCastingModMulti.value.toDoubleOrNull()
+                } else {
+                    null
+                },
+                spellsKnown = spellKnown,
+                cantripsKnown = cantripsKnown
+            )
+        }
 
         repository.insertClass(
             ClassEntity(
@@ -118,7 +174,7 @@ class HomebrewClassViewModel @Inject constructor(
                 } catch (e: Exception) {
                     10
                 },
-                spellCasting = null, //TODO
+                spellCasting = spellCasting,
                 pactMagic = pactMagic
             )
         )
@@ -191,6 +247,7 @@ class HomebrewClassViewModel @Inject constructor(
             "4"
         )
     val allSpells = repository.getLiveSpells()
+    val hasSpellCasting = mutableStateOf(false)
     val hasPactMagic = mutableStateOf(false)
     val goldMultiplier = mutableStateOf("10")
     val goldDie = mutableStateOf("4")
@@ -201,8 +258,40 @@ class HomebrewClassViewModel @Inject constructor(
     var id: Int = -1
     val subclassLevel = mutableStateOf("1")
     val pactMagicAbility = mutableStateOf("Charisma")
+    val spellCastingAbility = mutableStateOf("Intelligence")
     val pactMagicSpells = mutableStateListOf<Spell>()
-
+    val spellCastingSpells = mutableStateListOf<Spell>()
+    val spellCastingSlots = mutableStateListOf(
+        arrayOf("2", "0", "0", "0", "0", "0", "0", "0", "0", "0"),
+        arrayOf("3", "0", "0", "0", "0", "0", "0", "0", "0", "0"),
+        arrayOf("4", "2", "0", "0", "0", "0", "0", "0", "0", "0"),
+        arrayOf("4", "3", "0", "0", "0", "0", "0", "0", "0", "0"),
+        arrayOf("4", "3", "2", "0", "0", "0", "0", "0", "0", "0"),
+        arrayOf("4", "3", "3", "0", "0", "0", "0", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "1", "0", "0", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "2", "0", "0", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "3", "1", "0", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "3", "1", "0", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "3", "2", "0", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "3", "2", "0", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "3", "2", "1", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "3", "2", "1", "0", "0", "0"),
+        arrayOf("4", "3", "3", "3", "3", "2", "1", "1", "0", "0"),
+        arrayOf("4", "3", "3", "3", "3", "2", "1", "1", "1", "0"),
+        arrayOf("4", "3", "3", "3", "3", "2", "1", "1", "1", "1"),
+        arrayOf("4", "3", "3", "3", "3", "3", "1", "1", "1", "1"),
+        arrayOf("4", "3", "3", "3", "3", "3", "2", "1", "1", "1"),
+        arrayOf("4", "3", "3", "3", "3", "3", "2", "2", "1", "1"),
+    )
+    val spellCastingPrepares = mutableStateOf(false)
+    val spellCastingLearnsSpells = mutableStateOf(false)
+    val spellCastingCastingModMulti = mutableStateOf("1")
+    val spellCastingLevelMulti = mutableStateOf("1")
+    val spellCastingIsHalfCaster = mutableStateOf(false)
+    val spellCastingSpellsAndCantripsKnown = mutableStateMapOf(
+        "1" to Pair("4", "2"),
+        "20" to Pair("4", "6")
+    )
 
     //Slot level to slot number
     val pactMagicSlots = mutableStateListOf(

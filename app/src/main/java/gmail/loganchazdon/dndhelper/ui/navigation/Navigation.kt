@@ -117,5 +117,9 @@ fun Navigation(navController: NavHostController) {
         composable("homebrewView/homebrewClassView/{id}") {
             HomebrewClassView(viewModel = hiltViewModel(), navController = navController)
         }
+
+        composable("homebrewView/homebrewSubclassView/{id}") {
+            HomebrewSubclassView(viewModel = hiltViewModel(), navController = navController)
+        }
     }
 }

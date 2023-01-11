@@ -22,21 +22,4 @@ open class ClassEntity(
     @PrimaryKey(autoGenerate = true)
     open var id: Int = 0,
     var isHomebrew : Boolean = false
-) {
-    fun toClass(
-        tookGold : Boolean? = null,
-        isBaseClass: Boolean = false,
-        level: Int = 1,
-        featsGranted : MutableList<Feat>? = mutableListOf(),
-        levelPath: MutableList<Feature>? = mutableListOf(),
-    ) : Class {
-        return (this as Class).run {
-            this.tookGold = tookGold
-            this.isBaseClass = isBaseClass
-            this.level = level
-            this.featsGranted = featsGranted
-            this.levelPath = levelPath
-            this
-        }
-    }
-}
+)

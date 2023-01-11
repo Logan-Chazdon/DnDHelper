@@ -181,21 +181,36 @@ class HomebrewClassViewModel @Inject constructor(
     }
 
     fun deleteSubclass(it: Int) {
-        repository.removeClassSubclassCrossRef(
-            ClassSubclassCrossRef(
-                classId = id,
-                subclassId = subclasses!!.value!![it].subclassId
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.removeClassSubclassCrossRef(
+                ClassSubclassCrossRef(
+                    classId = id,
+                    subclassId = subclasses!!.value!![it].subclassId
+                )
             )
-        )
+        }
     }
 
     fun removeFeature(featureId: Int) {
-        repository.removeClassFeatureCrossRef(
-            ClassFeatureCrossRef(
-                featureId = featureId,
-                id = id
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.removeClassFeatureCrossRef(
+                ClassFeatureCrossRef(
+                    featureId = featureId,
+                    id = id
+                )
+            )
+        }
+    }
+
+    fun createDefaultSubclass(): Int {
+        val subclassId = repository.createDefaultSubclass()
+        repository.insertClassSubclassCrossRef(
+            ClassSubclassCrossRef(
+                classId = id,
+                subclassId = subclassId
             )
         )
+        return subclassId
     }
 
     val pactMagicSpellsKnown =
@@ -325,8 +340,8 @@ class HomebrewClassViewModel @Inject constructor(
                 if (it == -1) {
                     id = repository.createDefaultClass()
                 }
-                clazz = repository.getClass(it)
                 id = it
+                clazz = repository.getClass(id)
                 subclasses = repository.getSubclassesByClassId(id)
             }
         }

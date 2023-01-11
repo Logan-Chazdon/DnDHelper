@@ -191,7 +191,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 0
             )
 
-            repository.insertClassSubclassCrossRef(
+            repository.insertCharacterSubclassCrossRef(
                 CharacterSubclassCrossRef(
                     subClassId = subclass!!.subclassId,
                     classId = clazz.value!!.id ,

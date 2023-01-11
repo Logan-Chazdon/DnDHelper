@@ -420,7 +420,12 @@ fun HomebrewClassView(
                                     viewModel.deleteSubclass(it)
                                 },
                                 onExpanded = {
-                                    //TODO navigate
+                                    scope.launch(Dispatchers.IO) {
+                                        val id = viewModel.createDefaultSubclass()
+                                        Handler(mainLooper).post {
+                                            navController.navigate("homebrewView/homebrewSubclassView/$id")
+                                        }
+                                    }
                                 },
                             )
                         }

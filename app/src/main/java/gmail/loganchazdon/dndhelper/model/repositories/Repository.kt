@@ -324,7 +324,7 @@ class Repository @Inject constructor(
         }
     }
 
-    fun insertClassSubclassCrossRef(characterSubclassCrossRef: CharacterSubclassCrossRef) {
+    fun insertCharacterSubclassCrossRef(characterSubclassCrossRef: CharacterSubclassCrossRef) {
         dao?.insertCharacterSubclassCrossRef(
             characterSubclassCrossRef
         )
@@ -453,6 +453,37 @@ class Repository @Inject constructor(
 
     fun removeClassFeatureCrossRef(classFeatureCrossRef: ClassFeatureCrossRef) {
         dao?.removeClassFeatureCrossRef(classFeatureCrossRef)
+    }
+
+    fun createDefaultSubclass(): Int {
+        return dao!!.insertSubclass(
+            SubclassEntity(
+                "",
+                spellCasting = null,
+                spellAreFree = true,
+                spells = emptyList()
+            )
+        ).toInt()
+    }
+
+    fun getSubclass(it: Int): LiveData<Subclass> {
+        return dao!!.getSubclass(it)
+    }
+
+    fun removeSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef) {
+        dao?.removeSubclassFeatureCrossRef(subclassFeatureCrossRef)
+    }
+
+    fun insertSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef) {
+        dao?.insertSubclassFeatureCrossRef(subclassFeatureCrossRef)
+    }
+
+    fun insertSubclass(subclassEntity: SubclassEntity) {
+        dao?.insertSubclass(subclassEntity)
+    }
+
+    fun insertClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef) {
+        dao?.insertClassSubclassId(classSubclassCrossRef)
     }
 
     companion object {

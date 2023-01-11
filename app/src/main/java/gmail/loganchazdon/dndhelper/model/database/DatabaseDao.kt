@@ -5,6 +5,9 @@ import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 private const val fullCharacterSql =
     """WITH subrace AS (SELECT id AS subraceid, name AS subracename, abilityBonuses AS subraceabilityBonuses, abilityBonusChoice AS subraceabilityBonusChoice, 
@@ -270,13 +273,15 @@ WHERE featureId IS :featureId
     fun getAllClasses() : LiveData<List<Class>> {
         val classes = MediatorLiveData<List<Class>>()
         classes.addSource(getAllClassEntities()) {
-            val temp = mutableListOf<Class>()
-            it.forEachIndexed { index, classEntity ->
-                temp.add(index, classEntity.toClass(
-                    levelPath = getLevelPath(classEntity.id)
-                ))
+            GlobalScope.launch {
+                val temp = mutableListOf<Class>()
+                it.forEachIndexed { index, classEntity ->
+                    temp.add(
+                        index, Class(classEntity, getLevelPath(classEntity.id))
+                    )
+                }
+                classes.postValue(temp)
             }
-            classes.value = temp
         }
         return classes
     }
@@ -316,7 +321,7 @@ WHERE ClassFeatureCrossRef.id IS :id""")
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClass(newClass: ClassEntity) : Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubclass(subClass: SubclassEntity) : Long
 
     @Insert
@@ -571,13 +576,22 @@ JOIN ClassSubclassCrossRef ON ClassSubclassCrossRef.subclassId IS subclasses.sub
 WHERE classId IS :id""")
     protected abstract fun getUnfilledSubclassesByClassId(id: Int) : LiveData<List<SubclassEntity>>
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun getSubclassesByClassId(id: Int): LiveData<List<Subclass>> {
         val result = MediatorLiveData<List<Subclass>>()
         result.addSource(getUnfilledSubclassesByClassId(id)) { entities ->
-            (entities as List<Subclass>).forEach {
-                it.features = getSubclassFeaturesById(it.subclassId)
+            GlobalScope.launch {
+                val tempList = mutableListOf<Subclass>()
+                entities.forEach {
+                    tempList.add(
+                        Subclass(
+                            subclassEntity = it,
+                            features = getSubclassFeaturesById(it.subclassId)
+                        )
+                    )
+                }
+                result.postValue(tempList)
             }
-            result.value = entities
         }
         return result
     }
@@ -657,4 +671,30 @@ WHERE backgroundId IS :id""")
 
     @Delete
     abstract fun removeClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef)
+
+    @Query("""SELECT * FROM subclasses
+JOIN ClassSubclassCrossRef ON ClassSubclassCrossRef.subclassId IS subclasses.subclassId
+WHERE classId IS :id""")
+    protected abstract fun getUnfilledSubclass(id: Int) : LiveData<SubclassEntity>
+
+    fun getSubclass(id: Int): LiveData<Subclass> {
+        val result = MediatorLiveData<Subclass>()
+        result.addSource(getUnfilledSubclass(id)) {
+            if(it != null) {
+                GlobalScope.launch {
+                    result.postValue(Subclass(it, getSubclassFeaturesById(id)))
+                }
+            }
+        }
+        return result
+    }
+
+    @Delete
+    abstract fun removeSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef)
+
+    @Insert
+    abstract fun insertSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef)
+
+    @Insert
+    abstract fun insertClassSubclassId(classSubclassCrossRef: ClassSubclassCrossRef)
 }

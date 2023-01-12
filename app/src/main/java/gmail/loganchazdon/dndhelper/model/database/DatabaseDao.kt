@@ -557,10 +557,15 @@ WHERE backgroundId IS :id
     fun getClass(id : Int): LiveData<Class> {
         val result = MediatorLiveData<Class>()
         result.addSource(getUnfilledClass(id)) { entity ->
-            if(entity != null) {
-                entity as Class
-                entity.levelPath = getLevelPath(id)
-                result.value = entity
+            GlobalScope.launch {
+                if (entity != null) {
+                    result.postValue(
+                        Class(
+                            entity,
+                            getLevelPath(id)
+                        )
+                    )
+                }
             }
         }
         return result

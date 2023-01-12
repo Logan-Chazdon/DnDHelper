@@ -42,6 +42,9 @@ class Repository @Inject constructor(
         return dao!!.getHomebrewRaces()
     }
 
+    fun getHomebrewClasses() : LiveData<List<ClassEntity>> {
+        return dao!!.getHomebrewClasses()
+    }
 
     fun getSkillsByIndex(index: String): MutableLiveData<Map<String, List<String>>>? {
         if (index == "skill_proficiencies") {
@@ -484,6 +487,10 @@ class Repository @Inject constructor(
 
     fun insertClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef) {
         dao?.insertClassSubclassId(classSubclassCrossRef)
+    }
+
+    fun deleteClass(id: Int) {
+        dao?.deleteClass(id)
     }
 
     companion object {

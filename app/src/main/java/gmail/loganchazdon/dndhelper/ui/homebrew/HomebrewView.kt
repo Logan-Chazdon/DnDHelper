@@ -69,7 +69,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
             mutableStateOf(true)
         }
         val races = viewModel.races.observeAsState()
-
+        val classes =viewModel.classes.observeAsState()
         Column(modifier = Modifier
             .padding(paddingValues)
             .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -145,6 +145,25 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                         )
                     }
                 }
+
+                //Classes
+                if(showClasses.value) {
+                    items(classes.value?.filter {
+                        if (search.isBlank()) true else it.name.contains(
+                            search
+                        )
+                    } ?: listOf()) { clazz: gmail.loganchazdon.dndhelper.model.ClassEntity ->
+                        HomebrewItem(
+                            name = clazz.name,
+                            onClick = {
+                                navController.navigate("homebrewView/homebrewClassView/${clazz.id}")
+                            },
+                            onDelete = {
+                                viewModel.deleteClass(clazz.id)
+                            }
+                        )
+                    }
+                }
             }
         }
     }
@@ -157,7 +176,9 @@ private fun FilterItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(4.dp).clickable { checked.value = !checked.value },
+        modifier = Modifier
+            .padding(4.dp)
+            .clickable { checked.value = !checked.value },
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         Text(

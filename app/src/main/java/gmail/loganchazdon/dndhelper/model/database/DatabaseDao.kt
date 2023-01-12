@@ -697,4 +697,12 @@ WHERE classId IS :id""")
 
     @Insert
     abstract fun insertClassSubclassId(classSubclassCrossRef: ClassSubclassCrossRef)
+
+    @Query("SELECT * FROM classes WHERE isHomebrew IS 1")
+    abstract fun getHomebrewClasses() : LiveData<List<ClassEntity>>
+
+    @Query("DELETE FROM classes WHERE id IS :id")
+    abstract fun deleteClass(id: Int)
+
+
 }

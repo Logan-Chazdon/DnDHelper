@@ -20,5 +20,12 @@ class HomebrewViewModel @Inject constructor(
         }
     }
 
+    fun deleteClass(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteClass(id)
+        }
+    }
+
     val races = repository.getHomebrewRaces()
+    val classes = repository.getHomebrewClasses()
 }

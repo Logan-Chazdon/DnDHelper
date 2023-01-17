@@ -1185,12 +1185,7 @@
             "duration": "Instantaneous",
             "classes": [
                 {
-                    "name": "chronurgy magic",
-                    "index": "chronurgy magic"
-                },
-                {
-                    "name": "graviturgy magic",
-                    "index": "graviturgy magic"
+                    "name" : "wizard"
                 }
             ],
             "damage": "1d4 necrotic"

@@ -63,7 +63,6 @@ fun ClassView(
             if (character.classes.isNotEmpty()) {
                 character.classes.forEach { (_, clazz) ->
                     item {
-                        val classIndex = classes?.indexOfFirst { it.name == clazz.name }!!
                         Card(
                             elevation = 5.dp,
                             modifier = Modifier
@@ -166,7 +165,7 @@ fun ClassView(
                             shape = RoundedCornerShape(10.dp)
                         )
                         .clickable {
-                            navController.navigate("newCharacterView/ClassView/ConfirmClassView/$i/$characterId")
+                            navController.navigate("newCharacterView/ClassView/ConfirmClassView/${item.id}/$characterId")
                         }
                 ) {
                     Row()

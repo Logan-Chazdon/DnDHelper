@@ -6,10 +6,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.ClassChoiceEntity
@@ -49,7 +46,8 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
     val feats: LiveData<List<Feat>> = repository.getFeats()
     var id = -1
     val character: MediatorLiveData<Character> = MediatorLiveData()
-    val subclasses = repository.getSubclassesByClassId(savedStateHandle.get<String>("classId")!!.toInt())
+    val subclasses =
+        repository.getSubclassesByClassId(savedStateHandle.get<String>("classId")!!.toInt())
 
     init {
         featNames.addSource(feats) {
@@ -66,7 +64,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
             -1
         }
 
-        if(id !=-1) {
+        if (id != -1) {
             repository.getLiveCharacterById(
                 savedStateHandle.get<String>("characterId")!!.toInt(),
                 character
@@ -74,7 +72,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
         }
     }
 
-    private fun getFeatures(features: List<Feature>, level: Int) : List<Feature> {
+    private fun getFeatures(features: List<Feature>, level: Int): List<Feature> {
         features.filter { it.grantedAtLevel <= level }.forEach { feature ->
             feature.choices?.forEachIndexed { index, it ->
                 if (it.choose.num(level) != 0 && it.options?.isEmpty() == false) {
@@ -173,8 +171,9 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
         )
 
         //Store all class spells.
-        if(clazz.value!!.spellCasting != null || clazz.value!!.pactMagic != null) {
-            val defaultPreparedness = if(clazz.value!!.spellCasting?.prepareFrom == null) false else null
+        if (clazz.value!!.spellCasting != null || clazz.value!!.pactMagic != null) {
+            val defaultPreparedness =
+                if (clazz.value!!.spellCasting?.prepareFrom == null) false else null
             classSpells.forEach {
                 repository.insertCharacterClassSpellCrossRef(
                     classId = clazz.value!!.id,
@@ -186,23 +185,26 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
         }
 
         //If the level is high enough persist subclass choices
-        if(toNumber(levels) >= clazz.value!!.level) {
-            val subclass = (subclassDropdownState?.getSelected(subclasses.value ?: emptyList()) as List<Subclass>).getOrNull(
+        if (toNumber(levels) >= clazz.value!!.level) {
+            val subclass = (subclassDropdownState?.getSelected(
+                subclasses.value ?: emptyList()
+            ) as List<Subclass>).getOrNull(
                 0
             )
 
             repository.insertCharacterSubclassCrossRef(
                 CharacterSubclassCrossRef(
                     subClassId = subclass!!.subclassId,
-                    classId = clazz.value!!.id ,
+                    classId = clazz.value!!.id,
                     characterId = id
                 )
             )
 
             saveFeatures(subclass.features!!)
 
-            if(subclass.spellCasting != null) {
-                val defaultPreparedness = if(subclass.spellCasting?.prepareFrom == null) false else null
+            if (subclass.spellCasting != null) {
+                val defaultPreparedness =
+                    if (subclass.spellCasting?.prepareFrom == null) false else null
                 subclassSpells.forEach {
                     repository.insertSubclassSpellCastingSpellCrossRef(
                         subclassId = subclass.subclassId,
@@ -288,8 +290,9 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
             }
         }
 
-    fun getLearnableSpells(level: Int, subclass: Subclass?): MutableList<Spell> {
-        return clazz.value?.id?.let {
+    val learnableSpells = MutableLiveData<List<Spell>>()
+    suspend fun calcLearnableSpells(level: Int, subclass: Subclass?) {
+        learnableSpells.postValue(clazz.value?.id?.let {
             repository.getSpellsByClassId(it).run {
                 subclass?.let {
                     //If the spells for the subclass arnt free add them to the selection.
@@ -321,7 +324,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 }
                 this
             }
-        } ?: mutableListOf()
+        } ?: mutableListOf())
     }
 
     fun toggleClassSpell(it: Spell) {
@@ -340,7 +343,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
         }
     }
 
-    fun calculateAssumedFeatures() : List<Feature> {
+    fun calculateAssumedFeatures(): List<Feature> {
         val result = mutableListOf<Feature>()
         clazz.value?.levelPath?.let { getFeatures(it, toNumber(levels)) }?.let {
             result.addAll(it)

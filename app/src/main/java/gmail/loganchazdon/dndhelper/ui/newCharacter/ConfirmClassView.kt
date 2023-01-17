@@ -232,10 +232,7 @@ fun ConfirmClassView(
                     spells = viewModel.classSpells,
                     pactMagic = pactMagic,
                     level = viewModel.toNumber(viewModel.levels),
-                    learnableSpells = viewModel.getLearnableSpells(
-                        viewModel.toNumber(viewModel.levels),
-                        subclass
-                    ),
+                    learnableSpells = viewModel.learnableSpells.observeAsState(emptyList()).value,
                     toggleSpell = { viewModel.toggleClassSpell(it) }
                 )
             }
@@ -246,14 +243,21 @@ fun ConfirmClassView(
                     spells = viewModel.classSpells,
                     spellCasting = spellCasting,
                     level = viewModel.toNumber(viewModel.levels),
-                    learnableSpells = viewModel.getLearnableSpells(
-                        viewModel.toNumber(viewModel.levels),
-                        subclass
-                    ),
+                    learnableSpells = viewModel.learnableSpells.observeAsState(emptyList()).value,
                     toggleSpell = { viewModel.toggleClassSpell(it) }
                 )
             }
 
+            //Update the spells.
+            LaunchedEffect(
+                viewModel.toNumber(viewModel.levels),
+                subclass
+            ) {
+                viewModel.calcLearnableSpells(
+                    viewModel.toNumber(viewModel.levels),
+                    subclass
+                )
+            }
 
             if (viewModel.isBaseClass.value) {
                 clazz.value?.proficiencyChoices?.forEach { choice ->
@@ -596,10 +600,7 @@ fun ConfirmClassView(
                             spellCasting = spellCasting,
                             spells = viewModel.subclassSpells,
                             level = viewModel.toNumber(viewModel.levels),
-                            learnableSpells = viewModel.getLearnableSpells(
-                                viewModel.toNumber(viewModel.levels),
-                                subclass
-                            ),
+                            learnableSpells = viewModel.learnableSpells.observeAsState(emptyList()).value,
                             toggleSpell = { viewModel.toggleSubclassSpell(it) }
                         )
                     }

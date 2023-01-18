@@ -1,4 +1,5 @@
 package gmail.loganchazdon.dndhelper.model.database
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
@@ -31,7 +32,7 @@ WHERE characters.id = :id"""
 abstract class DatabaseDao {
     //Character Table
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertCharacter(character: CharacterEntity) : Long
+    abstract fun insertCharacter(character: CharacterEntity): Long
 
     //Fill out choices which require lists. Cant be done in sql due to lack of support.
     //Does not need to set non list choices.
@@ -67,15 +68,20 @@ abstract class DatabaseDao {
                 val featChoices = mutableListOf<FeatChoice>()
                 featChoiceEntities.forEach {
                     featChoices.add(
-                        it.toFeatChoice(getFeatChoiceChosen(characterId = character.id, choiceId = it.id))
+                        it.toFeatChoice(
+                            getFeatChoiceChosen(
+                                characterId = character.id,
+                                choiceId = it.id
+                            )
+                        )
                     )
                 }
-                subrace.featChoices =featChoices
+                subrace.featChoices = featChoices
             }
         }
 
         character.background?.let { background ->
-            getBackgroundChoiceData(charId= character.id).let { data ->
+            getBackgroundChoiceData(charId = character.id).let { data ->
                 val features = getBackgroundFeatures(background.id)
                 fillOutFeatureList(features, character.id)
                 background.features = features
@@ -90,10 +96,13 @@ abstract class DatabaseDao {
             clazz.level = data.level
             clazz.abilityImprovementsGranted = data.abilityImprovementsGranted
             clazz.totalNumOnGoldDie = data.totalNumOnGoldDie
-            clazz.tookGold =  data.tookGold
+            clazz.tookGold = data.tookGold
             clazz.isBaseClass = data.isBaseClass
             clazz.spellCasting?.known =
-                getSpellCastingSpellsForClass(characterId = character.id, classId = clazz.id).toList()
+                getSpellCastingSpellsForClass(
+                    characterId = character.id,
+                    classId = clazz.id
+                ).toList()
 
             val features = getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
             fillOutFeatureList(features, character.id)
@@ -105,14 +114,17 @@ abstract class DatabaseDao {
 
             clazz.subclass?.let { subclass ->
                 subclass.spellCasting?.known =
-                    getSpellCastingSpellsForSubclass(characterId = character.id, subclassId = subclass.subclassId).toList()
+                    getSpellCastingSpellsForSubclass(
+                        characterId = character.id,
+                        subclassId = subclass.subclassId
+                    ).toList()
 
                 val subClassFeatures = getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
                 fillOutFeatureList(subClassFeatures, character.id)
                 subclass.features = subClassFeatures
             }
 
-            if(data.isBaseClass) {
+            if (data.isBaseClass) {
                 clazz.proficiencyChoices.forEachIndexed { i, it ->
                     it.chosenByString = data.proficiencyChoices[i]
                 }
@@ -124,79 +136,105 @@ abstract class DatabaseDao {
 
 
     @MapInfo(valueColumn = "isPrepared")
-    @Query("""SELECT * FROM spells
+    @Query(
+        """SELECT * FROM spells
 JOIN SubclassSpellCastingSpellCrossRef ON SubclassSpellCastingSpellCrossRef.spellId IS spells.id
 WHERE characterId IS :characterId AND subclassId IS :subclassId
-""")
-    abstract fun getSpellCastingSpellsForSubclass(characterId: Int, subclassId: Int) : Map<Spell, Boolean?>
+"""
+    )
+    abstract fun getSpellCastingSpellsForSubclass(
+        characterId: Int,
+        subclassId: Int
+    ): Map<Spell, Boolean?>
 
 
     @MapInfo(valueColumn = "isPrepared")
-    @Query("""SELECT * FROM spells
+    @Query(
+        """SELECT * FROM spells
 JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spellId
 WHERE characterId IS :characterId AND classId IS :classId
-""")
-    abstract fun getSpellCastingSpellsForClass(characterId: Int, classId: Int) : Map<Spell, Boolean?>
+"""
+    )
+    abstract fun getSpellCastingSpellsForClass(characterId: Int, classId: Int): Map<Spell, Boolean?>
 
     @Insert
     abstract fun insertCharacterClassSpellCrossRef(ref: CharacterClassSpellCrossRef)
 
-    @Query("""SELECT * FROM spells 
+    @Query(
+        """SELECT * FROM spells 
 JOIN BackgroundSpellCrossRef ON BackgroundSpellCrossRef.spellId IS spells.id
 WHERE backgroundId IS :backgroundId
-    """)
+    """
+    )
     abstract fun getBackgroundSpells(backgroundId: Int): List<Spell>?
 
 
-    @Query("""SELECT * FROM feats
+    @Query(
+        """SELECT * FROM feats
 JOIN ClassFeatCrossRef ON ClassFeatCrossRef.featId IS feats.id
 WHERE ClassFeatCrossRef.classId IS :classId AND ClassFeatCrossRef.characterId IS :characterId
-    """)
+    """
+    )
     abstract fun getClassFeats(classId: Int, characterId: Int): MutableList<Feat>
 
-    @Query("""SELECT * FROM features
+    @Query(
+        """SELECT * FROM features
 JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
 WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLevel
-    """)
+    """
+    )
     abstract fun getClassFeatures(classId: Int, maxLevel: Int = 20): MutableList<Feature>
 
-    @Query("""SELECT * FROM ClassChoiceEntity
+    @Query(
+        """SELECT * FROM ClassChoiceEntity
 WHERE characterId IS :characterId AND classId IS :classId
-    """)
+    """
+    )
     abstract fun getClassChoiceData(characterId: Int, classId: Int): ClassChoiceEntity
 
-    @Query("""SELECT * FROM feats
+    @Query(
+        """SELECT * FROM feats
 JOIN FeatChoiceChoiceEntity ON FeatChoiceChoiceEntity.featId IS feats.id
 WHERE choiceId IS :choiceId AND characterId IS :characterId
-    """)
+    """
+    )
     abstract fun getFeatChoiceChosen(characterId: Int, choiceId: Int): List<Feat>
 
-    @Query("""SELECT * FROM featChoices
+    @Query(
+        """SELECT * FROM featChoices
 JOIN SubraceFeatChoiceCrossRef ON SubraceFeatChoiceCrossRef.featChoiceId IS featChoices.id
 WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
-    """)
+    """
+    )
     abstract fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
 
 
     private fun fillOutFeatureList(features: List<Feature>, characterId: Int) {
         features.forEach { feature ->
-            feature.choices = fillOutChoices(getFeatureChoices(feature.featureId), characterId = characterId)
+            feature.choices =
+                fillOutChoices(getFeatureChoices(feature.featureId), characterId = characterId)
             feature.spells = getFeatureSpells(feature.featureId)
         }
     }
 
-    @Query("""SELECT * FROM spells
+    @Query(
+        """SELECT * FROM spells
 JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.spellId IS spells.id
 WHERE featureId IS :featureId
-""")
+"""
+    )
     abstract fun getFeatureSpells(featureId: Int): List<Spell>?
 
     //This only fills out chosen not options.
     //We don't want options as it is not used inside of the character object.
-    private fun fillOutChoices(choiceEntities: List<FeatureChoiceEntity>, characterId: Int) : List<FeatureChoice> {
+    private fun fillOutChoices(
+        choiceEntities: List<FeatureChoiceEntity>,
+        characterId: Int
+    ): List<FeatureChoice> {
         val choices = mutableListOf<FeatureChoice>()
         choiceEntities.forEach { featureChoiceEntity ->
-            val features = getFeatureChoiceChosen(choiceId = featureChoiceEntity.id, characterId = characterId)
+            val features =
+                getFeatureChoiceChosen(choiceId = featureChoiceEntity.id, characterId = characterId)
             fillOutFeatureList(features, characterId)
             choices.add(
                 FeatureChoice(
@@ -212,12 +250,12 @@ WHERE featureId IS :featureId
     @RewriteQueriesToDropUnusedColumns
     @Query(fullCharacterSql)
     @Transaction
-    protected abstract fun findCharacterWithoutListChoices(id: Int) : Character
+    protected abstract fun findCharacterWithoutListChoices(id: Int): Character
 
     @Query(fullCharacterSql)
     @RewriteQueriesToDropUnusedColumns
     @Transaction
-    protected abstract fun findLiveCharacterWithoutListChoices(id: Int) : LiveData<Character>
+    protected abstract fun findLiveCharacterWithoutListChoices(id: Int): LiveData<Character>
 
 
     @Query("SELECT * FROM RaceChoiceEntity WHERE raceId = :raceId AND characterId = :charId")
@@ -232,10 +270,10 @@ WHERE featureId IS :featureId
         return character
     }
 
-    fun findLiveCharacterById(id: Int, character : MediatorLiveData<Character> ) {
-        val characterLiveData  =findLiveCharacterWithoutListChoices(id)
+    fun findLiveCharacterById(id: Int, character: MediatorLiveData<Character>) {
+        val characterLiveData = findLiveCharacterWithoutListChoices(id)
         character.addSource(characterLiveData) {
-            if(it != null) {
+            if (it != null) {
                 fillOutCharacterChoiceLists(it)
                 character.value = it
             }
@@ -246,9 +284,11 @@ WHERE featureId IS :featureId
     abstract fun deleteCharacter(id: Int)
 
     @Transaction
-    @Query("SELECT * FROM characters " +
-            "INNER JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id\n" +
-            "INNER JOIN races ON CharacterRaceCrossRef.raceId IS races.raceId")
+    @Query(
+        "SELECT * FROM characters " +
+                "INNER JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id\n" +
+                "INNER JOIN races ON CharacterRaceCrossRef.raceId IS races.raceId"
+    )
     abstract fun getAllCharacters(): LiveData<List<Character>>
 
     @Insert
@@ -261,7 +301,7 @@ WHERE featureId IS :featureId
     abstract fun insertRaceChoice(choice: RaceChoiceEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFeatureChoiceEntity(choice : FeatureChoiceChoiceEntity) : Long
+    abstract fun insertFeatureChoiceEntity(choice: FeatureChoiceChoiceEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterSubRaceCrossRef(characterSubraceCrossRef: CharacterSubraceCrossRef)
@@ -270,7 +310,7 @@ WHERE featureId IS :featureId
     @Query("SELECT * FROM classes")
     protected abstract fun getAllClassEntities(): LiveData<List<ClassEntity>>
 
-    fun getAllClasses() : LiveData<List<Class>> {
+    fun getAllClasses(): LiveData<List<Class>> {
         val classes = MediatorLiveData<List<Class>>()
         classes.addSource(getAllClassEntities()) {
             GlobalScope.launch {
@@ -292,13 +332,13 @@ WHERE featureId IS :featureId
         return features
     }
 
-    private fun fillOutFeatureListWithoutChosen(features : List<Feature>) {
+    private fun fillOutFeatureListWithoutChosen(features: List<Feature>) {
         features.forEach { feature ->
             feature.spells = getFeatureSpells(feature.featureId)
             feature.choices = getFeatureChoices(feature.featureId).let { choiceEntities ->
                 val temp = mutableListOf<FeatureChoice>()
                 choiceEntities.forEach { choice ->
-                    val filledChoice =FeatureChoice(
+                    val filledChoice = FeatureChoice(
                         entity = choice,
                         options = getFeatureChoiceOptions(choice.id),
                         chosen = null
@@ -313,16 +353,18 @@ WHERE featureId IS :featureId
         }
     }
 
-    @Query("""SELECT * FROM features
+    @Query(
+        """SELECT * FROM features
 JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
-WHERE ClassFeatureCrossRef.id IS :id""")
-    protected abstract fun getUnfilledLevelPath(id: Int) : MutableList<Feature>
+WHERE ClassFeatureCrossRef.id IS :id"""
+    )
+    protected abstract fun getUnfilledLevelPath(id: Int): MutableList<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertClass(newClass: ClassEntity) : Long
+    abstract fun insertClass(newClass: ClassEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSubclass(subClass: SubclassEntity) : Long
+    abstract fun insertSubclass(subClass: SubclassEntity): Long
 
     @Insert
     abstract fun insertCharacterClassCrossRef(ref: CharacterClassCrossRef)
@@ -344,14 +386,16 @@ WHERE ClassFeatureCrossRef.id IS :id""")
 
 
     @MapInfo(keyColumn = "name")
-    @Query("""SELECT * FROM classes
+    @Query(
+        """SELECT * FROM classes
 JOIN CharacterClassCrossRef ON CharacterClassCrossRef.classId IS classes.id
 JOIN ClassChoiceEntity ON ClassChoiceEntity.classId IS CharacterClassCrossRef.classId AND ClassChoiceEntity.characterId IS CharacterClassCrossRef.characterId
 JOIN CharacterSubclassCrossRef ON CharacterSubclassCrossRef.characterId IS CharacterClassCrossRef.characterId AND CharacterSubclassCrossRef.classId IS classes.id
 JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subClassId
 WHERE CharacterClassCrossRef.characterId IS :characterId
-    """)
-    protected abstract fun getCharactersClasses(characterId: Int) : MutableMap<String, Class>
+    """
+    )
+    protected abstract fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
 
     @Insert
     abstract fun insertCharacterSubclassCrossRef(ref: CharacterSubclassCrossRef)
@@ -366,14 +410,14 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
     abstract fun getHomebrewRaces(): LiveData<List<Race>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertRace(newRace: RaceEntity) : Long
+    abstract fun insertRace(newRace: RaceEntity): Long
 
     @Query("DELETE FROM races WHERE raceId = :id")
     abstract fun deleteRace(id: Int)
 
     @Query("SELECT * FROM races WHERE raceId = :id")
     @Transaction
-    abstract fun findLiveRaceById(id: Int) : LiveData<Race>
+    abstract fun findLiveRaceById(id: Int): LiveData<Race>
 
     @Insert
     abstract fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
@@ -386,38 +430,46 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
 
     @Transaction
     @RewriteQueriesToDropUnusedColumns
-    @Query("""SELECT * FROM features 
+    @Query(
+        """SELECT * FROM features 
 JOIN RaceFeatureCrossRef ON features.featureId IS RaceFeatureCrossRef.featureId 
-WHERE raceId is :raceId""")
-    protected abstract fun getRaceFeatures(raceId: Int) : List<Feature>
+WHERE raceId is :raceId"""
+    )
+    protected abstract fun getRaceFeatures(raceId: Int): List<Feature>
 
 
     @Transaction
     @RewriteQueriesToDropUnusedColumns
-    @Query("""SELECT * FROM features 
+    @Query(
+        """SELECT * FROM features 
 JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId 
-WHERE subraceId is :subraceId""")
-    protected abstract fun getSubraceFeatures(subraceId: Int) : List<Feature>
+WHERE subraceId is :subraceId"""
+    )
+    protected abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSubrace(subrace: SubraceEntity) : Long
+    abstract fun insertSubrace(subrace: SubraceEntity): Long
 
-    @Query("""SELECT * FROM subraces
+    @Query(
+        """SELECT * FROM subraces
 JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.subraceId IS subraces.id
 WHERE raceId IS :raceId
-    """)
+    """
+    )
     @Transaction
     protected abstract fun getSubraceOptionsWithoutFeatures(raceId: Int): LiveData<List<SubraceEntity>>
 
-    @Query("""SELECT * FROM features
+    @Query(
+        """SELECT * FROM features
 JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.featureId IS features.featureId
 WHERE subraceId IS :subraceId
-    """)
-    protected abstract fun getSubraceTraits(subraceId: Int) : List<Feature>
+    """
+    )
+    protected abstract fun getSubraceTraits(subraceId: Int): List<Feature>
 
-    fun bindSubraceOptions(raceId: Int, subraces:  MediatorLiveData<List<Subrace>>)  {
+    fun bindSubraceOptions(raceId: Int, subraces: MediatorLiveData<List<Subrace>>) {
         subraces.addSource(getSubraceOptionsWithoutFeatures(raceId)) { entityList ->
-            if(entityList != null) {
+            if (entityList != null) {
                 val temp: List<Subrace> = entityList as List<Subrace>
                 temp.forEach {
                     it.traits = getSubraceTraits(it.id)
@@ -441,13 +493,13 @@ WHERE subraceId IS :subraceId
 
     //Feature Table
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFeature(feature: FeatureEntity) : Long
+    abstract fun insertFeature(feature: FeatureEntity): Long
 
     @Query("SELECT * FROM features WHERE featureId = :id")
-    abstract fun getLiveFeatureById(id: Int) : LiveData<Feature>
+    abstract fun getLiveFeatureById(id: Int): LiveData<Feature>
 
     @Query("SELECT * FROM features WHERE featureId = :id")
-    abstract fun getFeatureById(id: Int) : Feature
+    abstract fun getFeatureById(id: Int): Feature
 
     @Insert
     abstract fun insertFeatureOptionsCrossRef(ref: FeatureOptionsCrossRef)
@@ -462,32 +514,38 @@ WHERE subraceId IS :subraceId
     abstract fun removeOptionsFeatureCrossRef(ref: OptionsFeatureCrossRef)
 
     @Insert
-    abstract fun insertFeatureChoice(option: FeatureChoiceEntity) : Long
+    abstract fun insertFeatureChoice(option: FeatureChoiceEntity): Long
 
     @Query("DELETE FROM features WHERE featureId = :id")
-    abstract fun removeFeatureChoice(id : Int)
+    abstract fun removeFeatureChoice(id: Int)
 
     //This returns all featureChoices associate with a feature. It doesn't not contain the options or the chosen fields.
-    @Query("""SELECT * FROM FeatureChoiceEntity 
+    @Query(
+        """SELECT * FROM FeatureChoiceEntity 
 JOIN FeatureOptionsCrossRef ON FeatureOptionsCrossRef.id IS FeatureChoiceEntity.id
-WHERE FeatureOptionsCrossRef.featureId IS :featureId""")
-    protected abstract fun getFeatureChoices(featureId: Int) : List<FeatureChoiceEntity>
+WHERE FeatureOptionsCrossRef.featureId IS :featureId"""
+    )
+    protected abstract fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
 
     //This returns all features which belong in the options field of a featureChoice.
-    @Query("""SELECT * FROM features
+    @Query(
+        """SELECT * FROM features
 JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
-WHERE OptionsFeatureCrossRef.choiceId IS :featureChoiceId""")
-    protected abstract fun getFeatureChoiceOptions(featureChoiceId: Int) : List<Feature>
+WHERE OptionsFeatureCrossRef.choiceId IS :featureChoiceId"""
+    )
+    protected abstract fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>
 
     //This returns all features which belong in the chosen field of a featureChoice.
-    @Query("""SELECT * FROM features 
+    @Query(
+        """SELECT * FROM features 
 JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId
-WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId""")
-    protected abstract fun getFeatureChoiceChosen(characterId: Int, choiceId: Int) : List<Feature>
+WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId"""
+    )
+    protected abstract fun getFeatureChoiceChosen(characterId: Int, choiceId: Int): List<Feature>
 
     //Feats
     @Insert
-    abstract fun insertFeat(feat: FeatEntity) : Long
+    abstract fun insertFeat(feat: FeatEntity): Long
 
     @Insert
     abstract fun insertFeatChoice(featChoiceEntity: FeatChoiceEntity): Long
@@ -512,17 +570,19 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     abstract fun insertBackgroundFeatureCrossRef(ref: BackgroundFeatureCrossRef)
 
     @Query("SELECT * FROM BackgroundChoiceEntity WHERE characterId IS :charId")
-    abstract fun getBackgroundChoiceData(charId: Int) : BackgroundChoiceEntity
+    abstract fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
 
-    @Query("""SELECT * FROM features 
+    @Query(
+        """SELECT * FROM features 
 JOIN BackgroundFeatureCrossRef ON features.featureId IS BackgroundFeatureCrossRef.featureId
 WHERE backgroundId IS :id
-    """)
+    """
+    )
     abstract fun getBackgroundFeatures(id: Int): List<Feature>
 
     //Spells
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSpell(spell: Spell) : Long
+    abstract fun insertSpell(spell: Spell): Long
 
     @Query("DELETE FROM spells WHERE id IS :id")
     abstract fun removeSpellById(id: Int)
@@ -552,9 +612,9 @@ WHERE backgroundId IS :id
     abstract fun removeSubclassSpellCrossRef(ref: SubclassSpellCrossRef)
 
     @Query("SELECT * FROM classes WHERE id IS :id")
-    protected abstract fun getUnfilledClass(id: Int) : LiveData<ClassEntity>
+    protected abstract fun getUnfilledClass(id: Int): LiveData<ClassEntity>
 
-    fun getClass(id : Int): LiveData<Class> {
+    fun getClass(id: Int): LiveData<Class> {
         val result = MediatorLiveData<Class>()
         result.addSource(getUnfilledClass(id)) { entity ->
             GlobalScope.launch {
@@ -571,15 +631,19 @@ WHERE backgroundId IS :id
         return result
     }
 
-    @Query("""SELECT * FROM spells
+    @Query(
+        """SELECT * FROM spells
 JOIN ClassSpellCrossRef ON spells.id IS ClassSpellCrossRef.spellId
-WHERE classId IS :classId""")
+WHERE classId IS :classId"""
+    )
     abstract fun getSpellsByClassId(classId: Int): MutableList<Spell>
 
-    @Query("""SELECT * FROM subclasses
+    @Query(
+        """SELECT * FROM subclasses
 JOIN ClassSubclassCrossRef ON ClassSubclassCrossRef.subclassId IS subclasses.subclassId
-WHERE classId IS :id""")
-    protected abstract fun getUnfilledSubclassesByClassId(id: Int) : LiveData<List<SubclassEntity>>
+WHERE classId IS :id"""
+    )
+    protected abstract fun getUnfilledSubclassesByClassId(id: Int): LiveData<List<SubclassEntity>>
 
     @OptIn(DelicateCoroutinesApi::class)
     fun getSubclassesByClassId(id: Int): LiveData<List<Subclass>> {
@@ -602,9 +666,9 @@ WHERE classId IS :id""")
     }
 
     @Query("SELECT * FROM subraces WHERE id = :id")
-    protected abstract fun getUnfilledSubrace(id: Int) : LiveData<SubraceEntity>
+    protected abstract fun getUnfilledSubrace(id: Int): LiveData<SubraceEntity>
 
-    fun getSubrace(id: Int) : LiveData<Subrace> {
+    fun getSubrace(id: Int): LiveData<Subrace> {
         val result = MediatorLiveData<Subrace>()
         result.addSource(getUnfilledSubrace(id)) { entity ->
             entity as Subrace
@@ -615,10 +679,12 @@ WHERE classId IS :id""")
     }
 
 
-    @Query("""SELECT * FROM features 
+    @Query(
+        """SELECT * FROM features 
 JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.featureId
-WHERE subclassId IS :id""")
-    protected abstract fun getSubclassFeaturesById(id: Int) : List<Feature>
+WHERE subclassId IS :id"""
+    )
+    protected abstract fun getSubclassFeaturesById(id: Int): List<Feature>
 
     @Insert
     abstract fun insertCharacterClassFeatCrossRef(classFeatCrossRef: ClassFeatCrossRef)
@@ -627,28 +693,33 @@ WHERE subclassId IS :id""")
     abstract fun insertSubClassSpellCastingCrossRef(subclassSpellCastingSpellCrossRef: SubclassSpellCastingSpellCrossRef)
 
     @Query("SELECT backpack FROM characters WHERE id IS :id")
-    abstract fun getCharacterBackPack(id: Int) : Backpack
+    abstract fun getCharacterBackPack(id: Int): Backpack
 
     @Query("UPDATE characters SET backpack = :backpack WHERE id IS :id")
     abstract fun insertCharacterBackPack(backpack: Backpack, id: Int)
 
     @Query("SELECT * FROM backgrounds WHERE id IS :id")
-    protected abstract fun getUnfilledBackground(id: Int) : LiveData<BackgroundEntity>
+    protected abstract fun getUnfilledBackground(id: Int): LiveData<BackgroundEntity>
 
-    @Query("""SELECT * FROM features
+    @Query(
+        """SELECT * FROM features
 JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.featureId IS features.featureId 
-WHERE backgroundId IS :id""")
-    protected abstract fun getUnfilledBackgroundFeatures(id: Int) : List<Feature>
+WHERE backgroundId IS :id"""
+    )
+    protected abstract fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
 
     fun getBackground(id: Int, result: MediatorLiveData<Background>) {
         result.addSource(getUnfilledBackground(id)) {
-            if(it != null) {
-                val background = it as Background
-                background.features = getUnfilledBackgroundFeatures(id)
-                fillOutFeatureListWithoutChosen(background.features!!)
-                result.value = background
+            if (it != null) {
+                GlobalScope.launch {
+                    val background = Background(
+                        it,
+                        getUnfilledBackgroundFeatures(id)
+                    )
+                    fillOutFeatureListWithoutChosen(background.features!!)
+                    result.postValue(background)
+                }
             }
-
         }
     }
 
@@ -656,7 +727,7 @@ WHERE backgroundId IS :id""")
     abstract fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity)
 
     @Query("SELECT * FROM backgrounds")
-    protected abstract fun getUnfilledBackgrounds() : LiveData<List<BackgroundEntity>>
+    protected abstract fun getUnfilledBackgrounds(): LiveData<List<BackgroundEntity>>
 
     fun getAllBackgrounds(): LiveData<List<Background>> {
         val result = MediatorLiveData<List<Background>>()
@@ -683,15 +754,17 @@ WHERE backgroundId IS :id""")
     @Delete
     abstract fun removeClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef)
 
-    @Query("""SELECT * FROM subclasses
+    @Query(
+        """SELECT * FROM subclasses
 JOIN ClassSubclassCrossRef ON ClassSubclassCrossRef.subclassId IS subclasses.subclassId
-WHERE classId IS :id""")
-    protected abstract fun getUnfilledSubclass(id: Int) : LiveData<SubclassEntity>
+WHERE classId IS :id"""
+    )
+    protected abstract fun getUnfilledSubclass(id: Int): LiveData<SubclassEntity>
 
     fun getSubclass(id: Int): LiveData<Subclass> {
         val result = MediatorLiveData<Subclass>()
         result.addSource(getUnfilledSubclass(id)) {
-            if(it != null) {
+            if (it != null) {
                 GlobalScope.launch {
                     result.postValue(Subclass(it, getSubclassFeaturesById(id)))
                 }
@@ -710,7 +783,7 @@ WHERE classId IS :id""")
     abstract fun insertClassSubclassId(classSubclassCrossRef: ClassSubclassCrossRef)
 
     @Query("SELECT * FROM classes WHERE isHomebrew IS 1")
-    abstract fun getHomebrewClasses() : LiveData<List<ClassEntity>>
+    abstract fun getHomebrewClasses(): LiveData<List<ClassEntity>>
 
     @Query("DELETE FROM classes WHERE id IS :id")
     abstract fun deleteClass(id: Int)

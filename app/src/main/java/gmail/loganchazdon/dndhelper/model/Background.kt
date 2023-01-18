@@ -29,5 +29,7 @@ class Background (
         features = features,
         proficiencyChoices = proficiencyChoices,
         languageChoices = languageChoices
-    )
+    ) {
+        this.id = entity.id
+    }
 }

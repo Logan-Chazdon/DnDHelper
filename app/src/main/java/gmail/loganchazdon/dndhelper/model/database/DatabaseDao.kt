@@ -661,11 +661,17 @@ WHERE backgroundId IS :id""")
     fun getAllBackgrounds(): LiveData<List<Background>> {
         val result = MediatorLiveData<List<Background>>()
         result.addSource(getUnfilledBackgrounds()) { backgroundEntities ->
-            val backgrounds = mutableListOf<Background>()
-            backgroundEntities.forEach {
-                it as Background
-                it.features = getBackgroundFeatures(it.id)
-                backgrounds.add(it)
+            GlobalScope.launch {
+                val backgrounds = mutableListOf<Background>()
+                backgroundEntities.forEach {
+                    backgrounds.add(
+                        Background(
+                            it,
+                            getBackgroundFeatures(it.id)
+                        )//TODO look into adding other choice objects here
+                    )
+                }
+                result.postValue(backgrounds)
             }
         }
         return result

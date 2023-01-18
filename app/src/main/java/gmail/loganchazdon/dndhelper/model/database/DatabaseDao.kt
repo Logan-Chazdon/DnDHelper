@@ -788,5 +788,6 @@ WHERE classId IS :id"""
     @Query("DELETE FROM classes WHERE id IS :id")
     abstract fun deleteClass(id: Int)
 
-
+    @Query("SELECT * FROM spells")
+    abstract fun getAllSpells(): LiveData<List<Spell>>
 }

@@ -1,44 +1,45 @@
 package gmail.loganchazdon.dndhelper.model.localDataSources
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.Component
 import gmail.loganchazdon.dndhelper.AppModule
 import gmail.loganchazdon.dndhelper.R
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
+import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.repositories.Repository.Companion.allSpellLevels
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-
+import javax.inject.Inject
 
 @Suppress("PropertyName")
 @Component(modules = [AppModule::class])
 interface LocalDataSource {
-    fun getItems(items : MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>>
-    fun getAbilitiesToSkills(abilitiesToSKills : MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>>
-    fun getSpells(spells :MutableLiveData<List<Spell>>): MutableLiveData<List<Spell>>
-    fun getLanguages(languages : MutableLiveData<List<Language>>): MutableLiveData<List<Language>>
-    fun getBackgrounds(backgrounds : MutableLiveData<List<Background>>): MutableLiveData<List<Background>>
-    fun getRaces(races : MutableLiveData<List<RaceEntity>>): MutableLiveData<List<RaceEntity>>
-    fun getClasses(classes : MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>>): MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>>
+    fun getItems(items: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>>
+    fun getAbilitiesToSkills(abilitiesToSKills: MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>>
+    fun getLanguages(languages: MutableLiveData<List<Language>>): MutableLiveData<List<Language>>
     fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>>
-    fun getFeats(feats : MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>>
-    fun getArmors(armors : MutableLiveData<List<Armor>>): MutableLiveData<List<Armor>>
-    fun getMiscItems(miscItems :  MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>>
-    fun getMartialWeapons(martialWeapons :MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
-    fun getInfusions(infusions : MutableLiveData<List<Infusion>>): MutableLiveData<List<Infusion>>
-    fun getSimpleWeapons(simpleWeapons :MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
-    fun getInvocations(invocations :MutableLiveData<List<Invocation>>): MutableLiveData<List<Invocation>>
+    fun getFeats(feats: MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>>
+    fun getArmors(armors: MutableLiveData<List<Armor>>): MutableLiveData<List<Armor>>
+    fun getMiscItems(miscItems: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>>
+    fun getMartialWeapons(martialWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
+    fun getInfusions(infusions: MutableLiveData<List<Infusion>>): MutableLiveData<List<Infusion>>
+    fun getSimpleWeapons(simpleWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
+    fun getInvocations(invocations: MutableLiveData<List<Invocation>>): MutableLiveData<List<Invocation>>
 }
 
 
-@RequiresApi(Build.VERSION_CODES.P)
-class LocalDataSourceImpl(val context: Context) : LocalDataSource {
+class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: DatabaseDao) :
+    LocalDataSource {
+    private val scope = CoroutineScope(Dispatchers.IO + Job())
     private val _infusions: MutableLiveData<List<Infusion>> =
         MutableLiveData()
     private val _invocations: MutableLiveData<List<Invocation>> =
@@ -55,17 +56,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         MediatorLiveData()
     private val _abilitiesToSkills: MutableLiveData<Map<String, List<String>>> =
         MutableLiveData()
-    private val _spells: MutableLiveData<List<Spell>> =
-        MutableLiveData()
     private val _languages: MutableLiveData<List<Language>> =
         MutableLiveData()
     private val _feats: MutableLiveData<List<Feat>> =
-        MutableLiveData()
-    private val _backgrounds: MutableLiveData<List<Background>> =
-        MutableLiveData()
-    private val _races: MutableLiveData<List<RaceEntity>> =
-        MutableLiveData()
-    private val _classes: MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>> =
         MutableLiveData()
     private val _metaMagics: MutableLiveData<List<Metamagic>> =
         MutableLiveData()
@@ -123,73 +116,103 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         "Three-Dragon Ante set"
     )
 
-    override fun getItems(items: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>> = _items
-    override fun getAbilitiesToSkills(abilitiesToSKills: MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>> = _abilitiesToSkills
-    override fun getSpells(spells: MutableLiveData<List<Spell>>): MutableLiveData<List<Spell>> = _spells
-    override fun getLanguages(languages: MutableLiveData<List<Language>>): MutableLiveData<List<Language>> = _languages
-    override fun getBackgrounds(backgrounds: MutableLiveData<List<Background>>): MutableLiveData<List<Background>> =_backgrounds
-    override fun getRaces(races: MutableLiveData<List<RaceEntity>>): MutableLiveData<List<RaceEntity>> = _races
-    override fun getClasses(classes: MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>>): MutableLiveData<List<gmail.loganchazdon.dndhelper.model.Class>> = _classes
-    override fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>> =  _metaMagics
-    override fun getFeats(feats: MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>> = _feats
-    override fun getArmors(armors: MutableLiveData<List<Armor>>): MutableLiveData<List<Armor>> = _armors
-    override fun getMiscItems(miscItems: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>> = _miscItems
-    override fun getMartialWeapons(martialWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>> = _martialWeapons
-    override fun getInfusions(infusions: MutableLiveData<List<Infusion>>): MutableLiveData<List<Infusion>> = _infusions
-    override fun getSimpleWeapons(simpleWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>> = _simpleWeapons
-    override fun getInvocations(invocations: MutableLiveData<List<Invocation>>): MutableLiveData<List<Invocation>> = _invocations
+    override fun getItems(items: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>> =
+        _items
 
+    override fun getAbilitiesToSkills(abilitiesToSKills: MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>> =
+        _abilitiesToSkills
+
+
+    override fun getLanguages(languages: MutableLiveData<List<Language>>): MutableLiveData<List<Language>> =
+        _languages
+
+    override fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>> =
+        _metaMagics
+
+    override fun getFeats(feats: MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>> = _feats
+    override fun getArmors(armors: MutableLiveData<List<Armor>>): MutableLiveData<List<Armor>> =
+        _armors
+
+    override fun getMiscItems(miscItems: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>> =
+        _miscItems
+
+    override fun getMartialWeapons(martialWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>> =
+        _martialWeapons
+
+    override fun getInfusions(infusions: MutableLiveData<List<Infusion>>): MutableLiveData<List<Infusion>> =
+        _infusions
+
+    override fun getSimpleWeapons(simpleWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>> =
+        _simpleWeapons
+
+    override fun getInvocations(invocations: MutableLiveData<List<Invocation>>): MutableLiveData<List<Invocation>> =
+        _invocations
+
+    private val classNameToId = mapOf(
+        "artificer" to 1,
+        "barbarian" to 2,
+        "bard" to 3,
+        "cleric" to 4,
+        "druid" to 5,
+        "fighter" to 6,
+        "monk" to 7,
+        "paladin" to 8,
+        "ranger" to 9,
+        "rogue" to 10,
+        "sorcerer" to 11,
+        "warlock" to 12,
+        "wizard" to 13
+    )
 
     init {
-        context.mainExecutor.execute {
-            //Items
-            generateItems()
+        //Items
+        generateItems()
 
-            //Abilities
-            generateSkills()
+        //Abilities
+        generateSkills()
 
-            //Spells
-            generateSpells()
+        //Spells
+        updateSpells()
 
-            //Languages
-            generateLanguages()
+        //Languages
+        generateLanguages()
 
-            //Infusions
-            generateInfusions()
+        //Infusions
+        generateInfusions()
 
-            //Invocations
-            generateInvocations()
+        //Invocations
+        generateInvocations()
 
-            //Metamagic
-            generateMetaMagic()
+        //Metamagic
+        generateMetaMagic()
 
-            //Maneuvers
-            generateManeuvers()
+        //Maneuvers
+        generateManeuvers()
 
-            //Fighting Styles
-            generateFightingStyles()
+        //Fighting Styles
+        generateFightingStyles()
 
-            //Feats
-            generateFeats()
+        //Feats
+        generateFeats()
 
-            //Backgrounds
-            generateBackgrounds()
+        //Backgrounds
+        updateBackgrounds()
 
-            //Races
-            generateRaces()
+        //Races
+        updateRaces()
 
-            //Classes
-            generateClasses()
-        }
+        //Classes
+        updateClasses()
+
     }
 
     private fun generateFightingStyles() {
         val dataAsString =
             context.resources.openRawResource(R.raw.fighting_styles).bufferedReader().readText()
         val fightingStylesJson = JSONObject(dataAsString).getJSONArray("fighting_styles")
-        _fightingStyles.value = extractFeatures(
-            fightingStylesJson
-        )
+        //_fightingStyles.value = extractFeatures(
+        //    fightingStylesJson
+        //) TODO
     }
 
     private fun generateMetaMagic() {
@@ -213,8 +236,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         val dataAsString =
             context.resources.openRawResource(R.raw.maneuvers).bufferedReader().readText()
         val maneuvers = mutableListOf<Feature>()
-        val maneuversJson =JSONObject(dataAsString).getJSONArray("maneuvers")
-        for(index in 0 until maneuversJson.length()) {
+        val maneuversJson = JSONObject(dataAsString).getJSONArray("maneuvers")
+        for (index in 0 until maneuversJson.length()) {
             val maneuverJson = maneuversJson.getJSONObject(index)
             maneuvers.add(
                 Feature(
@@ -281,7 +304,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         }
 
         val stats = mutableMapOf<String, Int>()
-        val statNames= listOf(
+        val statNames = listOf(
             "Strength",
             "Dexterity",
             "Constitution",
@@ -289,10 +312,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             "Wisdom",
             "Charisma"
         )
-        for(name in statNames) {
+        for (name in statNames) {
             try {
                 stats[name.substring(0, 3)] = jsonObject.getInt(name)
-            } catch(e: JSONException) { }
+            } catch (e: JSONException) {
+            }
         }
 
         return Prerequisite(
@@ -317,19 +341,20 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         _infusions.value = infusions
     }
 
-    private fun extractInfusion(infusionJson : JSONObject) : Infusion {
+    private fun extractInfusion(infusionJson: JSONObject): Infusion {
         val options = try {
             val fromJson = infusionJson.getJSONArray("from")
             val result = mutableListOf<Feature>()
-            for(index in 0 until fromJson.length()) {
+            for (index in 0 until fromJson.length()) {
                 val infusion = extractInfusion(fromJson.getJSONObject(index))
                 result.add(
                     Feature(
-                        name =infusion.name,
+                        name = infusion.name,
                         description = infusion.desc,
                         grantedAtLevel = infusion.grantedAtLevel,
                         maxTimesChosen = infusion.maxTimesChosen,
-                        infusion = infusion
+                        infusion = infusion,
+                        featureId = fromJson.getJSONObject(index).getInt("id")
                     )
                 )
             }
@@ -347,7 +372,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             options = options,
             maxTimesChosen = try {
                 infusionJson.getInt("max_times_chosen")
-            } catch (e : JSONException) {
+            } catch (e: JSONException) {
                 null
             },
             grantedAtLevel = try {
@@ -377,7 +402,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 extractTargetItemFilter(infusionJson.getJSONObject("target_item_filter"))
             } catch (e: JSONException) {
                 null
-            }
+            },
+            id = infusionJson.getInt("id")
         )
     }
 
@@ -435,7 +461,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
         when (index) {
             "simple_melee_weapons" -> {
-                return  _simpleWeapons.value!!.filter { it.range == "5ft"}
+                return _simpleWeapons.value!!.filter { it.range == "5ft" }
             }
             "gaming_sets" -> {
                 val result = mutableListOf<ItemInterface>()
@@ -534,11 +560,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun getSpellsByIndex(index: String): List<Spell>? {
         when (index) {
             else -> {
-                _spells.value?.forEach {
-                    if (index.lowercase().trim() == it.name.lowercase().trim()) {
-                        return listOf(it)
-                    }
-                }
+                /* _spells.value?.forEach {
+                     if (index.lowercase().trim() == it.name.lowercase().trim()) {
+                         return listOf(it)
+                     }
+                 } TODO*/
                 return null
             }
         }
@@ -590,7 +616,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     prerequisite = prerequisite,
                     abilityBonuses = abilityBonuses,
                     abilityBonusChoice = abilityBonusChoice,
-                    features = features
+                    //features = features TODO
                 )
             )
         }
@@ -904,10 +930,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     }
 
 
-    fun generateSpells() {
+    private fun updateSpells() {
         val dataAsString =
             context.resources.openRawResource(R.raw.spells).bufferedReader().readText()
-        val spells = mutableListOf<Spell>()
 
         val rootJson = JSONObject(dataAsString)
         val spellsJson = rootJson.getJSONArray("spells")
@@ -934,25 +959,38 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 false
             }
 
-            spells.add(
-                Spell(
-                    name = name,
-                    level = level,
-                    components = components,
-                    itemComponents = itemComponents,
-                    school = school,
-                    desc = desc,
-                    range = range,
-                    area = area,
-                    castingTime = castingTime,
-                    duration = duration,
-                    classes = classes,
-                    damage = damage,
-                    isRitual = ritual
-                )
-            )
+            scope.launch {
+                val id = spellJson.getInt("id")
+                dao.insertSpell(
+                    Spell(
+                        name = name,
+                        level = level,
+                        components = components,
+                        itemComponents = itemComponents,
+                        school = school,
+                        desc = desc,
+                        range = range,
+                        area = area,
+                        castingTime = castingTime,
+                        duration = duration,
+                        classes = classes,
+                        damage = damage,
+                        isRitual = ritual,
+                    ).run {
+                        this.id = id
+                        this
+                    })
+
+                classes.forEach {
+                    dao.insertClassSpellCrossRef(
+                        ClassSpellCrossRef(
+                            classId = classNameToId[it.lowercase()]!!,
+                            spellId = id
+                        )
+                    )
+                }
+            }
         }
-        _spells.value = spells
     }
 
     private fun generateLanguages() {
@@ -973,11 +1011,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     }
 
 
-    private fun generateBackgrounds() {
+    private fun updateBackgrounds() {
         val dataAsString =
             context.resources.openRawResource(R.raw.backgrounds).bufferedReader().readText()
-        val backgrounds = mutableListOf<Background>()
-
 
         val rootJson = JSONObject(dataAsString)
         val backgroundsJson = rootJson.getJSONArray("backgrounds")
@@ -1076,28 +1112,39 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 null
             }
 
-            backgrounds.add(
-                Background(
-                    name = name,
-                    desc = desc,
-                    spells = spells,
-                    proficiencies = proficiencies,
-                    proficiencyChoices = proficiencyChoices,
-                    features = features,
-                    languages = languages,
-                    languageChoices = languageChoices,
-                    equipment = equipment,
-                    equipmentChoices = equipmentChoices,
+            scope.launch {
+                dao.insertBackground(
+                    Background(
+                        name = name,
+                        desc = desc,
+                        spells = spells,
+                        proficiencies = proficiencies,
+                        proficiencyChoices = proficiencyChoices,
+                        languages = languages,
+                        languageChoices = languageChoices,
+                        equipment = equipment,
+                        equipmentChoices = equipmentChoices,
+                    ).run {
+                        this.id = backgroundIndex + 1
+                        this
+                    }
                 )
-            )
+
+                features.forEach {
+                    dao.insertBackgroundFeatureCrossRef(
+                        BackgroundFeatureCrossRef(
+                            backgroundId = backgroundIndex + 1,
+                            featureId = it
+                        )
+                    )
+                }
+            }
         }
-        _backgrounds.value = backgrounds
     }
 
-    private fun generateRaces() {
+    private fun updateRaces() {
         val dataAsString =
             context.resources.openRawResource(R.raw.races).bufferedReader().readText()
-        val races = mutableListOf<RaceEntity>()
         val rootJson = JSONObject(dataAsString)
         val racesJson = rootJson.getJSONArray("races")
         for (raceIndex in 0 until racesJson.length()) {
@@ -1142,27 +1189,37 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             } catch (e: JSONException) {
             }
 
-            races.add(
-                Race(
-                    name = name,
-                    groundSpeed = groundSpeed,
-                    abilityBonuses = abilityBonuses,
-                    abilityBonusChoice = abilityBonusChoice,
-                    proficiencyChoices = proficiencyChoices,
-                    alignment = alignment,
-                    age = age,
-                    size = size,
-                    sizeDesc = sizeDesc,
-                    startingProficiencies = startingProficiencies,
-                    languages = languages,
-                    languageChoices = languageChoices,
-                    languageDesc = languageDesc,
-                    traits = traits,
-                    subraces = subraces
+            scope.launch {
+                dao.insertRace(
+                    Race(
+                        name = name,
+                        groundSpeed = groundSpeed,
+                        abilityBonuses = abilityBonuses,
+                        abilityBonusChoice = abilityBonusChoice,
+                        proficiencyChoices = proficiencyChoices,
+                        alignment = alignment,
+                        age = age,
+                        size = size,
+                        sizeDesc = sizeDesc,
+                        startingProficiencies = startingProficiencies,
+                        languages = languages,
+                        languageChoices = languageChoices,
+                        languageDesc = languageDesc,
+                        subraces = subraces,
+                        id = raceIndex + 1
+                    )
                 )
-            )
+
+                traits.forEach {
+                    dao.insertRaceFeatureCrossRef(
+                        RaceFeatureCrossRef(
+                            raceId = raceIndex + 1,
+                            featureId = it
+                        )
+                    )
+                }
+            }
         }
-        _races.value = races
     }
 
     private fun extractSubraces(jsonArray: JSONArray): List<Subrace> {
@@ -1188,7 +1245,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val proficiencies = mutableListOf<Proficiency>()
             val proficiencyChoices = mutableListOf<ProficiencyChoice>()
             try {
-                extractProficienciesChoices(subraceJson.getJSONArray("proficiencies"), proficiencyChoices, proficiencies)
+                extractProficienciesChoices(
+                    subraceJson.getJSONArray("proficiencies"),
+                    proficiencyChoices,
+                    proficiencies
+                )
             } catch (e: JSONException) {
             }
 
@@ -1205,11 +1266,11 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     } catch (e: JSONException) {
                         null
                     },
-                    traits = try {
+                    /*traits = try {
                         extractFeatures(subraceJson.getJSONArray("features"))
                     } catch (e: JSONException) {
                         listOf()
-                    },
+                    }, TODO */
                     size = try {
                         subraceJson.getString("size")
                     } catch (e: JSONException) {
@@ -1228,7 +1289,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
     private fun extractFeatChoices(jsonArray: JSONArray): List<FeatChoice> {
         val result = mutableListOf<FeatChoice>()
-        for(index in 0 until jsonArray.length()) {
+        for (index in 0 until jsonArray.length()) {
             val featChoiceJson = jsonArray.getJSONObject(index)
             result.add(
                 FeatChoice(
@@ -1246,9 +1307,9 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     //from data in the list.
     private fun extractFeats(jsonArray: JSONArray): List<Feat> {
         val result = mutableListOf<Feat>()
-        for(i in 0 until jsonArray.length()) {
+        for (i in 0 until jsonArray.length()) {
             val featJson = jsonArray.getJSONObject(i)
-            when(featJson.getString("index")) {
+            when (featJson.getString("index")) {
                 "all_feats" -> {
                     result.addAll(
                         _feats.value!!
@@ -1361,7 +1422,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     private fun extractProficienciesChoices(
         json: JSONArray,
         choices: MutableList<ProficiencyChoice>,
-        proficiencies : MutableList<Proficiency>
+        proficiencies: MutableList<Proficiency>
     ) {
         val addProfsToList = fun(json: JSONObject, list: MutableList<Proficiency>) {
             try {
@@ -1384,12 +1445,12 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 0
             }
 
-            if(choose == 0) {
+            if (choose == 0) {
                 addProfsToList(profJson, proficiencies)
             } else {
                 val from = mutableListOf<Proficiency>()
                 val fromJson = profJson.getJSONArray("from")
-                for(fromIndex in 0 until fromJson.length()) {
+                for (fromIndex in 0 until fromJson.length()) {
                     addProfsToList(fromJson.getJSONObject(fromIndex), from)
                 }
                 choices.add(
@@ -1403,7 +1464,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         }
     }
 
-    private fun getProficienciesByIndex(index: String) : List<Proficiency> {
+    private fun getProficienciesByIndex(index: String): List<Proficiency> {
         val proficiencies = mutableListOf<Proficiency>()
         when (index) {
             "gaming_sets" -> {
@@ -1450,11 +1511,10 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
     }
 
 
-    private fun generateClasses() {
+    private fun updateClasses() {
         val dataAsString =
             context.resources.openRawResource(R.raw.classes).bufferedReader().readText()
 
-        val classes = mutableListOf<gmail.loganchazdon.dndhelper.model.Class>()
         val rootJson = JSONObject(dataAsString)
         val classesJson = rootJson.getJSONArray("classes")
         for (classIndex in 0 until classesJson.length()) {
@@ -1462,7 +1522,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
             val name = classJson.getString("name")
             val hitDie = classJson.getInt("hit_die")
             val subClasses = mutableListOf<Subclass>()
-            val levelPath = extractFeatures(classJson.getJSONArray("features"))
+            val featureIds = extractFeatures(classJson.getJSONArray("features"))
             val proficiencyChoices = mutableListOf<ProficiencyChoice>()
             val proficiencies = mutableListOf<Proficiency>()
             val equipmentChoices: MutableList<ItemChoice> = mutableListOf()
@@ -1515,7 +1575,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 subClasses.add(
                     Subclass(
                         name = subclassJson.getString("name"),
-                        features = extractFeatures(subclassJson.getJSONArray("features")),
+                        //TODO features = extractFeatures(subclassJson.getJSONArray("features")),
+                        features = emptyList(),
                         spellCasting = try {
                             extractSpellCasting(subclassJson.getJSONObject("spell_casting"))
                         } catch (e: JSONException) {
@@ -1569,33 +1630,40 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                 null
             }
 
-
-
-            classes.add(
-                Class(
-                    name = name,
-                    hitDie = hitDie,
-                    //subClasses = subClasses,
-                    levelPath = levelPath,
-                    proficiencyChoices = proficiencyChoices,
-                    proficiencies = proficiencies,
-                    equipmentChoices = equipmentChoices,
-                    equipment = equipment,
-                    spellCasting = spellCasting,
-                    pactMagic = pactMagic,
-                    subclassLevel = classJson.getInt("subclass_level"),
-                    startingGoldD4s = classJson.getInt("starting_gold_d4s"),
-                    startingGoldMultiplier = try {
-                        classJson.getInt("staring_gold_multiplier")
-                    } catch (e: JSONException) {
-                        10
-                    }
+            scope.launch {
+                dao.insertClass(
+                    Class(
+                        name = name,
+                        hitDie = hitDie,
+                        levelPath = null,
+                        proficiencyChoices = proficiencyChoices,
+                        proficiencies = proficiencies,
+                        equipmentChoices = equipmentChoices,
+                        equipment = equipment,
+                        spellCasting = spellCasting,
+                        pactMagic = pactMagic,
+                        subclassLevel = classJson.getInt("subclass_level"),
+                        startingGoldD4s = classJson.getInt("starting_gold_d4s"),
+                        startingGoldMultiplier = try {
+                            classJson.getInt("staring_gold_multiplier")
+                        } catch (e: JSONException) {
+                            10
+                        },
+                        id = classIndex + 1
+                    )
                 )
-            )
-        }
-        _classes.value = classes
-    }
 
+                featureIds.forEach {
+                    dao.insertClassFeatureCrossRef(
+                        ClassFeatureCrossRef(
+                            id = classIndex + 1,
+                            featureId = it
+                        )
+                    )
+                }
+            }
+        }
+    }
 
     private fun extractSpellCasting(spellCastingJson: JSONObject): SpellCasting? {
         val spellCastingType = spellCastingJson.getDouble("type")
@@ -1709,7 +1777,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
             if (choose == 0) {
                 try {
-                    when(val index = json.getString("index")) {
+                    when (val index = json.getString("index")) {
                         "gold" -> {
                             items.add(
                                 Currency(
@@ -1788,13 +1856,13 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
                 val listsCostOne = try {
                     json.getBoolean("lists_cost_one")
-                } catch (_ : JSONException) {
+                } catch (_: JSONException) {
                     true
                 }
 
                 val maxSame = try {
                     json.getInt("max_same")
-                } catch (_ : JSONException) {
+                } catch (_: JSONException) {
                     1
                 }
 
@@ -1811,8 +1879,8 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         }
     }
 
-    private fun extractFeatures(featuresJson: JSONArray): MutableList<Feature> {
-        val features = mutableListOf<Feature>()
+    private fun extractFeatures(featuresJson: JSONArray): List<Int> {
+        val ids = mutableListOf<Int>()
         try {
             for (featureIndex in 0 until featuresJson.length()) {
                 val featureJson = featuresJson.getJSONObject(featureIndex)
@@ -1830,45 +1898,51 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                         Choose(0)
                     }
                 }
-
+                val featureId = featureJson.getInt("id")
                 val level = try {
                     featureJson.getInt("level")
                 } catch (e: JSONException) {
                     0
                 }
 
-                var options: MutableList<Feature>?
                 //If we have an index construct a list from that otherwise just make it normally.
                 try {
                     when (val index = featureJson.getString("index")) {
                         "invocations" -> {
                             _invocations.value!!.forEach {
-                                features.add(
-                                    Feature(
-                                        name = it.name,
-                                        prerequisite = it.prerequisite,
-                                        description = it.desc,
-                                    )
+
+                                Feature(
+                                    name = it.name,
+                                    prerequisite = it.prerequisite,
+                                    description = it.desc,
                                 )
+
                             }
                         }
                         "infusions" -> {
                             _infusions.value!!.forEach {
-                                features.add(
-                                    Feature(
-                                        maxTimesChosen = it.maxTimesChosen,
-                                        grantedAtLevel = it.grantedAtLevel,
-                                        name = it.name,
-                                        description = it.desc,
-                                        infusion = it,
-                                        choices = listOf(
-                                            FeatureChoice(
-                                                options = it.options as MutableList<Feature>?,
-                                                choose = Choose(static = it.choose)
-                                            )
+                                val choices = if (it.options != null && it.choose != 0) {
+                                    listOf(
+                                        FeatureChoice(
+                                            options = it.options as MutableList<Feature>?,
+                                            choose = Choose(static = it.choose)
                                         )
                                     )
+                                } else {
+                                    null
+                                }
+
+
+                                Feature(
+                                    maxTimesChosen = it.maxTimesChosen,
+                                    grantedAtLevel = it.grantedAtLevel,
+                                    name = it.name,
+                                    description = it.desc,
+                                    infusion = it,
+                                    choices = choices,
+                                    featureId = it.id
                                 )
+
                             }
                         }
                         "proficiencies" -> {
@@ -1876,15 +1950,14 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 it.value.forEach { skill ->
                                     //Don't add saving throws
                                     if (!skill.lowercase().contains("throw")) {
-                                        features.add(
-                                            Feature(
-                                                name = skill,
-                                                description = "",
-                                                grantedAtLevel = 0,
-                                                prerequisite = Prerequisite(
-                                                    proficiency = Proficiency(
-                                                        name = skill
-                                                    )
+
+                                        Feature(
+                                            name = skill,
+                                            description = "",
+                                            grantedAtLevel = 0,
+                                            prerequisite = Prerequisite(
+                                                proficiency = Proficiency(
+                                                    name = skill
                                                 )
                                             )
                                         )
@@ -1896,13 +1969,13 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             _abilitiesToSkills.value!!.values.forEach {
                                 it.forEach { item ->
                                     if (!item.contains("Saving")) {
-                                        features.add(
-                                            Feature(
-                                                name = item,
-                                                proficiencies = listOf(Proficiency(name = item)),
-                                                description = ""
-                                            )
+
+                                        Feature(
+                                            name = item,
+                                            proficiencies = listOf(Proficiency(name = item)),
+                                            description = ""
                                         )
+
                                     }
                                 }
                             }
@@ -1913,60 +1986,60 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             } catch (e: JSONException) {
                                 null
                             }
-                            _spells.value?.forEach { spell ->
+                            /*_spells.value?.forEach { spell ->
                                 if (spell.level <= bound ?: 10) {
-                                    features.add(
-                                        Feature(
-                                            name = spell.name,
-                                            spells = listOf(spell),
-                                            description = "",
-                                        )
+
+                                    Feature(
+                                        name = spell.name,
+                                        spells = listOf(spell),
+                                        description = "",
                                     )
+
                                 }
-                            }
+                            } TODO */
                         }
                         "maneuvers" -> {
-                            features.addAll(
-                                _maneuvers.value!!
-                            )
+
+                            _maneuvers.value!!
+
                         }
                         "metamagic" -> {
                             _metaMagics.value?.forEach {
-                                features.add(
-                                    Feature(
-                                        name = it.name,
-                                        description = it.desc
-                                    )
+
+                                Feature(
+                                    name = it.name,
+                                    description = it.desc
                                 )
+
                             }
                         }
                         "all_languages" -> {
                             _languages.value!!.forEach {
-                                features.add(
-                                    Feature(
-                                        name = it.name!!,
-                                        languages = listOf(it),
-                                        description = "You can speak read and write ${it.name}."
-                                    )
+
+                                Feature(
+                                    name = it.name!!,
+                                    languages = listOf(it),
+                                    description = "You can speak read and write ${it.name}."
                                 )
+
                             }
                         }
                         "artisans_tools" -> {
                             artisansToolIndexes.forEach {
-                                features.add(
-                                    Feature(
-                                        name = it,
-                                        proficiencies = listOf(Proficiency(it)),
-                                        description = ""
-                                    )
+
+                                Feature(
+                                    name = it,
+                                    proficiencies = listOf(Proficiency(it)),
+                                    description = ""
                                 )
+
                             }
                         }
                         "spells" -> {
                             val levels = try {
                                 featureJson.getJSONArray("levels").let {
                                     val result = mutableListOf<Int>()
-                                    for(i in 0 until it.length()) {
+                                    for (i in 0 until it.length()) {
                                         result.add(it.getInt(i))
                                     }
                                     result
@@ -1978,7 +2051,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             val classes = try {
                                 featureJson.getJSONArray("classes").let {
                                     val result = mutableListOf<String>()
-                                    for(i in 0 until it.length()) {
+                                    for (i in 0 until it.length()) {
                                         result.add(it.getString(i))
                                     }
                                     result
@@ -1991,7 +2064,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                             val schools = try {
                                 featureJson.getJSONArray("schools").let {
                                     val result = mutableListOf<String>()
-                                    for(i in 0 until it.length()) {
+                                    for (i in 0 until it.length()) {
                                         result.add(it.getString(i))
                                     }
                                     result
@@ -2000,14 +2073,14 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 null
                             }
 
-                            val passes = fun (spell: Spell) : Boolean {
+                            val passes = fun(spell: Spell): Boolean {
                                 levels?.let {
-                                    if(!it.contains(spell.level)) {
+                                    if (!it.contains(spell.level)) {
                                         return false
                                     }
                                 }
 
-                                if(classes != null) {
+                                if (classes != null) {
                                     classes.forEach {
                                         if (spell.classes.contains(it)) {
                                             return true
@@ -2016,7 +2089,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                     return false
                                 }
 
-                                if(schools != null) {
+                                if (schools != null) {
                                     schools.forEach {
                                         if (spell.school == it) {
                                             return true
@@ -2028,64 +2101,93 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                                 return true
                             }
 
-                            _spells.value!!.filter {
+                            /*_spells.value!!.filter {
                                 passes(it)
                             }.forEach { spell ->
-                                features.add(
-                                    Feature(
-                                        name = spell.name,
-                                        spells = listOf(spell),
-                                        description = "",
-                                    )
+
+                                Feature(
+                                    name = spell.name,
+                                    spells = listOf(spell),
+                                    description = "",
                                 )
-                            }
+
+                            } TODO */
                         }
                         in _fightingStyles.value.let { styles ->
                             val result = mutableListOf<String>()
-                            styles?.forEach{
+                            styles?.forEach {
                                 result.add(it.name)
                             }
                             result
                         } -> {
-                            features.add(
-                                _fightingStyles.value!!.single {
-                                    it.name == index
-                                }
-                            )
+
+                            _fightingStyles.value!!.single {
+                                it.name == index
+                            }
+
                         }
                         else -> throw JSONException("Invalid index")
                     }
 
                 } catch (e: JSONException) {
-                    val choices = mutableListOf<FeatureChoice>()
 
                     val extractAndAddChoice = fun(choiceJson: JSONObject) {
-                        options = try {
-                            extractFeatures(choiceJson.getJSONArray("from"))
-                        } catch (e: JSONException) {
-                            null
-                        }
-
-                        val choose = try {
-                            Choose(choiceJson.getInt("choose"))
-                        } catch (e: JSONException) {
-                            try {
-                                val result = mutableListOf<Int>()
-                                val json = choiceJson.getJSONArray("choose")
-                                for (i in 0 until json.length()) {
-                                    result.add(json.getInt(i))
-                                }
-                                Choose(result)
+                        scope.launch {
+                            val optionsIds = try {
+                                extractFeatures(choiceJson.getJSONArray("from"))
                             } catch (e: JSONException) {
-                                Choose(0)
+                                null
                             }
-                        }
-                        if (options?.isNotEmpty() == true && choose != Choose(0)) {
-                            choices.add(
-                                FeatureChoice(
-                                    choose, options
+
+                            val choose = try {
+                                Choose(choiceJson.getInt("choose"))
+                            } catch (e: JSONException) {
+                                try {
+                                    val result = mutableListOf<Int>()
+                                    val json = choiceJson.getJSONArray("choose")
+                                    for (i in 0 until json.length()) {
+                                        result.add(json.getInt(i))
+                                    }
+                                    Choose(result)
+                                } catch (e: JSONException) {
+                                    Choose(0)
+                                }
+                            }
+                            if (optionsIds?.isNotEmpty() == true && choose != Choose(0)) {
+                                val choiceId = choiceJson.getInt("choice_id")
+                                val entity = FeatureChoiceEntity(
+                                    choose
+                                ).run {
+                                    this.id = choiceId
+                                    this
+                                }
+
+                                val optionsRef = FeatureOptionsCrossRef(
+                                    featureId = featureId,
+                                    id = choiceId
                                 )
-                            )
+
+                                dao.insertFeatureChoice(
+                                    entity
+                                )
+
+                                dao.insertFeatureOptionsCrossRef(
+                                    optionsRef
+                                )
+
+
+                                optionsIds.forEach {
+                                    val ref = OptionsFeatureCrossRef(
+                                        featureId = it,
+                                        choiceId = choiceId
+                                    )
+
+                                    dao.insertOptionsFeatureCrossRef(
+                                        ref
+                                    )
+
+                                }
+                            }
                         }
                     }
 
@@ -2133,7 +2235,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     val languages = try {
                         val languagesJson = featureJson.getJSONArray("languages")
                         val result = mutableListOf<Language>()
-                        for(i in 0 until languagesJson.length()) {
+                        for (i in 0 until languagesJson.length()) {
                             result.add(
                                 Language(
                                     name = languagesJson.getJSONObject(i).getString("name")
@@ -2149,7 +2251,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     val proficiencies = try {
                         val proficienciesJson = featureJson.getJSONArray("proficiencies")
                         val result = mutableListOf<Proficiency>()
-                        for(i in 0 until proficienciesJson.length()) {
+                        for (i in 0 until proficienciesJson.length()) {
                             result.add(
                                 Proficiency(
                                     name = proficienciesJson.getJSONObject(i).getString("name")
@@ -2163,30 +2265,31 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
 
                     val armorContingentAcBonus = try {
                         featureJson.getInt("armor_contingent_ac_bonus")
-                    } catch (e : JSONException) {
+                    } catch (e: JSONException) {
                         null
                     }
                     val extraAttackAndDamageRollStat = try {
                         featureJson.getString("extra_attack_and_damage_roll_stat")
-                    } catch (e : JSONException) {
+                    } catch (e: JSONException) {
                         null
                     }
                     val rangedAttackBonus = try {
                         featureJson.getInt("ranged_attack_bonus")
-                    } catch (e : JSONException) {
+                    } catch (e: JSONException) {
                         null
                     }
 
-                    val activationRequirement = featureJson.optJSONObject("activation_requirement").let {
-                        if(it == null) {
-                            ActivationRequirement()
-                        } else {
-                            extractActivationRequirement(it)
+                    val activationRequirement =
+                        featureJson.optJSONObject("activation_requirement").let {
+                            if (it == null) {
+                                ActivationRequirement()
+                            } else {
+                                extractActivationRequirement(it)
+                            }
                         }
-                    }
 
                     val speedBoost = featureJson.optJSONArray("speed_boost").let {
-                        if(it == null) {
+                        if (it == null) {
                             null
                         } else {
                             extractScalingBonus(it)
@@ -2194,62 +2297,64 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
                     }
 
                     val expertises = featureJson.optJSONArray("expertises").let {
-                        if(it == null) {
+                        if (it == null) {
                             null
                         } else {
                             val result = mutableListOf<Proficiency>()
-                            for(i in 0 until it.length()) {
+                            for (i in 0 until it.length()) {
                                 result.add(Proficiency(name = it.getString(i)))
                             }
                             result
                         }
                     }
 
-                    features.add(
-                        Feature(
-                            name = featureJson.getString("name"),
-                            choices = choices,
-                            activationRequirement = activationRequirement,
-                            rangedAttackBonus = rangedAttackBonus,
-                            extraAttackAndDamageRollStat = extraAttackAndDamageRollStat,
-                            maxTimesChosen = try {
-                                featureJson.getInt("max_times_chosen")
-                            } catch (e: JSONException) {
-                                null
-                            },
-                            description = try {
-                                featureJson.getString("desc")
-                            } catch (e: JSONException) {
-                                ""
-                            },
-                            grantedAtLevel = level,
-                            hpBonusPerLevel = hpBonusPerLevel,
-                            maxActive = maxActive,
-                            index = try {
-                                featureJson.getString("index")
-                            } catch (e: JSONException) {
-                                null
-                            },
-                            spells = spells,
-                            acBonus = try {
-                                featureJson.getInt("ac_bonus")
-                            } catch (e: JSONException) {
-                                null
-                            },
-                            ac = ac,
-                            armorContingentAcBonus = armorContingentAcBonus,
-                            proficiencies = proficiencies,
-                            languages = languages,
-                            speedBoost = speedBoost,
-                            expertises = expertises
-                        )
+                    val feature = Feature(
+                        name = featureJson.getString("name"),
+                        activationRequirement = activationRequirement,
+                        rangedAttackBonus = rangedAttackBonus,
+                        extraAttackAndDamageRollStat = extraAttackAndDamageRollStat,
+                        maxTimesChosen = try {
+                            featureJson.getInt("max_times_chosen")
+                        } catch (e: JSONException) {
+                            null
+                        },
+                        description = try {
+                            featureJson.getString("desc")
+                        } catch (e: JSONException) {
+                            ""
+                        },
+                        grantedAtLevel = level,
+                        hpBonusPerLevel = hpBonusPerLevel,
+                        maxActive = maxActive,
+                        index = try {
+                            featureJson.getString("index")
+                        } catch (e: JSONException) {
+                            null
+                        },
+                        spells = spells,
+                        acBonus = try {
+                            featureJson.getInt("ac_bonus")
+                        } catch (e: JSONException) {
+                            null
+                        },
+                        ac = ac,
+                        armorContingentAcBonus = armorContingentAcBonus,
+                        proficiencies = proficiencies,
+                        languages = languages,
+                        speedBoost = speedBoost,
+                        expertises = expertises,
+                        featureId = featureId
                     )
+                    ids.add(featureId)
+                    scope.launch {
+                        dao.insertFeature(feature)
+                    }
                 }
             }
         } catch (e: JSONException) {
             throw e
         }
-        return features
+        return ids
     }
 
     private fun extractSpells(spellsJson: JSONArray): List<Spell> {
@@ -2261,7 +2366,7 @@ class LocalDataSourceImpl(val context: Context) : LocalDataSource {
         return spells
     }
 
-    private fun extractActivationRequirement(json: JSONObject) : ActivationRequirement {
+    private fun extractActivationRequirement(json: JSONObject): ActivationRequirement {
         return ActivationRequirement(
             armorReqIndex = json.optString("armor_index"),
             shieldReq = json.optBoolean("shield")

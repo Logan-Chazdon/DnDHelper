@@ -1,17 +1,12 @@
 package gmail.loganchazdon.dndhelper
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.room.AutoMigration
 import androidx.room.Room
-import androidx.room.migration.AutoMigrationSpec
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
 import gmail.loganchazdon.dndhelper.model.database.MIGRATION_56_57
@@ -32,21 +27,21 @@ object AppModule {
             "database"
         ).addMigrations(MIGRATION_56_57).build()
     }
+
+    @Provides
+    @Singleton
+    fun providerLocalDataSource(@ApplicationContext appContext: Context, dao: DatabaseDao): LocalDataSource {
+        return LocalDataSourceImpl(appContext, dao)
+    }
+
+    @Provides
+    fun providerDao(db: RoomDataBase): DatabaseDao {
+        return db.databaseDao()
+    }
 }
 
 @Module
 @InstallIn(ViewModelComponent::class)
 object RepositoryModule{
-    @Provides
-    @ViewModelScoped
-    fun providerDao(db: RoomDataBase): DatabaseDao? {
-        return db.databaseDao()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.P)
-    @Provides
-    fun providerLocalDataSource(@ApplicationContext appContext: Context): LocalDataSource {
-        return LocalDataSourceImpl(appContext)
-    }
 
 }

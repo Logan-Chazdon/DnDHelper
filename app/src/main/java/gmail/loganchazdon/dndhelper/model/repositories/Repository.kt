@@ -34,7 +34,7 @@ class Repository @Inject constructor(
         MutableLiveData()
     )
     private val _feats = LocalDataSource.getFeats(MutableLiveData())
-    private val _spells = LocalDataSource.getSpells(MutableLiveData())
+    private val _spells = dao!!.getAllSpells()
     private val _infusions = LocalDataSource.getInfusions(MutableLiveData())
 
 
@@ -42,7 +42,7 @@ class Repository @Inject constructor(
         return dao!!.getHomebrewRaces()
     }
 
-    fun getHomebrewClasses() : LiveData<List<ClassEntity>> {
+    fun getHomebrewClasses(): LiveData<List<ClassEntity>> {
         return dao!!.getHomebrewClasses()
     }
 
@@ -127,7 +127,7 @@ class Repository @Inject constructor(
     }
 
     fun getSpellsByClassId(classId: Int): MutableList<Spell> {
-        return dao?.getSpellsByClassId(classId) ?: mutableListOf()
+        return dao!!.getSpellsByClassId(classId)
     }
 
     fun getAllSpells(): List<Spell> {

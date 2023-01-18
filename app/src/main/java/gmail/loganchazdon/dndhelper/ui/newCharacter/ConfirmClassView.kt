@@ -32,6 +32,7 @@ import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.theme.noActionNeeded
 import gmail.loganchazdon.dndhelper.ui.utils.allNames
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -251,12 +252,15 @@ fun ConfirmClassView(
             //Update the spells.
             LaunchedEffect(
                 viewModel.toNumber(viewModel.levels),
-                subclass
+                subclass,
+                clazz.value?.id
             ) {
-                viewModel.calcLearnableSpells(
-                    viewModel.toNumber(viewModel.levels),
-                    subclass
-                )
+                this.launch(Dispatchers.IO) {
+                    viewModel.calcLearnableSpells(
+                        viewModel.toNumber(viewModel.levels),
+                        subclass
+                    )
+                }
             }
 
             if (viewModel.isBaseClass.value) {
@@ -476,7 +480,7 @@ fun ConfirmClassView(
 
 
 
-            for (choice in clazz.value?.levelPath!!) {
+            for (choice in clazz.value?.levelPath ?: emptyList()) {
                 if (viewModel.levels.value.text.isNotBlank()) {
                     if (choice.grantedAtLevel <= viewModel.levels.value.text.toInt()) {
                         FeatureView(

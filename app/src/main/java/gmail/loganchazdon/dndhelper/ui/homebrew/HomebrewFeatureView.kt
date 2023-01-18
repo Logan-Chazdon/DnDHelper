@@ -1,8 +1,6 @@
 package gmail.loganchazdon.dndhelper.ui.homebrew
 
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,15 +10,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
-import gmail.loganchazdon.dndhelper.MyApplication
-import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSourceImpl
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.AutoSave
 
@@ -302,21 +294,4 @@ fun HomebrewFeatureView(
             }
         }
     }
-}
-
-
-@RequiresApi(Build.VERSION_CODES.P)
-@Preview(device = "spec:width=411dp,height=891dp,dpi=420", backgroundColor = 0xFFFFFFFF)
-@Composable
-private fun PreviewHomebrewFeatureView() {
-    HomebrewFeatureView(
-        viewModel = HomebrewFeatureViewModel(
-            Repository(
-                LocalDataSource = LocalDataSourceImpl(context = LocalContext.current),
-                dao = null
-            ),
-            MyApplication(),
-            savedStateHandle = SavedStateHandle(),
-        )
-    )
 }

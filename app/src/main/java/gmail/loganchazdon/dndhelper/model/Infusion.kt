@@ -16,7 +16,8 @@ data class Infusion(
     var active: Boolean = false,
     val attuned: Boolean,
     var level: Int = 0,
-    val grantedAtLevel: Int
+    val grantedAtLevel: Int,
+    val id: Int = 0
 ) {
     val currentAcBonus: Int?
     get() {

@@ -2010,9 +2010,9 @@
                             "level" : 7
                         },
                         {
-                            "name" : "Leomund's Secret Chest",
-                            "index" : "leomunds_secret_chest",
-                            "level" : 7
+                            "name": "Leomund's Secret Chest",
+                            "index": "leomunds_secret_chest",
+                            "level": 7
                         },
                         {
                             "name" : "Planar Binding",
@@ -2377,8 +2377,8 @@
                             "level" : 9
                         },
                         {
-                            "name" : "Scrying",
-                            "level" : 9
+                            "name": "Scrying",
+                            "level": 9
                         }
                     ],
                     "features" : [
@@ -2547,8 +2547,8 @@
                             "level" : 3
                         },
                         {
-                            "name" : "Sorching Ray",
-                            "level" : 3
+                            "name": "Scorching Ray",
+                            "level": 3
                         },
                         {
                             "name" : "Daylight",
@@ -2571,8 +2571,8 @@
                             "level" : 9
                         },
                         {
-                            "name" : "Scying",
-                            "level" : 9
+                            "name": "Scrying",
+                            "level": 9
                         }
                     ],
                     "features" : [

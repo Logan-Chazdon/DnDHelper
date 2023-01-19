@@ -14,6 +14,21 @@ class Subrace(
     groundSpeed: Int?,
     var featChoices: List<FeatChoice>? = null
 ) : SubraceEntity(name, abilityBonuses, abilityBonusChoice, startingProficiencies, languages, languageChoices, size, groundSpeed){
+    constructor(entity: SubraceEntity, traits: List<Feature>?, featChoices: List<FeatChoice>?) : this(
+        name = entity.name,
+        abilityBonuses = entity.abilityBonuses,
+        abilityBonusChoice = entity.abilityBonusChoice,
+        startingProficiencies = entity.startingProficiencies,
+        languages = entity.languages,
+        languageChoices = entity.languageChoices,
+        traits = traits,
+        featChoices = featChoices,
+        groundSpeed = entity.groundSpeed,
+        size = entity.size
+    ) {
+        this.id = entity.id
+    }
+
     val totalAbilityBonuses: List<AbilityBonus>
     get() {
         val result = mutableListOf<AbilityBonus>()

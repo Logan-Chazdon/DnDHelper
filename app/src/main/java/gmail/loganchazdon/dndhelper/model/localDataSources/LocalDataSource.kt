@@ -1167,15 +1167,16 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                     proficiencyChoices,
                     startingProficiencies
                 )
-            } catch (e: JSONException) {
+            } catch (_: JSONException) {
             }
             val languageDesc = raceJson.getString("language_desc")
             val traits = extractFeatures(raceJson.getJSONArray("features"))
-            val subraces = try {
+            val subraceIds =try {
                 extractSubraces(raceJson.getJSONArray("subraces"))
-            } catch (e: JSONException) {
-                listOf()
+            } catch (_: JSONException) {
+                emptyList()
             }
+
             val languages = mutableListOf<Language>()
             val languageChoices = mutableListOf<LanguageChoice>()
             extractLangs(raceJson.getJSONArray("languages"), languages, languageChoices)
@@ -1186,10 +1187,19 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
             try {
                 abilityBonusChoice =
                     extractAbilityBonuses(raceJson.getJSONArray("ability_bonuses"), abilityBonuses)
-            } catch (e: JSONException) {
+            } catch (_: JSONException) {
             }
 
             scope.launch {
+                subraceIds.forEach {
+                    dao.insertRaceSubraceCrossRef(
+                        RaceSubraceCrossRef(
+                            subraceId = it,
+                            raceId = raceIndex + 1
+                        )
+                    )
+                }
+
                 dao.insertRace(
                     Race(
                         name = name,
@@ -1205,7 +1215,6 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                         languages = languages,
                         languageChoices = languageChoices,
                         languageDesc = languageDesc,
-                        subraces = subraces,
                         id = raceIndex + 1
                     )
                 )
@@ -1222,15 +1231,15 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
         }
     }
 
-    private fun extractSubraces(jsonArray: JSONArray): List<Subrace> {
-        val subraces = mutableListOf<Subrace>()
+    private fun extractSubraces(jsonArray: JSONArray): List<Int> {
+        val result = mutableListOf<Int>()
         for (index in 0 until jsonArray.length()) {
             val subraceJson = jsonArray.getJSONObject(index)
             val languages = mutableListOf<Language>()
             val languageChoices = mutableListOf<LanguageChoice>()
             try {
                 extractLangs(subraceJson.getJSONArray("languages"), languages, languageChoices)
-            } catch (e: JSONException) {
+            } catch (_: JSONException) {
 
             }
             val abilityBonuses = mutableListOf<AbilityBonus>()
@@ -1240,7 +1249,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                     subraceJson.getJSONArray("ability_bonuses"),
                     abilityBonuses
                 )
-            } catch (e: JSONException) {
+            } catch (_: JSONException) {
             }
             val proficiencies = mutableListOf<Proficiency>()
             val proficiencyChoices = mutableListOf<ProficiencyChoice>()
@@ -1253,38 +1262,53 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
             } catch (e: JSONException) {
             }
 
-            subraces.add(
-                Subrace(
-                    name = subraceJson.getString("name"),
-                    abilityBonuses = abilityBonuses,
-                    abilityBonusChoice = abilityBonusChoice,
-                    startingProficiencies = proficiencies,
-                    languages = languages,
-                    languageChoices = languageChoices,
-                    featChoices = try {
-                        extractFeatChoices(subraceJson.getJSONArray("feats"))
-                    } catch (e: JSONException) {
-                        null
-                    },
-                    /*traits = try {
-                        extractFeatures(subraceJson.getJSONArray("features"))
-                    } catch (e: JSONException) {
-                        listOf()
-                    }, TODO */
-                    size = try {
-                        subraceJson.getString("size")
-                    } catch (e: JSONException) {
-                        null
-                    },
-                    groundSpeed = try {
-                        subraceJson.getInt("ground_speed")
-                    } catch (e: JSONException) {
-                        null
-                    },
-                )
-            )
+            val featChoices = try {
+                extractFeatChoices(subraceJson.getJSONArray("feats"))
+            } catch (e: JSONException) {
+                null
+            }
+            val id = subraceJson.getInt("id")
+            scope.launch {
+                try {
+                    extractFeatures(subraceJson.getJSONArray("features"))
+                } catch (e: JSONException) {
+                    listOf()
+                }.forEach {
+                    dao.insertSubraceFeatureCrossRef(
+                        SubraceFeatureCrossRef(
+                            subraceId = id,
+                            featureId = it
+                        )
+                    )
+                }
+
+                dao.insertSubrace(
+                    Subrace(
+                        name = subraceJson.getString("name"),
+                        abilityBonuses = abilityBonuses,
+                        abilityBonusChoice = abilityBonusChoice,
+                        startingProficiencies = proficiencies,
+                        languages = languages,
+                        languageChoices = languageChoices,
+                        featChoices = featChoices,
+                        size = try {
+                            subraceJson.getString("size")
+                        } catch (e: JSONException) {
+                            null
+                        },
+                        groundSpeed = try {
+                            subraceJson.getInt("ground_speed")
+                        } catch (e: JSONException) {
+                            null
+                        }
+                    ).run {
+                        this.id = id
+                        this
+                    })
+            }
+            result.add(id)
         }
-        return subraces
+        return result
     }
 
     private fun extractFeatChoices(jsonArray: JSONArray): List<FeatChoice> {
@@ -1582,7 +1606,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                         )
                     }
 
-                   try {
+                    try {
                         val subclassSpellJson = subclassJson.getJSONArray("spells")
                         for (index in 0 until subclassSpellJson.length()) {
                             val spellJson = subclassSpellJson.getJSONObject(index)
@@ -1596,8 +1620,6 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                         }
 
                     } catch (_: JSONException) { }
-
-
                 }
             }
 

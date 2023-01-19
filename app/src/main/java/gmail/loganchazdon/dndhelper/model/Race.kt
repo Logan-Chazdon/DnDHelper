@@ -19,7 +19,6 @@ class Race(
     languages: List<Language> = listOf(),
     languageChoices: List<LanguageChoice> = listOf(),
     languageDesc: String = "",
-    subraces: List<Subrace>? = listOf(),
     @Embedded(prefix = "subrace")
     var subrace: Subrace? = null
 ) : RaceEntity(
@@ -37,7 +36,6 @@ class Race(
     languages = languages,
     languageChoices = languageChoices,
     languageDesc = languageDesc,
-    subraces = subraces,
 ) {
     val totalGroundSpeed: Int
     get() {

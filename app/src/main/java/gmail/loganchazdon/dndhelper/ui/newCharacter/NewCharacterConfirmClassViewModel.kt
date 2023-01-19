@@ -318,7 +318,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 try {
                     val maxLevel =
                         clazz.value?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
-                            ?: clazz.value?.pactMagic?.pactSlots?.get(level - 1)!!.name.toInt()
+                            ?: clazz.value?.pactMagic?.pactSlots?.get(level - 1)?.name?.toInt() ?: 0
                     this.removeAll {
                         it.level > maxLevel
                     }

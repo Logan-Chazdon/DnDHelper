@@ -417,7 +417,21 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
 
     @Query("SELECT * FROM races WHERE raceId = :id")
     @Transaction
-    abstract fun findLiveRaceById(id: Int): LiveData<Race>
+    protected abstract fun findUnfilledLiveRaceById(id: Int): LiveData<Race>
+
+    fun bindLiveRaceById(id: Int, result: MediatorLiveData<Race>) {
+        result.addSource(findUnfilledLiveRaceById(id)) {
+            if(it != null) {
+                GlobalScope.launch {
+                    it.traits = getRaceTraits(id)
+                    result.postValue(it)
+                }
+            }
+        }
+    }
+
+    @Query("SELECT * FROM features JOIN RaceFeatureCrossRef ON RaceFeatureCrossRef.featureId IS features.featureId WHERE raceId IS :id")
+    protected abstract fun getRaceTraits(id: Int) : List<Feature>
 
     @Insert
     abstract fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
@@ -443,7 +457,7 @@ WHERE raceId is :raceId"""
     @Query(
         """SELECT * FROM features 
 JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId 
-WHERE subraceId is :subraceId"""
+WHERE subraceId IS :subraceId"""
     )
     protected abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
 
@@ -470,11 +484,17 @@ WHERE subraceId IS :subraceId
     fun bindSubraceOptions(raceId: Int, subraces: MediatorLiveData<List<Subrace>>) {
         subraces.addSource(getSubraceOptionsWithoutFeatures(raceId)) { entityList ->
             if (entityList != null) {
-                val temp: List<Subrace> = entityList as List<Subrace>
-                temp.forEach {
-                    it.traits = getSubraceTraits(it.id)
+                GlobalScope.launch {
+                    val temp: MutableList<Subrace> = mutableListOf()
+                    entityList.forEach { subraceEntity ->
+                        val featChoices = mutableListOf<FeatChoice>()
+                        getSubraceFeatChoices(subraceEntity.id).forEach {
+                            featChoices.add(it.toFeatChoice(emptyList()))
+                        }
+                        temp.add(Subrace(subraceEntity, getSubraceTraits(subraceEntity.id), featChoices))
+                    }
+                    subraces.postValue(temp)
                 }
-                subraces.value = temp
             }
         }
     }

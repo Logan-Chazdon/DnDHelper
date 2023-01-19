@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "7cc607d71f35f8b651f54c9ada78589f",
+    "identityHash": "0837b648904b7899cfe9cd2eb6188c7d",
     "entities": [
       {
         "tableName": "characters",
@@ -232,7 +232,7 @@
       },
       {
         "tableName": "races",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`raceId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `raceName` TEXT NOT NULL, `groundSpeed` INTEGER NOT NULL, `abilityBonuses` TEXT, `alignment` TEXT, `age` TEXT NOT NULL, `size` TEXT NOT NULL, `sizeDesc` TEXT NOT NULL, `startingProficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `languageDesc` TEXT NOT NULL, `subraces` TEXT, `isHomebrew` INTEGER NOT NULL, `abcchoose` INTEGER, `abcfrom` TEXT, `abcmaxOccurrencesOfAbility` INTEGER, `abcchosenByString` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`raceId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `raceName` TEXT NOT NULL, `groundSpeed` INTEGER NOT NULL, `abilityBonuses` TEXT, `alignment` TEXT, `age` TEXT NOT NULL, `size` TEXT NOT NULL, `sizeDesc` TEXT NOT NULL, `startingProficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `languageDesc` TEXT NOT NULL, `isHomebrew` INTEGER NOT NULL, `abcchoose` INTEGER, `abcfrom` TEXT, `abcmaxOccurrencesOfAbility` INTEGER, `abcchosenByString` TEXT)",
         "fields": [
           {
             "fieldPath": "raceId",
@@ -311,12 +311,6 @@
             "columnName": "languageDesc",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "subraces",
-            "columnName": "subraces",
-            "affinity": "TEXT",
-            "notNull": false
           },
           {
             "fieldPath": "isHomebrew",
@@ -1801,7 +1795,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7cc607d71f35f8b651f54c9ada78589f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0837b648904b7899cfe9cd2eb6188c7d')"
     ]
   }
 }

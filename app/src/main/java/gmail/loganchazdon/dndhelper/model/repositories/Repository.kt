@@ -98,8 +98,10 @@ class Repository @Inject constructor(
         dao?.findLiveCharacterById(id, character)
     }
 
-    fun getLiveRaceById(id: Int): LiveData<Race>? {
-        return dao?.findLiveRaceById(id)
+    fun getLiveRaceById(id: Int): LiveData<Race> {
+        val result = MediatorLiveData<Race>()
+        dao!!.bindLiveRaceById(id, result)
+        return result
     }
 
     //Inserts a new character into the database and returns its ID

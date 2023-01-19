@@ -182,7 +182,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
             applyBonus(it.ability, it.bonus)
         }
 
-        race.value?.subraces?.getOrNull(subraceIndex.value)?.abilityBonuses?.let { list ->
+        subraces.value?.getOrNull(subraceIndex.value)?.abilityBonuses?.let { list ->
             getStateBonuses(
                 list,
                 customSubraceStatsMap
@@ -203,7 +203,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
         race: Race?,
     ): List<Feature> {
         //TODO check this
-        race?.subrace = race?.subraces?.getOrNull(subraceIndex.value)
+        race?.subrace = subraces.value?.getOrNull(subraceIndex.value)
         return race?.filterRaceFeatures() ?: listOf()
     }
 
@@ -242,7 +242,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
     private val selectedSubraceASIs : List<Pair<String, Int>>
         get() {
             return ((subraceASIDropdownState.value?.getSelected(
-                race.value?.subraces?.get(subraceIndex.value)
+                subraces.value?.get(subraceIndex.value)
                     ?.abilityBonusChoice?.from.let { from ->
                         val names = mutableListOf<Pair<String, Int>>()
                         from?.forEach { it ->

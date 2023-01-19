@@ -1587,18 +1587,12 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                         for (index in 0 until subclassSpellJson.length()) {
                             val spellJson = subclassSpellJson.getJSONObject(index)
                             val spellId = dao.getSpellIdByName(spellJson.getString("name"))
-                            try {
-                                dao.insertSubclassSpellCrossRef(
-                                    SubclassSpellCrossRef(
-                                        subclassId = id,
-                                        spellId = spellId
-                                    )
+                            dao.insertSubclassSpellCrossRef(
+                                SubclassSpellCrossRef(
+                                    subclassId = id,
+                                    spellId = spellId
                                 )
-                            } catch( e : Exception) {
-                                val x  = id + spellId
-                                val y = spellJson
-                                throw(e)
-                            }
+                            )
                         }
 
                     } catch (_: JSONException) { }

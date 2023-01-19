@@ -652,10 +652,15 @@ WHERE classId IS :id"""
             GlobalScope.launch {
                 val tempList = mutableListOf<Subclass>()
                 entities.forEach {
+                    val spells : MutableList<Pair<Int, Spell>> = mutableListOf()
+                    getSubclassSpells(it.subclassId).forEach { spell ->
+                        spells.add(Pair(spell.level, spell))
+                    }
                     tempList.add(
                         Subclass(
                             subclassEntity = it,
-                            features = getSubclassFeaturesById(it.subclassId)
+                            features = getSubclassFeaturesById(it.subclassId),
+                            spells = spells
                         )
                     )
                 }
@@ -763,15 +768,24 @@ WHERE classId IS :id"""
 
     fun getSubclass(id: Int): LiveData<Subclass> {
         val result = MediatorLiveData<Subclass>()
-        result.addSource(getUnfilledSubclass(id)) {
-            if (it != null) {
+        result.addSource(getUnfilledSubclass(id)) { subclassEntity ->
+            if (subclassEntity != null) {
                 GlobalScope.launch {
-                    result.postValue(Subclass(it, getSubclassFeaturesById(id)))
+                    val spells : MutableList<Pair<Int, Spell>> = mutableListOf()
+                    getSubclassSpells(subclassEntity.subclassId).forEach {
+                        spells.add(Pair(it.level, it))
+                    }
+                    result.postValue(
+                        Subclass(subclassEntity, getSubclassFeaturesById(id), spells)
+                    )
                 }
             }
         }
         return result
     }
+
+    @Query("SELECT * FROM spells JOIN SubclassSpellCrossRef ON SubclassSpellCrossRef.spellId IS spells.id WHERE subclassId IS :id")
+    abstract fun getSubclassSpells(id: Int) : List<Spell>
 
     @Delete
     abstract fun removeSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef)
@@ -790,4 +804,7 @@ WHERE classId IS :id"""
 
     @Query("SELECT * FROM spells")
     abstract fun getAllSpells(): LiveData<List<Spell>>
+
+    @Query("SELECT id FROM spells WHERE LOWER(spells.name) LIKE LOWER(:name)")
+    abstract fun getSpellIdByName(name: String): Int
 }

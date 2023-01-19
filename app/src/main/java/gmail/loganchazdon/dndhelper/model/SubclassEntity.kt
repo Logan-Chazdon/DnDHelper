@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 open class SubclassEntity(
     @ColumnInfo(name = "subclass_name")
     var name: String,
-    var spells: List<Pair<Int, Spell>>?,
     val spellAreFree: Boolean,
     @ColumnInfo(name = "subclass_spell_casting")
     var spellCasting: SpellCasting?

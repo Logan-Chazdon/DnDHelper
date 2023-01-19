@@ -1521,7 +1521,6 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
             val classJson = classesJson.getJSONObject(classIndex)
             val name = classJson.getString("name")
             val hitDie = classJson.getInt("hit_die")
-            val subClasses = mutableListOf<Subclass>()
             val featureIds = extractFeatures(classJson.getJSONArray("features"))
             val proficiencyChoices = mutableListOf<ProficiencyChoice>()
             val proficiencies = mutableListOf<Proficiency>()
@@ -1549,43 +1548,63 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                 } catch (e: JSONException) {
                     false
                 }
-                val subclassSpells = try {
-                    val result = mutableListOf<Pair<Int, Spell>>()
-                    val subclassSpellJson = subclassJson.getJSONArray("spells")
-                    for (index in 0 until subclassSpellJson.length()) {
-                        val spellJson = subclassSpellJson.getJSONObject(index)
-                        val level = spellJson.getInt("level")
-                        val spell = getSpellsByIndex(spellJson.getString("name"))
-                        //TODO once all the spells are added put an exception here if the sell lists is not exactly one item.
-                        spell?.getOrNull(0)?.let {
-                            result.add(
-                                Pair(
-                                    level,
-                                    it
-                                )
-                            )
+
+                scope.launch {
+                    val id = subclassJson.getInt("id")
+                    dao.insertSubclass(
+                        SubclassEntity(
+                            name = subclassJson.getString("name"),
+                            spellCasting = try {
+                                extractSpellCasting(subclassJson.getJSONObject("spell_casting"))
+                            } catch (e: JSONException) {
+                                null
+                            },
+                            spellAreFree = spellsAreFree
+                        ).run {
+                            this.subclassId = id
+                            this
                         }
-                    }
-                    result
-                } catch (e: JSONException) {
-                    null
-                }
-
-
-                subClasses.add(
-                    Subclass(
-                        name = subclassJson.getString("name"),
-                        //TODO features = extractFeatures(subclassJson.getJSONArray("features")),
-                        features = emptyList(),
-                        spellCasting = try {
-                            extractSpellCasting(subclassJson.getJSONObject("spell_casting"))
-                        } catch (e: JSONException) {
-                            null
-                        },
-                        spells = subclassSpells,
-                        spellAreFree = spellsAreFree
                     )
-                )
+
+                    dao.insertClassSubclassId(
+                        ClassSubclassCrossRef(
+                            classId = classIndex + 1,
+                            subclassId = id
+                        )
+                    )
+
+                    extractFeatures(subclassJson.getJSONArray("features")).forEach {
+                        dao.insertSubclassFeatureCrossRef(
+                            SubclassFeatureCrossRef(
+                                featureId = it,
+                                subclassId = id
+                            )
+                        )
+                    }
+
+                   try {
+                        val subclassSpellJson = subclassJson.getJSONArray("spells")
+                        for (index in 0 until subclassSpellJson.length()) {
+                            val spellJson = subclassSpellJson.getJSONObject(index)
+                            val spellId = dao.getSpellIdByName(spellJson.getString("name"))
+                            try {
+                                dao.insertSubclassSpellCrossRef(
+                                    SubclassSpellCrossRef(
+                                        subclassId = id,
+                                        spellId = spellId
+                                    )
+                                )
+                            } catch( e : Exception) {
+                                val x  = id + spellId
+                                val y = spellJson
+                                throw(e)
+                            }
+                        }
+
+                    } catch (_: JSONException) { }
+
+
+                }
             }
 
             val spellCastingJson = classJson.getJSONObject("spell_casting")

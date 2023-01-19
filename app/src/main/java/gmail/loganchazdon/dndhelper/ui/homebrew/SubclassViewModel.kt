@@ -37,7 +37,6 @@ class SubclassViewModel @Inject constructor(
         val subclass = SubclassEntity(
             name = name.value,
             spellCasting = null, //TODO
-            spells = emptyList(), //TODO
             spellAreFree = false //TODO,
         )
         subclass.subclassId = id

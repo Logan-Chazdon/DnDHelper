@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "2c406d3953e4e1f2b27751104cb3c537",
+    "identityHash": "7cc607d71f35f8b651f54c9ada78589f",
     "entities": [
       {
         "tableName": "characters",
@@ -536,19 +536,13 @@
       },
       {
         "tableName": "subclasses",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subclass_name` TEXT NOT NULL, `spells` TEXT, `spellAreFree` INTEGER NOT NULL, `subclass_spell_casting` TEXT, `subclassId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subclass_name` TEXT NOT NULL, `spellAreFree` INTEGER NOT NULL, `subclass_spell_casting` TEXT, `subclassId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
             "columnName": "subclass_name",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "spells",
-            "columnName": "spells",
-            "affinity": "TEXT",
-            "notNull": false
           },
           {
             "fieldPath": "spellAreFree",
@@ -1807,7 +1801,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2c406d3953e4e1f2b27751104cb3c537')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7cc607d71f35f8b651f54c9ada78589f')"
     ]
   }
 }

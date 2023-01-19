@@ -256,6 +256,11 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
             subclassDropdownState!!.maxSameSelections = 1
             subclassDropdownState!!
         } else {
+            val names = mutableListOf<String>()
+            subclasses.value?.forEach {
+                names.add(it.name)
+            }
+            subclassDropdownState!!.names = names
             subclassDropdownState!!
         }
     }

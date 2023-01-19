@@ -464,7 +464,6 @@ class Repository @Inject constructor(
                 "",
                 spellCasting = null,
                 spellAreFree = true,
-                spells = emptyList()
             )
         ).toInt()
     }

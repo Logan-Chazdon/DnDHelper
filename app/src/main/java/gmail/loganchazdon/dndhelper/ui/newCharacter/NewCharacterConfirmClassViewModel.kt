@@ -192,26 +192,28 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 0
             )
 
-            repository.insertCharacterSubclassCrossRef(
-                CharacterSubclassCrossRef(
-                    subClassId = subclass!!.subclassId,
-                    classId = clazz.value!!.id,
-                    characterId = id
-                )
-            )
-
-            saveFeatures(subclass.features!!)
-
-            if (subclass.spellCasting != null) {
-                val defaultPreparedness =
-                    if (subclass.spellCasting?.prepareFrom == null) false else null
-                subclassSpells.forEach {
-                    repository.insertSubclassSpellCastingSpellCrossRef(
-                        subclassId = subclass.subclassId,
-                        spellId = it.id,
-                        characterId = id,
-                        isPrepared = defaultPreparedness
+            if(subclass != null) {
+                repository.insertCharacterSubclassCrossRef(
+                    CharacterSubclassCrossRef(
+                        subClassId = subclass.subclassId,
+                        classId = clazz.value!!.id,
+                        characterId = id
                     )
+                )
+
+                saveFeatures(subclass.features!!)
+
+                if (subclass.spellCasting != null) {
+                    val defaultPreparedness =
+                        if (subclass.spellCasting?.prepareFrom == null) false else null
+                    subclassSpells.forEach {
+                        repository.insertSubclassSpellCastingSpellCrossRef(
+                            subclassId = subclass.subclassId,
+                            spellId = it.id,
+                            characterId = id,
+                            isPrepared = defaultPreparedness
+                        )
+                    }
                 }
             }
         }

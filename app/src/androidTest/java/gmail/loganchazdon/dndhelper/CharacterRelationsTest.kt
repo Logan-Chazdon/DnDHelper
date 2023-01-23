@@ -255,7 +255,6 @@ class CharacterRelationsTest{
 
         val subClassId = dao.insertSubclass(SubclassEntity(
             name = "Subclass",
-            spells = emptyList(),
             spellAreFree = false,
             spellCasting = null
         )).toInt()

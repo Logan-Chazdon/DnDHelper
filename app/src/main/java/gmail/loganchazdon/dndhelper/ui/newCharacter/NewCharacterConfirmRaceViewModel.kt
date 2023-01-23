@@ -91,7 +91,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
         storeFeatureChoices(filterRaceFeatures(race.value!!),raceFeaturesDropdownStates)
 
 
-        subraces.value?.get(subraceIndex.value)?.let { subrace ->
+        subraces.value?.getOrNull(subraceIndex.value)?.let { subrace ->
             repository.insertCharacterSubraceCrossRef(
                 CharacterSubraceCrossRef(
                     characterId = id,

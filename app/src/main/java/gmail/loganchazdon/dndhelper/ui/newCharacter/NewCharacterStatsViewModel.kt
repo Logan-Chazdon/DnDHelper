@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.repositories.Repository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.indexOf
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -58,7 +59,7 @@ public class NewCharacterStatsViewModel @Inject constructor(
         } catch (E : Exception) {
             -1
         }
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             character = repository.getCharacterById(id)
             character?.let {
                 if(!it.baseStats.values.contains(0) && it.baseStats.isNotEmpty()) {

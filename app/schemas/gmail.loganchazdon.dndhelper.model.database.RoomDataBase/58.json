@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "0837b648904b7899cfe9cd2eb6188c7d",
+    "identityHash": "90ee8ede610d54a0b6f681edd483aa5e",
     "entities": [
       {
         "tableName": "characters",
@@ -568,7 +568,7 @@
       },
       {
         "tableName": "backgrounds",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `desc` TEXT NOT NULL, `spells` TEXT, `proficiencies` TEXT NOT NULL, `languages` TEXT NOT NULL, `equipment` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `isHomebrew` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `desc` TEXT NOT NULL, `spells` TEXT, `proficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT, `languages` TEXT NOT NULL, `languageChoices` TEXT, `equipment` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `isHomebrew` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "name",
@@ -595,10 +595,22 @@
             "notNull": true
           },
           {
+            "fieldPath": "proficiencyChoices",
+            "columnName": "proficiencyChoices",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "languages",
             "columnName": "languages",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "languageChoices",
+            "columnName": "languageChoices",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "equipment",
@@ -1795,7 +1807,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0837b648904b7899cfe9cd2eb6188c7d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '90ee8ede610d54a0b6f681edd483aa5e')"
     ]
   }
 }

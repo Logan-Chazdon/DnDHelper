@@ -5,19 +5,17 @@ class Background (
     desc: String,
     spells: List<Spell>?,
     proficiencies : List<Proficiency>,
-    val proficiencyChoices : List<ProficiencyChoice>? = null,
+    proficiencyChoices : List<ProficiencyChoice>? = null,
     var features : List<Feature>? = null,
     languages : List<Language>,
-    val languageChoices : List<LanguageChoice>? = null,
+    languageChoices : List<LanguageChoice>? = null,
     equipment : List<ItemInterface>,
     equipmentChoices: List<ItemChoice>
-) : BackgroundEntity(name, desc, spells, proficiencies, languages, equipment, equipmentChoices) {
+) : BackgroundEntity(name, desc, spells, proficiencies, proficiencyChoices, languages, languageChoices, equipment, equipmentChoices) {
 
     constructor(
         entity: BackgroundEntity,
         features : List<Feature>?,
-        languageChoices : List<LanguageChoice>? = null,
-        proficiencyChoices : List<ProficiencyChoice>? = null,
     ) : this(
         name = entity.name,
         desc = entity.desc,
@@ -27,8 +25,8 @@ class Background (
         equipment = entity.equipment,
         equipmentChoices = entity.equipmentChoices,
         features = features,
-        proficiencyChoices = proficiencyChoices,
-        languageChoices = languageChoices
+        proficiencyChoices = entity.proficiencyChoices,
+        languageChoices = entity.languageChoices
     ) {
         this.id = entity.id
     }

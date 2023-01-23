@@ -1375,7 +1375,8 @@
                                 {
                                     "index" : "all_feats"
                                 }
-                            ]
+                            ],
+                            "id" : 1
                         }
                     ],
                     "proficiencies" : [

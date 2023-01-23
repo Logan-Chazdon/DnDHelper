@@ -1282,6 +1282,15 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                     )
                 }
 
+                featChoices?.forEach {
+                    dao.insertSubraceFeatChoiceCrossRef(
+                        SubraceFeatChoiceCrossRef(
+                            featChoiceId = it,
+                            subraceId = id
+                        )
+                    )
+                }
+
                 dao.insertSubrace(
                     Subrace(
                         name = subraceJson.getString("name"),
@@ -1290,7 +1299,6 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                         startingProficiencies = proficiencies,
                         languages = languages,
                         languageChoices = languageChoices,
-                        featChoices = featChoices,
                         size = try {
                             subraceJson.getString("size")
                         } catch (e: JSONException) {
@@ -1311,16 +1319,21 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
         return result
     }
 
-    private fun extractFeatChoices(jsonArray: JSONArray): List<FeatChoice> {
-        val result = mutableListOf<FeatChoice>()
+    private fun extractFeatChoices(jsonArray: JSONArray): List<Int> {
+        val result = mutableListOf<Int>()
         for (index in 0 until jsonArray.length()) {
             val featChoiceJson = jsonArray.getJSONObject(index)
+            val featChoice = FeatChoice(
+                name = featChoiceJson.getString("name"),
+                choose = featChoiceJson.getInt("choose"),
+                from = extractFeats(featChoiceJson.getJSONArray("from"))
+            )
+            featChoice.id = featChoiceJson.getInt("id")
+            scope.launch {
+                dao.insertFeatChoice(featChoice)
+            }
             result.add(
-                FeatChoice(
-                    name = featChoiceJson.getString("name"),
-                    choose = featChoiceJson.getInt("choose"),
-                    from = extractFeats(featChoiceJson.getJSONArray("from"))
-                )
+                featChoice.id
             )
         }
         return result

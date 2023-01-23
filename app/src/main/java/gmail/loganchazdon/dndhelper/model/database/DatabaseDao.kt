@@ -583,7 +583,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     @Query("DELETE FROM backgrounds WHERE id = :id")
     abstract fun removeBackgroundById(id: Int)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterBackgroundCrossRef(ref: CharacterBackgroundCrossRef)
 
     @Insert
@@ -748,7 +748,7 @@ WHERE backgroundId IS :id"""
         }
     }
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity)
 
     @Query("SELECT * FROM backgrounds")

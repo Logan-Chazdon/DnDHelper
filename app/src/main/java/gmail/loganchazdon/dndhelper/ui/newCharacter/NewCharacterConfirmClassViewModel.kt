@@ -166,7 +166,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 totalNumOnGoldDie = goldRolled.value.toInt(),
                 tookGold = takeGold.value,
                 abilityImprovementsGranted = clazz.value!!.abilityImprovementsGranted,
-                proficiencyChoices = clazz.value!!.proficiencyChoices.toStringList(),
+                proficiencyChoicesByString = clazz.value!!.proficiencyChoices.toStringList(),
             )
         )
 

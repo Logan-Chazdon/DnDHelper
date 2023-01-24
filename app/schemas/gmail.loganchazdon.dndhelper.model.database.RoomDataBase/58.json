@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "90ee8ede610d54a0b6f681edd483aa5e",
+    "identityHash": "34e899421cce774bcf0b1ec800139dc5",
     "entities": [
       {
         "tableName": "characters",
@@ -832,7 +832,7 @@
       },
       {
         "tableName": "ClassChoiceEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `level` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `totalNumOnGoldDie` INTEGER, `abilityImprovementsGranted` TEXT NOT NULL, `tookGold` INTEGER NOT NULL, `proficiencyChoices` TEXT NOT NULL, PRIMARY KEY(`characterId`, `classId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `level` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `totalNumOnGoldDie` INTEGER, `abilityImprovementsGranted` TEXT NOT NULL, `tookGold` INTEGER NOT NULL, `proficiencyChoicesByString` TEXT NOT NULL, PRIMARY KEY(`characterId`, `classId`))",
         "fields": [
           {
             "fieldPath": "characterId",
@@ -877,8 +877,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "proficiencyChoices",
-            "columnName": "proficiencyChoices",
+            "fieldPath": "proficiencyChoicesByString",
+            "columnName": "proficiencyChoicesByString",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -1807,7 +1807,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '90ee8ede610d54a0b6f681edd483aa5e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '34e899421cce774bcf0b1ec800139dc5')"
     ]
   }
 }

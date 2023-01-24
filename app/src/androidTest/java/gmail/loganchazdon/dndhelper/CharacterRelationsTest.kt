@@ -249,7 +249,7 @@ class CharacterRelationsTest{
                 totalNumOnGoldDie = 10,
                 abilityImprovementsGranted = mutableListOf(),
                 tookGold = true,
-                proficiencyChoices = emptyList()
+                proficiencyChoicesByString = emptyList()
             )
         )
 

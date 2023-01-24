@@ -394,7 +394,7 @@ WHERE ClassFeatureCrossRef.id IS :id"""
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubclass(subClass: SubclassEntity): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterClassCrossRef(ref: CharacterClassCrossRef)
 
     @Delete
@@ -406,7 +406,7 @@ WHERE ClassFeatureCrossRef.id IS :id"""
     @Query("DELETE FROM ClassChoiceEntity WHERE classId IS :classId AND characterId IS :characterId")
     abstract fun removeClassChoiceEntity(classId: Int, characterId: Int)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassFeatureCrossRef(ref: ClassFeatureCrossRef)
 
     @Delete
@@ -425,7 +425,7 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
     )
     protected abstract fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterSubclassCrossRef(ref: CharacterSubclassCrossRef)
 
     //Race Table
@@ -458,13 +458,13 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
     @Query("SELECT * FROM features JOIN RaceFeatureCrossRef ON RaceFeatureCrossRef.featureId IS features.featureId WHERE raceId IS :id")
     protected abstract fun getRaceTraits(id: Int) : List<Feature>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
 
     @Delete
     abstract fun removeRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubraceFeatChoiceCrossRef(subraceFeatChoiceCrossRef: SubraceFeatChoiceCrossRef)
 
     @Transaction
@@ -524,7 +524,7 @@ WHERE subraceId IS :subraceId
         }
     }
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef)
 
     @Delete
@@ -546,19 +546,19 @@ WHERE subraceId IS :subraceId
     @Query("SELECT * FROM features WHERE featureId = :id")
     abstract fun getFeatureById(id: Int): Feature
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatureOptionsCrossRef(ref: FeatureOptionsCrossRef)
 
     @Delete
     abstract fun removeFeatureOptionsCrossRef(ref: FeatureOptionsCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertOptionsFeatureCrossRef(ref: OptionsFeatureCrossRef)
 
     @Delete
     abstract fun removeOptionsFeatureCrossRef(ref: OptionsFeatureCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatureChoice(option: FeatureChoiceEntity): Long
 
     @Query("DELETE FROM features WHERE featureId = :id")
@@ -592,17 +592,17 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     @Insert
     abstract fun insertFeat(feat: FeatEntity): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatChoice(featChoiceEntity: FeatChoiceEntity): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatChoiceFeatCrossRef(featChoiceFeatCrossRef: FeatChoiceFeatCrossRef)
 
     @Insert
     abstract fun insertFeatChoiceChoiceEntity(featChoiceChoiceEntity: FeatChoiceChoiceEntity)
 
     //Backgrounds
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBackground(backgroundEntity: BackgroundEntity): Long
 
     @Query("DELETE FROM backgrounds WHERE id = :id")
@@ -611,7 +611,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterBackgroundCrossRef(ref: CharacterBackgroundCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBackgroundFeatureCrossRef(ref: BackgroundFeatureCrossRef)
 
     @Query("SELECT * FROM BackgroundChoiceEntity WHERE characterId IS :charId")
@@ -632,25 +632,25 @@ WHERE backgroundId IS :id
     @Query("DELETE FROM spells WHERE id IS :id")
     abstract fun removeSpellById(id: Int)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatureSpellCrossRef(ref: FeatureSpellCrossRef)
 
     @Delete
     abstract fun removeFeatureSpellCrossRef(ref: FeatureSpellCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBackgroundSpellCrossRef(ref: BackgroundSpellCrossRef)
 
     @Delete
     abstract fun removeBackgroundSpellCrossRef(ref: BackgroundSpellCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassSpellCrossRef(ref: ClassSpellCrossRef)
 
     @Delete
     abstract fun removeClassSpellCrossRef(ref: ClassSpellCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubclassSpellCrossRef(ref: SubclassSpellCrossRef)
 
     @Delete
@@ -798,7 +798,7 @@ WHERE backgroundId IS :id"""
         return result
     }
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
 
     @Delete
@@ -835,10 +835,10 @@ WHERE classId IS :id"""
     @Delete
     abstract fun removeSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassSubclassId(classSubclassCrossRef: ClassSubclassCrossRef)
 
     @Query("SELECT * FROM classes WHERE isHomebrew IS 1")

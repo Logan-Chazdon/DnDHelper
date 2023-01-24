@@ -20,12 +20,12 @@ languages AS backgroundlanguages, equipment AS backgroundequipment, equipmentCho
 FROM backgrounds)
 
 SELECT * FROM characters 
-INNER JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id
-INNER JOIN races ON CharacterRaceCrossRef.raceId IS races.raceId
-INNER JOIN CharacterSubraceCrossRef ON CharacterSubraceCrossRef.characterId IS characters.id
-INNER JOIN subrace ON subrace.subraceid IS CharacterSubraceCrossRef.subraceId
-INNER JOIN CharacterBackgroundCrossRef ON CharacterBackgroundCrossRef.characterId IS characters.id
-INNER JOIN background ON background.backgroundid IS CharacterBackgroundCrossRef.backgroundId
+LEFT JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id
+LEFT JOIN races ON CharacterRaceCrossRef.raceId IS races.raceId
+LEFT JOIN CharacterSubraceCrossRef ON CharacterSubraceCrossRef.characterId IS characters.id
+LEFT JOIN subrace ON subrace.subraceid IS CharacterSubraceCrossRef.subraceId
+LEFT JOIN CharacterBackgroundCrossRef ON CharacterBackgroundCrossRef.characterId IS characters.id
+LEFT JOIN background ON background.backgroundid IS CharacterBackgroundCrossRef.backgroundId
 WHERE characters.id = :id"""
 
 @Dao
@@ -126,7 +126,7 @@ abstract class DatabaseDao {
 
             if (data.isBaseClass) {
                 clazz.proficiencyChoices.forEachIndexed { i, it ->
-                    it.chosenByString = data.proficiencyChoices[i]
+                    it.chosenByString = data.proficiencyChoicesByString[i]
                 }
             }
         }
@@ -274,8 +274,10 @@ WHERE featureId IS :featureId
         val characterLiveData = findLiveCharacterWithoutListChoices(id)
         character.addSource(characterLiveData) {
             if (it != null) {
-                fillOutCharacterChoiceLists(it)
-                character.value = it
+                GlobalScope.launch {
+                    fillOutCharacterChoiceLists(it)
+                    character.postValue(it)
+                }
             }
         }
     }
@@ -283,13 +285,39 @@ WHERE featureId IS :featureId
     @Query("DELETE FROM characters WHERE id = :id")
     abstract fun deleteCharacter(id: Int)
 
-    @Transaction
-    @Query(
-        "SELECT * FROM characters " +
-                "INNER JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id\n" +
-                "INNER JOIN races ON CharacterRaceCrossRef.raceId IS races.raceId"
-    )
-    abstract fun getAllCharacters(): LiveData<List<Character>>
+
+    @Query("SELECT * FROM characters")
+    protected abstract fun getAllCharactersWithoutClasses(): LiveData<List<Character>>
+
+    @Query("""SELECT * FROM races 
+        JOIN CharacterRaceCrossRef ON CharacterRaceCrossRef.raceId IS races.raceId
+        where id IS :id
+    """)
+    protected abstract fun getCharacterRace(id: Int) : Race?
+
+
+    @Query("""SELECT * FROM backgrounds
+        JOIN CharacterBackgroundCrossRef ON CharacterBackgroundCrossRef.backgroundId IS backgrounds.id
+        where CharacterBackgroundCrossRef.characterId IS :id
+    """)
+    protected abstract fun getCharacterBackground(id: Int) : Background?
+
+    fun getAllCharacters() : LiveData<List<Character>> {
+        val result = MediatorLiveData<List<Character>>()
+        result.addSource(getAllCharactersWithoutClasses()) { characterList ->
+            if(characterList != null) {
+                GlobalScope.launch {
+                    characterList.forEach {
+                        it.classes = getCharactersClasses(it.id)
+                        it.race = getCharacterRace(it.id)
+                        it.background= getCharacterBackground(it.id)
+                    }
+                    result.postValue(characterList)
+                }
+            }
+        }
+        return result
+    }
 
     @Insert
     abstract fun insertCharacterRaceCrossRef(ref: CharacterRaceCrossRef)
@@ -402,11 +430,9 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
 
     //Race Table
     @Query("SELECT * FROM races")
-    @Transaction
     abstract fun getAllRaces(): LiveData<List<Race>>
 
     @Query("SELECT * FROM races WHERE isHomebrew IS 1")
-    @Transaction
     abstract fun getHomebrewRaces(): LiveData<List<Race>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -416,7 +442,6 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
     abstract fun deleteRace(id: Int)
 
     @Query("SELECT * FROM races WHERE raceId = :id")
-    @Transaction
     protected abstract fun findUnfilledLiveRaceById(id: Int): LiveData<Race>
 
     fun bindLiveRaceById(id: Int, result: MediatorLiveData<Race>) {

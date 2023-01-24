@@ -27,7 +27,7 @@ fun AllCharactersView(
     allCharactersViewModel: AllCharactersViewModel,
     navController: NavController
 ) {
-    val allCharacters = allCharactersViewModel.getAllCharacters()?.observeAsState()
+    val allCharacters = allCharactersViewModel.allCharacters!!.observeAsState()
     val scrollState = rememberScrollState()
 
 

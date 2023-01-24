@@ -30,9 +30,10 @@ class CharacterRelationsTest{
 
     @Before
     fun setupDatabase() {
-        database = Room.inMemoryDatabaseBuilder(
+        database = Room.databaseBuilder(
             ApplicationProvider.getApplicationContext(),
-            RoomDataBase::class.java
+            RoomDataBase::class.java,
+            "CharacterRelationsTest"
         ).allowMainThreadQueries().build()
 
         dao = (database as RoomDataBase).databaseDao()

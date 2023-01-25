@@ -15,8 +15,9 @@ import gmail.loganchazdon.dndhelper.model.choiceEntities.RaceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.SubraceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterRaceCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.CharacterSubraceCrossRef
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
-import gmail.loganchazdon.dndhelper.model.repositories.Repository.Companion.statNames
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository.Companion.statNames
+import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import gmail.loganchazdon.dndhelper.ui.utils.toStringList
@@ -25,7 +26,8 @@ import kotlin.properties.Delegates
 
 @HiltViewModel
 public class NewCharacterConfirmRaceViewModel @Inject constructor(
-    private val repository: Repository,
+    raceRepository: RaceRepository,
+    private val characterRepository: CharacterRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
@@ -42,14 +44,14 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
     val character: MediatorLiveData<Character> = MediatorLiveData()
     val customizeStats = mutableStateOf(false)
     val customRaceStatsMap = mutableStateMapOf<String, String>()
-    val race = repository.getLiveRaceById(savedStateHandle.get<String>("raceId")!!.toInt())!!
-    val subraces = repository.getSubracesByRaceId(savedStateHandle.get<String>("raceId")!!.toInt())
+    val race = raceRepository.getLiveRaceById(savedStateHandle.get<String>("raceId")!!.toInt())!!
+    val subraces = raceRepository.getSubracesByRaceId(savedStateHandle.get<String>("raceId")!!.toInt())
 
     init {
         try {
             id = savedStateHandle.get<String>("characterId")!!.toInt()
             if(id !=-1) {
-                repository.getLiveCharacterById(
+                characterRepository.getLiveCharacterById(
                     savedStateHandle.get<String>("characterId")!!.toInt(),
                     character
                 )
@@ -59,11 +61,11 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
         }
     }
 
-    suspend fun setRace() {
+     fun setRace() {
         if (id == -1)
-            id = repository.createDefaultCharacter() ?: -1
+            id = characterRepository.createDefaultCharacter()
 
-        repository.insertCharacterRaceCrossRef(
+        characterRepository.insertCharacterRaceCrossRef(
             CharacterRaceCrossRef(
                 raceId = race.value!!.raceId,
                 id = id
@@ -75,7 +77,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
                 ?.getSelected(it.from) as List<Proficiency>
         }
 
-        repository.insertRaceChoiceEntity(
+        characterRepository.insertRaceChoiceEntity(
             RaceChoiceEntity(
                 raceId = race.value!!.raceId,
                 characterId = id,
@@ -92,7 +94,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
 
 
         subraces.value?.getOrNull(subraceIndex.value)?.let { subrace ->
-            repository.insertCharacterSubraceCrossRef(
+            characterRepository.insertCharacterSubraceCrossRef(
                 CharacterSubraceCrossRef(
                     characterId = id,
                     subraceId = subrace.id
@@ -111,7 +113,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
                 )
             }
 
-            repository.insertSubraceChoiceEntity(
+            characterRepository.insertSubraceChoiceEntity(
                 SubraceChoiceEntity(
                     subraceId = subrace.id,
                     characterId = id,
@@ -134,7 +136,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
                             ?.getSelected()
                     it.chosen?.let { chosen -> storeFeatureChoices(chosen, dropdownStates) }
                     it.chosen?.forEach { chosen ->
-                        repository.insertFeatureChoiceChoiceEntity(
+                        characterRepository.insertFeatureChoiceChoiceEntity(
                             FeatureChoiceChoiceEntity(
                                 featureId = chosen.featureId,
                                 choiceId = it.id,
@@ -149,7 +151,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
 
     fun calculateAssumedSpells(): MutableList<Spell> {
         val result = mutableListOf<Spell>()
-        character.value?.let { repository.getSpellsForCharacter(it) }?.let {
+        character.value?.let { characterRepository.getSpellsForCharacter(it) }?.let {
             it.forEach { (_, spells) ->
                 spells.forEach { (_, spell) ->
                     result.add(spell)

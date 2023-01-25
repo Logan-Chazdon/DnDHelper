@@ -12,7 +12,8 @@ import gmail.loganchazdon.dndhelper.model.Item
 import gmail.loganchazdon.dndhelper.model.Language
 import gmail.loganchazdon.dndhelper.model.choiceEntities.BackgroundChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.BackgroundRepository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import gmail.loganchazdon.dndhelper.ui.utils.toStringList
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewCharacterConfirmBackgroundViewModel @Inject constructor(
-    private val repository: Repository,
+    backgroundRepository: BackgroundRepository,
+    private val characterRepository: CharacterRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
@@ -30,7 +32,7 @@ class NewCharacterConfirmBackgroundViewModel @Inject constructor(
     var id = -1
     val character: MediatorLiveData<Character> = MediatorLiveData()
     val background =
-        repository.getBackground(savedStateHandle.get<String>("backgroundId")!!.toInt())
+        backgroundRepository.getBackground(savedStateHandle.get<String>("backgroundId")!!.toInt())
 
 
     init {
@@ -41,7 +43,7 @@ class NewCharacterConfirmBackgroundViewModel @Inject constructor(
         }
 
         if (id != -1) {
-            repository.getLiveCharacterById(
+            characterRepository.getLiveCharacterById(
                 savedStateHandle.get<String>("characterId")!!.toInt(),
                 character
             )
@@ -49,11 +51,11 @@ class NewCharacterConfirmBackgroundViewModel @Inject constructor(
     }
 
 
-    suspend fun setBackGround() {
+    fun setBackGround() {
         if (id == -1)
-            id = repository.createDefaultCharacter() ?: -1
+            id = characterRepository.createDefaultCharacter()
 
-        repository.insertCharacterBackgroundCrossRef(
+        characterRepository.insertCharacterBackgroundCrossRef(
             backgroundId = background.value!!.id,
             characterId = id
         )
@@ -65,7 +67,7 @@ class NewCharacterConfirmBackgroundViewModel @Inject constructor(
             it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
         }
 
-        repository.insertBackgroundChoiceEntity(
+        characterRepository.insertBackgroundChoiceEntity(
             BackgroundChoiceEntity(
                 backgroundId = background.value!!.id,
                 characterId = id,
@@ -86,7 +88,7 @@ class NewCharacterConfirmBackgroundViewModel @Inject constructor(
         features.forEach { feature ->
             feature.choices?.forEach { choice ->
                 choice.chosen?.forEach { chosen ->
-                    repository.insertFeatureChoiceChoiceEntity(
+                    characterRepository.insertFeatureChoiceChoiceEntity(
                         FeatureChoiceChoiceEntity(
                             featureId = chosen.featureId,
                             choiceId = choice.id,

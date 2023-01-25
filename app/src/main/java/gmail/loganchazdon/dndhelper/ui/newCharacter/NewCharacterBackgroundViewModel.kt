@@ -5,14 +5,16 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Background
 import gmail.loganchazdon.dndhelper.model.Character
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.BackgroundRepository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 public class NewCharacterBackgroundViewModel @Inject constructor(
-    private val repository: Repository,
+    private val backgroundRepository: BackgroundRepository,
+    characterRepository: CharacterRepository,
     application: Application, savedStateHandle: SavedStateHandle
 ): AndroidViewModel(application){
     lateinit var backgrounds : LiveData<List<Background>>
@@ -21,7 +23,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-           backgrounds = repository.getBackgrounds()
+           backgrounds = backgroundRepository.getBackgrounds()
         }
         id = try {
             savedStateHandle.get<String>("characterId")!!.toInt()
@@ -30,7 +32,7 @@ public class NewCharacterBackgroundViewModel @Inject constructor(
         }
 
         if(id !=-1) {
-            repository.getLiveCharacterById(
+            characterRepository.getLiveCharacterById(
                 savedStateHandle.get<String>("characterId")!!.toInt(),
                 character
             )

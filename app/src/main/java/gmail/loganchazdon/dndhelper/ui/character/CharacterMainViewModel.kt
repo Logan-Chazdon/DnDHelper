@@ -10,7 +10,7 @@ import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.Infusion
 import gmail.loganchazdon.dndhelper.model.ItemInterface
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterMainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val repository: Repository, application: Application
+    val repository: CharacterRepository,
+    application: Application
 ): AndroidViewModel(application) {
     private val debounceTime: Long = 1000
     val characterFeatures: MediatorLiveData<List<Pair<Int, Feature>>> = MediatorLiveData()

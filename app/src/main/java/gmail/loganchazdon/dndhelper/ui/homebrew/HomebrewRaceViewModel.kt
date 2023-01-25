@@ -8,7 +8,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
+import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
@@ -17,13 +18,14 @@ import kotlin.properties.Delegates
 
 @HiltViewModel
 class HomebrewRaceViewModel @Inject constructor(
-    private val repository: Repository,
+    private val raceRepository: RaceRepository,
+    private val featureRepository: FeatureRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
     fun createDefaultFeature(): Int {
-        val featureId = repository.createDefaultFeature()!!
-        repository.insertRaceFeatureCrossRef(
+        val featureId = featureRepository.createDefaultFeature()
+        raceRepository.insertRaceFeatureCrossRef(
             RaceFeatureCrossRef(
                 raceId = id,
                 featureId = featureId
@@ -33,8 +35,8 @@ class HomebrewRaceViewModel @Inject constructor(
     }
 
     fun createDefaultSubrace() : Int {
-        val subraceId = repository.createDefaultSubrace()
-        repository.insertRaceSubraceCrossRef(
+        val subraceId = raceRepository.createDefaultSubrace()
+        raceRepository.insertRaceSubraceCrossRef(
             RaceSubraceCrossRef(
                 raceId = id,
                 subraceId = subraceId
@@ -44,7 +46,7 @@ class HomebrewRaceViewModel @Inject constructor(
     }
 
     fun removeFeature(featureId: Int) {
-        repository.removeRaceFeatureCrossRef(
+        raceRepository.removeRaceFeatureCrossRef(
             RaceFeatureCrossRef(
                 raceId = id,
                 featureId = featureId
@@ -66,7 +68,7 @@ class HomebrewRaceViewModel @Inject constructor(
             abilityBonuses = abilityBonuses,
             isHomebrew = true
         )
-        repository.insertRace(newRace)
+        raceRepository.insertRace(newRace)
     }
 
     fun deleteSubraceAt(it: Int) {
@@ -75,7 +77,7 @@ class HomebrewRaceViewModel @Inject constructor(
 
 
     var subraces : LiveData<List<Subrace>>? = null
-    val sizeClassOptions = Repository.sizeClasses
+    val sizeClassOptions = RaceRepository.sizeClasses
     val race: MediatorLiveData<Race> = MediatorLiveData()
     val name = mutableStateOf("")
     val speed = mutableStateOf("")
@@ -91,11 +93,11 @@ class HomebrewRaceViewModel @Inject constructor(
                     if ((it ?: 0) > 0) {
                         it
                     } else {
-                        repository.createDefaultRace()
+                        raceRepository.createDefaultRace()
                     }
                 }!!
             }.invokeOnCompletion {
-                race.addSource(repository.getLiveRaceById(id)!!) {
+                race.addSource(raceRepository.getLiveRaceById(id)) {
                     race.value = it
 
                     //Set all data in the viewModel to match the race.
@@ -111,7 +113,7 @@ class HomebrewRaceViewModel @Inject constructor(
                     abilityBonusChoice.value = it.abilityBonusChoice
                 }
 
-                subraces = repository.getSubracesByRaceId(id)
+                subraces = raceRepository.getSubracesByRaceId(id)
             }
 
         }

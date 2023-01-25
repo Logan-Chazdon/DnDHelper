@@ -12,19 +12,21 @@ import gmail.loganchazdon.dndhelper.model.AbilityBonusChoice
 import gmail.loganchazdon.dndhelper.model.Subrace
 import gmail.loganchazdon.dndhelper.model.SubraceEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubraceFeatureCrossRef
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
+import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
 import javax.inject.Inject
 
 
 @HiltViewModel
 class SubraceViewModel @Inject constructor(
-    private val repository: Repository,
+    private val raceRepository: RaceRepository,
+    private val featureRepository: FeatureRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
     fun createDefaultFeature(): Int {
-        val featureId = repository.createDefaultFeature()!!
-        repository.insertSubraceFeatureCrossRef(
+        val featureId = featureRepository.createDefaultFeature()
+        raceRepository.insertSubraceFeatureCrossRef(
             SubraceFeatureCrossRef(
                 subraceId = id,
                 featureId = featureId
@@ -34,7 +36,7 @@ class SubraceViewModel @Inject constructor(
     }
 
     fun removeFeature(featureId: Int) {
-        repository.removeSubraceFeatureCrossRef(
+        raceRepository.removeSubraceFeatureCrossRef(
             SubraceFeatureCrossRef(
                 subraceId = id,
                 featureId = featureId
@@ -43,7 +45,7 @@ class SubraceViewModel @Inject constructor(
     }
 
     fun saveSubrace() {
-        repository.insertSubrace(
+        raceRepository.insertSubrace(
             SubraceEntity(
                 name = name.value,
                 abilityBonuses = abilityBonuses,
@@ -59,10 +61,10 @@ class SubraceViewModel @Inject constructor(
     val name = mutableStateOf("")
     val subrace = MediatorLiveData<Subrace>()
     val id = savedStateHandle.get<String>("id")?.toInt()!!
-    val sizeClassOptions = Repository.sizeClasses
+    val sizeClassOptions = RaceRepository.sizeClasses
 
     init {
-        subrace.addSource(repository.getSubrace(id)) {
+        subrace.addSource(raceRepository.getSubrace(id)) {
             //Set all data in the viewModel to match the race.
             name.value = it.name
             sizeClass.value = it.size ?: "Medium"

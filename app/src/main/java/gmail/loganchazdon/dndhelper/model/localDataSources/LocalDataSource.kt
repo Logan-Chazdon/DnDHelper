@@ -8,9 +8,9 @@ import dagger.Component
 import gmail.loganchazdon.dndhelper.AppModule
 import gmail.loganchazdon.dndhelper.R
 import gmail.loganchazdon.dndhelper.model.*
-import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
+import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
-import gmail.loganchazdon.dndhelper.model.repositories.Repository.Companion.allSpellLevels
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository.Companion.allSpellLevels
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -37,8 +37,17 @@ interface LocalDataSource {
 }
 
 
-class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: DatabaseDao) :
-    LocalDataSource {
+class LocalDataSourceImpl @Inject constructor(
+    val context: Context,
+    val featureDao: FeatureDao,
+    val backgroundDao: BackgroundDao,
+    val classDao: ClassDao,
+    val featDao: FeatDao,
+    val raceDao: RaceDao,
+    val spellDao: SpellDao,
+    val subclassDao: SubclassDao,
+    val subraceDao: SubraceDao
+) : LocalDataSource {
     private val scope = CoroutineScope(Dispatchers.IO + Job())
     private val _infusions: MutableLiveData<List<Infusion>> =
         MutableLiveData()
@@ -203,7 +212,6 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
 
         //Classes
         updateClasses()
-
     }
 
     private fun generateFightingStyles() {
@@ -961,7 +969,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
 
             scope.launch {
                 val id = spellJson.getInt("id")
-                dao.insertSpell(
+                spellDao.insertSpell(
                     Spell(
                         name = name,
                         level = level,
@@ -982,7 +990,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                     })
 
                 classes.forEach {
-                    dao.insertClassSpellCrossRef(
+                    classDao.insertClassSpellCrossRef(
                         ClassSpellCrossRef(
                             classId = classNameToId[it.lowercase()]!!,
                             spellId = id
@@ -1113,7 +1121,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
             }
 
             scope.launch {
-                dao.insertBackground(
+                backgroundDao.insertBackground(
                     Background(
                         name = name,
                         desc = desc,
@@ -1131,7 +1139,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                 )
 
                 features.forEach {
-                    dao.insertBackgroundFeatureCrossRef(
+                    backgroundDao.insertBackgroundFeatureCrossRef(
                         BackgroundFeatureCrossRef(
                             backgroundId = backgroundIndex + 1,
                             featureId = it
@@ -1171,7 +1179,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
             }
             val languageDesc = raceJson.getString("language_desc")
             val traits = extractFeatures(raceJson.getJSONArray("features"))
-            val subraceIds =try {
+            val subraceIds = try {
                 extractSubraces(raceJson.getJSONArray("subraces"))
             } catch (_: JSONException) {
                 emptyList()
@@ -1192,7 +1200,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
 
             scope.launch {
                 subraceIds.forEach {
-                    dao.insertRaceSubraceCrossRef(
+                    raceDao.insertRaceSubraceCrossRef(
                         RaceSubraceCrossRef(
                             subraceId = it,
                             raceId = raceIndex + 1
@@ -1200,7 +1208,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                     )
                 }
 
-                dao.insertRace(
+                raceDao.insertRace(
                     Race(
                         name = name,
                         groundSpeed = groundSpeed,
@@ -1220,7 +1228,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                 )
 
                 traits.forEach {
-                    dao.insertRaceFeatureCrossRef(
+                    raceDao.insertRaceFeatureCrossRef(
                         RaceFeatureCrossRef(
                             raceId = raceIndex + 1,
                             featureId = it
@@ -1274,7 +1282,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                 } catch (e: JSONException) {
                     listOf()
                 }.forEach {
-                    dao.insertSubraceFeatureCrossRef(
+                    subraceDao.insertSubraceFeatureCrossRef(
                         SubraceFeatureCrossRef(
                             subraceId = id,
                             featureId = it
@@ -1283,7 +1291,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                 }
 
                 featChoices?.forEach {
-                    dao.insertSubraceFeatChoiceCrossRef(
+                    subraceDao.insertSubraceFeatChoiceCrossRef(
                         SubraceFeatChoiceCrossRef(
                             featChoiceId = it,
                             subraceId = id
@@ -1291,7 +1299,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                     )
                 }
 
-                dao.insertSubrace(
+                subraceDao.insertSubrace(
                     Subrace(
                         name = subraceJson.getString("name"),
                         abilityBonuses = abilityBonuses,
@@ -1330,7 +1338,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
             )
             featChoice.id = featChoiceJson.getInt("id")
             scope.launch {
-                dao.insertFeatChoice(featChoice)
+                featDao.insertFeatChoice(featChoice)
             }
             result.add(
                 featChoice.id
@@ -1588,7 +1596,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
 
                 scope.launch {
                     val id = subclassJson.getInt("id")
-                    dao.insertSubclass(
+                    subclassDao.insertSubclass(
                         SubclassEntity(
                             name = subclassJson.getString("name"),
                             spellCasting = try {
@@ -1603,7 +1611,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                         }
                     )
 
-                    dao.insertClassSubclassId(
+                    classDao.insertClassSubclassId(
                         ClassSubclassCrossRef(
                             classId = classIndex + 1,
                             subclassId = id
@@ -1611,7 +1619,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                     )
 
                     extractFeatures(subclassJson.getJSONArray("features")).forEach {
-                        dao.insertSubclassFeatureCrossRef(
+                        subclassDao.insertSubclassFeatureCrossRef(
                             SubclassFeatureCrossRef(
                                 featureId = it,
                                 subclassId = id
@@ -1623,8 +1631,8 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                         val subclassSpellJson = subclassJson.getJSONArray("spells")
                         for (index in 0 until subclassSpellJson.length()) {
                             val spellJson = subclassSpellJson.getJSONObject(index)
-                            val spellId = dao.getSpellIdByName(spellJson.getString("name"))
-                            dao.insertSubclassSpellCrossRef(
+                            val spellId = spellDao.getSpellIdByName(spellJson.getString("name"))
+                            subclassDao.insertSubclassSpellCrossRef(
                                 SubclassSpellCrossRef(
                                     subclassId = id,
                                     spellId = spellId
@@ -1632,7 +1640,8 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                             )
                         }
 
-                    } catch (_: JSONException) { }
+                    } catch (_: JSONException) {
+                    }
                 }
             }
 
@@ -1679,7 +1688,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
             }
 
             scope.launch {
-                dao.insertClass(
+                classDao.insertClass(
                     Class(
                         name = name,
                         hitDie = hitDie,
@@ -1702,7 +1711,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                 )
 
                 featureIds.forEach {
-                    dao.insertClassFeatureCrossRef(
+                    classDao.insertClassFeatureCrossRef(
                         ClassFeatureCrossRef(
                             id = classIndex + 1,
                             featureId = it
@@ -2215,11 +2224,11 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                                     id = choiceId
                                 )
 
-                                dao.insertFeatureChoice(
+                                featureDao.insertFeatureChoice(
                                     entity
                                 )
 
-                                dao.insertFeatureOptionsCrossRef(
+                                featureDao.insertFeatureOptionsCrossRef(
                                     optionsRef
                                 )
 
@@ -2230,7 +2239,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                                         choiceId = choiceId
                                     )
 
-                                    dao.insertOptionsFeatureCrossRef(
+                                    featureDao.insertOptionsFeatureCrossRef(
                                         ref
                                     )
 
@@ -2395,7 +2404,7 @@ class LocalDataSourceImpl @Inject constructor(val context: Context, val dao: Dat
                     )
                     ids.add(featureId)
                     scope.launch {
-                        dao.insertFeature(feature)
+                        featureDao.insertFeature(feature)
                     }
                 }
             }

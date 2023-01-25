@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import gmail.loganchazdon.dndhelper.model.Resource
 import gmail.loganchazdon.dndhelper.model.Spell
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -40,16 +40,16 @@ fun SpellCastingView(
     //Add an empty resource to spell slots for every missing slot level.
     //This will cause the lazy list to render all spells of that level.
     run {
-        val highestLevel = Repository.allSpellLevels.findLast {
+        val highestLevel = SpellRepository.allSpellLevels.findLast {
             it.second == spellSlotsOffsetForCantrips.last().name
         }?.first
 
         for(index in 1 until (highestLevel ?: 1)) {
-            if(spellSlotsOffsetForCantrips[index].name != Repository.allSpellLevels[index - 1].second ) {
+            if(spellSlotsOffsetForCantrips[index].name != SpellRepository.allSpellLevels[index - 1].second ) {
                 spellSlotsOffsetForCantrips.add(
                     index,
                     Resource(
-                        name = Repository.allSpellLevels[index - 1].second,
+                        name = SpellRepository.allSpellLevels[index - 1].second,
                         currentAmount = 0,
                         maxAmountType = "0",
                         rechargeAmountType = "")

@@ -10,7 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Subclass
 import gmail.loganchazdon.dndhelper.model.SubclassEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubclassFeatureCrossRef
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
+import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,13 +19,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SubclassViewModel @Inject constructor(
-    private val repository: Repository,
+    private val classRepository: ClassRepository,
+    private val featureRepository: FeatureRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
     fun createDefaultFeature(): Int {
-        val featureId = repository.createDefaultFeature()!!
-        repository.insertSubclassFeatureCrossRef(
+        val featureId = featureRepository.createDefaultFeature()
+        classRepository.insertSubclassFeatureCrossRef(
             SubclassFeatureCrossRef(
                 subclassId = id,
                 featureId = featureId
@@ -40,13 +42,13 @@ class SubclassViewModel @Inject constructor(
             spellAreFree = false //TODO,
         )
         subclass.subclassId = id
-        repository.insertSubclass(
+        classRepository.insertSubclass(
             subclass
         )
     }
 
     fun removeFeature(featureId: Int) {
-        repository.removeSubclassFeatureCrossRef(
+        classRepository.removeSubclassFeatureCrossRef(
             SubclassFeatureCrossRef(
                 featureId = featureId,
                 subclassId = id
@@ -62,9 +64,9 @@ class SubclassViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             savedStateHandle.get<String>("id")!!.toInt().let {
                 if (it == -1) {
-                    id = repository.createDefaultSubclass()
+                    id = classRepository.createDefaultSubclass()
                 }
-                subclass = repository.getSubclass(id)
+                subclass = classRepository.getSubclass(id)
                 id = it
             }
         }

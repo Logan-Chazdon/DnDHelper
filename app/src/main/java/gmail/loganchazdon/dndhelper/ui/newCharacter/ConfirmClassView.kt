@@ -26,7 +26,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import gmail.loganchazdon.dndhelper.model.Subclass
-import gmail.loganchazdon.dndhelper.model.repositories.Repository.Companion.statNames
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository.Companion.statNames
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.theme.noActionNeeded

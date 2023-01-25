@@ -4,28 +4,30 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
+import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomebrewViewModel @Inject constructor(
-    private val repository: Repository,
+    private val raceRepository: RaceRepository,
+    private val classRepository: ClassRepository,
     application: Application
 ) : AndroidViewModel(application) {
     fun deleteRace(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteRace(id)
+            raceRepository.deleteRace(id)
         }
     }
 
     fun deleteClass(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteClass(id)
+            classRepository.deleteClass(id)
         }
     }
 
-    val races = repository.getHomebrewRaces()
-    val classes = repository.getHomebrewClasses()
+    val races = raceRepository.getHomebrewRaces()
+    val classes = classRepository.getHomebrewClasses()
 }

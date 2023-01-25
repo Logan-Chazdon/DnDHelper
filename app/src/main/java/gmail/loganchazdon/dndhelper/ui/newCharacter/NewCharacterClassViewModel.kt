@@ -8,19 +8,20 @@ import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.Class
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
+import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class NewCharacterClassViewModel @Inject constructor(
-    private val repository: Repository,
+    private val characterRepository: CharacterRepository,
+    classRepository: ClassRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
-    var classes: LiveData<List<Class>> = repository.getClasses()
+    var classes: LiveData<List<Class>> = classRepository.getClasses()
     var id = -1
     val character: MediatorLiveData<Character> = MediatorLiveData()
-
 
 
     init {
@@ -30,8 +31,8 @@ class NewCharacterClassViewModel @Inject constructor(
             -1
         }
 
-        if(id !=-1) {
-            repository.getLiveCharacterById(
+        if (id != -1) {
+            characterRepository.getLiveCharacterById(
                 savedStateHandle.get<String>("characterId")!!.toInt(),
                 character
             )
@@ -39,7 +40,7 @@ class NewCharacterClassViewModel @Inject constructor(
     }
 
     fun removeClass(classId: Int) {
-        repository.removeClassFromCharacter(classId = classId, characterId = id)
+        characterRepository.removeClassFromCharacter(classId = classId, characterId = id)
     }
 }
 

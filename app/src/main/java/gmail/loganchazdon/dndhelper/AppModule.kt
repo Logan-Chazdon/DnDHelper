@@ -5,12 +5,11 @@ import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import gmail.loganchazdon.dndhelper.model.database.DatabaseDao
 import gmail.loganchazdon.dndhelper.model.database.MIGRATION_56_57
 import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
+import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSourceImpl
 import javax.inject.Singleton
@@ -30,18 +29,82 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providerLocalDataSource(@ApplicationContext appContext: Context, dao: DatabaseDao): LocalDataSource {
-        return LocalDataSourceImpl(appContext, dao)
+    fun provideLocalDataSource(
+        @ApplicationContext appContext: Context,
+        backgroundDao: BackgroundDao,
+        classDao: ClassDao,
+        featDao: FeatDao,
+        featureDao: FeatureDao,
+        raceDao: RaceDao,
+        spellDao: SpellDao,
+        subraceDao: SubraceDao,
+        subclassDao: SubclassDao
+    ): LocalDataSource {
+        return LocalDataSourceImpl(
+            context = appContext,
+            backgroundDao = backgroundDao,
+            classDao = classDao,
+            featDao = featDao,
+            raceDao = raceDao,
+            spellDao = spellDao,
+            featureDao = featureDao,
+            subraceDao = subraceDao,
+            subclassDao = subclassDao
+        )
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideBackgroundDao(database: RoomDataBase): BackgroundDao {
+        return database.backgroundDao()
     }
 
     @Provides
-    fun providerDao(db: RoomDataBase): DatabaseDao {
-        return db.databaseDao()
+    @Singleton
+    fun provideCharacterDao(database: RoomDataBase): CharacterDao {
+        return database.characterDao()
     }
-}
 
-@Module
-@InstallIn(ViewModelComponent::class)
-object RepositoryModule{
+    @Provides
+    @Singleton
+    fun provideClassDao(database: RoomDataBase): ClassDao {
+        return database.classDao()
+    }
 
+    @Provides
+    @Singleton
+    fun provideFeatDao(database: RoomDataBase): FeatDao {
+        return database.featDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeatureDao(database: RoomDataBase): FeatureDao {
+        return database.featureDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRaceDao(database: RoomDataBase): RaceDao {
+        return database.raceDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSpellDao(database: RoomDataBase): SpellDao {
+        return database.spellDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubclassDao(database: RoomDataBase): SubclassDao {
+        return database.subclassDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSubraceDao(database: RoomDataBase): SubraceDao {
+        return database.subraceDao()
+    }
 }

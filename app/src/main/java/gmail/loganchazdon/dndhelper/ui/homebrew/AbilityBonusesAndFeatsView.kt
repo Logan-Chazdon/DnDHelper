@@ -16,7 +16,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import gmail.loganchazdon.dndhelper.model.AbilityBonus
 import gmail.loganchazdon.dndhelper.model.AbilityBonusChoice
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository.Companion.statNames
 import java.util.*
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -98,7 +98,7 @@ fun AbilityBonusesAndFeatsView(
                             5 to true
                         )
                     }
-                    Repository.statNames.forEachIndexed { index, it ->
+                    statNames.forEachIndexed { index, it ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(5.dp)

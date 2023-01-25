@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.*
+import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 
 
@@ -24,5 +25,13 @@ import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 )
 @TypeConverters(Converters::class)
 abstract class RoomDataBase: RoomDatabase() {
-    abstract fun databaseDao(): DatabaseDao
+    abstract fun backgroundDao() : BackgroundDao
+    abstract fun characterDao() : CharacterDao
+    abstract fun classDao() : ClassDao
+    abstract fun featDao() : FeatDao
+    abstract fun featureDao() : FeatureDao
+    abstract fun raceDao() : RaceDao
+    abstract fun spellDao() : SpellDao
+    abstract fun subclassDao() : SubclassDao
+    abstract fun subraceDao() : SubraceDao
 }

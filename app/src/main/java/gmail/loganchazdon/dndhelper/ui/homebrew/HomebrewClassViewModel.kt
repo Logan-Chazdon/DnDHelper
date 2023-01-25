@@ -12,20 +12,24 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassSubclassCrossRef
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
+import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomebrewClassViewModel @Inject constructor(
-    private val repository: Repository,
+    private val classRepository: ClassRepository,
+    private val featureRepository: FeatureRepository,
+    private val spellRepository: SpellRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
     fun createDefaultFeature(): Int {
-        val featureId = repository.createDefaultFeature()!!
-        repository.insertClassFeatureCrossRef(
+        val featureId = featureRepository.createDefaultFeature()
+        classRepository.insertClassFeatureCrossRef(
             ClassFeatureCrossRef(
                 id = id,
                 featureId = featureId
@@ -51,7 +55,7 @@ class HomebrewClassViewModel @Inject constructor(
                 }
                 pactSlots.add(
                     Resource(
-                        name = Repository.allSpellLevels[level - 1].second,
+                        name = SpellRepository.allSpellLevels[level - 1].second,
                         currentAmount = amount,
                         maxAmountType = amount.toString(),
                         rechargeAmountType = amount.toString()
@@ -146,7 +150,7 @@ class HomebrewClassViewModel @Inject constructor(
             )
         }
 
-        repository.insertClass(
+        classRepository.insertClass(
             ClassEntity(
                 name = name.value,
                 isHomebrew = true,
@@ -182,7 +186,7 @@ class HomebrewClassViewModel @Inject constructor(
 
     fun deleteSubclass(it: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.removeClassSubclassCrossRef(
+            classRepository.removeClassSubclassCrossRef(
                 ClassSubclassCrossRef(
                     classId = id,
                     subclassId = subclasses!!.value!![it].subclassId
@@ -193,7 +197,7 @@ class HomebrewClassViewModel @Inject constructor(
 
     fun removeFeature(featureId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.removeClassFeatureCrossRef(
+            classRepository.removeClassFeatureCrossRef(
                 ClassFeatureCrossRef(
                     featureId = featureId,
                     id = id
@@ -203,8 +207,8 @@ class HomebrewClassViewModel @Inject constructor(
     }
 
     fun createDefaultSubclass(): Int {
-        val subclassId = repository.createDefaultSubclass()
-        repository.insertClassSubclassCrossRef(
+        val subclassId = classRepository.createDefaultSubclass()
+        classRepository.insertClassSubclassCrossRef(
             ClassSubclassCrossRef(
                 classId = id,
                 subclassId = subclassId
@@ -261,7 +265,7 @@ class HomebrewClassViewModel @Inject constructor(
             "4",
             "4"
         )
-    val allSpells = repository.getLiveSpells()
+    val allSpells = spellRepository.getLiveSpells()
     val hasSpellCasting = mutableStateOf(false)
     val hasPactMagic = mutableStateOf(false)
     val goldMultiplier = mutableStateOf("10")
@@ -338,11 +342,11 @@ class HomebrewClassViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             savedStateHandle.get<String>("id")!!.toInt().let {
                 if (it == -1) {
-                    id = repository.createDefaultClass()
+                    id = classRepository.createDefaultClass()
                 }
                 id = it
-                clazz = repository.getClass(id)
-                subclasses = repository.getSubclassesByClassId(id)
+                clazz = classRepository.getClass(id)
+                subclasses = classRepository.getSubclassesByClassId(id)
             }
         }
     }

@@ -7,7 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 public class ItemDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val repository: Repository, application: Application
+    val repository: CharacterRepository, application: Application
 ): AndroidViewModel(application) {
     private val debounceTime:Long = 1000
     val character = MediatorLiveData<Character>()

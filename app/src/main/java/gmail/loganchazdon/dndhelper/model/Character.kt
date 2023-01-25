@@ -3,7 +3,7 @@ package gmail.loganchazdon.dndhelper.model
 
 import androidx.room.Embedded
 import androidx.room.Ignore
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlin.math.floor
 
 
@@ -877,7 +877,7 @@ class Character (
                 } else {
                     slots.add(
                         Resource(
-                            name = Repository.allSpellLevels[level].second,
+                            name = SpellRepository.allSpellLevels[level].second,
                             currentAmount = amount,
                             maxAmountType = maxAmount.toString(),
                             rechargeAmountType = maxAmount.toString()

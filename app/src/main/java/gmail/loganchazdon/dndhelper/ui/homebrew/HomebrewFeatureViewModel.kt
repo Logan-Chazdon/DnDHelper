@@ -12,7 +12,9 @@ import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.Infusion
 import gmail.loganchazdon.dndhelper.model.Language
 import gmail.loganchazdon.dndhelper.model.Spell
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
+import gmail.loganchazdon.dndhelper.model.repositories.ProficiencyRepository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,7 +23,9 @@ import kotlin.properties.Delegates
 
 @HiltViewModel
 class HomebrewFeatureViewModel @Inject constructor(
-    private val repository: Repository,
+    spellRepository: SpellRepository,
+    proficiencyRepository: ProficiencyRepository,
+    private val featureRepository: FeatureRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
@@ -34,7 +38,7 @@ class HomebrewFeatureViewModel @Inject constructor(
                 grantedAtLevel = featureLevel.value.toIntOrNull() ?: 1,
                 featureId = id
             )
-            repository.insertFeature(newFeature)
+            featureRepository.insertFeature(newFeature)
         }
     }
 
@@ -52,9 +56,9 @@ class HomebrewFeatureViewModel @Inject constructor(
     val replacesAc = mutableStateOf(true)
     val grantsInfusions = mutableStateOf(true)
     val grantsSpells = mutableStateOf(true)
-    val allSpells = repository.getLiveSpells()
-    val allLanguages = repository.getLanguagesByIndex("all_languages")!!
-    val allInfusions = repository.getAllInfusions()
+    val allSpells = spellRepository.getLiveSpells()
+    val allLanguages = proficiencyRepository.getLanguagesByIndex("all_languages")!!
+    val allInfusions = featureRepository.getAllInfusions()
     var id by Delegates.notNull<Int>()
     var feature: MediatorLiveData<Feature> = MediatorLiveData()
 
@@ -70,11 +74,11 @@ class HomebrewFeatureViewModel @Inject constructor(
                 if ((it ?: 0) > 0) {
                     it
                 } else {
-                    repository.createDefaultFeature()
+                    featureRepository.createDefaultFeature()
                 }
             }!!
 
-            feature.addSource(repository.getLiveFeature(id)!!) {
+            feature.addSource(featureRepository.getLiveFeature(id)!!) {
                 //Set all viewModel data to match feature in database.
 
                 //General

@@ -8,14 +8,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.Resource
 import gmail.loganchazdon.dndhelper.model.Spell
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
-import gmail.loganchazdon.dndhelper.model.repositories.Repository.Companion.allSpellLevels
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository.Companion.allSpellLevels
 import javax.inject.Inject
 
 @HiltViewModel
 public class CombatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val repository: Repository, application: Application
+    val repository: CharacterRepository, application: Application
 ): AndroidViewModel(application) {
 
     fun addTemp(temp: String) {
@@ -157,7 +157,7 @@ public class CombatViewModel @Inject constructor(
     //If the boolean is null the spell does not require preparation.
     //Else the boolean represents whether or not the spell is prepared.
     fun getAllSpells(): Map<Int, List<Pair<Boolean?, Spell>>> {
-        character?.value?.let {
+        character.value?.let {
             return repository.getSpellsForCharacter(it)
         }
         return mapOf()

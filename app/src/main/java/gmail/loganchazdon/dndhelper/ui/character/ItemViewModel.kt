@@ -7,14 +7,17 @@ import gmail.loganchazdon.dndhelper.model.Armor
 import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.ItemInterface
 import gmail.loganchazdon.dndhelper.model.Shield
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
+import gmail.loganchazdon.dndhelper.model.repositories.ItemRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 public class ItemViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val repository: Repository, application: Application
+    private val characterRepository: CharacterRepository,
+    private val itemRepository: ItemRepository,
+    application: Application
 ) : AndroidViewModel(application) {
 
     var character: MediatorLiveData<Character> = MediatorLiveData()
@@ -22,12 +25,12 @@ public class ItemViewModel @Inject constructor(
 
 
     init {
-        repository.getLiveCharacterById(
+        characterRepository.getLiveCharacterById(
             savedStateHandle.get<String>("characterId")!!.toInt(),
             character
         )
         viewModelScope.launch {
-            allItems = repository.getAllItems()
+            allItems = itemRepository.getAllItems()
 
         }
 
@@ -40,7 +43,7 @@ public class ItemViewModel @Inject constructor(
         )
         character.value.let { newCharacter ->
             if (newCharacter != null) {
-                repository.insertCharacter(newCharacter)
+                characterRepository.insertCharacter(newCharacter)
             }
         }
     }
@@ -62,23 +65,23 @@ public class ItemViewModel @Inject constructor(
         character.value?.backpack!!.addedCurrency[name]!!.amount = newAmount - nonAddedCurrency
 
         character.value?.let {
-            repository.insertCharacter(it)
+            characterRepository.insertCharacter(it)
         }
     }
 
      fun equip(armor: Armor) {
         character.value?.backpack?.equippedArmor = armor
-        repository.insertCharacter(character.value!!)
+        characterRepository.insertCharacter(character.value!!)
     }
 
     fun equip(shield: Shield) {
         character.value?.backpack?.equippedShield = shield
-        repository.insertCharacter(character.value!!)
+        characterRepository.insertCharacter(character.value!!)
     }
 
     suspend fun deleteItemAt(itemToDeleteIndex: Int) {
         character.value?.backpack?.deleteItemAtIndex(itemToDeleteIndex)
-        repository.insertCharacter(character.value!!)
+        characterRepository.insertCharacter(character.value!!)
     }
 
 }

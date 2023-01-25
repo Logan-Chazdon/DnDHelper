@@ -7,13 +7,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Race
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-public class NewCharacterRaceViewModel @Inject constructor(
-    private val repository: Repository,
+class NewCharacterRaceViewModel @Inject constructor(
+    private val raceRepository: RaceRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
@@ -22,7 +22,7 @@ public class NewCharacterRaceViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            races = repository.getRaces()
+            races = raceRepository.getRaces()
         }
     }
 }

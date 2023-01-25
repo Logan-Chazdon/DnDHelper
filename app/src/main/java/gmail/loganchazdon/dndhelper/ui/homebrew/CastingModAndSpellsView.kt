@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import gmail.loganchazdon.dndhelper.model.Spell
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 
 @Composable
@@ -58,7 +58,7 @@ fun CastingModAndSpellsView(
             expanded = false
         }
     ) {
-        Repository.statNames.forEach {
+        CharacterRepository.statNames.forEach {
             DropdownMenuItem(
                 onClick = {
                     ability.value = it

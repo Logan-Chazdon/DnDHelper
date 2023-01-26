@@ -166,9 +166,9 @@ class CharacterRepository @Inject constructor(
     fun getSpellsForCharacter(character: Character): MutableMap<Int, MutableList<Pair<Boolean?, Spell>>> {
         val spells: MutableMap<Int, MutableList<Pair<Boolean?, Spell>>> = mutableMapOf()
         character.classes.forEach {
-            addSpellsFromSpellCasting(it.value.spellCasting, listOf(it.value.name), spells)
+            addSpellsFromSpellCasting(character.id, it.value.spellCasting, listOf(it.value.name), spells)
             it.value.subclass?.spellCasting?.let { spellCasting ->
-                addSpellsFromSpellCasting(spellCasting, spellCasting.learnFrom, spells)
+                addSpellsFromSpellCasting(character.id, spellCasting, spellCasting.learnFrom, spells)
             }
         }
 
@@ -190,30 +190,26 @@ class CharacterRepository @Inject constructor(
     }
 
     private fun addSpellsFromSpellCasting(
+        id: Int,
         spellCasting: SpellCasting?,
         lists: List<String>?,
         spells: MutableMap<Int, MutableList<Pair<Boolean?, Spell>>>
     ) {
-        //Preparation casters
-        //TODO the time complexity here is really bad. Refactor this
-        /*when(spellCasting?.prepareFrom) {
+        when(spellCasting?.prepareFrom) {
             null -> {
                 //Non preparation casters
                 spellCasting?.known?.forEach { spell ->
-                    if(spells.getOrDefault(spell.level, null) == null) {
-                        spells[spell.level] = mutableListOf()
-                    }
-                    spells[spell.level]?.add(Pair(first = null, second = spell))
+                    spells[spell.first.level]?.add(Pair(first = null, second = spell.first))
                 }
             }
             "all" -> {
                 //Spell casters that prepare from all of their respective class spells
                 spellCasting.known.forEach { spell ->
-                    if(spell.level == 0) {
-                        if (spells.getOrDefault(spell.level, null) == null) {
-                            spells[spell.level] = mutableListOf()
+                    if(spell.first.level == 0) {
+                        if (spells.getOrDefault(spell.first.level, null) == null) {
+                            spells[spell.first.level] = mutableListOf()
                         }
-                        spells[spell.level]?.add(Pair(first = null, second = spell))
+                        spells[spell.first.level]?.add(Pair(first = null, second = spell.first))
                     }
                 }
 
@@ -227,16 +223,15 @@ class CharacterRepository @Inject constructor(
                 }
 
                 listsToCheck.forEach {
-                    getAllSpellsByClassIndex(
-                        getClassIndex(it)
-                    ).forEach { spell ->
-                        spellCasting.prepared.contains(spell).let { prepared ->
-                            if (spell.level != 0) {
-                                if (spells.getOrDefault(spell.level, null) == null) {
-                                    spells[spell.level] = mutableListOf()
-                                }
-                                spells[spell.level]?.add(Pair(prepared, spell))
+                    characterDao.getAllSpellsByList(
+                        id,
+                        getClassIdsByName(it)
+                    ).forEach { (spell, prepared) ->
+                        if (spell.level != 0) {
+                            if (spells.getOrDefault(spell.level, null) == null) {
+                                spells[spell.level] = mutableListOf()
                             }
+                            spells[spell.level]?.add(Pair(prepared, spell))
                         }
                     }
                 }
@@ -244,16 +239,17 @@ class CharacterRepository @Inject constructor(
             "known" -> {
                 //Spell casters that prepare from known spells
                 spellCasting.known.forEach { spell ->
-                    spellCasting.prepared.contains(spell).let { prepared ->
-                        if(spells.getOrDefault(spell.level, null) == null) {
-                            spells[spell.level] = mutableListOf()
-                        }
-                        spells[spell.level]?.add(Pair(prepared, spell))
+                    if(spells.getOrDefault(spell.first.level, null) == null) {
+                        spells[spell.first.level] = mutableListOf()
                     }
+                    spells[spell.first.level]?.add(Pair(spell.second, spell.first))
                 }
             }
         }
-        */
+    }
+
+    private fun getClassIdsByName(name: String): List<Int> {
+        return classDao.getClassIdsByName(name)
     }
 
     private fun fillOutFeatureList(features: List<Feature>, characterId: Int) {

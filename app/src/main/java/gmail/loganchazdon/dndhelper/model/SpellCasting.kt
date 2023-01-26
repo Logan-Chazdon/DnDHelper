@@ -12,6 +12,7 @@ data class SpellCasting (
     val cantripsKnown: List<Int>?,
     //Boolean representing the prepared state of the spell,
     //to the spell.
+    @Transient
     var known: List<Pair<Spell, Boolean?>> = listOf(),
     val spellSlotsByLevel: List<List<Resource>>? = null,
     val learnFrom: List<String>? = null, //Only used when the list of spells to present is not implied.

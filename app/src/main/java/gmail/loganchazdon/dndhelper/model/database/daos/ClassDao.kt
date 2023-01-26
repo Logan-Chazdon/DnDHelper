@@ -85,4 +85,9 @@ WHERE classId IS :classId"""
 
     @Delete
     abstract fun removeClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef)
+
+    //Note this function can return multiple classes by intention.
+    //This is in case a user creates a new class with the same name as a different class.
+    @Query("SELECT id FROM classes WHERE name IS :name")
+    abstract fun getClassIdsByName(name: String) : List<Int>
 }

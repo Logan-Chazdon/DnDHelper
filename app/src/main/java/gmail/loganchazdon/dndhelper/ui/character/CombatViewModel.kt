@@ -114,14 +114,14 @@ public class CombatViewModel @Inject constructor(
         val spellSlotsOffsetForCantrips = mutableListOf(
             Resource("Cantrip", 0, "0", "0")
         )
-        character?.value?.getAllSpellSlots()?.let { spellSlotsOffsetForCantrips.addAll(it) }
+        character.value?.getAllSpellSlots()?.let { spellSlotsOffsetForCantrips.addAll(it) }
         return spellSlotsOffsetForCantrips
     }
 
     //Returns a list of booleans to spells
     //If the boolean is null the spell does not require preparation.
     //Else the boolean represents whether or not the spell is prepared.
-    fun getAllSpells(): Map<Int, List<Pair<Boolean?, Spell>>> {
+    suspend fun getAllSpells(): Map<Int, List<Pair<Boolean?, Spell>>> {
         character.value?.let {
             return repository.getSpellsForCharacter(it)
         }

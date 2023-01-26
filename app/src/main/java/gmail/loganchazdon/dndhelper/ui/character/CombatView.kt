@@ -318,15 +318,19 @@ fun CombatView(viewModel: CombatViewModel) {
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                val allSpells = viewModel.getAllSpells()
-                if (allSpells.isNotEmpty()) {
+                val allSpells: State<Map<Int, List<Pair<Boolean?, Spell>>>> = produceState(emptyMap(), character.value)  {
+                    this.launch(Dispatchers.IO) {
+                        value = viewModel.getAllSpells()
+                    }
+                }
+                if (allSpells.value.isNotEmpty()) {
                     Box(
                         Modifier.width(width)
                     ) {
-                        character?.value?.let {
+                        character.value?.let {
                             SpellCastingView(
                                 spellSlotsOffsetForCantrips = viewModel.getSpellSlotsAndCantrips(),
-                                allSpells = allSpells,
+                                allSpells = allSpells.value,
                                 cast = { newSpell ->
                                     spell = newSpell
                                     castIsExpanded = true
@@ -356,7 +360,7 @@ fun CombatView(viewModel: CombatViewModel) {
                 Box(
                     Modifier.width(width)
                 ) {
-                    character?.value?.let { ItemsAndAbilitiesView(character = it) }
+                    character.value?.let { ItemsAndAbilitiesView(character = it) }
                 }
             }
 

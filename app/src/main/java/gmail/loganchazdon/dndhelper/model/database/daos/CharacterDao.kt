@@ -112,28 +112,32 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
     @Query("SELECT * FROM characters")
     protected abstract fun getAllCharactersWithoutClasses(): LiveData<List<Character>>
 
-    @Query("""SELECT * FROM races 
+    @Query(
+        """SELECT * FROM races 
         JOIN CharacterRaceCrossRef ON CharacterRaceCrossRef.raceId IS races.raceId
         where id IS :id
-    """)
-    protected abstract fun getCharacterRace(id: Int) : Race?
+    """
+    )
+    protected abstract fun getCharacterRace(id: Int): Race?
 
 
-    @Query("""SELECT * FROM backgrounds
+    @Query(
+        """SELECT * FROM backgrounds
         JOIN CharacterBackgroundCrossRef ON CharacterBackgroundCrossRef.backgroundId IS backgrounds.id
         where CharacterBackgroundCrossRef.characterId IS :id
-    """)
-    protected abstract fun getCharacterBackground(id: Int) : Background?
+    """
+    )
+    protected abstract fun getCharacterBackground(id: Int): Background?
 
-    fun getAllCharacters() : LiveData<List<Character>> {
+    fun getAllCharacters(): LiveData<List<Character>> {
         val result = MediatorLiveData<List<Character>>()
         result.addSource(getAllCharactersWithoutClasses()) { characterList ->
-            if(characterList != null) {
+            if (characterList != null) {
                 GlobalScope.launch {
                     characterList.forEach {
                         it.classes = getCharactersClasses(it.id)
                         it.race = getCharacterRace(it.id)
-                        it.background= getCharacterBackground(it.id)
+                        it.background = getCharacterBackground(it.id)
                     }
                     result.postValue(characterList)
                 }
@@ -238,4 +242,14 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     @Query("UPDATE characters SET negativeDeathSaves = negativeDeathSaves + :it WHERE id = :id")
     abstract fun updateDeathSaveFailures(id: Int, it: Int)
+
+    @MapInfo(valueColumn = "isPrepared")
+    @Query(
+        """
+        SELECT * FROM spells
+        JOIN ClassSpellCrossRef ON  INSTR(:list, ClassSpellCrossRef.classId) > 0 AND ClassSpellCrossRef.spellId IS spells.id
+        LEFT JOIN CharacterClassSpellCrossRef ON CharacterClassSpellCrossRef.characterId = :id AND CharacterClassSpellCrossRef.spellId = spells.id
+    """
+    )
+    abstract fun getAllSpellsByList(id: Int, list: List<Int>): Map<Spell, Boolean?>
 }

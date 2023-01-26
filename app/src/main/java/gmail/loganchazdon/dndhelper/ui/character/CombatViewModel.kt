@@ -17,63 +17,28 @@ public class CombatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val repository: CharacterRepository, application: Application
 ): AndroidViewModel(application) {
-
-    fun addTemp(temp: String) {
-        /*val tempChar = character!!.value!!.copy(tempHp = temp.toInt())
-        tempChar.id = character!!.value!!.id
-        repository.insertCharacter(tempChar)*/
+    fun setTemp(temp: String) {
+        repository.setTemp(character.value?.id, temp)
     }
 
-    fun heal(temp: String) {
-       /* var newHp = character!!.value!!.currentHp + temp.toInt()
-        if(newHp > character!!.value!!.maxHp) {
-            newHp = character!!.value!!.maxHp
-        }
-
-        val tempChar = character!!.value!!.copy(currentHp = newHp)
-        tempChar.id = character!!.value!!.id
-        repository.insertCharacter(tempChar)*/
+    fun heal(hp: String) {
+        repository.heal(character.value?.id, hp)
     }
 
-    fun setHp(it: String) {
-       /* val tempChar = character!!.value!!.copy(currentHp = it.toInt())
-        tempChar.id = character!!.value!!.id
-        repository.insertCharacter(tempChar)*/
+    fun setHp(hp: String) {
+        repository.setHp(character.value?.id, hp)
     }
 
-    fun damage(temp: String) {
-        /*var currentHp = character!!.value!!.currentHp
-        var tempHp = 0
-        if(character!!.value!!.tempHp < temp.toInt()) {
-            val amountRemoved = character!!.value!!.tempHp
-            currentHp -= temp.toInt() - amountRemoved
-
-        } else {
-            tempHp = character!!.value!!.tempHp - temp.toInt()
-        }
-
-        val tempChar = character!!.value!!.copy(currentHp = currentHp, tempHp = tempHp)
-        tempChar.id = character!!.value!!.id
-
-        repository.insertCharacter(tempChar)*/
+    fun damage(damage: String) {
+        repository.damage(character.value?.id, damage)
     }
 
     fun updateDeathSaveSuccesses(it: Boolean) {
-        /*val tempChar : Character = if(it){
-            character!!.value!!.copy(positiveDeathSaves = character!!.value!!.positiveDeathSaves + 1)
-        } else {
-            character!!.value!!.copy(positiveDeathSaves = character!!.value!!.positiveDeathSaves - 1)
-        }
-        repository.insertCharacter(tempChar)*/
+        repository.updateDeathSaveSuccesses(character.value?.id, it)
     }
 
     fun updateDeathSaveFailures(it: Boolean) {
-        /*val tempChar : Character = if(it){
-            character!!.value!!.copy(negativeDeathSaves = character!!.value!!.negativeDeathSaves + 1)
-        } else {
-            character!!.value!!.copy(negativeDeathSaves = character!!.value!!.negativeDeathSaves - 1)
-        }
-        repository.insertCharacter(tempChar)*/
+        repository.updateDeathSaveFailures(character.value?.id, it)
     }
 
     fun getCastingOptions(spell: Spell): List<Pair<Int, String>> {

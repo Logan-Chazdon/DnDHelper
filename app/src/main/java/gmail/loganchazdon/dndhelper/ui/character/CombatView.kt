@@ -60,7 +60,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 hpPopUpExpanded = false
                                 scope.launch(Dispatchers.IO) {
                                     try {
-                                        viewModel.addTemp(temp)
+                                        viewModel.setTemp(temp)
                                     } catch (e: NumberFormatException) {
                                     }
                                 }
@@ -156,7 +156,7 @@ fun CombatView(viewModel: CombatViewModel) {
                     tempHp = it.tempHp,
                     setTemp = {
                         scope.launch(Dispatchers.IO) {
-                            viewModel.addTemp(it)
+                            viewModel.setTemp(it)
                         }
                     },
                     setHp = {

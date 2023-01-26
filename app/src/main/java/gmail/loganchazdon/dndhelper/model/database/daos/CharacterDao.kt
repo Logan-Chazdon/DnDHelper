@@ -220,4 +220,22 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatureChoiceEntity(choice: FeatureChoiceChoiceEntity): Long
+
+    @Query("UPDATE characters SET tempHp = :temp WHERE id IS :id")
+    abstract fun setTemp(id: Int, temp: Int)
+
+    @Query("UPDATE characters SET currentHp = currentHp + :hp WHERE id = :id")
+    abstract fun heal(id: Int, hp: Int)
+
+    @Query("UPDATE characters SET currentHp =:hp WHERE id = :id")
+    abstract fun setHp(id: Int, hp: Int)
+
+    @Query("UPDATE characters SET currentHp = MAX(currentHp - :damage, 0) WHERE id = :id")
+    abstract fun damage(id: Int, damage: Int)
+
+    @Query("UPDATE characters SET positiveDeathSaves = positiveDeathSaves + :it WHERE id = :id")
+    abstract fun updateDeathSaveSuccesses(id: Int, it: Int)
+
+    @Query("UPDATE characters SET negativeDeathSaves = negativeDeathSaves + :it WHERE id = :id")
+    abstract fun updateDeathSaveFailures(id: Int, it: Int)
 }

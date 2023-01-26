@@ -408,6 +408,46 @@ class CharacterRepository @Inject constructor(
         character.classes = classes
     }
 
+    fun setTemp(id: Int?, temp: String) {
+        try {
+            characterDao.setTemp(id!!, temp.toInt())
+        } catch(_: Exception) { }
+    }
+
+    fun heal(id: Int?, hp: String) {
+        try {
+            characterDao.heal(id!!, hp.toInt())
+        } catch(_: Exception) { }
+    }
+
+    fun setHp(id: Int?, hp: String) {
+        try {
+            characterDao.setHp(id!!, hp.toInt())
+        } catch(_: Exception) { }
+    }
+
+    fun damage(id: Int?, damage: String) {
+        try {
+            characterDao.damage(id!!, damage.toInt())
+        } catch(_: Exception) { }
+    }
+
+    fun updateDeathSaveSuccesses(id: Int?, it: Boolean) {
+        if(it) {
+            characterDao.updateDeathSaveSuccesses(id!!, 1)
+        } else {
+            characterDao.updateDeathSaveSuccesses(id!!, -1)
+        }
+    }
+
+    fun updateDeathSaveFailures(id: Int?, it: Boolean) {
+        if(it) {
+            characterDao.updateDeathSaveFailures(id!!, 1)
+        } else {
+            characterDao.updateDeathSaveFailures(id!!, -1)
+        }
+    }
+
     companion object {
         val statNames = listOf(
             "Strength",

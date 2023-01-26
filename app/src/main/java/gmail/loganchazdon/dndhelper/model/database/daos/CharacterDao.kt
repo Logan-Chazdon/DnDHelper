@@ -163,7 +163,7 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
     @Delete
     abstract fun removeCharacterClassCrossRef(ref: CharacterClassCrossRef)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassChoiceEntity(entity: ClassChoiceEntity)
 
     @Query("DELETE FROM ClassChoiceEntity WHERE classId IS :classId AND characterId IS :characterId")

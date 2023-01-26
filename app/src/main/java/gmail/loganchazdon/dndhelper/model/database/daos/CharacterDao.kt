@@ -174,8 +174,8 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
         """SELECT * FROM classes
 JOIN CharacterClassCrossRef ON CharacterClassCrossRef.classId IS classes.id
 JOIN ClassChoiceEntity ON ClassChoiceEntity.classId IS CharacterClassCrossRef.classId AND ClassChoiceEntity.characterId IS CharacterClassCrossRef.characterId
-JOIN CharacterSubclassCrossRef ON CharacterSubclassCrossRef.characterId IS CharacterClassCrossRef.characterId AND CharacterSubclassCrossRef.classId IS classes.id
-JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subClassId
+LEFT JOIN CharacterSubclassCrossRef ON CharacterSubclassCrossRef.characterId IS CharacterClassCrossRef.characterId AND CharacterSubclassCrossRef.classId IS classes.id
+LEFT JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subClassId
 WHERE CharacterClassCrossRef.characterId IS :characterId
     """
     )

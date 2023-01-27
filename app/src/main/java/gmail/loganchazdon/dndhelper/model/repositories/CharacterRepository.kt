@@ -444,6 +444,10 @@ class CharacterRepository @Inject constructor(
         }
     }
 
+    fun insertSpellSlots(spellSlots: List<Resource>, id: Int) {
+        characterDao.insertSpellSlots(spellSlots,id)
+    }
+
     companion object {
         val statNames = listOf(
             "Strength",

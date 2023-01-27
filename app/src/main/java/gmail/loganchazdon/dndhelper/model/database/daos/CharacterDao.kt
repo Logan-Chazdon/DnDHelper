@@ -252,4 +252,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     """
     )
     abstract fun getAllSpellsByList(id: Int, list: List<Int>): Map<Spell, Boolean?>
+
+    @Query("UPDATE characters SET spellSlots = :spellSlots WHERE id = :id")
+    abstract fun insertSpellSlots(spellSlots: List<Resource>, id: Int)
 }

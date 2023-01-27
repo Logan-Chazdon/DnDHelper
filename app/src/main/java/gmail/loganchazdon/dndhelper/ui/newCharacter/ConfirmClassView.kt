@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.Subclass
 import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository.Companion.statNames
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
@@ -82,12 +83,11 @@ fun ConfirmClassView(
         }
     }
 
-    val assumedSpells = remember(viewModel.subclassSpells, viewModel.classSpells) {
-        derivedStateOf {
-            viewModel.calculateAssumedSpells()
+    val assumedSpells : State<List<Spell>> = produceState(initialValue = emptyList(), viewModel.subclassSpells, viewModel.classSpells) {
+        launch(Dispatchers.IO) {
+            value = viewModel.calculateAssumedSpells()
         }
     }
-
 
     LaunchedEffect(
         viewModel.character.observeAsState().value?.id,

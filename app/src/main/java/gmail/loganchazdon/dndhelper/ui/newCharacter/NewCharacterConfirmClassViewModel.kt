@@ -107,17 +107,12 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
 
     suspend fun addClassLevels() {
         if (id == -1)
-            id = characterRepository.createDefaultCharacter() ?: -1
-
+            id = characterRepository.createDefaultCharacter()
         characterRepository.insertCharacterClassCrossRef(
             characterId = id,
             classId = clazz.value!!.id
         )
-
         saveFeatures(clazz.value!!.levelPath!!)
-
-        //Persist all feature choices.
-
 
         //Persist feat choices and calculate ASIs.
         for ((i, item) in isFeat.withIndex()) {
@@ -221,6 +216,14 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 }
             }
         }
+        
+        val temp = if(character.value != null) {
+            character.value!!
+        } else {
+            characterRepository.getCharacterById(id)
+        }
+        temp.addClass(clazz.value!!, takeGold = takeGold.value)
+        characterRepository.insertSpellSlots(temp.spellSlots, id)
     }
 
 

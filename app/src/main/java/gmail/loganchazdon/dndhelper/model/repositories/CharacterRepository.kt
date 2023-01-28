@@ -231,7 +231,7 @@ class CharacterRepository @Inject constructor(
                             if (spells.getOrDefault(spell.level, null) == null) {
                                 spells[spell.level] = mutableListOf()
                             }
-                            spells[spell.level]?.add(Pair(prepared, spell))
+                            spells[spell.level]?.add(Pair(prepared ?: false, spell))
                         }
                     }
                 }

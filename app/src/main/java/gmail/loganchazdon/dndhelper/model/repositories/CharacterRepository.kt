@@ -448,6 +448,10 @@ class CharacterRepository @Inject constructor(
         characterDao.insertSpellSlots(spellSlots,id)
     }
 
+    fun removeClassSpellCrossRefs(classId: Int, characterId: Int) {
+        characterDao.removeCharacterClassSpellCrossRefs(classId, characterId)
+    }
+
     companion object {
         val statNames = listOf(
             "Strength",

@@ -255,4 +255,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     @Query("UPDATE characters SET spellSlots = :spellSlots WHERE id = :id")
     abstract fun insertSpellSlots(spellSlots: List<Resource>, id: Int)
+
+    @Query("DELETE FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND characterId IS :characterId")
+    abstract fun removeCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
 }

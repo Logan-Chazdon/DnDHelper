@@ -114,6 +114,11 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
         )
         saveFeatures(clazz.value!!.levelPath!!)
 
+        characterRepository.removeClassSpellCrossRefs(
+            clazz.value!!.id,
+            id
+        )
+
         //Persist feat choices and calculate ASIs.
         for ((i, item) in isFeat.withIndex()) {
             if (item) {

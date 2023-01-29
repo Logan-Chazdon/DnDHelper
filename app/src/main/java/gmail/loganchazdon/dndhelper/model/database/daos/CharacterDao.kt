@@ -228,8 +228,8 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     @Query("UPDATE characters SET tempHp = :temp WHERE id IS :id")
     abstract fun setTemp(id: Int, temp: Int)
 
-    @Query("UPDATE characters SET currentHp = currentHp + :hp WHERE id = :id")
-    abstract fun heal(id: Int, hp: Int)
+    @Query("UPDATE characters SET currentHp =MIN(currentHp + :hp, :maxHp) WHERE id = :id")
+    abstract fun heal(id: Int, hp: Int, maxHp : Int)
 
     @Query("UPDATE characters SET currentHp =:hp WHERE id = :id")
     abstract fun setHp(id: Int, hp: Int)

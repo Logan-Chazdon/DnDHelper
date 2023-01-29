@@ -22,7 +22,7 @@ public class CombatViewModel @Inject constructor(
     }
 
     fun heal(hp: String) {
-        repository.heal(character.value?.id, hp)
+        repository.heal(character.value?.id, hp, character.value!!.maxHp)
     }
 
     fun setHp(hp: String) {

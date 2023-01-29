@@ -410,9 +410,9 @@ class CharacterRepository @Inject constructor(
         } catch(_: Exception) { }
     }
 
-    fun heal(id: Int?, hp: String) {
+    fun heal(id: Int?, hp: String, maxHp: Int) {
         try {
-            characterDao.heal(id!!, hp.toInt())
+            characterDao.heal(id!!, hp.toInt(), maxHp)
         } catch(_: Exception) { }
     }
 

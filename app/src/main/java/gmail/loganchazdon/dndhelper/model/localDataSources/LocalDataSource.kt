@@ -33,7 +33,7 @@ interface LocalDataSource {
     fun getMartialWeapons(martialWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
     fun getInfusions(infusions: MutableLiveData<List<Infusion>>): MutableLiveData<List<Infusion>>
     fun getSimpleWeapons(simpleWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
-    fun getInvocations(invocations: MutableLiveData<List<Invocation>>): MutableLiveData<List<Invocation>>
+    fun getInvocations(invocations: MutableLiveData<List<Feature>>): MutableLiveData<List<Feature>>
 }
 
 
@@ -51,7 +51,7 @@ class LocalDataSourceImpl @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.IO + Job())
     private val _infusions: MutableLiveData<List<Infusion>> =
         MutableLiveData()
-    private val _invocations: MutableLiveData<List<Invocation>> =
+    private val _invocations: MutableLiveData<List<Feature>> =
         MutableLiveData()
     private val _martialWeapons: MutableLiveData<List<Weapon>> =
         MutableLiveData()
@@ -154,7 +154,7 @@ class LocalDataSourceImpl @Inject constructor(
     override fun getSimpleWeapons(simpleWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>> =
         _simpleWeapons
 
-    override fun getInvocations(invocations: MutableLiveData<List<Invocation>>): MutableLiveData<List<Invocation>> =
+    override fun getInvocations(invocations: MutableLiveData<List<Feature>>): MutableLiveData<List<Feature>> =
         _invocations
 
     private val classNameToId = mapOf(
@@ -261,23 +261,37 @@ class LocalDataSourceImpl @Inject constructor(
     private fun generateInvocations() {
         val dataAsString =
             context.resources.openRawResource(R.raw.invocations).bufferedReader().readText()
-        val invocations = mutableListOf<Invocation>()
+        val invocations = mutableListOf<Feature>()
         val invocationsJson = JSONObject(dataAsString).getJSONArray("invocations")
         for (index in 0 until invocationsJson.length()) {
             val invocationJson = invocationsJson.getJSONObject(index)
             invocations.add(
-                Invocation(
+                Feature(
                     name = invocationJson.getString("name"),
-                    desc = invocationJson.getString("desc"),
+                    description = invocationJson.getString("desc"),
                     prerequisite = try {
                         extractPrerequisite(invocationJson.getJSONObject("prerequisite"))
                     } catch (e: JSONException) {
                         null
-                    }
+                    },
+                    featureId = invocationJson.getInt("id")
                 )
             )
         }
         _invocations.value = invocations
+        scope.launch {
+            invocations.forEach {
+                featureDao.insertFeature(
+                    it
+                )
+            }
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Invocations",
+                    ids=  invocations.map { it.featureId }
+                )
+            )
+        }
     }
 
     private fun extractPrerequisite(jsonObject: JSONObject): Prerequisite {
@@ -1998,15 +2012,12 @@ class LocalDataSourceImpl @Inject constructor(
                 try {
                     when (val index = featureJson.getString("index")) {
                         "invocations" -> {
-                            _invocations.value!!.forEach {
-
-                                Feature(
-                                    name = it.name,
-                                    prerequisite = it.prerequisite,
-                                    description = it.desc,
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Invocations"
                                 )
-
-                            }
+                            )
                         }
                         "infusions" -> {
                             scope.launch {

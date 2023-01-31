@@ -228,6 +228,7 @@ class LocalDataSourceImpl @Inject constructor(
         val dataAsString =
             context.resources.openRawResource(R.raw.metamagic).bufferedReader().readText()
         val metamagicsJson = JSONObject(dataAsString).getJSONArray("metamagic")
+        val ids = mutableListOf<Int>()
         for (index in 0 until metamagicsJson.length()) {
             val metamagicJson = metamagicsJson.getJSONObject(index)
             metamagic.add(
@@ -236,8 +237,27 @@ class LocalDataSourceImpl @Inject constructor(
                     desc = metamagicJson.getString("desc")
                 )
             )
+            ids.add(metamagicJson.getInt("id"))
         }
         _metaMagics.value = metamagic
+
+        scope.launch {
+            metamagic.forEachIndexed { index, metamagic ->
+                featureDao.insertFeature(
+                    FeatureEntity(
+                        featureId = ids[index],
+                        name = metamagic.name,
+                        description = metamagic.desc,
+                    )
+                )
+            }
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index=  "Metamagics",
+                    ids = ids
+                )
+            )
+        }
     }
 
     private fun generateManeuvers() {
@@ -252,10 +272,24 @@ class LocalDataSourceImpl @Inject constructor(
                     name = maneuverJson.getString("name"),
                     description = maneuverJson.getString("desc"),
                     grantedAtLevel = 0,
+                    featureId = maneuverJson.getInt("id")
                 )
             )
         }
         _maneuvers.value = maneuvers
+
+        scope.launch {
+            maneuvers.forEach {
+                featureDao.insertFeature(it)
+            }
+
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Maneuvers",
+                    ids= maneuvers.map { it.featureId }
+                )
+            )
+        }
     }
 
     private fun generateInvocations() {
@@ -2012,12 +2046,14 @@ class LocalDataSourceImpl @Inject constructor(
                 try {
                     when (val index = featureJson.getString("index")) {
                         "invocations" -> {
-                            featureDao.insertFeatureChoiceIndexCrossRef(
-                                FeatureChoiceIndexCrossRef(
-                                    choiceId = parentChoiceId!!,
-                                    index = "Invocations"
+                            scope.launch {
+                                featureDao.insertFeatureChoiceIndexCrossRef(
+                                    FeatureChoiceIndexCrossRef(
+                                        choiceId = parentChoiceId!!,
+                                        index = "Invocations"
+                                    )
                                 )
-                            )
+                            }
                         }
                         "infusions" -> {
                             scope.launch {
@@ -2083,18 +2119,23 @@ class LocalDataSourceImpl @Inject constructor(
                             } TODO */
                         }
                         "maneuvers" -> {
-
-                            _maneuvers.value!!
-
+                            scope.launch {
+                                featureDao.insertFeatureChoiceIndexCrossRef(
+                                    FeatureChoiceIndexCrossRef(
+                                        choiceId = parentChoiceId!!,
+                                        index = "Maneuvers"
+                                    )
+                                )
+                            }
                         }
                         "metamagic" -> {
-                            _metaMagics.value?.forEach {
-
-                                Feature(
-                                    name = it.name,
-                                    description = it.desc
+                            scope.launch {
+                                featureDao.insertFeatureChoiceIndexCrossRef(
+                                    FeatureChoiceIndexCrossRef(
+                                        choiceId = parentChoiceId!!,
+                                        index = "Metamagics"
+                                    )
                                 )
-
                             }
                         }
                         "all_languages" -> {

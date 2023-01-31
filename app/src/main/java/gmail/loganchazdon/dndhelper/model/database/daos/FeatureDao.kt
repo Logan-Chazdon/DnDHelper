@@ -3,9 +3,7 @@ package gmail.loganchazdon.dndhelper.model.database.daos
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.*
-import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureSpellCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.OptionsFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 
 @Dao
 abstract class FeatureDao {
@@ -45,11 +43,11 @@ WHERE FeatureOptionsCrossRef.featureId IS :featureId"""
     abstract fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
 
     //This returns all features which belong in the options field of a featureChoice.
-    @Query(
-        """SELECT * FROM features
-JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
-WHERE OptionsFeatureCrossRef.choiceId IS :featureChoiceId"""
-    )
+    @Query("""SELECT * FROM features
+LEFT JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
+LEFT JOIN FeatureChoiceIndexCrossRef ON FeatureChoiceIndexCrossRef.choiceId IS :featureChoiceId
+LEFT JOIN IndexRef ON IndexRef.`index` IS FeatureChoiceIndexCrossRef.`index`
+WHERE ',' || ids || ',' LIKE '%,' || features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId""")
     protected abstract fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>
 
 
@@ -88,4 +86,15 @@ WHERE featureId IS :featureId
     )
     abstract fun getFeatureSpells(featureId: Int): List<Spell>?
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertIndexRef(ref: IndexRef)
+
+    @Delete
+    abstract fun deleteIndexRef(ref: IndexRef)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertFeatureChoiceIndexCrossRef(ref: FeatureChoiceIndexCrossRef)
+
+    @Delete
+    abstract fun deleteFeatureChoiceIndexCrossRef(ref: FeatureChoiceIndexCrossRef)
 }

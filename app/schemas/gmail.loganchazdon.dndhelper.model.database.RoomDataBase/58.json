@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "34e899421cce774bcf0b1ec800139dc5",
+    "identityHash": "2ff611b4a2cf705ac6b18b18cd3336d4",
     "entities": [
       {
         "tableName": "characters",
@@ -1802,12 +1802,65 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "IndexRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`index` TEXT NOT NULL, `ids` TEXT NOT NULL, PRIMARY KEY(`index`))",
+        "fields": [
+          {
+            "fieldPath": "index",
+            "columnName": "index",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ids",
+            "columnName": "ids",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "index"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "FeatureChoiceIndexCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`choiceId` INTEGER NOT NULL, `index` TEXT NOT NULL, PRIMARY KEY(`choiceId`, `index`))",
+        "fields": [
+          {
+            "fieldPath": "choiceId",
+            "columnName": "choiceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "index",
+            "columnName": "index",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "choiceId",
+            "index"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '34e899421cce774bcf0b1ec800139dc5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2ff611b4a2cf705ac6b18b18cd3336d4')"
     ]
   }
 }

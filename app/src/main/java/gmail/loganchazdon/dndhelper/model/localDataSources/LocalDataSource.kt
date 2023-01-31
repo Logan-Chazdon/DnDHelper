@@ -347,6 +347,39 @@ class LocalDataSourceImpl @Inject constructor(
             infusions.add(extractInfusion(infusionJson))
         }
         _infusions.value = infusions
+        val ids = mutableListOf<Int>()
+        scope.launch {
+            infusions.forEach {
+                val choices = if (it.options != null && it.choose != 0) {
+                    listOf(
+                        FeatureChoice(
+                            options = it.options as MutableList<Feature>?,
+                            choose = Choose(static = it.choose)
+                        )
+                    )
+                } else {
+                    null
+                }
+                ids.add(it.id)
+                featureDao.insertFeature(
+                    Feature(
+                        maxTimesChosen = it.maxTimesChosen,
+                        grantedAtLevel = it.grantedAtLevel,
+                        name = it.name,
+                        description = it.desc,
+                        infusion = it,
+                        choices = choices,
+                        featureId = it.id
+                    )
+                )
+            }
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Infusions",
+                    ids = ids
+                )
+            )
+        }
     }
 
     private fun extractInfusion(infusionJson: JSONObject): Infusion {
@@ -1936,7 +1969,7 @@ class LocalDataSourceImpl @Inject constructor(
         }
     }
 
-    private fun extractFeatures(featuresJson: JSONArray): List<Int> {
+    private fun extractFeatures(featuresJson: JSONArray, parentChoiceId: Int? = null): List<Int> {
         val ids = mutableListOf<Int>()
         try {
             for (featureIndex in 0 until featuresJson.length()) {
@@ -1962,7 +1995,6 @@ class LocalDataSourceImpl @Inject constructor(
                     0
                 }
 
-                //If we have an index construct a list from that otherwise just make it normally.
                 try {
                     when (val index = featureJson.getString("index")) {
                         "invocations" -> {
@@ -1977,29 +2009,13 @@ class LocalDataSourceImpl @Inject constructor(
                             }
                         }
                         "infusions" -> {
-                            _infusions.value!!.forEach {
-                                val choices = if (it.options != null && it.choose != 0) {
-                                    listOf(
-                                        FeatureChoice(
-                                            options = it.options as MutableList<Feature>?,
-                                            choose = Choose(static = it.choose)
-                                        )
+                            scope.launch {
+                                featureDao.insertFeatureChoiceIndexCrossRef(
+                                    FeatureChoiceIndexCrossRef(
+                                        choiceId = parentChoiceId!!,
+                                        index = "Infusions"
                                     )
-                                } else {
-                                    null
-                                }
-
-
-                                Feature(
-                                    maxTimesChosen = it.maxTimesChosen,
-                                    grantedAtLevel = it.grantedAtLevel,
-                                    name = it.name,
-                                    description = it.desc,
-                                    infusion = it,
-                                    choices = choices,
-                                    featureId = it.id
                                 )
-
                             }
                         }
                         "proficiencies" -> {
@@ -2190,8 +2206,14 @@ class LocalDataSourceImpl @Inject constructor(
 
                     val extractAndAddChoice = fun(choiceJson: JSONObject) {
                         scope.launch {
+                            val choiceId = try {
+                                choiceJson.getInt("choice_id")
+                            } catch(e: JSONException) {
+                                null
+                            }
+
                             val optionsIds = try {
-                                extractFeatures(choiceJson.getJSONArray("from"))
+                                extractFeatures(choiceJson.getJSONArray("from"), choiceId)
                             } catch (e: JSONException) {
                                 null
                             }
@@ -2210,8 +2232,7 @@ class LocalDataSourceImpl @Inject constructor(
                                     Choose(0)
                                 }
                             }
-                            if (optionsIds?.isNotEmpty() == true && choose != Choose(0)) {
-                                val choiceId = choiceJson.getInt("choice_id")
+                            if (choose != Choose(0) && choiceId != null) {
                                 val entity = FeatureChoiceEntity(
                                     choose
                                 ).run {
@@ -2233,7 +2254,7 @@ class LocalDataSourceImpl @Inject constructor(
                                 )
 
 
-                                optionsIds.forEach {
+                                optionsIds?.forEach {
                                     val ref = OptionsFeatureCrossRef(
                                         featureId = it,
                                         choiceId = choiceId
@@ -2242,7 +2263,6 @@ class LocalDataSourceImpl @Inject constructor(
                                     featureDao.insertOptionsFeatureCrossRef(
                                         ref
                                     )
-
                                 }
                             }
                         }

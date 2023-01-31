@@ -1,433 +1,375 @@
 {
-    "invocations": [
+    "invocations" : [
         {
-            "name": "Agonizing Blast",
-            "desc": "When you cast Eldritch Blast, add your Charisma modifier to the damage it deals on a hit.",
-            "prerequisite": {
-                "spell": "Eldritch Blast"
+            "name" : "Agonizing Blast",
+            "desc" : "When you cast Eldritch Blast, add your Charisma modifier to the damage it deals on a hit.",
+            "prerequisite" : {
+                "spell" : "Eldritch Blast"
             },
-            "comment": "TODO add effect",
-            "id": 1887
+            "comment" : "TODO add effect"
         },
         {
-            "name": "Armor of Shadows",
-            "desc": "You can cast Mage Armor on yourself at will, without expending a spell slot or material components.",
-            "id": 1888
+            "name" : "Armor of Shadows",
+            "desc" : "You can cast Mage Armor on yourself at will, without expending a spell slot or material components."
         },
         {
-            "name": "Ascendant Step",
-            "desc": "You can cast Levitate on yourself at will, without expending a spell slot or material components.",
-            "prerequisite": {
-                "level": 9
+            "name" : "Ascendant Step",
+            "desc" : "You can cast Levitate on yourself at will, without expending a spell slot or material components.",
+            "prerequisite" : {
+                "level" : 9
+            }
+        },
+        {
+            "name" : "Aspect of the Moon",
+            "desc" : "You no longer need to sleep and can’t be forced to sleep by any means. To gain the benefits of a long rest, you can spend all 8 hours doing light activity, such as reading your Book of Shadows and keeping watch.",
+            "prerequisite" : {
+                "feature" : "Pact of the Tome"
+            }
+        },
+        {
+            "name" : "Beast Speech",
+            "desc" : "You can cast Speak with Animals at will, without expending a spell slot."
+        },
+        {
+            "name" : "Beguiling Influence",
+            "desc" : "You gain proficiency in the Deception and Persuasion skills.",
+            "proficiencies" : [
+                {"name" : "Deception"},
+                {"name" : "Persuasion"}
+            ]
+        },
+        {
+            "name" : "Bewitching Whispers",
+            "desc" : "You can cast Compulsion once using a warlock spell slot. You can't do so again until you finish a long rest.",
+            "prerequisite" : {
+                "level" : 7
+            }
+        },
+        {
+            "name" : "Bond of the Talisman",
+            "desc" : "While someone else is wearing your talisman, you can use your action to teleport to the unoccupied space closest to them, provided the two of you are on the same plane of existence. The wearer of your talisman can do the same thing, using their action to teleport to you. The teleportation can be used a number of times equal to your proficiency bonus, and all expended uses are restored when you finish a long rest.",
+            "prerequisite" : {
+                "level" : 12,
+                "feature" : "Pact of the Talisman"
+            }
+        },
+        {
+            "name" : "Book of Ancient Secrets",
+            "desc" : "You can now inscribe magical rituals in your Book of Shadows. Choose two 1st-level spells that have the ritual tag from any class's spell list (the two needn't be from the same list). The spells appear in the book and don't count against the number of spells you know. With your Book of Shadows in hand, you can cast the chosen spells as rituals. You can't cast the spells except as rituals, unless you've learned them by some other means. You can also cast a warlock spell you know as a ritual if it has the ritual tag.\n\nOn your adventures, you can add other ritual spells to your Book of Shadows. When you find such a spell, you can add it to the book if the spell's level is equal to or less than half your warlock level (rounded up) and if you can spare the time to transcribe the spell. For each level of the spell, the transcription process takes 2 hours and costs 50 gp for the rare inks needed to inscribe it.",
+            "prerequisite" : {
+                "feature" : "Pact of the Tome"
             },
-            "id": 1889
-        },
-        {
-            "name": "Aspect of the Moon",
-            "desc": "You no longer need to sleep and can\u2019t be forced to sleep by any means. To gain the benefits of a long rest, you can spend all 8 hours doing light activity, such as reading your Book of Shadows and keeping watch.",
-            "prerequisite": {
-                "feature": "Pact of the Tome"
-            },
-            "id": 1890
-        },
-        {
-            "name": "Beast Speech",
-            "desc": "You can cast Speak with Animals at will, without expending a spell slot.",
-            "id": 1891
-        },
-        {
-            "name": "Beguiling Influence",
-            "desc": "You gain proficiency in the Deception and Persuasion skills.",
-            "proficiencies": [
+            "spells" : [
                 {
-                    "name": "Deception"
-                },
-                {
-                    "name": "Persuasion"
-                }
-            ],
-            "id": 1892
-        },
-        {
-            "name": "Bewitching Whispers",
-            "desc": "You can cast Compulsion once using a warlock spell slot. You can't do so again until you finish a long rest.",
-            "prerequisite": {
-                "level": 7
-            },
-            "id": 1893
-        },
-        {
-            "name": "Bond of the Talisman",
-            "desc": "While someone else is wearing your talisman, you can use your action to teleport to the unoccupied space closest to them, provided the two of you are on the same plane of existence. The wearer of your talisman can do the same thing, using their action to teleport to you. The teleportation can be used a number of times equal to your proficiency bonus, and all expended uses are restored when you finish a long rest.",
-            "prerequisite": {
-                "level": 12,
-                "feature": "Pact of the Talisman"
-            },
-            "id": 1894
-        },
-        {
-            "name": "Book of Ancient Secrets",
-            "desc": "You can now inscribe magical rituals in your Book of Shadows. Choose two 1st-level spells that have the ritual tag from any class's spell list (the two needn't be from the same list). The spells appear in the book and don't count against the number of spells you know. With your Book of Shadows in hand, you can cast the chosen spells as rituals. You can't cast the spells except as rituals, unless you've learned them by some other means. You can also cast a warlock spell you know as a ritual if it has the ritual tag.\n\nOn your adventures, you can add other ritual spells to your Book of Shadows. When you find such a spell, you can add it to the book if the spell's level is equal to or less than half your warlock level (rounded up) and if you can spare the time to transcribe the spell. For each level of the spell, the transcription process takes 2 hours and costs 50 gp for the rare inks needed to inscribe it.",
-            "prerequisite": {
-                "feature": "Pact of the Tome"
-            },
-            "spells": [
-                {
-                    "choose": 2,
-                    "from": [
+                    "choose" : 2,
+                    "from" : [
                         {
-                            "index": "all_spells",
-                            "bound": {
-                                "level": 1,
-                                "is_ritual": true
+                            "index" : "all_spells",
+                            "bound" : {
+                                "level" : 1,
+                                "is_ritual" : true
                             }
                         }
                     ]
                 }
-            ],
-            "id": 1895
+            ]
         },
         {
-            "name": "Chains of Carceri",
-            "desc": "You can cast Hold Monster at will \u2013 targeting a celestial, fiend, or elemental \u2013 without expending a spell slot or material components. You must finish a long rest before you can use this invocation on the same creature again.",
-            "prerequisite": {
-                "level": 15,
-                "feature": "Pact of the Chain"
-            },
-            "id": 1896
+            "name" : "Chains of Carceri",
+            "desc" : "You can cast Hold Monster at will – targeting a celestial, fiend, or elemental – without expending a spell slot or material components. You must finish a long rest before you can use this invocation on the same creature again.",
+            "prerequisite" : {
+                "level" : 15,
+                "feature" : "Pact of the Chain"
+            }
         },
         {
-            "name": "Cloak of Flies",
-            "desc": "As a bonus action, you can surround yourself with a magical aura that looks like buzzing flies. The aura extends 5 feet from you in every direction, but not through total cover. It lasts until you're incapacitated or you dismiss it as a bonus action.\n\nThe aura grants you advantage on Charisma (Intimidation) checks but disadvantage on all other Charisma checks. Any other creature that starts its turn in the aura takes poison damage equal to your Charisma modifier (minimum of 0 damage).\n\nOnce you use this invocation, you can\u2019t use it again until you finish a short or long rest.",
-            "prerequisite": {
-                "level": 5
-            },
-            "id": 1897
+            "name" : "Cloak of Flies",
+            "desc" : "As a bonus action, you can surround yourself with a magical aura that looks like buzzing flies. The aura extends 5 feet from you in every direction, but not through total cover. It lasts until you're incapacitated or you dismiss it as a bonus action.\n\nThe aura grants you advantage on Charisma (Intimidation) checks but disadvantage on all other Charisma checks. Any other creature that starts its turn in the aura takes poison damage equal to your Charisma modifier (minimum of 0 damage).\n\nOnce you use this invocation, you can’t use it again until you finish a short or long rest.",
+            "prerequisite" : {
+                "level" : 5
+            }
         },
         {
-            "name": "Devil's Sight",
-            "desc": "You can see normally in darkness, both magical and nonmagical, to a distance of 120 feet.",
-            "id": 1898
+            "name" : "Devil's Sight",
+            "desc" : "You can see normally in darkness, both magical and nonmagical, to a distance of 120 feet."
         },
         {
-            "name": "Dreadful Word",
-            "desc": "You can cast Confusion once using a warlock spell slot. You can't do so again until you finish a long rest.",
-            "prerequisite": {
-                "level": 7
-            },
-            "id": 1899
+            "name" : "Dreadful Word",
+            "desc" : "You can cast Confusion once using a warlock spell slot. You can't do so again until you finish a long rest.",
+            "prerequisite" : {
+                "level" : 7
+            }
         },
         {
-            "name": "Eldritch Mind",
-            "desc": "You have advantage on Constitution saving throws that you make to maintain your concentration on a spell.",
-            "id": 1900
+            "name" : "Eldritch Mind",
+            "desc" : "You have advantage on Constitution saving throws that you make to maintain your concentration on a spell."
         },
         {
-            "name": "Eldritch Sight",
-            "desc": "You can cast Detect Magic at will, without expending a spell slot or material components.",
-            "id": 1901
+            "name" : "Eldritch Sight",
+            "desc" : "You can cast Detect Magic at will, without expending a spell slot or material components."
         },
         {
-            "name": "Eldritch Smite",
-            "desc": "Once per turn when you hit a creature with your pact weapon, you can expend a warlock spell slot to deal an extra 1d8 force damage to the target, plus another 1d8 per level of the spell slot, and you can knock the target prone if it is Huge or smaller.",
-            "prerequisite": {
-                "level": 5,
-                "feature": "Pact of the Blade"
-            },
-            "id": 1902
+            "name" : "Eldritch Smite",
+            "desc" : "Once per turn when you hit a creature with your pact weapon, you can expend a warlock spell slot to deal an extra 1d8 force damage to the target, plus another 1d8 per level of the spell slot, and you can knock the target prone if it is Huge or smaller.",
+            "prerequisite" : {
+                "level" : 5,
+                "feature" : "Pact of the Blade"
+            }
         },
         {
-            "name": "Eldritch Spear",
-            "desc": "When you cast Eldritch Blast, its range is 300 feet.",
-            "prerequisite": {
-                "spell": "Eldritch Blast"
-            },
-            "id": 1903
+            "name" : "Eldritch Spear",
+            "desc" : "When you cast Eldritch Blast, its range is 300 feet.",
+            "prerequisite" : {
+                "spell" : "Eldritch Blast"
+            }
         },
         {
-            "name": "Eyes of the Rune Keeper",
-            "desc": "You can read all writing.",
-            "id": 1904
+            "name" : "Eyes of the Rune Keeper",
+            "desc" : "You can read all writing."
         },
         {
-            "name": "Far Scribe",
-            "desc": "A new page appears in your Book of Shadows. With your permission, a creature can use its action to write its name on that page, which can contain a number of names equal to your proficiency bonus.\n\nYou can cast the Sending spell, targeting a creature whose name is on the page, without using a spell slot and without using material components. To do so, you must write the message on the page. The target hears the message in their mind, and if the target replies, their message appears on the page, rather than in your mind. The writing disappears after 1 minute.\n\nAs an action, you can magically erase a name on the page by touching it.",
-            "prerequisite": {
-                "level": 5,
-                "feature": "Pact of the Tome"
-            },
-            "id": 1905
+            "name" : "Far Scribe",
+            "desc" : "A new page appears in your Book of Shadows. With your permission, a creature can use its action to write its name on that page, which can contain a number of names equal to your proficiency bonus.\n\nYou can cast the Sending spell, targeting a creature whose name is on the page, without using a spell slot and without using material components. To do so, you must write the message on the page. The target hears the message in their mind, and if the target replies, their message appears on the page, rather than in your mind. The writing disappears after 1 minute.\n\nAs an action, you can magically erase a name on the page by touching it.",
+            "prerequisite" : {
+                "level" : 5,
+                "feature" : "Pact of the Tome"
+            }
         },
         {
-            "name": "Fiendish Vigor",
-            "desc": "You can cast False Life on yourself at will as a 1st-level spell, without expending a spell slot or material components.",
-            "id": 1906
+            "name" : "Fiendish Vigor",
+            "desc" : "You can cast False Life on yourself at will as a 1st-level spell, without expending a spell slot or material components."
         },
         {
-            "name": "Gaze of Two Minds",
-            "desc": "You can use your action to touch a willing humanoid and perceive through its senses until the end of your next turn. As long as the creature is on the same plane of existence as you, you can use your action on subsequent turns to maintain this connection, extending the duration until the end of your next turn. While perceiving through the other creature's senses, you benefit from any special senses possessed by that creature, and you are blinded and deafened to your own surroundings.",
-            "id": 1907
+            "name" : "Gaze of Two Minds",
+            "desc" : "You can use your action to touch a willing humanoid and perceive through its senses until the end of your next turn. As long as the creature is on the same plane of existence as you, you can use your action on subsequent turns to maintain this connection, extending the duration until the end of your next turn. While perceiving through the other creature's senses, you benefit from any special senses possessed by that creature, and you are blinded and deafened to your own surroundings."
         },
         {
-            "name": "Ghostly Gaze",
-            "desc": "As an action, you gain the ability to see through solid objects to a range of 30 feet. Within that range, you have darkvision if you don\u2019t already have it. This special sight lasts for 1 minute or until your concentration ends (as if you were concentrating on a spell). During that time, you perceive objects as ghostly, transparent images.\n\nOnce you use this invocation, you can\u2019t use it again until you finish a short or long rest.",
-            "prerequisite": {
-                "level": 7
-            },
-            "id": 1908
+            "name" : "Ghostly Gaze",
+            "desc" : "As an action, you gain the ability to see through solid objects to a range of 30 feet. Within that range, you have darkvision if you don’t already have it. This special sight lasts for 1 minute or until your concentration ends (as if you were concentrating on a spell). During that time, you perceive objects as ghostly, transparent images.\n\nOnce you use this invocation, you can’t use it again until you finish a short or long rest.",
+            "prerequisite" : {
+                "level" : 7
+            }
         },
         {
-            "name": "Gift of the Depths",
-            "desc": "You can breathe underwater, and you gain a swimming speed equal to your walking speed.\n\nYou can also cast Water Breathing without expending a spell slot. You regain the ability to do so when you finish a long rest.",
-            "prerequisite": {
-                "level": 5
-            },
-            "id": 1909
+            "name" : "Gift of the Depths",
+            "desc" : "You can breathe underwater, and you gain a swimming speed equal to your walking speed.\n\nYou can also cast Water Breathing without expending a spell slot. You regain the ability to do so when you finish a long rest.",
+            "prerequisite" : {
+                "level" : 5
+            }
         },
         {
-            "name": "Gift of the Ever-Living Ones",
-            "desc": "Whenever you regain hit points while your familiar is within 100 feet of you, treat any dice rolled to determine the hit points you regain as having rolled their maximum value for you.",
-            "prerequisite": {
-                "feature": "Pact of the Chain"
-            },
-            "id": 1910
+            "name" : "Gift of the Ever-Living Ones",
+            "desc" : "Whenever you regain hit points while your familiar is within 100 feet of you, treat any dice rolled to determine the hit points you regain as having rolled their maximum value for you.",
+            "prerequisite" : {
+                "feature" : "Pact of the Chain"
+            }
         },
         {
-            "name": "Gift of the Protectors",
-            "desc": "A new page appears in your Book of Shadows. With your permission, a creature can use its action to write its name on that page, which can contain a number of names equal to your proficiency bonus.\n\nWhen any creature whose name is on the page is reduced to 0 hit points but not killed outright, the creature magically drops to 1 hit point instead. Once this magic is triggered, no creature can benefit from it until you finish a long rest.\n\nAs an action, you can magically erase a name on the page by touching it.",
-            "prerequisite": {
-                "feature": "Pact of the Tome",
-                "level": 9
-            },
-            "id": 1911
+            "name" : "Gift of the Protectors",
+            "desc" : "A new page appears in your Book of Shadows. With your permission, a creature can use its action to write its name on that page, which can contain a number of names equal to your proficiency bonus.\n\nWhen any creature whose name is on the page is reduced to 0 hit points but not killed outright, the creature magically drops to 1 hit point instead. Once this magic is triggered, no creature can benefit from it until you finish a long rest.\n\nAs an action, you can magically erase a name on the page by touching it.",
+            "prerequisite" : {
+                "feature" : "Pact of the Tome",
+                "level" : 9
+            }
         },
         {
-            "name": "Grasp of Hadar",
-            "desc": "Once on each of your turns when you hit a creature with your Eldritch Blast, you can move that creature in a straight line 10 feet closer to yourself.",
-            "prerequisite": {
-                "spell": "Eldritch Blast"
-            },
-            "id": 1912
+            "name" : "Grasp of Hadar",
+            "desc" : "Once on each of your turns when you hit a creature with your Eldritch Blast, you can move that creature in a straight line 10 feet closer to yourself.",
+            "prerequisite" : {
+                "spell" : "Eldritch Blast"
+            }
         },
         {
-            "name": "Improved Pact Weapon",
-            "desc": "You can use any weapon you summon with your Pact of the Blade feature as a spellcasting focus for your warlock spells.\n\nIn addition, the weapon gains a +1 bonus to its attack and damage rolls, unless it is a magic weapon that already has a bonus to those rolls.\n\nFinally, the weapon you conjure can be a shortbow, longbow, light crossbow, or heavy crossbow.",
-            "prerequisite": {
-                "feature": "Pact of the Blade"
-            },
-            "id": 1913
+            "name" : "Improved Pact Weapon",
+            "desc" : "You can use any weapon you summon with your Pact of the Blade feature as a spellcasting focus for your warlock spells.\n\nIn addition, the weapon gains a +1 bonus to its attack and damage rolls, unless it is a magic weapon that already has a bonus to those rolls.\n\nFinally, the weapon you conjure can be a shortbow, longbow, light crossbow, or heavy crossbow.",
+            "prerequisite" : {
+                "feature" : "Pact of the Blade"
+            }
         },
         {
-            "name": "Investment of the Chain Master",
-            "desc": "When you cast Find Familiar, you infuse the summoned familiar with a measure of your eldritch power, granting the creature the following benefits:\n\n    The familiar gains either a flying speed or a swimming speed (your choice) of 40 feet.\n\n    As a bonus action, you can command the familiar to take the Attack action.\n\n    The familiar\u2019s weapon attacks are considered magical for the purpose of overcoming immunity and resistance to nonmagical attacks.\n\n    If the familiar forces a creature to make a saving throw, it uses your spell save DC.\n\n    When the familiar takes damage, you can use your reaction to grant it resistance against that damage.",
-            "prerequisite": {
-                "feature": "Pact of the Chain"
-            },
-            "id": 1914
+            "name" : "Investment of the Chain Master",
+            "desc" : "When you cast Find Familiar, you infuse the summoned familiar with a measure of your eldritch power, granting the creature the following benefits:\n\n    The familiar gains either a flying speed or a swimming speed (your choice) of 40 feet.\n\n    As a bonus action, you can command the familiar to take the Attack action.\n\n    The familiar’s weapon attacks are considered magical for the purpose of overcoming immunity and resistance to nonmagical attacks.\n\n    If the familiar forces a creature to make a saving throw, it uses your spell save DC.\n\n    When the familiar takes damage, you can use your reaction to grant it resistance against that damage.",
+            "prerequisite" : {
+                "feature" : "Pact of the Chain"
+            }
         },
         {
-            "name": "Lance of Lethargy",
-            "desc": "Once on each of your turns when you hit a creature with your Eldritch Blast, you can reduce that creature\u2019s speed by 10 feet until the end of your next turn.",
-            "prerequisite": {
-                "spell": "Eldritch Blast"
-            },
-            "id": 1915
+            "name" : "Lance of Lethargy",
+            "desc" : "Once on each of your turns when you hit a creature with your Eldritch Blast, you can reduce that creature’s speed by 10 feet until the end of your next turn.",
+            "prerequisite" : {
+                "spell" : "Eldritch Blast"
+            }
         },
         {
-            "name": "Lifedrinker",
-            "desc": "When you hit a creature with your pact weapon, the creature takes extra necrotic damage equal to your Charisma modifier (minimum 1).",
-            "prerequisite": {
-                "level": 12,
-                "feature": "Pact of the Blade"
-            },
-            "id": 1916
+            "name" : "Lifedrinker",
+            "desc" : "When you hit a creature with your pact weapon, the creature takes extra necrotic damage equal to your Charisma modifier (minimum 1).",
+            "prerequisite" : {
+                "level" : 12,
+                "feature" : "Pact of the Blade"
+            }
         },
         {
-            "name": "Maddening Hex",
-            "desc": "As a bonus action, you cause a psychic disturbance around the target cursed by your Hex spell or by a warlock feature of yours, such as Hexblade\u2019s Curse and Sign of Ill Omen. When you do so, you deal psychic damage to the cursed target and each creature of your choice within 5 feet of it. The psychic damage equals your Charisma modifier (minimum of 1 damage). To use this invocation, you must be able to see the cursed target, and it must be within 30 feet of you.",
-            "prerequisite": {
-                "level": 5,
-                "comment": "TODO Hex spell or a warlock feature that curses"
-            },
-            "id": 1917
+            "name" : "Maddening Hex",
+            "desc" : "As a bonus action, you cause a psychic disturbance around the target cursed by your Hex spell or by a warlock feature of yours, such as Hexblade’s Curse and Sign of Ill Omen. When you do so, you deal psychic damage to the cursed target and each creature of your choice within 5 feet of it. The psychic damage equals your Charisma modifier (minimum of 1 damage). To use this invocation, you must be able to see the cursed target, and it must be within 30 feet of you.",
+            "prerequisite" : {
+                "level" : 5,
+                "comment" : "TODO Hex spell or a warlock feature that curses"
+            }
         },
         {
-            "name": "Mask of Many Faces",
-            "desc": "You can cast Disguise Self at will, without expending a spell slot.",
-            "id": 1918
+            "name" : "Mask of Many Faces",
+            "desc" : "You can cast Disguise Self at will, without expending a spell slot."
         },
         {
-            "name": "Master of Myriad Forms",
-            "desc": "You can cast Alter Self at will, without expending a spell slot.",
-            "prerequisite": {
-                "level": 15
-            },
-            "id": 1919
+            "name" : "Master of Myriad Forms",
+            "desc" : "You can cast Alter Self at will, without expending a spell slot.",
+            "prerequisite" : {
+                "level" : 15
+            }
         },
         {
-            "name": "Minions of Chaos",
-            "desc": "You can cast Conjure Elemental once using a warlock spell slot. You can't do so again until you finish a long rest.",
-            "prerequisite": {
-                "level": 9
-            },
-            "id": 1920
+            "name" : "Minions of Chaos",
+            "desc" : "You can cast Conjure Elemental once using a warlock spell slot. You can't do so again until you finish a long rest.",
+            "prerequisite" : {
+                "level" : 9
+            }
         },
         {
-            "name": "Mire the Mind",
-            "desc": "You can cast Slow once using a warlock spell slot. You can't do so again until you finish a long rest.",
-            "prerequisite": {
-                "level": 5
-            },
-            "id": 1921
+            "name" : "Mire the Mind",
+            "desc" : "You can cast Slow once using a warlock spell slot. You can't do so again until you finish a long rest.",
+            "prerequisite" : {
+                "level" : 5
+            }
         },
         {
-            "name": "Misty Visions",
-            "desc": "You can cast Silent Image at will, without expending a spell slot or material components.",
-            "id": 1922
+            "name" : "Misty Visions",
+            "desc" : "You can cast Silent Image at will, without expending a spell slot or material components."
         },
         {
-            "name": "One with Shadows",
-            "desc": "When you are in an area of dim light or darkness, you can use your action to become invisible until you move or take an action or a reaction.",
-            "prerequisite": {
-                "level": 5
-            },
-            "id": 1923
+            "name" : "One with Shadows",
+            "desc" : "When you are in an area of dim light or darkness, you can use your action to become invisible until you move or take an action or a reaction.",
+            "prerequisite" : {
+                "level" : 5
+            }
         },
         {
-            "name": "Otherworldly Leap",
-            "desc": "You can cast Jump at will, without expending a spell slot.",
-            "prerequisite": {
-                "level": 9
-            },
-            "id": 1924
+            "name" : "Otherworldly Leap",
+            "desc" : "You can cast Jump at will, without expending a spell slot.",
+            "prerequisite" : {
+                "level" : 9
+            }
         },
         {
-            "name": "Protection of the Talisman",
-            "desc": "When the wearer of your talisman fails a saving throw, they can add a d4 to the roll, potentially turning the save into a success. This benefit can be used a number of times equal to your proficiency bonus, and all expended uses are restored when you finish a long rest.",
-            "prerequisite": {
-                "level": 7,
-                "feature": "Pact of the Talisman"
-            },
-            "id": 1925
+            "name" : "Protection of the Talisman",
+            "desc" : "When the wearer of your talisman fails a saving throw, they can add a d4 to the roll, potentially turning the save into a success. This benefit can be used a number of times equal to your proficiency bonus, and all expended uses are restored when you finish a long rest.",
+            "prerequisite" : {
+                "level" : 7,
+                "feature" : "Pact of the Talisman"
+            }
         },
         {
-            "name": "Rebuke of the Talisman",
-            "desc": "When the wearer of your talisman is hit by an attacker you can see within 30 feet of you, you can use your reaction to deal psychic damage to the attacker equal to your proficiency bonus and push it up to 10 feet away from the talisman's wearer.",
-            "prerequisite": {
-                "feature": "Pact of the Talisman"
-            },
-            "id": 1926
+            "name" : "Rebuke of the Talisman",
+            "desc" : "When the wearer of your talisman is hit by an attacker you can see within 30 feet of you, you can use your reaction to deal psychic damage to the attacker equal to your proficiency bonus and push it up to 10 feet away from the talisman's wearer.",
+            "prerequisite" : {
+                "feature" : "Pact of the Talisman"
+            }
         },
         {
-            "name": "Relentless Hex",
-            "desc": "Your curse creates a temporary bond between you and your target. As a bonus action, you can magically teleport up to 30 feet to an unoccupied space you can see within 5 feet of the target cursed by your Hex spell or by a warlock feature of yours, such as Hexblade\u2019s Curse and Sign of Ill Omen. To teleport in this way, you must be able to see the cursed target.",
-            "prerequisite": {
-                "level": 7,
-                "comment": "TODO Hex spell or a warlock feature that curses"
-            },
-            "id": 1927
+            "name" : "Relentless Hex",
+            "desc": "Your curse creates a temporary bond between you and your target. As a bonus action, you can magically teleport up to 30 feet to an unoccupied space you can see within 5 feet of the target cursed by your Hex spell or by a warlock feature of yours, such as Hexblade’s Curse and Sign of Ill Omen. To teleport in this way, you must be able to see the cursed target.",
+            "prerequisite" : {
+                "level" : 7,
+                "comment" : "TODO Hex spell or a warlock feature that curses"
+            }
         },
         {
-            "name": "Repelling Blast",
-            "desc": "When you hit a creature with Eldritch Blast, you can push the creature up to 10 feet away from you in a straight line.",
-            "prerequisite": {
-                "spell": "Eldritch Blast"
-            },
-            "id": 1928
+            "name" : "Repelling Blast",
+            "desc" : "When you hit a creature with Eldritch Blast, you can push the creature up to 10 feet away from you in a straight line.",
+            "prerequisite" : {
+                "spell" : "Eldritch Blast"
+            }
         },
         {
-            "name": "Sculptor of Flesh",
-            "desc": "You can cast Polymorph once using a warlock spell slot. You can't do so again until you finish a long rest.",
-            "prerequisite": {
-                "level": 7
-            },
-            "id": 1929
+            "name" : "Sculptor of Flesh",
+            "desc" : "You can cast Polymorph once using a warlock spell slot. You can't do so again until you finish a long rest.",
+            "prerequisite" : {
+                "level" : 7
+            }
         },
         {
-            "name": "Shroud of Shadow",
-            "desc": "You can cast Invisibility at will, without expending a spell slot.",
-            "prerequisite": {
-                "level": 15
-            },
-            "id": 1930
+            "name" : "Shroud of Shadow",
+            "desc" : "You can cast Invisibility at will, without expending a spell slot.",
+            "prerequisite" : {
+                "level" : 15
+            }
         },
         {
             "name": "Sign of Ill Omen",
             "desc": "You can cast Bestow Curse once using a warlock spell slot. You can't do so again until you finish a long rest.",
-            "prerequisite": {
-                "level": 5
-            },
-            "id": 1931
+            "prerequisite" : {
+                "level" : 5
+            }
         },
         {
-            "name": "Thief of Five Fates",
-            "desc": "You can cast Bane once using a warlock spell slot. You can't do so again until you finish a long rest.",
-            "id": 1932
+            "name" : "Thief of Five Fates",
+            "desc" : "You can cast Bane once using a warlock spell slot. You can't do so again until you finish a long rest."
         },
         {
-            "name": "Thirsting Blade",
-            "desc": "You can attack with your pact weapon twice, instead of once, whenever you take the Attack action on your turn.",
-            "prerequisite": {
-                "level": 5,
-                "feature": "Pact of the Blade"
-            },
-            "id": 1933
+            "name" : "Thirsting Blade",
+            "desc" : "You can attack with your pact weapon twice, instead of once, whenever you take the Attack action on your turn.",
+            "prerequisite" : {
+                "level" : 5,
+                "feature" : "Pact of the Blade"
+            }
         },
         {
-            "name": "Tomb of Levistus",
-            "desc": "As a reaction when you take damage, you can entomb yourself in ice, which melts away at the end of your next turn. You gain 10 temporary hit points per warlock level, which take as much of the triggering damage as possible. Immediately after you take the damage, you gain vulnerability to fire damage, your speed is reduced to 0, and you are incapacitated. These effects, including any remaining temporary hit points, all end when the ice melts.\n\nOnce you use this invocation, you can\u2019t use it again until you finish a short or long rest.",
-            "prerequisite": {
-                "level": 5
-            },
-            "id": 1934
+            "name" : "Tomb of Levistus",
+            "desc" : "As a reaction when you take damage, you can entomb yourself in ice, which melts away at the end of your next turn. You gain 10 temporary hit points per warlock level, which take as much of the triggering damage as possible. Immediately after you take the damage, you gain vulnerability to fire damage, your speed is reduced to 0, and you are incapacitated. These effects, including any remaining temporary hit points, all end when the ice melts.\n\nOnce you use this invocation, you can’t use it again until you finish a short or long rest.",
+            "prerequisite" : {
+                "level" : 5
+            }
         },
         {
             "name": "Trickster's Escape",
-            "desc": "You can cast Freedom of Movement once on yourself without expending a spell slot. You regain the ability to do so when you finish a long rest.",
-            "prerequisite": {
-                "level": 7
-            },
-            "id": 1935
+            "desc" : "You can cast Freedom of Movement once on yourself without expending a spell slot. You regain the ability to do so when you finish a long rest.",
+            "prerequisite" : {
+                "level" : 7
+            }
         },
         {
-            "name": "Undying Servitude",
-            "desc": "You can cast Animate Dead without using a spell slot. Once you do so, you can't cast it in this way again until you finish a long rest.",
-            "prerequisite": {
-                "level": 5
-            },
-            "id": 1936
+            "name" : "Undying Servitude",
+            "desc" : "You can cast Animate Dead without using a spell slot. Once you do so, you can't cast it in this way again until you finish a long rest.",
+            "prerequisite" : {
+                "level" : 5
+            }
         },
         {
-            "name": "Visions of Distant Realms",
-            "desc": "You can cast Arcane Eye at will, without expending a spell slot.",
-            "prerequisite": {
-                "level": 15
-            },
-            "id": 1937
+            "name" : "Visions of Distant Realms",
+            "desc" : "You can cast Arcane Eye at will, without expending a spell slot.",
+            "prerequisite" : {
+                "level" : 15
+            }
         },
         {
-            "name": "Voice of the Chain Master",
-            "desc": "You can communicate telepathically with your familiar and perceive through your familiar's senses as long as you are on the same plane of existence. Additionally, while perceiving through your familiar's senses, you can also speak through your familiar in your own voice, even if your familiar is normally incapable of speech.",
-            "prerequisite": {
-                "feature": "Pact of the Chain"
-            },
-            "id": 1938
+            "name" : "Voice of the Chain Master",
+            "desc" : "You can communicate telepathically with your familiar and perceive through your familiar's senses as long as you are on the same plane of existence. Additionally, while perceiving through your familiar's senses, you can also speak through your familiar in your own voice, even if your familiar is normally incapable of speech.",
+            "prerequisite" : {
+                "feature" : "Pact of the Chain"
+            }
         },
         {
-            "name": "Whispers of the Grave",
-            "desc": "You can cast Speak with Dead at will, without expending a spell slot.",
-            "prerequisite": {
-                "level": 9
-            },
-            "id": 1939
+            "name" : "Whispers of the Grave",
+            "desc" : "You can cast Speak with Dead at will, without expending a spell slot.",
+            "prerequisite" : {
+                "level" : 9
+            }
         },
         {
-            "name": "Witch Sight",
-            "desc": "You can see the true form of any shapechanger or creature concealed by illusion or transmutation magic while the creature is within 30 feet of you and within line of sight.",
-            "prerequisite": {
-                "level": 15
-            },
-            "id": 1940
+            "name" : "Witch Sight",
+            "desc" : "You can see the true form of any shapechanger or creature concealed by illusion or transmutation magic while the creature is within 30 feet of you and within line of sight.",
+            "prerequisite" : {
+                "level" : 15
+            }
         }
     ]
 }

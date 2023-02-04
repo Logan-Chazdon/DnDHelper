@@ -253,7 +253,7 @@ class LocalDataSourceImpl @Inject constructor(
             }
             featureDao.insertIndexRef(
                 IndexRef(
-                    index=  "Metamagics",
+                    index = "Metamagics",
                     ids = ids
                 )
             )
@@ -286,7 +286,7 @@ class LocalDataSourceImpl @Inject constructor(
             featureDao.insertIndexRef(
                 IndexRef(
                     index = "Maneuvers",
-                    ids= maneuvers.map { it.featureId }
+                    ids = maneuvers.map { it.featureId }
                 )
             )
         }
@@ -322,7 +322,7 @@ class LocalDataSourceImpl @Inject constructor(
             featureDao.insertIndexRef(
                 IndexRef(
                     index = "Invocations",
-                    ids=  invocations.map { it.featureId }
+                    ids = invocations.map { it.featureId }
                 )
             )
         }
@@ -980,6 +980,59 @@ class LocalDataSourceImpl @Inject constructor(
             abilitiesToSkills[baseStat] = skills
         }
         _abilitiesToSkills.value = abilitiesToSkills
+
+        scope.launch {
+            val expertiseIds = mutableListOf<Int>()
+            val skillIds = mutableListOf<Int>()
+            var id = 0
+            abilitiesToSkills.forEach {
+                it.value.forEach { skill ->
+                    //Don't add saving throws
+                    if (!skill.lowercase().contains("throw")) {
+                        id++
+                        featureDao.insertFeature(
+                            Feature(
+                                name = skill,
+                                description = "",
+                                grantedAtLevel = 0,
+                                prerequisite = Prerequisite(
+                                    proficiency = Proficiency(
+                                        name = skill
+                                    )
+                                ),
+                                featureId = id,
+                            )
+                        )
+                        expertiseIds.add(id)
+
+                        id++
+                        featureDao.insertFeature(
+                            Feature(
+                                name = skill,
+                                proficiencies = listOf(Proficiency(name = skill)),
+                                description = "",
+                                featureId = id
+                            )
+                        )
+                        skillIds.add(id)
+                    }
+                }
+
+                featureDao.insertIndexRef(
+                    IndexRef(
+                        index = "Expertise",
+                        expertiseIds
+                    )
+                )
+
+                featureDao.insertIndexRef(
+                    IndexRef(
+                        index = "Skills",
+                        skillIds
+                    )
+                )
+            }
+        }
     }
 
 
@@ -2090,39 +2143,20 @@ class LocalDataSourceImpl @Inject constructor(
                             }
                         }
                         "proficiencies" -> {
-                            _abilitiesToSkills.value!!.forEach {
-                                it.value.forEach { skill ->
-                                    //Don't add saving throws
-                                    if (!skill.lowercase().contains("throw")) {
-
-                                        Feature(
-                                            name = skill,
-                                            description = "",
-                                            grantedAtLevel = 0,
-                                            prerequisite = Prerequisite(
-                                                proficiency = Proficiency(
-                                                    name = skill
-                                                )
-                                            )
-                                        )
-                                    }
-                                }
-                            }
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Expertise"
+                                )
+                            )
                         }
                         "skills" -> {
-                            _abilitiesToSkills.value!!.values.forEach {
-                                it.forEach { item ->
-                                    if (!item.contains("Saving")) {
-
-                                        Feature(
-                                            name = item,
-                                            proficiencies = listOf(Proficiency(name = item)),
-                                            description = ""
-                                        )
-
-                                    }
-                                }
-                            }
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Skills"
+                                )
+                            )
                         }
                         "all_spells" -> {
                             val bound = try {
@@ -2134,7 +2168,9 @@ class LocalDataSourceImpl @Inject constructor(
                                 FeatureChoiceIndexCrossRef(
                                     index = "Spells",
                                     choiceId = parentChoiceId!!,
-                                    levels = allSpellLevels.mapNotNull { if(it.first < (bound ?: 0)) it.first else null },
+                                    levels = allSpellLevels.mapNotNull {
+                                        if (it.first < (bound ?: 0)) it.first else null
+                                    },
                                 )
                             )
                         }
@@ -2251,7 +2287,7 @@ class LocalDataSourceImpl @Inject constructor(
                         scope.launch {
                             val choiceId = try {
                                 choiceJson.getInt("choice_id")
-                            } catch(e: JSONException) {
+                            } catch (e: JSONException) {
                                 null
                             }
 

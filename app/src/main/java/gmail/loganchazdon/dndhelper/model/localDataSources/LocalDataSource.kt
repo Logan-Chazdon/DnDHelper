@@ -1163,7 +1163,7 @@ class LocalDataSourceImpl @Inject constructor(
         val dataAsString =
             context.resources.openRawResource(R.raw.languages).bufferedReader().readText()
         val languages = mutableListOf<Language>()
-
+        val ids= mutableListOf<Int>()
         val rootJson = JSONObject(dataAsString)
         val languagesJson = rootJson.getJSONArray("languages")
 
@@ -1172,7 +1172,28 @@ class LocalDataSourceImpl @Inject constructor(
             languages.add(
                 Language(languageJson.getString("name"))
             )
+            ids.add(languageJson.getInt("id"))
             _languages.value = languages
+        }
+
+        scope.launch {
+            languages.forEachIndexed { index, it ->
+                featureDao.insertFeature(
+                    Feature(
+                        name = it.name!!,
+                        description = "",
+                        featureId = ids[index],
+                        languages = listOf(it)
+                    )
+                )
+
+                featureDao.insertIndexRef(
+                    IndexRef(
+                        index ="Languages",
+                        ids= ids
+                    )
+                )
+            }
         }
     }
 
@@ -2195,15 +2216,12 @@ class LocalDataSourceImpl @Inject constructor(
                             }
                         }
                         "all_languages" -> {
-                            _languages.value!!.forEach {
-
-                                Feature(
-                                    name = it.name!!,
-                                    languages = listOf(it),
-                                    description = "You can speak read and write ${it.name}."
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Languages"
                                 )
-
-                            }
+                            )
                         }
                         "artisans_tools" -> {
                             artisansToolIndexes.forEach {

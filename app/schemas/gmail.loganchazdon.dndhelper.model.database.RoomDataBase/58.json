@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "2ff611b4a2cf705ac6b18b18cd3336d4",
+    "identityHash": "d8a38ef8de429b4fa15d87802fefa4e6",
     "entities": [
       {
         "tableName": "characters",
@@ -1831,7 +1831,7 @@
       },
       {
         "tableName": "FeatureChoiceIndexCrossRef",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`choiceId` INTEGER NOT NULL, `index` TEXT NOT NULL, PRIMARY KEY(`choiceId`, `index`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`choiceId` INTEGER NOT NULL, `index` TEXT NOT NULL, `levels` TEXT, `classes` TEXT, `schools` TEXT, PRIMARY KEY(`choiceId`, `index`))",
         "fields": [
           {
             "fieldPath": "choiceId",
@@ -1844,6 +1844,24 @@
             "columnName": "index",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "levels",
+            "columnName": "levels",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "classes",
+            "columnName": "classes",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "schools",
+            "columnName": "schools",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -1860,7 +1878,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2ff611b4a2cf705ac6b18b18cd3336d4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd8a38ef8de429b4fa15d87802fefa4e6')"
     ]
   }
 }

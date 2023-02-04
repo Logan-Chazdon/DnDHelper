@@ -263,7 +263,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun stringListToStoredString(myObjects: List<String>): String? {
+    fun stringListToStoredString(myObjects: List<String>?): String? {
         return gson.toJson(myObjects)
     }
 
@@ -528,7 +528,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun mutableIntListToStoredString(myObjects: MutableList<Int>): String? {
+    fun mutableIntListToStoredString(myObjects: MutableList<Int>?): String? {
         return gson.toJson(myObjects)
     }
 

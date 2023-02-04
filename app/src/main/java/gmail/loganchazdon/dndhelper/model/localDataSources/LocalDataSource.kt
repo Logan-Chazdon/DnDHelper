@@ -1022,7 +1022,7 @@ class LocalDataSourceImpl @Inject constructor(
     private fun updateSpells() {
         val dataAsString =
             context.resources.openRawResource(R.raw.spells).bufferedReader().readText()
-
+        val ids = mutableListOf<Int>()
         val rootJson = JSONObject(dataAsString)
         val spellsJson = rootJson.getJSONArray("spells")
 
@@ -1047,9 +1047,9 @@ class LocalDataSourceImpl @Inject constructor(
             } catch (e: JSONException) {
                 false
             }
-
+            val id = spellJson.getInt("id")
+            ids.add(id)
             scope.launch {
-                val id = spellJson.getInt("id")
                 spellDao.insertSpell(
                     Spell(
                         name = name,
@@ -1070,6 +1070,21 @@ class LocalDataSourceImpl @Inject constructor(
                         this
                     })
 
+                featureDao.insertFeature(
+                    FeatureEntity(
+                        featureId = id,
+                        name = name,
+                        description = desc
+                    )
+                )
+
+                featureDao.insertFeatureSpellCrossRef(
+                    FeatureSpellCrossRef(
+                        id,
+                        id
+                    )
+                )
+
                 classes.forEach {
                     classDao.insertClassSpellCrossRef(
                         ClassSpellCrossRef(
@@ -1079,6 +1094,15 @@ class LocalDataSourceImpl @Inject constructor(
                     )
                 }
             }
+        }
+
+        scope.launch {
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Spells",
+                    ids = ids
+                )
+            )
         }
     }
 
@@ -2106,17 +2130,13 @@ class LocalDataSourceImpl @Inject constructor(
                             } catch (e: JSONException) {
                                 null
                             }
-                            /*_spells.value?.forEach { spell ->
-                                if (spell.level <= bound ?: 10) {
-
-                                    Feature(
-                                        name = spell.name,
-                                        spells = listOf(spell),
-                                        description = "",
-                                    )
-
-                                }
-                            } TODO */
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    index = "Spells",
+                                    choiceId = parentChoiceId!!,
+                                    levels = allSpellLevels.mapNotNull { if(it.first < (bound ?: 0)) it.first else null },
+                                )
+                            )
                         }
                         "maneuvers" -> {
                             scope.launch {
@@ -2198,45 +2218,16 @@ class LocalDataSourceImpl @Inject constructor(
                                 null
                             }
 
-                            val passes = fun(spell: Spell): Boolean {
-                                levels?.let {
-                                    if (!it.contains(spell.level)) {
-                                        return false
-                                    }
-                                }
 
-                                if (classes != null) {
-                                    classes.forEach {
-                                        if (spell.classes.contains(it)) {
-                                            return true
-                                        }
-                                    }
-                                    return false
-                                }
-
-                                if (schools != null) {
-                                    schools.forEach {
-                                        if (spell.school == it) {
-                                            return true
-                                        }
-                                    }
-                                    return false
-                                }
-
-                                return true
-                            }
-
-                            /*_spells.value!!.filter {
-                                passes(it)
-                            }.forEach { spell ->
-
-                                Feature(
-                                    name = spell.name,
-                                    spells = listOf(spell),
-                                    description = "",
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    index = "Spells",
+                                    choiceId = parentChoiceId!!,
+                                    levels = levels,
+                                    classes = classes,
+                                    schools = schools
                                 )
-
-                            } TODO */
+                            )
                         }
                         in _fightingStyles.value.let { styles ->
                             val result = mutableListOf<String>()

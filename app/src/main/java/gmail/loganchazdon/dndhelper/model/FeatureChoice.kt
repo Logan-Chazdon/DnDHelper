@@ -13,5 +13,6 @@ class FeatureChoice(
         options: List<Feature>?
     ) : this(choose = entity.choose, options = options?.toMutableList()){
         this.chosen = chosen
+        this.id = entity.id
     }
 }

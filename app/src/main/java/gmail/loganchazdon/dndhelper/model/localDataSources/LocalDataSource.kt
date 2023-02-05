@@ -397,27 +397,16 @@ class LocalDataSourceImpl @Inject constructor(
         _infusions.value = infusions
         val ids = mutableListOf<Int>()
         scope.launch {
-            infusions.forEach {
-                val choices = if (it.options != null && it.choose != 0) {
-                    listOf(
-                        FeatureChoice(
-                            options = it.options as MutableList<Feature>?,
-                            choose = Choose(static = it.choose)
-                        )
-                    )
-                } else {
-                    null
-                }
-                ids.add(it.id)
+            infusions.forEach { infusion ->
+                ids.add(infusion.id)
                 featureDao.insertFeature(
                     Feature(
-                        maxTimesChosen = it.maxTimesChosen,
-                        grantedAtLevel = it.grantedAtLevel,
-                        name = it.name,
-                        description = it.desc,
-                        infusion = it,
-                        choices = choices,
-                        featureId = it.id
+                        maxTimesChosen = infusion.maxTimesChosen,
+                        grantedAtLevel = infusion.grantedAtLevel,
+                        name = infusion.name,
+                        description = infusion.desc,
+                        infusion = infusion,
+                        featureId = infusion.id
                     )
                 )
             }
@@ -451,14 +440,56 @@ class LocalDataSourceImpl @Inject constructor(
         } catch (e: JSONException) {
             null
         }
+        val  choose = try {
+            infusionJson.getInt("choose")
+        } catch (e: JSONException) {
+            0
+        }
+
+        val choice = if (options != null && choose != 0) {
+            FeatureChoiceEntity(
+                choose = Choose(static = choose)
+            ).run {
+                this.id = infusionJson.getInt("choice_id")
+                this
+            }
+        } else {
+            null
+        }
+
+        scope.launch {
+            choice?.let { entity ->
+                val subIds = mutableListOf<Int>()
+                options?.forEach {
+                    subIds.add(it.featureId)
+                    featureDao.insertFeature(it)
+                }
+                featureDao.insertIndexRef(
+                    IndexRef(
+                        index = "Replicate magic item",
+                        ids = subIds
+                    )
+                )
+
+                featureDao.insertFeatureChoice(entity)
+
+                featureDao.insertFeatureChoiceIndexCrossRef(
+                    FeatureChoiceIndexCrossRef(
+                        choiceId = entity.id,
+                        index = "Replicate magic item"
+                    )
+                )
+
+                featureDao.insertFeatureOptionsCrossRef(
+                    FeatureOptionsCrossRef(
+                        featureId = infusionJson.getInt("id"),
+                        id = entity.id
+                    )
+                )
+            }
+        }
 
         return Infusion(
-            choose = try {
-                infusionJson.getInt("choose")
-            } catch (e: JSONException) {
-                0
-            },
-            options = options,
             maxTimesChosen = try {
                 infusionJson.getInt("max_times_chosen")
             } catch (e: JSONException) {

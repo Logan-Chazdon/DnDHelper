@@ -122,6 +122,12 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
                 )
             )
         }
+         val temp = if(character.value != null) {
+             character.value!!
+         } else {
+             characterRepository.getCharacterById(id)
+         }
+         characterRepository.setHp(id, temp.maxHp.toString())
     }
 
     private fun storeFeatureChoices(features: List<Feature>, dropdownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>) {

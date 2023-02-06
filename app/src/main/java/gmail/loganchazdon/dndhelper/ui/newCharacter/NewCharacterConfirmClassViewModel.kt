@@ -229,6 +229,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
         }
         temp.addClass(clazz.value!!, takeGold = takeGold.value)
         characterRepository.insertSpellSlots(temp.spellSlots, id)
+        characterRepository.setHp(id, temp.maxHp.toString())
     }
 
 

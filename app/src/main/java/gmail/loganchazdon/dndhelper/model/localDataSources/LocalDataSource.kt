@@ -8,6 +8,7 @@ import dagger.Component
 import gmail.loganchazdon.dndhelper.AppModule
 import gmail.loganchazdon.dndhelper.R
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.Currency
 import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository.Companion.allSpellLevels
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.*
 import javax.inject.Inject
 
 @Suppress("PropertyName")
@@ -177,6 +179,8 @@ class LocalDataSourceImpl @Inject constructor(
         //Items
         generateItems()
 
+        generateItemProficiencies()
+
         //Abilities
         generateSkills()
 
@@ -212,6 +216,40 @@ class LocalDataSourceImpl @Inject constructor(
 
         //Classes
         updateClasses()
+    }
+
+    private fun generateItemProficiencies() {
+        val rootJson = JSONObject(context.resources.openRawResource(R.raw.item_proficiencies).bufferedReader().readText())
+
+        val types = listOf("instruments", "artisans_tools", "gaming_sets")
+        scope.launch {
+            val ids = mutableListOf<Int>()
+            types.forEach { type ->
+                val array = rootJson.getJSONArray(type)
+                for (i in 0 until array.length()) {
+                    val item = array.getJSONObject(i)
+                    val id = item.getInt("id")
+                    ids.add(id)
+                    val name = item.getString("name")
+                    featureDao.insertFeature(
+                        FeatureEntity(
+                            featureId = id,
+                            name = name,
+                            description = "",
+                            proficiencies = listOf(
+                                Proficiency(name)
+                            )
+                        )
+                    )
+                }
+                featureDao.insertIndexRef(
+                    IndexRef(
+                        ids = ids,
+                        index = type.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                    )
+                )
+            }
+        }
     }
 
     private fun generateFightingStyles() {
@@ -2255,15 +2293,12 @@ class LocalDataSourceImpl @Inject constructor(
                             )
                         }
                         "artisans_tools" -> {
-                            artisansToolIndexes.forEach {
-
-                                Feature(
-                                    name = it,
-                                    proficiencies = listOf(Proficiency(it)),
-                                    description = ""
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Artisans_tools"
                                 )
-
-                            }
+                            )
                         }
                         "spells" -> {
                             val levels = try {

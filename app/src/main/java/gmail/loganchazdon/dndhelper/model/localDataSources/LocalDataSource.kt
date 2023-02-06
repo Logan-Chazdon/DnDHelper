@@ -219,7 +219,9 @@ class LocalDataSourceImpl @Inject constructor(
     }
 
     private fun generateItemProficiencies() {
-        val rootJson = JSONObject(context.resources.openRawResource(R.raw.item_proficiencies).bufferedReader().readText())
+        val rootJson = JSONObject(
+            context.resources.openRawResource(R.raw.item_proficiencies).bufferedReader().readText()
+        )
 
         val types = listOf("instruments", "artisans_tools", "gaming_sets")
         scope.launch {
@@ -256,9 +258,17 @@ class LocalDataSourceImpl @Inject constructor(
         val dataAsString =
             context.resources.openRawResource(R.raw.fighting_styles).bufferedReader().readText()
         val fightingStylesJson = JSONObject(dataAsString).getJSONArray("fighting_styles")
-        //_fightingStyles.value = extractFeatures(
-        //    fightingStylesJson
-        //) TODO
+        val ids = extractFeatures(
+            fightingStylesJson
+        )
+        scope.launch {
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Fighting Styles",
+                    ids = ids
+                )
+            )
+        }
     }
 
     private fun generateMetaMagic() {
@@ -478,7 +488,7 @@ class LocalDataSourceImpl @Inject constructor(
         } catch (e: JSONException) {
             null
         }
-        val  choose = try {
+        val choose = try {
             infusionJson.getInt("choose")
         } catch (e: JSONException) {
             0
@@ -1232,7 +1242,7 @@ class LocalDataSourceImpl @Inject constructor(
         val dataAsString =
             context.resources.openRawResource(R.raw.languages).bufferedReader().readText()
         val languages = mutableListOf<Language>()
-        val ids= mutableListOf<Int>()
+        val ids = mutableListOf<Int>()
         val rootJson = JSONObject(dataAsString)
         val languagesJson = rootJson.getJSONArray("languages")
 
@@ -1258,8 +1268,8 @@ class LocalDataSourceImpl @Inject constructor(
 
                 featureDao.insertIndexRef(
                     IndexRef(
-                        index ="Languages",
-                        ids= ids
+                        index = "Languages",
+                        ids = ids
                     )
                 )
             }
@@ -2349,24 +2359,29 @@ class LocalDataSourceImpl @Inject constructor(
                                 )
                             )
                         }
-                        in _fightingStyles.value.let { styles ->
-                            val result = mutableListOf<String>()
-                            styles?.forEach {
-                                result.add(it.name)
-                            }
-                            result
-                        } -> {
-
-                            _fightingStyles.value!!.single {
-                                it.name == index
-                            }
-
+                        "fighting_styles" -> {
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    index = "Fighting_styles",
+                                    choiceId = parentChoiceId!!
+                                )
+                            )
                         }
-                        else -> throw JSONException("Invalid index")
+                        else -> {
+                            scope.launch {
+                                parentChoiceId?.let {
+                                    val id = featureDao.getFightingStyleIdByName(index)
+                                    featureDao.insertOptionsFeatureCrossRef(
+                                        OptionsFeatureCrossRef(
+                                            featureId = id,
+                                            choiceId = it
+                                        )
+                                    )
+                                }
+                            }
+                        }
                     }
-
                 } catch (e: JSONException) {
-
                     val extractAndAddChoice = fun(choiceJson: JSONObject) {
                         scope.launch {
                             val choiceId = try {

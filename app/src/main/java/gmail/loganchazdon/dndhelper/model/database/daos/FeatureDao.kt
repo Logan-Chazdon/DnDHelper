@@ -120,4 +120,13 @@ WHERE featureId IS :featureId
 
     @Delete
     abstract fun deleteFeatureChoiceIndexCrossRef(ref: FeatureChoiceIndexCrossRef)
+
+    @Query(
+        """
+SELECT features.featureId FROM features
+JOIN IndexRef ON IndexRef.`index` IS 'Fighting Styles' AND (',' || ids || ',' LIKE '%,' || features.featureId || ',%') 
+WHERE name LIKE :index
+        """
+    )
+    abstract fun getFightingStyleIdByName(index: String): Int
 }

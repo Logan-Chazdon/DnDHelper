@@ -29,4 +29,8 @@ class ProficiencyRepository @Inject constructor(
         }
         return null
     }
+
+    fun getAllSkills(): MutableLiveData<Map<String, List<String>>> {
+        return _skills
+    }
 }

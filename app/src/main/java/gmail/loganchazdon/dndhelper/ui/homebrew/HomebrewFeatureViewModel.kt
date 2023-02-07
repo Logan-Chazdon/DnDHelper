@@ -8,10 +8,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.Feature
-import gmail.loganchazdon.dndhelper.model.Infusion
-import gmail.loganchazdon.dndhelper.model.Language
-import gmail.loganchazdon.dndhelper.model.Spell
+import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
 import gmail.loganchazdon.dndhelper.model.repositories.ProficiencyRepository
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
@@ -36,7 +33,9 @@ class HomebrewFeatureViewModel @Inject constructor(
                 name = featureName.value,
                 description = featureDesc.value,
                 grantedAtLevel = featureLevel.value.toIntOrNull() ?: 1,
-                featureId = id
+                featureId = id,
+                expertises = expertises,
+                proficiencies = proficiencies
             )
             featureRepository.insertFeature(newFeature)
         }
@@ -61,7 +60,9 @@ class HomebrewFeatureViewModel @Inject constructor(
     val allInfusions = featureRepository.getAllInfusions()
     var id by Delegates.notNull<Int>()
     var feature: MediatorLiveData<Feature> = MediatorLiveData()
-
+    val allProficiencies = proficiencyRepository.getAllSkills()
+    val proficiencies = mutableStateListOf<Proficiency>()
+    val expertises = mutableStateListOf<Proficiency>()
     val baseAc = mutableStateOf("10")
     val dexMax = mutableStateOf("0")
     val wisMax = mutableStateOf("0")
@@ -78,7 +79,7 @@ class HomebrewFeatureViewModel @Inject constructor(
                 }
             }!!
 
-            feature.addSource(featureRepository.getLiveFeature(id)!!) {
+            feature.addSource(featureRepository.getLiveFeature(id)) {
                 //Set all viewModel data to match feature in database.
 
                 //General

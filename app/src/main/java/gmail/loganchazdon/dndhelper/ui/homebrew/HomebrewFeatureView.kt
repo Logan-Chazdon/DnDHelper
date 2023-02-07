@@ -9,10 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import gmail.loganchazdon.dndhelper.model.Proficiency
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 import gmail.loganchazdon.dndhelper.ui.newCharacter.AutoSave
 
@@ -281,17 +284,66 @@ fun HomebrewFeatureView(
                         title = "Grants proficiencies",
                         active = viewModel.grantsProficiencies
                     ) {
-
+                        ProficiencySelectionView(
+                            viewModel.proficiencies,
+                            viewModel.allProficiencies
+                        )
                     }
 
                     AttributeView(
                         title = "Grants expertise",
                         active = viewModel.grantsExpertise
                     ) {
-
+                        ProficiencySelectionView(
+                            viewModel.expertises,
+                            viewModel.allProficiencies
+                        )
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun ProficiencySelectionView(
+    chosenList: SnapshotStateList<Proficiency>,
+    fromList: MutableLiveData<Map<String, List<String>>>,
+) {
+    val expanded = remember {
+        mutableStateOf(false)
+    }
+    GenericSelectionView(
+        chosen = chosenList.let {
+            val result = mutableListOf<String>()
+            it.forEach { item ->
+                result.add(item.name.toString())
+            }
+            result
+        },
+        onDelete = {
+            chosenList.removeAt(it)
+        },
+        onExpanded = {expanded.value = !expanded.value}
+    )
+
+    GenericSelectionPopupView(
+        isExpanded = expanded,
+        onItemClick = {
+            val index = chosenList.indexOfFirst { prof -> prof.name == it }
+            if(index != -1 ) {
+                chosenList.removeAt(index)
+            } else {
+                chosenList.add(Proficiency(it))
+            }
+        },
+        items = fromList.observeAsState(mapOf()).value.flatMap { it.value },
+        detailsView = null,
+        getName = {
+            it
+        },
+        isSelected = { s ->
+            chosenList.indexOfFirst { prof -> prof.name == s } != -1
+        }
+    )
 }

@@ -42,6 +42,13 @@ WHERE FeatureOptionsCrossRef.featureId IS :featureId"""
     )
     abstract fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
 
+    @Query(
+        """SELECT * FROM FeatureChoiceEntity 
+JOIN FeatureOptionsCrossRef ON FeatureOptionsCrossRef.id IS FeatureChoiceEntity.id
+WHERE FeatureOptionsCrossRef.featureId IS :featureId"""
+    )
+    abstract fun getLiveFeatureChoices(featureId: Int): LiveData<List<FeatureChoiceEntity>>
+
     //This returns all features which belong in the options field of a featureChoice.
     @Query(
         """
@@ -71,7 +78,7 @@ AND (
    ))
 """
     )
-    protected abstract fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>
+    abstract fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -129,4 +136,10 @@ WHERE name LIKE :index
         """
     )
     abstract fun getFightingStyleIdByName(index: String): Int
+
+    @Query("SELECT IndexRef.'index' FROM IndexRef")
+    abstract fun returnGetAllIndexes(): LiveData<List<String>>
+
+    @Query("DELETE FROM FeatureChoiceIndexCrossRef WHERE choiceId = :id")
+    abstract fun clearFeatureChoiceIndexRefs(id: Int)
 }

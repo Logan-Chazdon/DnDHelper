@@ -6,7 +6,7 @@ import androidx.room.Entity
 data class FeatureChoiceIndexCrossRef(
     val choiceId: Int,
     val index: String,
-    val levels:  List<Int>? = null,
+    var levels:  List<Int>? = null,
     val classes:  List<String>? = null,
     val schools:  List<String>? = null,
 )

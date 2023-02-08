@@ -3,12 +3,16 @@ package gmail.loganchazdon.dndhelper.ui.homebrew
 import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureChoiceIndexCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.OptionsFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
 import gmail.loganchazdon.dndhelper.model.repositories.ProficiencyRepository
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
@@ -39,8 +43,72 @@ class HomebrewFeatureViewModel @Inject constructor(
             )
             featureRepository.insertFeature(newFeature)
         }
+
+        featureChoices.value?.forEach { entity ->
+            featureRepository.clearFeatureChoiceIndexRefs(entity.id)
+            selectedIndexes.filter {
+                it.choiceId == entity.id
+            }.forEach {
+                featureRepository.insertFeatureChoiceIndexCrossRef(it)
+            }
+        }
     }
 
+    fun createDefaultFeature(choiceId: Int): Int {
+        val featureId = featureRepository.createDefaultFeature()
+        featureRepository.insertOptionsFeature(
+            OptionsFeatureCrossRef(
+                choiceId = choiceId,
+                featureId = featureId
+            )
+        )
+        return featureId
+    }
+
+    fun createDefaultFeatureChoice() {
+        val choiceId = featureRepository.createDefaultFeatureChoice()
+        featureRepository.insertFeatureOptionsCrossRef(
+            FeatureOptionsCrossRef(
+                id = choiceId,
+                featureId = id
+            )
+        )
+    }
+
+    fun removeFeatureChoice(choiceId: Int) {
+        featureRepository.removeFeatureOptionsCrossRef(
+            FeatureOptionsCrossRef(
+                id = choiceId,
+                featureId = id
+            )
+        )
+    }
+
+    fun removeFeatureFromChoice(featureId: Int, choiceId: Int) {
+        featureRepository.removeOptionsFeatureCrossRef(
+            OptionsFeatureCrossRef(
+                featureId = featureId,
+                choiceId = choiceId
+            )
+        )
+    }
+
+    fun getOptions(id: Int): List<Feature> {
+        return featureRepository.getFeatureChoiceOptions(id)
+    }
+
+    fun updateChoice(id: Int, choose: Choose) {
+        val choice =  FeatureChoiceEntity(
+            choose= choose,
+        )
+        choice.id= id
+        featureRepository.insertFeatureChoice(
+            choice
+        )
+    }
+
+    val selectedIndexes: SnapshotStateList<FeatureChoiceIndexCrossRef> = mutableStateListOf()
+    val featureIndexes = featureRepository.getAllIndexes()
     val infusions = mutableStateListOf<Infusion>()
     val spells = mutableStateListOf<Spell>()
     val languages = mutableStateListOf<Language>()
@@ -68,6 +136,7 @@ class HomebrewFeatureViewModel @Inject constructor(
     val wisMax = mutableStateOf("0")
     val conMax = mutableStateOf("0")
     val acBonus = mutableStateOf("0")
+    val featureChoices = MediatorLiveData<List<FeatureChoiceEntity>>()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -79,9 +148,14 @@ class HomebrewFeatureViewModel @Inject constructor(
                 }
             }!!
 
-            feature.addSource(featureRepository.getLiveFeature(id)) {
-                //Set all viewModel data to match feature in database.
+            featureChoices.addSource( featureRepository.getFeatureChoiceEntities(id)) {
+                if(it.isNotEmpty()) {
+                    containsChoices.value = true
+                }
+                featureChoices.postValue(it)
+            }
 
+            feature.addSource(featureRepository.getLiveFeature(id)) {
                 //General
                 featureName.value = it.name
                 featureDesc.value = it.description
@@ -91,7 +165,9 @@ class HomebrewFeatureViewModel @Inject constructor(
                 grantsSpells.value = it.getSpellsGiven().isNotEmpty()
                 if(grantsSpells.value) {
                     //Fill out spells
-                    spells.addAll(it.spells!!)
+                    if(spells.isEmpty()) {
+                        spells.addAll(it.spells!!)
+                    }
                 }
 
                 grantsInfusions.value = it.grantsInfusions
@@ -103,25 +179,31 @@ class HomebrewFeatureViewModel @Inject constructor(
                 grantsExpertise.value = !it.expertises.isNullOrEmpty()
                 if(grantsExpertise.value) {
                     //Fill out expertises
-
+                    if(expertises.isEmpty()) {
+                        it.expertises?.let { it1 -> expertises.addAll(it1) }
+                    }
                 }
 
                 grantsProficiencies.value = !it.languages.isNullOrEmpty()
                 if(grantsProficiencies.value) {
                     //Fill out proficiencies
-
+                    if(proficiencies.isEmpty()) {
+                        it.proficiencies?.let { it1 -> proficiencies.addAll(it1) }
+                    }
                 }
 
                 grantsLanguages.value = !it.languages.isNullOrEmpty()
                 if(grantsLanguages.value) {
                     //Fill out languages
-
+                    if(languages.isEmpty()) {
+                        it.languages?.let { it1 -> languages.addAll(it1) }
+                    }
                 }
 
                 grantsAcBonus.value = it.acBonus != 0
                 if(grantsAcBonus.value) {
                     //Fill out ac bonus
-
+                    acBonus.value = it.acBonus.toString()
                 }
             }
         }

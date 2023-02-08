@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 open class FeatureChoiceEntity(
-    open val choose: Choose = Choose(0),
+    open var choose: Choose = Choose(0),
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

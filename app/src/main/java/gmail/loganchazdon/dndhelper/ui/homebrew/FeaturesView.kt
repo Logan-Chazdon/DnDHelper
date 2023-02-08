@@ -27,7 +27,7 @@ fun FeaturesView(features: List<Feature>, onDelete: (Int) -> Unit, onClick: (Int
         ) {
             features.forEach { feature ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().clickable { onClick(feature.featureId) },
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -35,7 +35,6 @@ fun FeaturesView(features: List<Feature>, onDelete: (Int) -> Unit, onClick: (Int
                         text = feature.name.ifBlank { "Unnamed feature" },
                         style = MaterialTheme.typography.h6,
                         modifier = Modifier
-                            .clickable { onClick(feature.featureId) }
                             .padding(start = 5.dp)
                     )
                     IconButton(

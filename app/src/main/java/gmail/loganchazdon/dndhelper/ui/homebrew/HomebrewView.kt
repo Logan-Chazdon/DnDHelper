@@ -135,7 +135,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                         )
                     } ?: listOf()) { race: Race ->
                         HomebrewItem(
-                            name = race.raceName,
+                            name = race.raceName.ifBlank { "Unnamed race" },
                             onClick = {
                                 navController.navigate("homebrewView/homebrewRaceView/${race.raceId}")
                             },
@@ -154,7 +154,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                         )
                     } ?: listOf()) { clazz: gmail.loganchazdon.dndhelper.model.ClassEntity ->
                         HomebrewItem(
-                            name = clazz.name,
+                            name = clazz.name.ifBlank { "Unnamed class" },
                             onClick = {
                                 navController.navigate("homebrewView/homebrewClassView/${clazz.id}")
                             },

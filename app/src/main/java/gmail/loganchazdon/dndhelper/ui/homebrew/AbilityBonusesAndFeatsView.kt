@@ -10,6 +10,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -125,6 +126,8 @@ fun AbilityBonusesAndFeatsView(
                                 onValueChange = { value ->
                                     stats[it] = value
                                 },
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                                singleLine = true
                             )
 
                             Text(text = it, style = MaterialTheme.typography.h6)

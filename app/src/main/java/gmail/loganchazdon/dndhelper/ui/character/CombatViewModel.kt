@@ -67,47 +67,41 @@ public class CombatViewModel @Inject constructor(
     }
 
     private fun getCharacterMinusSlot(slot: Int): Character {
-       /* var result : Character? = null
-        val newSlots = character!!.value!!.spellSlots
-        if(newSlots.getOrNull(slot - 1)?.currentAmount ?: 0 != 0) {
+        val newSlots = character.value!!.spellSlots
+        if((newSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
             newSlots[slot - 1].currentAmount -= 1
-            result =  character!!.value!!.copy(spellSlots = newSlots, id = character!!.value!!.id)
+           character.value!!.spellSlots = newSlots
         } else {
-            for ((_, clazz) in character!!.value!!.classes) {
+            for ((_, clazz) in character.value!!.classes) {
                 if(clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount != 0) {
                     clazz.pactMagic?.pactSlots!![clazz.level - 1].currentAmount -= 1
-                    result = character!!.value!!.copy(id = character!!.value!!.id)
                     break
                 }
             }
         }
-        return result!!*/
-        return Character()
+        return character.value!!
     }
 
     private fun getCharacterPlusSlot(slot: Int): Character {
-        /*var result : Character? = null
-        val newSlots = character!!.value!!.spellSlots
+        val newSlots = character.value!!.spellSlots
         if(
-            newSlots.getOrNull(slot - 1)?.currentAmount ?: 0
+            (newSlots.getOrNull(slot - 1)?.currentAmount ?: 0)
             != (newSlots.getOrNull(slot - 1)?.maxAmountType ?: "0").toInt()
         ) {
             newSlots[slot - 1].currentAmount += 1
-            result =  character!!.value!!.copy(spellSlots = newSlots, id = character!!.value!!.id)
+             character.value!!.spellSlots = newSlots
         } else {
-            for ((_, clazz) in character!!.value!!.classes) {
+            for ((_, clazz) in character.value!!.classes) {
                 if(
                     clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount !=
                     clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.maxAmountType?.toInt()
                 ) {
                     clazz.pactMagic?.pactSlots!![clazz.level - 1].currentAmount += 1
-                    result = character!!.value!!.copy(id = character!!.value!!.id)
                     break
                 }
             }
         }
-        return result!!*/
-        return Character()
+        return character.value!!
     }
 
     fun getSpellSlotsAndCantrips(): MutableList<Resource> {

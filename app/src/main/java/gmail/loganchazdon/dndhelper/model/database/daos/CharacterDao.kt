@@ -155,7 +155,7 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceChoice(choice: RaceChoiceEntity)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterClassSpellCrossRef(ref: CharacterClassSpellCrossRef)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -258,4 +258,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     @Query("DELETE FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND characterId IS :characterId")
     abstract fun removeCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
+    
+    @Query("SELECT COUNT(*) FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND characterId IS :characterId AND isPrepared IS '1'")
+    abstract fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int
 }

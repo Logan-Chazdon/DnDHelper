@@ -16,7 +16,7 @@ import javax.inject.Inject
 public class CombatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     val repository: CharacterRepository, application: Application
-): AndroidViewModel(application) {
+) : AndroidViewModel(application) {
     fun setTemp(temp: String) {
         repository.setTemp(character.value?.id, temp)
     }
@@ -45,8 +45,9 @@ public class CombatViewModel @Inject constructor(
         return allSpellLevels.let { levels ->
             val result = mutableListOf<Pair<Int, String>>()
             levels.forEach { level ->
-                val slot = character!!.value!!.getAllSpellSlots().findLast { it.name == level.second }
-                if(slot?.currentAmount ?: 0 != 0 && spell.level <= level.first) {
+                val slot =
+                    character!!.value!!.getAllSpellSlots().findLast { it.name == level.second }
+                if (slot?.currentAmount ?: 0 != 0 && spell.level <= level.first) {
                     result.add(level)
                 }
             }
@@ -68,12 +69,12 @@ public class CombatViewModel @Inject constructor(
 
     private fun getCharacterMinusSlot(slot: Int): Character {
         val newSlots = character.value!!.spellSlots
-        if((newSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
+        if ((newSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
             newSlots[slot - 1].currentAmount -= 1
-           character.value!!.spellSlots = newSlots
+            character.value!!.spellSlots = newSlots
         } else {
             for ((_, clazz) in character.value!!.classes) {
-                if(clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount != 0) {
+                if (clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount != 0) {
                     clazz.pactMagic?.pactSlots!![clazz.level - 1].currentAmount -= 1
                     break
                 }
@@ -84,15 +85,15 @@ public class CombatViewModel @Inject constructor(
 
     private fun getCharacterPlusSlot(slot: Int): Character {
         val newSlots = character.value!!.spellSlots
-        if(
+        if (
             (newSlots.getOrNull(slot - 1)?.currentAmount ?: 0)
             != (newSlots.getOrNull(slot - 1)?.maxAmountType ?: "0").toInt()
         ) {
             newSlots[slot - 1].currentAmount += 1
-             character.value!!.spellSlots = newSlots
+            character.value!!.spellSlots = newSlots
         } else {
             for ((_, clazz) in character.value!!.classes) {
-                if(
+                if (
                     clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount !=
                     clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.maxAmountType?.toInt()
                 ) {
@@ -123,9 +124,8 @@ public class CombatViewModel @Inject constructor(
     }
 
 
-
-    fun togglePreparation(spell: Spell) {
-        /*for (item in character?.value!!.classes.values) {
+    fun togglePreparation(spell: Spell, prepared: Boolean?) {
+        for (item in character.value!!.classes.values) {
             if (
             //This class prepares spells.
                 item.spellCasting?.prepareFrom != null &&
@@ -133,29 +133,40 @@ public class CombatViewModel @Inject constructor(
                 spell.classes.contains(item.name.lowercase())
             ) {
                 //If we have the spell prepared unprepared it.
-                if (item.spellCasting.prepared.contains(spell)) {
-                    item.spellCasting.prepared.remove(spell)
-                    break
-                }
-
-                //If this class can prepare more spells.
-                if (
-                    item.spellCasting.getMaxPrepared(
-                        item.level,
-                        character!!.value?.getStatMod(item.spellCasting.castingAbility) ?: 1
-                    ) > item.spellCasting.prepared.size
-                ) {
-                    item.spellCasting.prepared.add(spell)
-                    break
+                if (prepared == true) {
+                    repository.insertCharacterClassSpellCrossRef(
+                        spellId = spell.id,
+                        characterId =character.value!!.id,
+                        classId =item.id,
+                        prepared = false
+                    )
+                } else {
+                    //If this class can prepare more spells.
+                    val totalPrepared = repository.getNumOfPreparedSpells(
+                        classId = item.id,
+                        characterId = character.value!!.id
+                    )
+                    if (
+                        item.spellCasting.getMaxPrepared(
+                            item.level,
+                            character.value?.getStatMod(item.spellCasting.castingAbility) ?: 1
+                        ) > totalPrepared
+                    ) {
+                        //Prepare the spell
+                        repository.insertCharacterClassSpellCrossRef(
+                            spellId = spell.id,
+                            characterId =character.value!!.id,
+                            classId =item.id,
+                            prepared = true
+                        )
+                        break
+                    }
                 }
             }
         }
-        character.value?.let { repository.insertCharacter(it) }
-        */
-        //TODO refactor
     }
 
-    val character : MediatorLiveData<Character> = MediatorLiveData()
+    val character: MediatorLiveData<Character> = MediatorLiveData()
 
 
     init {

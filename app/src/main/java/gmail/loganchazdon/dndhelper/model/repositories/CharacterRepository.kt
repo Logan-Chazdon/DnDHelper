@@ -452,6 +452,11 @@ class CharacterRepository @Inject constructor(
         characterDao.removeCharacterClassSpellCrossRefs(classId, characterId)
     }
 
+    fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int {
+        return characterDao.getNumOfPreparedSpells(classId = classId, characterId = characterId)
+    }
+
+
     companion object {
         val statNames = listOf(
             "Strength",

@@ -35,7 +35,7 @@ fun SpellCastingView(
     cast: (Spell) -> Unit,
     useSlot: (Int) -> Unit,
     refundSlot: (Int) -> Unit,
-    togglePreparation: (Spell) -> Unit
+    togglePreparation: (Spell, Boolean?) -> Unit
 ) {
     //Add an empty resource to spell slots for every missing slot level.
     //This will cause the lazy list to render all spells of that level.
@@ -210,7 +210,7 @@ fun SpellCastingView(
                                                 Canvas(modifier = Modifier
                                                     .size(20.dp)
                                                     .clickable {
-                                                        togglePreparation(spell)
+                                                        togglePreparation(spell, prepared)
                                                     }) {
                                                     drawCircle(
                                                         color = if (isPrepared) {

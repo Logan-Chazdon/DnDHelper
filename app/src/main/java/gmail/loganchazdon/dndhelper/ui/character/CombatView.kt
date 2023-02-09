@@ -318,7 +318,11 @@ fun CombatView(viewModel: CombatViewModel) {
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                val allSpells: State<Map<Int, List<Pair<Boolean?, Spell>>>> = produceState(emptyMap(), character.value)  {
+                //This is used to force a recalculation of allSpells.
+                val allSpellsKey = remember {
+                    mutableStateOf(0)
+                }
+                val allSpells: State<Map<Int, List<Pair<Boolean?, Spell>>>> = produceState(emptyMap(), character.value, allSpellsKey.value)  {
                     this.launch(Dispatchers.IO) {
                         value = viewModel.getAllSpells()
                     }
@@ -345,9 +349,10 @@ fun CombatView(viewModel: CombatViewModel) {
                                         viewModel.useSlot(slot)
                                     }
                                 },
-                                togglePreparation = { spell ->
-                                    GlobalScope.launch {
-                                        viewModel.togglePreparation(spell)
+                                togglePreparation = { spell, prepared ->
+                                    scope.launch(Dispatchers.IO) {
+                                        viewModel.togglePreparation(spell, prepared)
+                                        allSpellsKey.value = allSpellsKey.value + 1
                                     }
                                 }
                             )

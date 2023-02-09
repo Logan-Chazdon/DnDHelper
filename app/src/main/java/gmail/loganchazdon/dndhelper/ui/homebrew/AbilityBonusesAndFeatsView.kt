@@ -215,7 +215,8 @@ fun AbilityBonusesAndFeatsView(
             ) {
                 Text(
                     text = "Ability bonuses and feats",
-                    style = MaterialTheme.typography.h6
+                    style = MaterialTheme.typography.h6,
+                    modifier = Modifier.padding(5.dp)
                 )
 
                 //TODO implement race feats

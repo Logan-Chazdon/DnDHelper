@@ -229,7 +229,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     abstract fun setTemp(id: Int, temp: Int)
 
     @Query("UPDATE characters SET currentHp =MIN(currentHp + :hp, :maxHp) WHERE id = :id")
-    abstract fun heal(id: Int, hp: Int, maxHp : Int)
+    abstract fun heal(id: Int, hp: Int, maxHp: Int)
 
     @Query("UPDATE characters SET currentHp =:hp WHERE id = :id")
     abstract fun setHp(id: Int, hp: Int)
@@ -258,7 +258,25 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     @Query("DELETE FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND characterId IS :characterId")
     abstract fun removeCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
-    
+
     @Query("SELECT COUNT(*) FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND characterId IS :characterId AND isPrepared IS '1'")
     abstract fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int
+
+    @Query("UPDATE characters SET name = :it WHERE id IS :id")
+    abstract fun changeName(it: String, id: Int)
+
+    @Query("UPDATE characters SET personalityTraits = :it WHERE id IS :id")
+    abstract fun setPersonalityTraits(it: String, id: Int)
+
+    @Query("UPDATE characters SET ideals = :it WHERE id IS :id")
+    abstract fun setIdeals(it: String, id: Int)
+
+    @Query("UPDATE characters SET bonds = :it WHERE id IS :id")
+    abstract fun setBonds(it: String, id: Int)
+
+    @Query("UPDATE characters SET flaws = :it WHERE id IS :id")
+    abstract fun setFlaws(it: String, id: Int)
+
+    @Query("UPDATE characters SET notes = :it WHERE id IS :id")
+    abstract fun setNotes(it: String, id: Int)
 }

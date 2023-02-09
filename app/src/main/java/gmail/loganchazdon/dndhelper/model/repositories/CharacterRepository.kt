@@ -456,6 +456,30 @@ class CharacterRepository @Inject constructor(
         return characterDao.getNumOfPreparedSpells(classId = classId, characterId = characterId)
     }
 
+    fun changeName(it: String, id: Int) {
+        characterDao.changeName(it, id)
+    }
+
+    fun setPersonalityTraits(it: String, id: Int) {
+        characterDao.setPersonalityTraits(it, id)
+    }
+
+    fun setIdeals(it: String, id: Int) {
+        characterDao.setIdeals(it, id)
+    }
+
+    fun setBonds(it: String, id: Int) {
+        characterDao.setBonds(it, id)
+    }
+
+    fun setFlaws(it: String, id: Int) {
+        characterDao.setFlaws(it, id)
+    }
+
+    fun setNotes(it: String, id: Int) {
+        characterDao.setNotes(it, id)
+    }
+
 
     companion object {
         val statNames = listOf(

@@ -69,10 +69,8 @@ class CharacterMainViewModel @Inject constructor(
 
 
     fun longRest() {
-        /*val newChar = character.value!!.copy()
-        newChar.id = character.value!!.id
-        newChar.longRest()
-        repository.insertCharacter(newChar)*/
+        character.value!!.longRest()
+        repository.insertCharacter(character.value!!)
     }
 
     fun shortRest() {
@@ -80,51 +78,27 @@ class CharacterMainViewModel @Inject constructor(
     }
 
     private fun setName(it: String) {
-        /*val newChar = character.value?.copy(name = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }*/
+        repository.changeName(it, character.value!!.id)
     }
 
     private fun setPersonalityTraits(it: String) {
-        /*val newChar = character.value?.copy(personalityTraits = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }*/
+        repository.setPersonalityTraits(it, character.value!!.id)
     }
 
     private fun setIdeals(it: String) {
-      /*  val newChar = character.value?.copy(ideals = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }*/
+        repository.setIdeals(it, character.value!!.id)
     }
 
     private fun setBonds(it: String) {
-        /*val newChar = character.value?.copy(bonds = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }*/
+        repository.setBonds(it, character.value!!.id)
     }
 
     private fun setFlaws(it: String) {
-        /*val newChar = character.value?.copy(flaws = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }*/
+        repository.setFlaws(it, character.value!!.id)
     }
 
     private fun setNotes(it: String) {
-        /*val newChar = character.value?.copy(notes = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }*/
+        repository.setNotes(it, character.value!!.id)
     }
 
     fun infuse(targetItem: ItemInterface?, infusion: Infusion) {

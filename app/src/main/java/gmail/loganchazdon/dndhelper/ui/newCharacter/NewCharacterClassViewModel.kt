@@ -33,7 +33,7 @@ class NewCharacterClassViewModel @Inject constructor(
 
         if (id != -1) {
             characterRepository.getLiveCharacterById(
-                savedStateHandle.get<String>("characterId")!!.toInt(),
+                id,
                 character
             )
         }

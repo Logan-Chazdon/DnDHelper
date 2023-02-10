@@ -18,7 +18,9 @@ import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import gmail.loganchazdon.dndhelper.model.repositories.FeatRepository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
+import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getFeatsAt
+import gmail.loganchazdon.dndhelper.ui.utils.allNames
 import gmail.loganchazdon.dndhelper.ui.utils.toStringList
 import javax.inject.Inject
 
@@ -196,7 +198,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 0
             )
 
-            if(subclass != null) {
+            if (subclass != null) {
                 characterRepository.insertCharacterSubclassCrossRef(
                     CharacterSubclassCrossRef(
                         subClassId = subclass.subclassId,
@@ -221,8 +223,8 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 }
             }
         }
-        
-        val temp = if(character.value != null) {
+
+        val temp = if (character.value != null) {
             character.value!!
         } else {
             characterRepository.getCharacterById(id)
@@ -457,25 +459,25 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
         return profs
     }
 
-    fun applyAlreadySelectedChoices() {/*
-        val className = classes.value?.get(classIndex)?.name
-        character?.value?.classes
-            ?.getOrDefault(className, null)?.let { clazz ->
+    fun applyAlreadySelectedChoices() {
+        character.value?.classes
+            ?.getOrDefault(clazz.value?.name, null)?.let { clazz ->
                 //Apply level choice.
                 levels.value = TextFieldValue(clazz.level.toString())
 
                 //Apply feature choices.
-                clazz.levelPath.filter { it.grantedAtLevel <= clazz.level }
-                    .forEachIndexed { index, feature ->
+                clazz.levelPath?.filter { it.grantedAtLevel <= clazz.level }
+                    ?.forEachIndexed { index, feature ->
                         feature.choices?.forEachIndexed { choiceIndex, _ ->
-                            val featureToPass = classes.value?.get(classIndex)
-                                ?.levelPath?.filter { it.grantedAtLevel <= clazz.level }?.get(index)
-                                ?.copy()?.run {
-                                    this.choices?.forEachIndexed { choiceIndex, it ->
-                                        it.chosen = feature.choices[choiceIndex].chosen
+                            val featureToPass =
+                                clazz.levelPath?.filter { it.grantedAtLevel <= clazz.level }
+                                    ?.get(index)
+                                    ?.copy()?.run {
+                                        this.choices?.forEachIndexed { choiceIndex, it ->
+                                            it.chosen = feature.choices!![choiceIndex].chosen
+                                        }
+                                        this
                                     }
-                                    this
-                                }
 
                             featureToPass?.let {
                                 featureDropdownStates.getDropDownState(
@@ -513,7 +515,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
 
                         //Apply data from the choice.
                         val selectedNames = mutableListOf<String>()
-                        choice.chosen?.forEach {
+                        choice.chosen.forEach {
                             selectedNames.add(it.name.toString())
                         }
                         state.setSelected(selectedNames)
@@ -550,14 +552,14 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
 
                 //Apply spell class choices.
                 if (clazz.spellCasting?.type != 0.0) {
-                    clazz.spellCasting?.known?.let { classSpells.addAll(it) }
+                    clazz.spellCasting?.known?.let { pairs -> classSpells.addAll(pairs.map { it.first }) }
                 }
                 clazz.pactMagic?.let {
                     classSpells.addAll(it.known)
                 }
 
                 //Apply feat and asi choices.
-                clazz.featsGranted.forEachIndexed { i, it ->
+                clazz.featsGranted?.forEachIndexed { i, it ->
                     isFeat.add(i, true)
                     featNames.value?.let { featNames ->
                         featDropDownStates
@@ -602,13 +604,13 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                         .getDropDownState(
                             key = i,
                             maxSelections = 2,
-                            names = abilityNames,
+                            names = CharacterRepository.statNames as MutableList<String>,
                             choiceName = "Ability Score Improvement",
                             maxOfSameSelection = 2
                         )
                     val selectedList = mutableListOf<Pair<String, Int>>()
                     it.forEach { entry ->
-                        val key = abilityNames.first {
+                        val key = CharacterRepository.statNames.first {
                             it.substring(0..2) == entry.key
                         }
                         selectedList.add(
@@ -621,19 +623,18 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 //Apply subclass choices.
                 clazz.subclass?.let { subclass ->
                     //Set the subclass
-                    val state = getSubclassDropdownState(clazz)
+                    val state = getSubclassDropdownState()
                     state.setSelected(listOf(subclass.name))
 
                     //Apply subclass spell choices.
                     if (clazz.spellCasting?.type != 0.0) {
-                        clazz.spellCasting?.known?.let { subclassSpells.addAll(it) }
+                        clazz.spellCasting?.known?.let { pairs -> subclassSpells.addAll(pairs.map { it.first }) }
                     }
                     clazz.pactMagic?.let {
                         subclassSpells.addAll(it.known)
                     }
                 }
             }
-            */
     }
 
     fun toNumber(textFieldValue: MutableState<TextFieldValue>): Int {

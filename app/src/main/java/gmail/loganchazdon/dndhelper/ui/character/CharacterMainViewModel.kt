@@ -102,46 +102,50 @@ class CharacterMainViewModel @Inject constructor(
     }
 
     fun infuse(targetItem: ItemInterface?, infusion: Infusion) {
-        /*val newChar = activateInfusion(infusion, character.value!!.copy())
-        if(targetItem != null) {
-            newChar?.backpack?.applyInfusion(targetItem, infusion)
+        character.value?.let {
+            if(activateInfusion(infusion, it)) {
+                if (targetItem != null) {
+                    it.backpack.applyInfusion(targetItem, infusion)
+                }
+                repository.insertCharacter(it)
+            }
         }
-        newChar?.id = character.value!!.id
-        newChar?.let { character -> repository.insertCharacter(character) }*/
     }
 
     fun disableInfusion(infusion: Infusion) {
-        /*val newChar = deactivateInfusion(infusion, character.value!!.copy())
-        newChar?.backpack?.removeInfusion(infusion)
-        newChar?.id = character.value!!.id
-        newChar?.let { character -> repository.insertCharacter(character) }*/
+        character.value?.let {
+            if(deactivateInfusion(infusion, it)) {
+                it.backpack.removeInfusion(infusion)
+                repository.insertCharacter(it)
+            }
+        }
     }
 
-    //This function just returns the character passed in with the target infusion set to active or null.
-    private fun activateInfusion(infusion: Infusion, character: Character) : Character? {
-        //TODO check for other possible sources of infusions.
+    private fun activateInfusion(infusion: Infusion, character: Character) : Boolean {
         character.classes.values.forEachIndexed { classIndex, clazz  ->
             clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
-                    if(character.classes.values.elementAt(classIndex).levelPath!![index].activateInfusion(infusion))
-                        return character
+                    if(character.classes.values.elementAt(classIndex).levelPath!![index].activateInfusion(infusion)) {
+                        repository.activateInfusion(infusion.id, character.id)
+                        return true
+                    }
                 }
             }
         }
-        return null
+        return false
     }
 
-    //Attempt to find an active infusion equal to the one passed and disable it.
-    fun deactivateInfusion(infusion: Infusion, character: Character): Character? {
-        //TODO check for other possible sources of infusions.
+    private fun deactivateInfusion(infusion: Infusion, character: Character) : Boolean {
         character.classes.values.forEachIndexed { classIndex, clazz  ->
             clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
-                    if(character.classes.values.elementAt(classIndex).levelPath!![index].deactivateInfusion(infusion))
-                        return character
+                    if(character.classes.values.elementAt(classIndex).levelPath!![index].deactivateInfusion(infusion)) {
+                        repository.deactivateInfusion(infusion.id, character.id)
+                        return true
+                    }
                 }
             }
         }
-        return null
+        return false
     }
 }

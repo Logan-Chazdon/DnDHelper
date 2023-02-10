@@ -6,6 +6,7 @@ import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
+import gmail.loganchazdon.dndhelper.model.stateEntities.CharacterFeatureState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -257,6 +258,7 @@ class CharacterRepository @Inject constructor(
             feature.choices =
                 fillOutChoices(featureDao.getFeatureChoices(feature.featureId), characterId = characterId)
             feature.spells = featureDao.getFeatureSpells(feature.featureId)
+            feature.infusion?.active = characterDao.isFeatureActive(featureId = feature.featureId, characterId = characterId)
         }
     }
 
@@ -478,6 +480,26 @@ class CharacterRepository @Inject constructor(
 
     fun setNotes(it: String, id: Int) {
         characterDao.setNotes(it, id)
+    }
+
+    fun activateInfusion(infusionId: Int, characterId: Int) {
+        characterDao.insertCharacterFeatureState(
+            CharacterFeatureState(
+                featureId = infusionId,
+                characterId = characterId,
+                isActive = true
+            )
+        )
+    }
+
+    fun deactivateInfusion(infusionId: Int, characterId: Int) {
+        characterDao.insertCharacterFeatureState(
+            CharacterFeatureState(
+                featureId = infusionId,
+                characterId = characterId,
+                isActive = false
+            )
+        )
     }
 
 

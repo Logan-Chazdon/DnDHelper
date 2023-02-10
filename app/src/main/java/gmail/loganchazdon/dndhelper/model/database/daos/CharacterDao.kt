@@ -6,6 +6,7 @@ import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
+import gmail.loganchazdon.dndhelper.model.stateEntities.CharacterFeatureState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -279,4 +280,10 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     @Query("UPDATE characters SET notes = :it WHERE id IS :id")
     abstract fun setNotes(it: String, id: Int)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertCharacterFeatureState(characterFeatureState: CharacterFeatureState)
+
+    @Query("SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId")
+    abstract fun isFeatureActive(featureId: Int, characterId: Int): Boolean
 }

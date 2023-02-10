@@ -7,6 +7,7 @@ import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
+import gmail.loganchazdon.dndhelper.model.stateEntities.CharacterFeatureState
 
 
 @Database(
@@ -18,7 +19,8 @@ import gmail.loganchazdon.dndhelper.model.junctionEntities.*
         OptionsFeatureCrossRef::class, ClassFeatureCrossRef::class, CharacterSubclassCrossRef::class, CharacterBackgroundCrossRef::class, CharacterSubraceCrossRef::class,
         ClassFeatCrossRef::class, FeatureSpellCrossRef::class, BackgroundSpellCrossRef::class, SubclassSpellCrossRef::class, ClassSpellCrossRef::class,
         CharacterClassSpellCrossRef::class, SubclassSpellCastingSpellCrossRef::class, ClassSubclassCrossRef::class, SubclassFeatureCrossRef::class,
-        RaceChoiceEntity::class, FeatureChoiceChoiceEntity::class, SubraceChoiceEntity::class, BackgroundChoiceEntity::class, IndexRef::class, FeatureChoiceIndexCrossRef::class
+        RaceChoiceEntity::class, FeatureChoiceChoiceEntity::class, SubraceChoiceEntity::class, BackgroundChoiceEntity::class, IndexRef::class, FeatureChoiceIndexCrossRef::class,
+        CharacterFeatureState::class
     ],
     version = 58,
     exportSchema = true

@@ -19,10 +19,8 @@ public class ItemViewModel @Inject constructor(
     private val itemRepository: ItemRepository,
     application: Application
 ) : AndroidViewModel(application) {
-
     var character: MediatorLiveData<Character> = MediatorLiveData()
     var allItems: LiveData<List<ItemInterface>>? = null
-
 
     init {
         characterRepository.getLiveCharacterById(
@@ -33,29 +31,23 @@ public class ItemViewModel @Inject constructor(
             allItems = itemRepository.getAllItems()
 
         }
-
     }
-
 
     suspend fun addItem(item: ItemInterface) {
         character.value?.backpack?.addItem(
             item
         )
-        character.value.let { newCharacter ->
-            if (newCharacter != null) {
-                characterRepository.insertCharacter(newCharacter)
-            }
+        character.value?.let { newCharacter ->
+            characterRepository.insertCharacter(newCharacter)
         }
     }
 
     suspend fun buyItem(item: ItemInterface) {
-        /*val cost = item.cost
+        val cost = item.cost
         if (character.value?.backpack?.subtractCurrency(cost!!) == true) {
             addItem(item)
-            val newChar = character.value!!.copy(backpack = character.value!!.backpack)
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }*/
+            characterRepository.insertCharacter(character.value!!)
+        }
     }
 
     suspend fun addCurrency(name: String?, newAmount: Int) {
@@ -83,5 +75,4 @@ public class ItemViewModel @Inject constructor(
         character.value?.backpack?.deleteItemAtIndex(itemToDeleteIndex)
         characterRepository.insertCharacter(character.value!!)
     }
-
 }

@@ -1,4 +1,4 @@
-package gmail.loganchazdon.dndhelper.model.database
+package gmail.loganchazdon.dndhelper.model.database.migrations
 
 import android.annotation.SuppressLint
 import android.content.ContentValues

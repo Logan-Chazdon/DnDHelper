@@ -26,17 +26,17 @@ val MIGRATION_57_58 = object : Migration(57, 58) {
 
         //Create all new tables
         db.execSQL("CREATE TABLE IF NOT EXISTS `classes` (`name` TEXT NOT NULL, `hitDie` INTEGER NOT NULL, `subclassLevel` INTEGER NOT NULL, `proficiencyChoices` TEXT NOT NULL, `proficiencies` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `equipment` TEXT NOT NULL, `spellCasting` TEXT, `pactMagic` TEXT, `startingGoldD4s` INTEGER NOT NULL, `startingGoldMultiplier` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `isHomebrew` INTEGER NOT NULL)")
-        db.execSQL("CREATE TABLE IF NOT EXISTS `races` (`raceId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `raceName` TEXT NOT NULL, `groundSpeed` INTEGER NOT NULL, `abilityBonuses` TEXT, `alignment` TEXT, `age` TEXT NOT NULL, `size` TEXT NOT NULL, `sizeDesc` TEXT NOT NULL, `startingProficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `languageDesc` TEXT NOT NULL, `subraces` TEXT, `isHomebrew` INTEGER NOT NULL, `abcchoose` INTEGER, `abcfrom` TEXT, `abcmaxOccurrencesOfAbility` INTEGER, `abcchosenByString` TEXT)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `races` (`raceId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `raceName` TEXT NOT NULL, `groundSpeed` INTEGER NOT NULL, `abilityBonuses` TEXT, `alignment` TEXT, `age` TEXT NOT NULL, `size` TEXT NOT NULL, `sizeDesc` TEXT NOT NULL, `startingProficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `languageDesc` TEXT NOT NULL, `isHomebrew` INTEGER NOT NULL, `abcchoose` INTEGER, `abcfrom` TEXT, `abcmaxOccurrencesOfAbility` INTEGER, `abcchosenByString` TEXT)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `features` (`featureId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `index` TEXT, `grantedAtLevel` INTEGER NOT NULL, `maxTimesChosen` INTEGER, `prerequisite` TEXT, `activationRequirement` TEXT NOT NULL, `speedBoost` TEXT, `spells` TEXT, `infusion` TEXT, `maxActive` TEXT NOT NULL, `hpBonusPerLevel` INTEGER, `armorContingentAcBonus` INTEGER, `acBonus` INTEGER, `ac` TEXT, `proficiencies` TEXT, `expertises` TEXT, `languages` TEXT, `extraAttackAndDamageRollStat` TEXT, `rangedAttackBonus` INTEGER)")
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_features_featureId` ON `features` (`featureId`)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `FeatureChoiceEntity` (`choose` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
-        db.execSQL("CREATE TABLE IF NOT EXISTS `subclasses` (`subclass_name` TEXT NOT NULL, `spells` TEXT, `spellAreFree` INTEGER NOT NULL, `subclass_spell_casting` TEXT, `subclassId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
-        db.execSQL("CREATE TABLE IF NOT EXISTS `backgrounds` (`name` TEXT NOT NULL, `desc` TEXT NOT NULL, `spells` TEXT, `proficiencies` TEXT NOT NULL, `languages` TEXT NOT NULL, `equipment` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `isHomebrew` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `subclasses` (`subclass_name` TEXT NOT NULL, `spellAreFree` INTEGER NOT NULL, `subclass_spell_casting` TEXT, `subclassId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `backgrounds` (`name` TEXT NOT NULL, `desc` TEXT NOT NULL, `spells` TEXT, `proficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT, `languages` TEXT NOT NULL, `languageChoices` TEXT, `equipment` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `isHomebrew` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `subraces` (`name` TEXT NOT NULL, `abilityBonuses` TEXT, `abilityBonusChoice` TEXT, `startingProficiencies` TEXT, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `size` TEXT, `groundSpeed` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `feats` (`name` TEXT NOT NULL, `desc` TEXT NOT NULL, `prerequisite` TEXT, `abilityBonuses` TEXT, `abilityBonusChoice` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `featChoices` (`name` TEXT NOT NULL, `choose` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `FeatChoiceChoiceEntity` (`characterId` INTEGER NOT NULL, `choiceId` INTEGER NOT NULL, `featId` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `choiceId`, `featId`))")
-        db.execSQL("CREATE TABLE IF NOT EXISTS `ClassChoiceEntity` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `level` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `totalNumOnGoldDie` INTEGER, `abilityImprovementsGranted` TEXT NOT NULL, `tookGold` INTEGER NOT NULL, `proficiencyChoices` TEXT NOT NULL, PRIMARY KEY(`characterId`, `classId`))")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `ClassChoiceEntity` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `level` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `totalNumOnGoldDie` INTEGER, `abilityImprovementsGranted` TEXT NOT NULL, `tookGold` INTEGER NOT NULL, `proficiencyChoicesByString` TEXT NOT NULL, PRIMARY KEY(`characterId`, `classId`))")
         db.execSQL("CREATE TABLE IF NOT EXISTS `spells` (`name` TEXT NOT NULL, `level` INTEGER NOT NULL, `components` TEXT NOT NULL, `itemComponents` TEXT NOT NULL, `school` TEXT NOT NULL, `desc` TEXT NOT NULL, `range` TEXT NOT NULL, `area` TEXT NOT NULL, `castingTime` TEXT NOT NULL, `duration` TEXT NOT NULL, `classes` TEXT NOT NULL, `damage` TEXT NOT NULL, `isRitual` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `RaceFeatureCrossRef` (`featureId` INTEGER NOT NULL, `raceId` INTEGER NOT NULL, PRIMARY KEY(`raceId`, `featureId`))")
         db.execSQL("CREATE TABLE IF NOT EXISTS `CharacterRaceCrossRef` (`raceId` INTEGER NOT NULL, `id` INTEGER NOT NULL, PRIMARY KEY(`id`, `raceId`))")
@@ -65,6 +65,9 @@ val MIGRATION_57_58 = object : Migration(57, 58) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `FeatureChoiceChoiceEntity` (`featureId` INTEGER NOT NULL, `characterId` INTEGER NOT NULL, `choiceId` INTEGER NOT NULL, PRIMARY KEY(`featureId`, `characterId`, `choiceId`))")
         db.execSQL("CREATE TABLE IF NOT EXISTS `SubraceChoiceEntity` (`subraceId` INTEGER NOT NULL, `characterId` INTEGER NOT NULL, `languageChoice` TEXT NOT NULL, `abcchosenByString` TEXT NOT NULL, PRIMARY KEY(`subraceId`, `characterId`))")
         db.execSQL("CREATE TABLE IF NOT EXISTS `BackgroundChoiceEntity` (`characterId` INTEGER NOT NULL, `backgroundId` INTEGER NOT NULL, `languageChoices` TEXT NOT NULL, PRIMARY KEY(`characterId`, `backgroundId`))")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `IndexRef` (`index` TEXT NOT NULL, `ids` TEXT NOT NULL, PRIMARY KEY(`index`))")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `FeatureChoiceIndexCrossRef` (`choiceId` INTEGER NOT NULL, `index` TEXT NOT NULL, `levels` TEXT, `classes` TEXT, `schools` TEXT, PRIMARY KEY(`choiceId`, `index`))")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `CharacterFeatureState` (`characterId` INTEGER NOT NULL, `featureId` INTEGER NOT NULL, `isActive` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `featureId`))")
 
         //Migrate all characters
         val cursor = db.query("SELECT * FROM characters")
@@ -138,7 +141,7 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
             values.put("totalNumOnGoldDie", 10)
             values.put("abilityImprovementsGranted", "[]")
             values.put("tookGold", false)
-            values.put("proficiencyChoices", proficiencyChoices)
+            values.put("proficiencyChoicesByString", proficiencyChoices)
             db.insert("ClassChoiceEntity", OnConflictStrategy.IGNORE, values)
         }
     }
@@ -400,7 +403,6 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         values.put("languages", "[]")
         values.put("languageChoices", "[]")
         values.put("languageDesc", "")
-        values.put("subraces", "")
         values.put("isHomebrew", false)
         db.insert("races", OnConflictStrategy.IGNORE, values)
         val cursor =db.query("SELECT last_insert_rowid()")

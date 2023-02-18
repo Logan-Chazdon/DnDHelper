@@ -8,17 +8,67 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
+
 
 //In version 58 we extracted many of the elements of a character into separate tables to allow for homebrew and take
 //advantage of rooms relational abilities.
 val MIGRATION_57_58 = object : Migration(57, 58) {
     lateinit var db: SupportSQLiteDatabase
     val gson = Gson()
+    lateinit var classesJson: JSONArray
+    lateinit var backgroundsJson: JSONArray
+    lateinit var racesJson: JSONArray
+    lateinit var featsJson: JSONArray
+    lateinit var infusionsJson: JSONArray
+    lateinit var invocationsJson: JSONArray
+    lateinit var spellsJson: JSONArray
+    lateinit var maneuversJson: JSONArray
+    lateinit var fightingStylesJson: JSONArray
+    lateinit var metamagicJson: JSONArray
+    lateinit var languagesJson: JSONArray
+    lateinit var artisansToolsJson: JSONArray
+    val proficienciesJson = JSONArray()
+    val expertiseJson = JSONArray()
+
+    private fun getJsonArrayFromFile(filePath: String, arrayName: String): JSONArray {
+        val reader = this.javaClass.classLoader!!.getResourceAsStream(filePath).bufferedReader()
+        return JSONObject(reader.readText()).getJSONArray(arrayName)
+    }
+
+    private fun fillOutProficienciesAndExpertise() {
+        var i = 0
+        val abilitiesJson = getJsonArrayFromFile("res/raw/skills.json", "baseStats")
+        for (abilityIndex in 0 until abilitiesJson.length()) {
+            val statJson = abilitiesJson.getJSONObject(abilityIndex)
+            val skillsJson = statJson.getJSONArray("skills")
+            for (skillIndex in 0 until skillsJson.length()) {
+                val skillJson = skillsJson.getJSONObject(skillIndex)
+                val name  =skillJson.getString("name")
+                proficienciesJson.put("{name: ${name}, id : ${i++}}")
+                expertiseJson.put("{name: ${name}, id : ${i++}}")
+            }
+        }
+    }
 
     @SuppressLint("Range")
     override fun migrate(database: SupportSQLiteDatabase) {
         db = database
+
+        classesJson = getJsonArrayFromFile("res/raw/classes.json", "classes")
+        backgroundsJson = getJsonArrayFromFile("res/raw/backgrounds.json", "backgrounds")
+        racesJson = getJsonArrayFromFile("res/raw/races.json", "races")
+        featsJson = getJsonArrayFromFile("res/raw/feats.json", "feats")
+        infusionsJson = getJsonArrayFromFile("res/raw/infusions.json", "infusions")
+        invocationsJson = getJsonArrayFromFile("res/raw/invocations.json", "invocations")
+        spellsJson = getJsonArrayFromFile("res/raw/spells.json", "spells")
+        maneuversJson = getJsonArrayFromFile("res/raw/maneuvers.json", "maneuvers")
+        fightingStylesJson = getJsonArrayFromFile("res/raw/fighting_styles.json", "fighting_styles")
+        metamagicJson = getJsonArrayFromFile("res/raw/metamagic.json", "metamagic")
+        languagesJson = getJsonArrayFromFile("res/raw/languages.json", "languages")
+        artisansToolsJson = getJsonArrayFromFile("res/raw/item_proficiencies.json", "artisans_tools")
+        fillOutProficienciesAndExpertise()
 
         //Remove old version of unused tables
         db.execSQL("DROP TABLE classes")
@@ -96,21 +146,108 @@ val MIGRATION_57_58 = object : Migration(57, 58) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `characters` (`name` TEXT NOT NULL, `personalityTraits` TEXT NOT NULL, `ideals` TEXT NOT NULL, `bonds` TEXT NOT NULL, `flaws` TEXT NOT NULL, `notes` TEXT NOT NULL, `currentHp` INTEGER NOT NULL, `tempHp` INTEGER NOT NULL, `conditions` TEXT NOT NULL, `resistances` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `statGenerationMethodIndex` INTEGER NOT NULL, `baseStats` TEXT NOT NULL, `backpack` TEXT NOT NULL, `inspiration` INTEGER NOT NULL, `positiveDeathSaves` INTEGER NOT NULL, `negativeDeathSaves` INTEGER NOT NULL, `spellSlots` TEXT NOT NULL, `addedLanguages` TEXT NOT NULL, `addedProficiencies` TEXT NOT NULL)")
 
         //Copy all data into the new table
-        db.execSQL("""INSERT INTO characters 
+        db.execSQL(
+            """INSERT INTO characters 
             (name, personalityTraits, ideals, bonds, flaws, notes, currentHp, tempHp, conditions, resistances, statGenerationMethodIndex, id, baseStats, backpack, 
 inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages, addedProficiencies)
 SELECT name, personalityTraits, ideals, bonds, flaws, notes, currentHp, tempHp, conditions, resistances, statGenerationMethodIndex, id, baseStats, backpack, 
 inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages, addedProficiencies FROM characters_old
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         //Delete the old table.
         db.execSQL("DROP TABLE characters_old")
     }
 
+    private fun getIdByNameInList(name: String, list: JSONArray): Int? {
+        for (i in 0 until list.length()) {
+            val item = list.getJSONObject(i)
+            if (item.optString("name") == name) {
+                return item.getInt("id")
+            }
+        }
+        return null
+    }
+
+    private fun getClassId(name: String): Int {
+        for (i in 0 until classesJson.length()) {
+            val clazz = classesJson.getJSONObject(i)
+            if (clazz.getString("name") == name) {
+                return i + 1
+            }
+        }
+        throw Exception("Name not found")
+    }
+
+    private fun getBackgroundId(name: String): Int {
+        for (i in 0 until backgroundsJson.length()) {
+            val background = backgroundsJson.getJSONObject(i)
+            if (background.getString("name") == name) {
+                return i + 1
+            }
+        }
+        throw Exception("Name not found")
+    }
+
+    private fun getRaceId(name: String): Int {
+        for (i in 0 until racesJson.length()) {
+            val races = racesJson.getJSONObject(i)
+            if (races.getString("name") == name) {
+                return i + 1
+            }
+        }
+        throw Exception("Name not found")
+    }
+
+    private fun getSubraceId(name: String, raceId: Int): Int {
+        val subracesJson = racesJson.getJSONObject(raceId - 1).getJSONArray("subraces")
+
+        for (i in 0 until subracesJson.length()) {
+            val subrace = subracesJson.getJSONObject(i)
+            if (subrace.getString("name") == name) {
+                return subrace.getInt("id")
+            }
+        }
+        throw Exception("Name not found")
+    }
+
+    private fun getClassFeatureList(name: String): JSONArray {
+        for (i in 0 until classesJson.length()) {
+            val clazz = classesJson.getJSONObject(i)
+            if (clazz.getString("name") == name) {
+                return clazz.getJSONArray("features")
+            }
+        }
+        throw Exception("Name not found")
+    }
+
+    private fun getRaceFeatures(name: String): JSONArray {
+        for (i in 0 until racesJson.length()) {
+            val race = racesJson.getJSONObject(i)
+            if (race.getString("name") == name) {
+                return race.getJSONArray("features")
+            }
+        }
+        throw Exception("Name not found")
+    }
+
+    private fun migrateFeatureList(
+        featureList: JSONArray,
+        featureListWithIds: JSONArray,
+        characterId: Int
+    ) {
+        for (i in 0 until featureList.length()) {
+            val featureObj = featureList.getJSONObject(i)
+            val featureObjWithIds = featureListWithIds.getJSONObject(i)
+            val featureId = featureObjWithIds.getInt("id")
+            migrateFeature(characterId, featureObj, featureObjWithIds, featureId)
+        }
+    }
+
     private fun migrateClasses(id: Int, classes: JSONObject) {
         classes.keys().forEach { key ->
             val classObj = classes.getJSONObject(key)
-            val classId = reserveSpaceForClassAndGetId(classObj.getString("name"))
+            val classId = getClassId(classObj.getString("name"))
             //Insert CharacterClassCrossRef
             db.execSQL(
                 "INSERT INTO CharacterClassCrossRef (characterId, classId) VALUES ($id, $classId)"
@@ -124,12 +261,7 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
             }
 
             classObj.optJSONArray("levelPath")?.let { features ->
-                for(i in 0 until features.length()) {
-                    val featureObj = features.getJSONObject(i)
-                    val featureId = reserveSpaceForFeatureAndGetId(featureObj.getString("name"))
-                    migrateFeature(id, featureObj, featureId)
-                    db.execSQL("INSERT INTO ClassFeatureCrossRef (id, featureId) VALUES ($classId, $featureId)")
-                }
+                migrateFeatureList(features, getClassFeatureList(classObj.getString("name")), id)
             }
 
             //Insert a class choice object
@@ -147,26 +279,37 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
     }
 
     private fun migrateSubclass(id: Int, classId: Int, subclass: JSONObject) {
-        val subclassId = reserveSpaceForSubclassAndGetId(subclass.getString("name"))
+        val subclassId = getIdByNameInList(
+            subclass.getString("name"),
+            classesJson.getJSONObject(classId - 1).getJSONArray("subclasses")
+        )
 
         subclass.optJSONArray("features")?.let { features ->
-            for(i in 0 until features.length()) {
-                val featureObj = features.getJSONObject(i)
-                val featureId = reserveSpaceForFeatureAndGetId(featureObj.getString("name"))
-                migrateFeature(id, featureObj, featureId)
-                db.execSQL("INSERT INTO SubclassFeatureCrossRef (id, featureId) VALUES ($subclassId, $featureId)")
-            }
+            migrateFeatureList(
+                features,
+                getSubclassFeatures(classId, subclass.getString("name")),
+                id
+            )
         }
-
 
         db.execSQL(
             "INSERT INTO CharacterSubclassCrossRef (subClassId, characterId, classId) VALUES ($subclassId, $id, $classId)"
         )
     }
 
-    private fun migrateBackground(id: Int, background: JSONObject) {
-        val backgroundId = reserveSpaceForBackgroundAndGetId(background.getString("name"))
+    private fun getSubclassFeatures(classId: Int, name: String): JSONArray {
+        val subclasses = classesJson.getJSONObject(classId - 1).getJSONArray("subclasses")
+        for (i in 0 until subclasses.length()) {
+            val subclass = subclasses.getJSONObject(i)
+            if (subclass.getString("name") == name) {
+                return subclass.getJSONArray("features")
+            }
+        }
+        throw Exception("Subclass not found")
+    }
 
+    private fun migrateBackground(id: Int, background: JSONObject) {
+        val backgroundId = getBackgroundId(background.getString("name"))
 
         //Insert a CharacterBackgroundCrossRef
         db.execSQL(
@@ -213,7 +356,7 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         return gson.toJson(proficiencyChoices)
     }
 
-    private fun convertAbilityBonuses(json : JSONArray) : String {
+    private fun convertAbilityBonuses(json: JSONArray): String {
         val result = mutableListOf<String>()
         for (i in 0 until json.length()) {
             val obj = json.getJSONObject(i)
@@ -225,28 +368,24 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
     }
 
     private fun migrateRace(id: Int, race: JSONObject) {
-        val raceId = reserveSpaceForRaceAndGetId(race.getString("name"))
+        val raceId = getRaceId(race.getString("name"))
 
         race.optJSONObject("subrace")?.let {
-            migrateSubrace(id, it)
+            migrateSubrace(id, it, raceId)
         }
 
         race.optJSONArray("traits")?.let { features ->
-            for(i in 0 until features.length()) {
-                val featureObj = features.getJSONObject(i)
-                val featureId = reserveSpaceForFeatureAndGetId(featureObj.getString("name"))
-                migrateFeature(id, featureObj, featureId)
-                db.execSQL("INSERT INTO RaceFeatureCrossRef (id, featureId) VALUES ($raceId, $featureId)")
-            }
+            migrateFeatureList(features, getRaceFeatures(race.getString("name")), id)
         }
 
         //Insert a CharacterRaceCrossRef
         db.execSQL("INSERT INTO CharacterRaceCrossRef (id, raceId) VALUES ($id, $raceId)")
 
         //Extract the ability bonus choice and convert it so it can be stored in a race choice object.
-        val abilityBonusChoice = race.optJSONObject("abilityBonusChoice")?.getJSONArray("chosen")?.let {
-            convertAbilityBonuses(it)
-        } ?: "[]"
+        val abilityBonusChoice =
+            race.optJSONObject("abilityBonusChoice")?.getJSONArray("chosen")?.let {
+                convertAbilityBonuses(it)
+            } ?: "[]"
 
         //Extract the proficiency choices and convert them so they can be stored in a race choice object.
         val proficiencyChoices = convertProficiencyChoices(race.getJSONArray("proficiencyChoices"))
@@ -264,28 +403,22 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         db.insert("RaceChoiceEntity", OnConflictStrategy.IGNORE, values)
     }
 
-    private fun migrateSubrace(id: Int, subrace: JSONObject) {
-        val subraceId = reserveSpaceForSubraceAndGetId(subrace.getString("name"))
+    private fun migrateSubrace(id: Int, subrace: JSONObject, raceId: Int) {
+        val subraceId = getSubraceId(subrace.getString("name"), raceId)
 
         subrace.optJSONArray("featChoices")?.let {
-            for(i in 0 until it.length()) {
+            for (i in 0 until it.length()) {
                 val obj = it.getJSONObject(i)
-                val choiceId = reserveSpaceForFeatChoiceAndGetId(obj.getString("name"))
+                //This can be set to 1 because version 57 only contains one feat choice.
+                val choiceId = 1
                 db.execSQL("INSERT INTO SubraceFeatChoiceCrossRef (subraceId, featChoiceId) VALUES($subraceId, $choiceId)")
                 migrateFeatChoice(id, choiceId, obj)
             }
         }
 
-
         subrace.optJSONArray("traits")?.let { features ->
-            for(i in 0 until features.length()) {
-                val featureObj = features.getJSONObject(i)
-                val featureId = reserveSpaceForFeatureAndGetId(featureObj.getString("name"))
-                migrateFeature(id, featureObj, featureId)
-                db.execSQL("INSERT INTO SubraceFeatureCrossRef (id, featureId) VALUES ($subraceId, $featureId)")
-            }
+            migrateFeatureList(features, getSubraceFeatureList(subraceId, raceId), id)
         }
-
 
         db.execSQL("INSERT INTO CharacterSubraceCrossRef (subraceId, characterId) VALUES($id, $subraceId) ")
 
@@ -293,9 +426,10 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
             convertLanguageChoices(it)
         } ?: "[]"
 
-        val abilityBonusChoice = subrace.optJSONObject("abilityBonusChoice")?.getJSONArray("chosen")?.let {
-            convertAbilityBonuses(it)
-        } ?: "[]"
+        val abilityBonusChoice =
+            subrace.optJSONObject("abilityBonusChoice")?.getJSONArray("chosen")?.let {
+                convertAbilityBonuses(it)
+            } ?: "[]"
 
         val values = ContentValues()
         values.put("subraceId", subraceId)
@@ -306,162 +440,125 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         db.insert("SubraceChoiceEntity", OnConflictStrategy.IGNORE, values)
     }
 
-    private fun migrateFeatChoice(characterId : Int,choiceId : Int, obj: JSONObject) {
+    private fun getSubraceFeatureList(subraceId: Int, raceId: Int): JSONArray {
+        val subraces = racesJson.getJSONObject(raceId - 1).getJSONArray("subraces")
+        for (i in 0 until subraces.length()) {
+            val subrace = subraces.getJSONObject(i)
+            if (subrace.getInt("id") == subraceId) {
+                return subrace.optJSONArray("features") ?: JSONArray("[]")
+            }
+        }
+        throw Exception("Subrace not found")
+    }
+
+    private fun getFeatId(name: String): Int {
+        for (i in 0 until featsJson.length()) {
+            val feat = featsJson.getJSONObject(i)
+            if (feat.getString("name") == name) {
+                return i + 1
+            }
+        }
+        throw Exception("Feat not found")
+    }
+
+    private fun migrateFeatChoice(characterId: Int, choiceId: Int, obj: JSONObject) {
         obj.optJSONArray("chosen")?.let {
-            for(i in 0 until it.length()) {
+            for (i in 0 until it.length()) {
                 val feat = it.getJSONObject(i)
-                val featId = reserveSpaceForFeatAndGetId(feat.getString("name"))
+                val featId = getFeatId(feat.getString("name"))
+                val featureListWithIds =
+                    featsJson.getJSONObject(featId - 1).getJSONArray("features")
                 db.execSQL("INSERT INTO FeatChoiceChoiceEntity(characterId, choiceId, featId) VALUES($characterId, $choiceId, $featId)")
-                migrateFeat(characterId, feat)
+                migrateFeat(characterId, feat, featId, featureListWithIds)
             }
         }
     }
 
-    private fun migrateFeat(characterId: Int, feat: JSONObject) {
+    private fun getFeatFeatureId(name: String, featId: Int): Int {
+        val featOptions = featsJson.getJSONObject(featId - 1).getJSONArray("features")
+        for (i in 0 until featOptions.length()) {
+            val feature = featOptions.getJSONObject(i)
+            if (feature.getString("name") == name) {
+                return feature.getInt("id")
+            }
+        }
+        throw Exception("Feat not found")
+    }
+
+    private fun migrateFeat(
+        characterId: Int,
+        feat: JSONObject,
+        featId: Int,
+        featureListWithIds: JSONArray
+    ) {
         feat.optJSONArray("features")?.let {
-            for(i in 0 until it.length()) {
-                val obj =it.getJSONObject(i)
-                val featureId = reserveSpaceForFeatureAndGetId(obj.getString("name"))
-                migrateFeature(characterId, obj, featureId)
-                //db.execSQL("INSERT INTO ") FeatFeatureCrossRef
+            for (i in 0 until it.length()) {
+                val obj = it.getJSONObject(i)
+                val featureObjWithIds = featureListWithIds.getJSONObject(i)
+                val featureId = getFeatFeatureId(obj.getString("name"), featId)
+                migrateFeature(characterId, obj, featureObjWithIds, featureId)
             }
         }
     }
 
 
-    private fun migrateFeature(characterId: Int, feature: JSONObject, featureId: Int) {
+    private fun migrateFeature(
+        characterId: Int,
+        feature: JSONObject,
+        featureObjWithIds: JSONObject,
+        featureId: Int
+    ) {
         feature.optJSONArray("choices")?.let { choices ->
-            for(i in 0 until choices.length()) {
+            for (i in 0 until choices.length()) {
                 val obj = choices.getJSONObject(i)
-                val featureChoiceId = reserveSpaceForFeatureChoiceAndGetId()
-                migrateFeatureChoice(characterId, obj, featureChoiceId)
-                db.execSQL("INSERT INTO FeatureChoiceChoiceEntity (featureId, choiceId, characterId) VALUES($featureId, $featureChoiceId, $characterId)")
+                if (obj.optInt("static") != 0) {
+                    val objWithIds = featureObjWithIds.getJSONArray("from").getJSONObject(i)
+                    val featureChoiceId =
+                        objWithIds.optInt("choice_id") ?: featureObjWithIds.getInt("choice_id")
+                    migrateFeatureChoice(characterId, obj, objWithIds, featureChoiceId)
+                    db.execSQL("INSERT INTO FeatureChoiceChoiceEntity (featureId, choiceId, characterId) VALUES($featureId, $featureChoiceId, $characterId)")
+                }
             }
         }
     }
 
 
-    private fun migrateFeatureChoice(characterId: Int, choice: JSONObject, choiceId: Int) {
+    private fun getFeatureChoiceFromList(choice: JSONObject, choiceWithIds: JSONObject): JSONArray {
+        return try {
+            when (choiceWithIds.getString("index")) {
+                "infusions" -> infusionsJson
+                "invocations" -> invocationsJson
+                "proficiencies" -> expertiseJson
+                "skills" -> proficienciesJson
+                "all_spells" -> spellsJson
+                "spells" -> spellsJson
+                "maneuvers" -> maneuversJson
+                "metamagic" -> metamagicJson
+                "all_languages" -> languagesJson
+                "artisans_tools" -> artisansToolsJson
+                "fighting_styles" -> fightingStylesJson
+                else -> fightingStylesJson
+            }
+        } catch (e: JSONException) {
+            choice.getJSONArray("chosen")
+        }
+    }
+
+    private fun migrateFeatureChoice(
+        characterId: Int,
+        choice: JSONObject,
+        choiceWithIds: JSONObject,
+        choiceId: Int
+    ) {
         choice.optJSONArray("chosen")?.let { chosen ->
-            for(i in 0 until chosen.length()) {
+            val fromList = getFeatureChoiceFromList(choice, choiceWithIds)
+            for (i in 0 until chosen.length()) {
                 val obj = chosen.getJSONObject(i)
-                val featureId = reserveSpaceForFeatureAndGetId(obj.getString("name"))
-                migrateFeature(characterId, obj, featureId)
+                val objWithId = fromList.getJSONObject(i)
+                val featureId = objWithId.getInt("id")
+                migrateFeature(characterId, obj, objWithId, featureId)
                 db.execSQL("INSERT INTO FeatureChoiceChoiceEntity (featureId, characterId, choiceId) VALUES ($featureId, $characterId, $choiceId)")
             }
         }
-    }
-
-    private fun reserveSpaceForFeatChoiceAndGetId(name: String): Int {
-        val values = ContentValues()
-        values.put("name", name)
-        db.insert("FeatChoiceEntity", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
-    }
-
-    private fun reserveSpaceForSubraceAndGetId(name: String): Int {
-        val values = ContentValues()
-        values.put("name", name)
-        values.put("languages", "[]")
-        values.put("languageChoices", "[]")
-        db.insert("subraces", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
-    }
-
-
-    private fun reserveSpaceForClassAndGetId(name: String): Int {
-        val values = ContentValues()
-        values.put("name", name)
-        values.put("hitDie", 8)
-        values.put("proficiencyChoices", "[]")
-        values.put("proficiencies", "[]")
-        values.put("equipment", "[]")
-        values.put("equipmentChoices", "[]")
-        values.put("startingGoldD4s", 10)
-        values.put("startingGoldMultiplier", 10)
-        values.put("subclassLevel", 1)
-        values.put("isHomebrew", false)
-        db.insert("classes", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
-    }
-
-    private fun reserveSpaceForRaceAndGetId(name: String): Int {
-        val values = ContentValues()
-        values.put("raceName", name)
-        values.put("groundSpeed", 30)
-        values.put("age", "")
-        values.put("size", "")
-        values.put("sizeDesc", "")
-        values.put("startingProficiencies", "[]")
-        values.put("proficiencyChoices", "[]")
-        values.put("languages", "[]")
-        values.put("languageChoices", "[]")
-        values.put("languageDesc", "")
-        values.put("isHomebrew", false)
-        db.insert("races", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
-    }
-
-    private fun reserveSpaceForBackgroundAndGetId(name: String): Int {
-        val values = ContentValues()
-        values.put("name", name)
-        values.put("desc", "")
-        values.put("proficiencies", "[]")
-        values.put("languages", "[]")
-        values.put("equipment", "[]")
-        values.put("equipmentChoices", "[]")
-        values.put("isHomebrew", false)
-        db.insert("backgrounds", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
-    }
-
-    private fun reserveSpaceForSubclassAndGetId(name: String): Int {
-        val values = ContentValues()
-        values.put("name", name)
-        db.insert("subclasses", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
-    }
-
-    private fun reserveSpaceForFeatAndGetId(name: String): Int {
-        val values = ContentValues()
-        values.put("name", name)
-        db.insert("feats", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
-    }
-
-    private fun reserveSpaceForFeatureAndGetId(name: String): Int {
-        val values = ContentValues()
-        values.put("name", name)
-        values.put("description", "")
-        values.put("grantedAtLevel", 1)
-        values.put("activationRequirement", "[]")
-        values.put("maxActive", "[]")
-        db.insert("features", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
-    }
-
-    private fun reserveSpaceForFeatureChoiceAndGetId(): Int {
-        val values = ContentValues()
-        values.put("choose", "[]")
-        db.insert("FeatureChoiceEntity", OnConflictStrategy.IGNORE, values)
-        val cursor =db.query("SELECT last_insert_rowid()")
-        cursor.moveToFirst()
-        return cursor.getInt(0)
     }
 }

@@ -511,10 +511,12 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         feature.optJSONArray("choices")?.let { choices ->
             for (i in 0 until choices.length()) {
                 val obj = choices.getJSONObject(i)
-                if (obj.optInt("static") != 0) {
+                if (
+                    (obj.optJSONObject("choose")?.optInt("static", 1) ?: 0) != 0
+                ) {
                     val objWithIds = featureObjWithIds.getJSONArray("from").getJSONObject(i)
                     val featureChoiceId =
-                        objWithIds.optInt("choice_id") ?: featureObjWithIds.getInt("choice_id")
+                        objWithIds.optInt("choice_id", featureObjWithIds.getInt("choice_id"))
                     migrateFeatureChoice(characterId, obj, objWithIds, featureChoiceId)
                     db.execSQL("INSERT INTO FeatureChoiceChoiceEntity (featureId, choiceId, characterId) VALUES($featureId, $featureChoiceId, $characterId)")
                 }
@@ -523,7 +525,7 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
     }
 
 
-    private fun getFeatureChoiceFromList(choice: JSONObject, choiceWithIds: JSONObject): JSONArray {
+    private fun getFeatureChoiceFromList(choiceWithIds: JSONObject): JSONArray {
         return try {
             when (choiceWithIds.getString("index")) {
                 "infusions" -> infusionsJson
@@ -540,8 +542,18 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
                 else -> fightingStylesJson
             }
         } catch (e: JSONException) {
-            choice.getJSONArray("chosen")
+            choiceWithIds.getJSONArray("from")
         }
+    }
+
+    private fun getJsonObjectFromList(name: String, list: JSONArray) : JSONObject {
+        for(i in 0 until list.length()) {
+            val obj = list.getJSONObject(i)
+            if(obj.getString("name") == name) {
+                return obj
+            }
+        }
+        throw Exception("name not found")
     }
 
     private fun migrateFeatureChoice(
@@ -551,10 +563,9 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         choiceId: Int
     ) {
         choice.optJSONArray("chosen")?.let { chosen ->
-            val fromList = getFeatureChoiceFromList(choice, choiceWithIds)
             for (i in 0 until chosen.length()) {
                 val obj = chosen.getJSONObject(i)
-                val objWithId = fromList.getJSONObject(i)
+                val objWithId = getJsonObjectFromList(obj.getString("name"), getFeatureChoiceFromList(choiceWithIds))
                 val featureId = objWithId.getInt("id")
                 migrateFeature(characterId, obj, objWithId, featureId)
                 db.execSQL("INSERT INTO FeatureChoiceChoiceEntity (featureId, characterId, choiceId) VALUES ($featureId, $characterId, $choiceId)")

@@ -342,10 +342,11 @@ class HomebrewClassViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             savedStateHandle.get<String>("id")!!.toInt().let {
-                if (it == -1) {
-                    id = classRepository.createDefaultClass()
+                id = if (it == -1) {
+                    classRepository.createDefaultClass()
+                } else {
+                    it
                 }
-                id = it
                 clazz = classRepository.getClass(id)
                 subclasses = classRepository.getSubclassesByClassId(id)
             }

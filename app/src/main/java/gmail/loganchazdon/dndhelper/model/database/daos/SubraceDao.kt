@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubraceFeatChoiceCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubraceFeatureCrossRef
 import kotlinx.coroutines.GlobalScope
@@ -120,4 +121,7 @@ WHERE subraceId IS :subraceId
 
     @Delete
     abstract fun removeSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef)
+
+    @Delete
+    abstract fun removeRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
 }

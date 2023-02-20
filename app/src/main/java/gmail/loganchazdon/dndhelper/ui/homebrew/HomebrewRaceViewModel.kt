@@ -72,7 +72,11 @@ class HomebrewRaceViewModel @Inject constructor(
     }
 
     fun deleteSubraceAt(it: Int) {
-
+        val subraceId = subraces!!.value!![it].id
+        raceRepository.removeRaceSubraceCrossRef(
+            raceId = id,
+            subraceId = subraceId
+        )
     }
 
 

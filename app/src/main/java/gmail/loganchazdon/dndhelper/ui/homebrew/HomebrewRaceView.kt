@@ -126,7 +126,9 @@ fun HomebrewRaceView(
                             result
                         },
                         onDelete =  {
-                            viewModel.deleteSubraceAt(it)
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.deleteSubraceAt(it)
+                            }
                         },
                         onExpanded = {
                             scope.launch(Dispatchers.IO) {

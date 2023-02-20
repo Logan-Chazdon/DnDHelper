@@ -90,6 +90,15 @@ class RaceRepository @Inject constructor(
         return result
     }
 
+    fun removeRaceSubraceCrossRef(raceId: Int, subraceId: Int) {
+        subraceDao.removeRaceSubraceCrossRef(
+            RaceSubraceCrossRef(
+                raceId = raceId,
+                subraceId = subraceId
+            )
+        )
+    }
+
     companion object {
         val sizeClasses = listOf(
             "Tiny",

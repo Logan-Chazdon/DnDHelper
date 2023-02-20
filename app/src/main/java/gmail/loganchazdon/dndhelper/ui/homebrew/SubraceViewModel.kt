@@ -48,6 +48,7 @@ class SubraceViewModel @Inject constructor(
         raceRepository.insertSubrace(
             SubraceEntity(
                 name = name.value,
+                size = sizeClass.value,
                 abilityBonuses = abilityBonuses,
                 abilityBonusChoice = abilityBonusChoice.value,
             )

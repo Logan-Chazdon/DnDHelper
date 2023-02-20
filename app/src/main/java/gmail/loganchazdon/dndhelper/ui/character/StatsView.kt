@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 @ExperimentalFoundationApi
 @Composable
 fun StatsView(viewModel: StatsViewModel) {
-    val character = viewModel.character?.observeAsState()
+    val character = viewModel.character.observeAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -34,7 +34,7 @@ fun StatsView(viewModel: StatsViewModel) {
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         //Stats
-        val stats = character?.value?.getStats()
+        val stats = character.value?.getStats()
         val statNames =
             listOf("Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma")
         val statNamesAbr = listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")

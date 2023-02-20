@@ -87,7 +87,7 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
                                         onClick = {
                                             //Take the user to the items detail view
                                             navController.navigate(
-                                                "characterView/ItemsView/ItemDetailView/${viewModel.character!!.value!!.id}/$i"
+                                                "characterView/ItemsView/ItemDetailView/${viewModel.character.value!!.id}/$i"
                                             )
                                         },
                                         onLongClick = {

@@ -135,7 +135,7 @@ fun CombatView(viewModel: CombatViewModel) {
         }
     }
 
-    val character = viewModel.character?.observeAsState()
+    val character = viewModel.character.observeAsState()
     val isVertical = LocalConfiguration.current.orientation == ORIENTATION_PORTRAIT
     VariableOrientationView(isVertical = isVertical, arrangement = Arrangement.SpaceBetween) {
         Column(
@@ -149,7 +149,7 @@ fun CombatView(viewModel: CombatViewModel) {
                 }
             )
         ) {
-            viewModel.character?.observeAsState()?.value?.let {
+            viewModel.character.observeAsState().value?.let {
                 HeathStatsView(
                     currentHp = it.currentHp,
                     maxHp = it.maxHp,
@@ -203,7 +203,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 "",
                                 Modifier.size(75.dp)
                             )
-                            val ac = character?.value?.armorClass
+                            val ac = character.value?.armorClass
                             Text(
                                 text = "$ac",
                                 modifier = Modifier.padding(bottom = 5.dp),
@@ -232,7 +232,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 Modifier.size(75.dp)
                             )
                             Text(
-                                text = character?.value?.groundSpeed.toString(),
+                                text = character.value?.groundSpeed.toString(),
                                 modifier = Modifier.padding(bottom = 5.dp),
                                 style = MaterialTheme.typography.h5
                             )
@@ -259,7 +259,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 Modifier.size(75.dp)
                             )
                             Text(
-                                text = character?.value?.maxHitDice ?: "",
+                                text = character.value?.maxHitDice ?: "",
                                 modifier = Modifier.padding(bottom = 5.dp),
                                 style = MaterialTheme.typography.h5
                             )
@@ -277,7 +277,7 @@ fun CombatView(viewModel: CombatViewModel) {
 
                 DeathSavesView(
                     type = "Success",
-                    num = viewModel.character?.observeAsState()?.value?.positiveDeathSaves,
+                    num = viewModel.character.observeAsState().value?.positiveDeathSaves,
                     onClick = {
                         scope.launch(Dispatchers.IO) {
                             viewModel.updateDeathSaveSuccesses(it)
@@ -287,7 +287,7 @@ fun CombatView(viewModel: CombatViewModel) {
 
                 DeathSavesView(
                     type = "Fail",
-                    num = viewModel.character?.observeAsState()?.value?.negativeDeathSaves,
+                    num = viewModel.character.observeAsState().value?.negativeDeathSaves,
                     onClick = {
                         scope.launch(Dispatchers.IO) {
                             viewModel.updateDeathSaveFailures(it)

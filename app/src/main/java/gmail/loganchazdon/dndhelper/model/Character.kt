@@ -251,7 +251,7 @@ class Character (
             }
 
             if(item.abilityBonusChoice != null) {
-                item.abilityBonusChoice.chosen?.forEach {
+                item.abilityBonusChoice.chosen.forEach {
                     stats[it.ability.substring(0, 3)] =
                         stats[it.ability.substring(0, 3)]?.plus(it.bonus)  ?: it.bonus
                 }
@@ -672,7 +672,7 @@ class Character (
         race?.getAllLanguages()?.let { result.addAll(it) }
         background?.languages?.let {result.addAll(it) }
         background?.languageChoices?.forEach { choice ->
-            choice.chosen?.let { result.addAll(it) }
+            choice.chosen.let { result.addAll(it) }
         }
         features.forEach { feature ->
             feature.second.languages?.let {
@@ -690,7 +690,7 @@ class Character (
         classes.forEach {
             result.addAll(it.value.proficiencies)
             it.value.proficiencyChoices.forEach { choice ->
-                choice.chosen?.let { chosen -> result.addAll(chosen) }
+                choice.chosen.let { chosen -> result.addAll(chosen) }
             }
         }
         race?.getAllProficiencies()?.let { result.addAll(it) }

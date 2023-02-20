@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -35,9 +36,6 @@ fun StatsView(viewModel: StatsViewModel) {
     ) {
         //Stats
         val stats = character.value?.getStats()
-        val statNames =
-            listOf("Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma")
-        val statNamesAbr = listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")
 
         val proficiencyBoxesExpanded =
             remember { mutableStateListOf<Boolean>(true, false, false, false, false, false) }
@@ -53,9 +51,9 @@ fun StatsView(viewModel: StatsViewModel) {
                 }
             ) {
                 items(6) { item ->
-                    val stat = stats?.get(statNamesAbr[item]) ?: 10
+                    val stat = stats?.get(CharacterRepository.shortStatNames[item]) ?: 10
                     val mod = (stat - 10) / 2
-                    StatBoxView(stat = statNames[item], value = stat, mod = mod, onClick = {
+                    StatBoxView(stat = CharacterRepository.statNames[item], value = stat, mod = mod, onClick = {
                         proficiencyBoxesExpanded.replaceAll { false }
                         proficiencyBoxesExpanded[item] = true
                     })
@@ -91,7 +89,7 @@ fun StatsView(viewModel: StatsViewModel) {
                         ) {
                             Text("Inspiration", Modifier.padding(5.dp))
                             Checkbox(
-                                checked = viewModel.character?.observeAsState()?.value?.inspiration
+                                checked = viewModel.character.observeAsState().value?.inspiration
                                     ?: false,
                                 onCheckedChange = null,
                                 Modifier.size(30.dp)
@@ -106,7 +104,7 @@ fun StatsView(viewModel: StatsViewModel) {
                         modifier = Modifier.fillMaxHeight(),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        viewModel.character?.observeAsState()?.value?.passives?.forEach {
+                        viewModel.character.observeAsState().value?.passives?.forEach {
                             PassiveStatView(passive = it.key, value = it.value)
                         }
                     }
@@ -117,13 +115,13 @@ fun StatsView(viewModel: StatsViewModel) {
                     for (item in 0..5) {
                         if (proficiencyBoxesExpanded[item]) {
                             ProficienciesBoxView(
-                                baseStat = statNames[item],
-                                baseStatNum = viewModel.character?.observeAsState()
-                                    ?.value?.getStatMod(statNamesAbr[item]) ?: 0,
-                                profBonus = viewModel.character?.observeAsState()?.value?.proficiencyBonus
+                                baseStat = CharacterRepository.statNames[item],
+                                baseStatNum = viewModel.character.observeAsState()
+                                    .value?.getStatMod(CharacterRepository.shortStatNames[item]) ?: 0,
+                                profBonus = viewModel.character.observeAsState().value?.proficiencyBonus
                                     ?: 2,
                                 stats = viewModel.checkForProficienciesOrExpertise
-                                    (it[statNames[item]]!!) ?: mutableMapOf(),
+                                    (it[CharacterRepository.statNames[item]]!!) ?: mutableMapOf(),
                                 modifier = Modifier.fillMaxSize(0.9f)
                             )
                         }

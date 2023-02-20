@@ -70,7 +70,7 @@ class Character (
             }
         }
 
-        if(!additionalSpells.isNullOrEmpty()) {
+        if(additionalSpells.isNotEmpty()) {
             return true
         }
 

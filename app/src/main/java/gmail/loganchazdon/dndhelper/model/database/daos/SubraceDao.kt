@@ -18,9 +18,11 @@ abstract class SubraceDao {
     fun getSubrace(id: Int): LiveData<Subrace> {
         val result = MediatorLiveData<Subrace>()
         result.addSource(getUnfilledSubrace(id)) { entity ->
-            entity as Subrace
-            entity.traits = getSubraceTraits(id)
-            result.value = entity
+            if(entity != null) {
+                GlobalScope.launch {
+                    result.postValue(Subrace(entity, getSubraceTraits(id), null))
+                }
+            }
         }
         return result
     }
@@ -35,38 +37,12 @@ WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
     abstract fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubclass(subClass: SubclassEntity): Long
 
 
-
-
-
-
-
-
-
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubraceFeatChoiceCrossRef(subraceFeatChoiceCrossRef: SubraceFeatChoiceCrossRef)
-
 
 
     @Transaction
@@ -108,7 +84,13 @@ WHERE subraceId IS :subraceId
                         getSubraceFeatChoices(subraceEntity.id).forEach {
                             featChoices.add(it.toFeatChoice(emptyList()))
                         }
-                        temp.add(Subrace(subraceEntity, getSubraceTraits(subraceEntity.id), featChoices))
+                        temp.add(
+                            Subrace(
+                                subraceEntity,
+                                getSubraceTraits(subraceEntity.id),
+                                featChoices
+                            )
+                        )
                     }
                     subraces.postValue(temp)
                 }

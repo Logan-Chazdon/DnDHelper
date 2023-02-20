@@ -1,5 +1,6 @@
 package gmail.loganchazdon.dndhelper.ui.homebrew
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GenericSelectionView(
     chosen: List<String>,
+    onClick : ((Int) -> Unit)? = null,
     onDelete : (Int) -> Unit,
     onExpanded : () -> Unit
 ) {
@@ -33,7 +35,7 @@ fun GenericSelectionView(
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(0.7f)
+                    modifier = Modifier.fillMaxWidth(0.7f).clickable { onClick?.invoke(index) }
                 ) {
                     Text(text = it)
                     IconButton(

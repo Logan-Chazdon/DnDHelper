@@ -118,6 +118,9 @@ fun HomebrewRaceView(
                 //Subraces
                 item {
                     GenericSelectionView(
+                        onClick = {
+                           navController!!.navigate("homebrewView/homebrewSubraceView/${viewModel.subraces!!.value!![it].id}")
+                        },
                         chosen = viewModel.subraces?.observeAsState(emptyList())?.value.let {
                             val result = mutableListOf<String>()
                             it?.forEach {

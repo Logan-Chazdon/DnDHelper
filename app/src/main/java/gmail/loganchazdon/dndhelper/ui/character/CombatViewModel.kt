@@ -46,8 +46,8 @@ public class CombatViewModel @Inject constructor(
             val result = mutableListOf<Pair<Int, String>>()
             levels.forEach { level ->
                 val slot =
-                    character!!.value!!.getAllSpellSlots().findLast { it.name == level.second }
-                if (slot?.currentAmount ?: 0 != 0 && spell.level <= level.first) {
+                    character.value!!.getAllSpellSlots().findLast { it.name == level.second }
+                if ((slot?.currentAmount ?: 0) != 0 && spell.level <= level.first) {
                     result.add(level)
                 }
             }

@@ -44,7 +44,7 @@ class Subrace(
         result.addAll(languageChoices.let { languageChoices ->
             val langs = mutableListOf<Language>()
             languageChoices.forEach {
-                it.chosen?.let { chosen -> langs.addAll(chosen) }
+                it.chosen.let { chosen -> langs.addAll(chosen) }
             }
             langs
         })

@@ -7,9 +7,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import gmail.loganchazdon.dndhelper.model.database.MIGRATION_56_57
 import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
 import gmail.loganchazdon.dndhelper.model.database.daos.*
+import gmail.loganchazdon.dndhelper.model.database.migrations.MIGRATION_56_57
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSourceImpl
 import javax.inject.Singleton

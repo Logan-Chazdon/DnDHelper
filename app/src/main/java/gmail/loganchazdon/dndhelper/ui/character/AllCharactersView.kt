@@ -27,7 +27,7 @@ fun AllCharactersView(
     allCharactersViewModel: AllCharactersViewModel,
     navController: NavController
 ) {
-    val allCharacters = allCharactersViewModel.allCharacters!!.observeAsState()
+    val allCharacters = allCharactersViewModel.allCharacters.observeAsState()
     val scrollState = rememberScrollState()
 
 
@@ -46,7 +46,7 @@ fun AllCharactersView(
                 ) {
                     Text(
                         text = "Delete: " +
-                                (allCharacters?.value?.getOrNull(characterToDeleteIndex.value)?.name ?: "") + "?",
+                                (allCharacters.value?.getOrNull(characterToDeleteIndex.value)?.name ?: "") + "?",
                         fontSize = 20.sp
                     )
                     Row(
@@ -61,7 +61,7 @@ fun AllCharactersView(
 
                         Button(
                             onClick = {
-                                val id = allCharacters?.value?.get(characterToDeleteIndex.value)?.id
+                                val id = allCharacters.value?.get(characterToDeleteIndex.value)?.id
                                 if (id != null) {
                                     allCharactersViewModel.deleteCharacterById(id)
                                 }
@@ -94,7 +94,7 @@ fun AllCharactersView(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            allCharacters?.value?.forEachIndexed { i, character ->
+            allCharacters.value?.forEachIndexed { i, character ->
                 Card(
                     backgroundColor = MaterialTheme.colors.surface,
                     shape = RoundedCornerShape(10.dp),

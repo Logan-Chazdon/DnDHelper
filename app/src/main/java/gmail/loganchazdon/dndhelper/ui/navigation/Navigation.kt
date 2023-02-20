@@ -110,7 +110,7 @@ fun Navigation(navController: NavHostController) {
             StatsView(viewModel, navController)
         }
 
-        composable("homebrew/homebrewSubraceView/{id}"){
+        composable("homebrewView/homebrewSubraceView/{id}"){
             HomebrewSubraceView(viewModel = hiltViewModel(), navController = navController)
         }
 

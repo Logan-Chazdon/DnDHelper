@@ -44,7 +44,7 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
     val character: MediatorLiveData<Character> = MediatorLiveData()
     val customizeStats = mutableStateOf(false)
     val customRaceStatsMap = mutableStateMapOf<String, String>()
-    val race = raceRepository.getLiveRaceById(savedStateHandle.get<String>("raceId")!!.toInt())!!
+    val race = raceRepository.getLiveRaceById(savedStateHandle.get<String>("raceId")!!.toInt())
     val subraces = raceRepository.getSubracesByRaceId(savedStateHandle.get<String>("raceId")!!.toInt())
 
     init {

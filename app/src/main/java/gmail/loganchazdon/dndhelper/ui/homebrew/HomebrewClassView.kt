@@ -409,6 +409,9 @@ fun HomebrewClassView(
                             )
 
                             GenericSelectionView(
+                                onClick = {
+                                    navController.navigate("homebrewView/homebrewSubclassView/${viewModel.subclasses!!.value!![it].subclassId}")
+                                },
                                 chosen = viewModel.subclasses?.observeAsState(listOf())?.value.let {
                                     val result = mutableListOf<String>()
                                     it?.forEach {

@@ -179,7 +179,8 @@ class HomebrewClassViewModel @Inject constructor(
                     10
                 },
                 spellCasting = spellCasting,
-                pactMagic = pactMagic
+                pactMagic = pactMagic,
+                id = id
             )
         )
     }

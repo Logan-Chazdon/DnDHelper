@@ -45,13 +45,15 @@ class SubraceViewModel @Inject constructor(
     }
 
     fun saveSubrace() {
+        val entity = SubraceEntity(
+            name = name.value,
+            size = sizeClass.value,
+            abilityBonuses = abilityBonuses,
+            abilityBonusChoice = abilityBonusChoice.value,
+        )
+        entity.id = id
         raceRepository.insertSubrace(
-            SubraceEntity(
-                name = name.value,
-                size = sizeClass.value,
-                abilityBonuses = abilityBonuses,
-                abilityBonusChoice = abilityBonusChoice.value,
-            )
+            entity
         )
     }
 

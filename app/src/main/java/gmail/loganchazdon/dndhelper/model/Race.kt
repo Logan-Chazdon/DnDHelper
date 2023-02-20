@@ -60,7 +60,7 @@ class Race(
         result.addAll(languageChoices.let { languageChoices ->
             val langs = mutableListOf<Language>()
             languageChoices.forEach {
-                it.chosen?.let { chosen -> langs.addAll(chosen) }
+                it.chosen.let { chosen -> langs.addAll(chosen) }
             }
             langs
         })
@@ -109,7 +109,7 @@ class Race(
         val result = mutableListOf<Proficiency>()
         result.addAll(startingProficiencies)
         proficiencyChoices.forEach {
-            it.chosen?.let { chosen -> result.addAll(chosen) }
+            it.chosen.let { chosen -> result.addAll(chosen) }
         }
         return result
     }

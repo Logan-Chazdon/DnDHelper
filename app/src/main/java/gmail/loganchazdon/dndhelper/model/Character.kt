@@ -578,7 +578,6 @@ class Character (
 
     private fun checkForExpertise(it: String) : Boolean {
         features.forEach { feature ->
-            //TODO replace this system with the new feature.expertises
             if(feature.second.name == "Expertise") {
                 feature.second.allChosen.forEach { item ->
                     if (item.name == it) {

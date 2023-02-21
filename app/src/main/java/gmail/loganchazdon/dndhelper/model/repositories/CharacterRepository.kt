@@ -513,8 +513,8 @@ class CharacterRepository @Inject constructor(
             "Charisma"
         )
 
-        val shortStatNames = statNames.onEach {
-            it.subSequence(0, 2)
+        val shortStatNames = statNames.map {
+            it.take(3)
         }
     }
 }

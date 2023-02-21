@@ -5,6 +5,25 @@
       <map>
         <entry key="app/src/main/java/gmail/loganchazdon/dndhelper/ui/SpellDetailsView.kt" value="0.41388888888888886" />
         <entry key="app/src/main/java/gmail/loganchazdon/dndhelper/ui/homebrew/HomebrewFeatureView.kt" value="0.33" />
+        <entry key="app/src/main/res/drawable/ic_abilities_icon.xml" value="0.353" />
+        <entry key="app/src/main/res/drawable/ic_armour_class.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_background_icon.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___artificer.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___barbarian.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___bard.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___cleric.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___druid.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___fighter.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___monk.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___paladin.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___ranger.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___rogue.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___sorcerer.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_class_icon___warlock.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_combat_icon.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_items_icon.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_race_icon.xml" value="0.1975" />
+        <entry key="app/src/main/res/drawable/ic_stats_icon.xml" value="0.1975" />
       </map>
     </option>
   </component>

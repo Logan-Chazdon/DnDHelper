@@ -4,10 +4,7 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassFeatureCrossRef
@@ -16,6 +13,7 @@ import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -93,9 +91,9 @@ class HomebrewClassViewModel @Inject constructor(
             )
         }
 
-        var spellCasting : SpellCasting? = null
-        if(hasSpellCasting.value) {
-            val spellKnown = if(spellCastingLearnsSpells.value) {
+        var spellCasting: SpellCasting? = null
+        if (hasSpellCasting.value) {
+            val spellKnown = if (spellCastingLearnsSpells.value) {
                 mutableListOf<Int>()
             } else {
                 null
@@ -106,16 +104,18 @@ class HomebrewClassViewModel @Inject constructor(
             var levelSpellsKnown = 0
             var levelCantripsKnown = 0
             var currentIndex = 0
-            for(currentLevel in 1 until 21) {
-                if(
+            for (currentLevel in 1 until 21) {
+                if (
                     (spellCastingSpellsAndCantripsKnown.keys.elementAtOrNull(currentIndex)
                         ?.toIntOrNull() ?: 0) <= currentLevel
                 ) {
-                    levelSpellsKnown = spellCastingSpellsAndCantripsKnown[currentLevel.toString()]?.second?.toIntOrNull()
-                        ?: spellKnown?.getOrNull(currentLevel - 1) ?: 0
+                    levelSpellsKnown =
+                        spellCastingSpellsAndCantripsKnown[currentLevel.toString()]?.second?.toIntOrNull()
+                            ?: spellKnown?.getOrNull(currentLevel - 1) ?: 0
 
-                    levelCantripsKnown = spellCastingSpellsAndCantripsKnown[currentLevel.toString()]?.first?.toIntOrNull()
-                        ?: cantripsKnown.getOrNull(currentLevel - 1) ?: 0
+                    levelCantripsKnown =
+                        spellCastingSpellsAndCantripsKnown[currentLevel.toString()]?.first?.toIntOrNull()
+                            ?: cantripsKnown.getOrNull(currentLevel - 1) ?: 0
                     currentIndex += 1
                 }
 
@@ -124,15 +124,15 @@ class HomebrewClassViewModel @Inject constructor(
             }
 
             spellCasting = SpellCasting(
-                type = if(spellCastingIsHalfCaster.value) {
+                type = if (spellCastingIsHalfCaster.value) {
                     0.5
                 } else {
                     1.0
                 },
                 hasSpellBook = false, //TODO
-                castingAbility = spellCastingAbility.value.substring(0 ,3),
-                prepareFrom = if(spellCastingPrepares.value) {
-                    if(spellCastingLearnsSpells.value) {
+                castingAbility = spellCastingAbility.value.substring(0, 3),
+                prepareFrom = if (spellCastingPrepares.value) {
+                    if (spellCastingLearnsSpells.value) {
                         "known"
                     } else {
                         "all"
@@ -140,7 +140,7 @@ class HomebrewClassViewModel @Inject constructor(
                 } else {
                     null
                 },
-                preparationModMultiplier = if(spellCastingPrepares.value) {
+                preparationModMultiplier = if (spellCastingPrepares.value) {
                     spellCastingCastingModMulti.value.toDoubleOrNull()
                 } else {
                     null
@@ -274,7 +274,7 @@ class HomebrewClassViewModel @Inject constructor(
     val hitDie = mutableStateOf("8")
     var subclasses: LiveData<List<Subclass>>? = null
     val name = mutableStateOf("")
-    var clazz: LiveData<Class>? = null
+    var clazz: MediatorLiveData<Class> = MediatorLiveData()
     var id: Int = -1
     val subclassLevel = mutableStateOf("1")
     val pactMagicAbility = mutableStateOf("Charisma")
@@ -340,16 +340,102 @@ class HomebrewClassViewModel @Inject constructor(
 
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.async(Dispatchers.IO) {
             savedStateHandle.get<String>("id")!!.toInt().let {
                 id = if (it == -1) {
                     classRepository.createDefaultClass()
                 } else {
                     it
                 }
-                clazz = classRepository.getClass(id)
-                subclasses = classRepository.getSubclassesByClassId(id)
+
             }
+        }.invokeOnCompletion {
+            val source = classRepository.getClass(id)
+            clazz.addSource(source) { newClazz ->
+                clazz.value = newClazz
+
+                //Set all data in the viewModel to match the class.
+                name.value = newClazz.name
+
+                if (!newClazz.pactMagic?.pactSlots.isNullOrEmpty()) {
+                    pactMagicSlots.clear()
+                    newClazz.pactMagic!!.pactSlots.forEach { resource ->
+                        pactMagicSlots.add(
+                            Pair(
+                                SpellRepository.allSpellLevels.first { it.second == resource.name }.first.toString(),
+                                resource.maxAmountType
+                            )
+                        )
+                    }
+                }
+
+                if (newClazz.spellCasting?.spellsKnown != null || newClazz.spellCasting?.cantripsKnown != null) {
+                    spellCastingSpellsAndCantripsKnown.clear()
+                    var previousSpell = ""
+                    var previousCantrip = ""
+
+                    for (level in 1..20) {
+                        val spells = newClazz.spellCasting.spellsKnown?.get(level - 1).toString()
+                        val cantrips =
+                            newClazz.spellCasting.cantripsKnown?.get(level - 1).toString()
+
+                        if (spells != previousSpell || cantrips != previousCantrip) {
+                            spellCastingSpellsAndCantripsKnown[level.toString()] =
+                                Pair(cantrips, spells)
+                            previousSpell = spells
+                            previousCantrip = cantrips
+                        }
+                    }
+                }
+
+                spellCastingIsHalfCaster.value = newClazz.spellCasting?.type == 0.5
+                spellCastingCastingModMulti.value =
+                    newClazz.spellCasting?.preparationModMultiplier.toString()
+                spellCastingLearnsSpells.value = newClazz.spellCasting?.prepareFrom == "known"
+                spellCastingPrepares.value = newClazz.spellCasting?.prepareFrom != null
+                newClazz.spellCasting?.spellSlotsByLevel?.let { slots ->
+                    if (slots.isNotEmpty()) {
+                        spellCastingSlots.clear()
+                        slots.forEach { resources: List<Resource> ->
+                            val tempArray = emptyArray<String>()
+                            resources.forEach {
+                                tempArray.plus(it.maxAmountType)
+                            }
+                            spellCastingSlots.add(tempArray)
+                        }
+                    }
+                }
+
+                if (newClazz.spellCasting?.known?.isNotEmpty() == true) {
+                    spellCastingSpells.clear()
+                    spellCastingSpells.addAll(newClazz.spellCasting.known.map { it.first })
+                }
+
+                newClazz.pactMagic?.known?.let { known -> pactMagicSpells.addAll(known) }
+
+                newClazz.pactMagic?.castingAbility?.let { pactMagicAbility.value = it }
+                newClazz.spellCasting?.castingAbility?.let { spellCastingAbility.value = it }
+
+                subclassLevel.value = newClazz.subclassLevel.toString()
+                hitDie.value = newClazz.hitDie.toString()
+                goldDie.value = newClazz.startingGoldD4s.toString()
+                goldMultiplier.value = newClazz.startingGoldMultiplier.toString()
+                hasSpellCasting.value = newClazz.spellCasting != null
+                hasPactMagic.value = newClazz.pactMagic != null
+
+                if (hasPactMagic.value) {
+                    pactMagicCantripsKnown.clear()
+                    pactMagicCantripsKnown.addAll(newClazz.pactMagic?.cantripsKnown?.map { it.toString() }
+                        ?: emptyList())
+
+                    pactMagicSpellsKnown.clear()
+                    pactMagicSpellsKnown.addAll(newClazz.pactMagic?.spellsKnown?.map { it.toString() }
+                        ?: emptyList())
+                }
+
+                clazz.removeSource(source)
+            }
+            subclasses = classRepository.getSubclassesByClassId(id)
         }
     }
 }

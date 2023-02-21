@@ -132,12 +132,14 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                                 ) {
                                     FilterItem(
                                         "classes",
-                                        showClasses
+                                        showClasses,
+                                        onClick = { navController.navigate("homebrewView/homebrewClassView/-1") }
                                     )
 
                                     FilterItem(
                                         "races",
-                                        showRaces
+                                        showRaces,
+                                        onClick = { navController.navigate("homebrewView/homebrewRaceView/-1") }
                                     )
 
                                     FilterItem(
@@ -200,7 +202,8 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
 @Composable
 private fun FilterItem(
     name: String,
-    checked: MutableState<Boolean>
+    checked: MutableState<Boolean>,
+    onClick: (() -> Unit)? = null
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -226,7 +229,7 @@ private fun FilterItem(
         }
 
         Button(
-            onClick = {}
+            onClick = { onClick?.invoke() }
         ) {
             Text("NEW")
         }

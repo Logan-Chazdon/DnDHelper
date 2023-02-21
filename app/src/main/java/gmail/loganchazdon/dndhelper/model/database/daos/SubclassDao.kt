@@ -16,9 +16,7 @@ import kotlinx.coroutines.launch
 @Dao
 abstract class SubclassDao {
     @Query(
-        """SELECT * FROM subclasses
-JOIN ClassSubclassCrossRef ON ClassSubclassCrossRef.subclassId IS subclasses.subclassId
-WHERE classId IS :id"""
+        """SELECT * FROM subclasses WHERE subclassId IS :id"""
     )
     protected abstract fun getUnfilledSubclass(id: Int): LiveData<SubclassEntity>
 

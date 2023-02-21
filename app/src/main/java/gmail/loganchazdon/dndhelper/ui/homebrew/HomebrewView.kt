@@ -1,5 +1,8 @@
 package gmail.loganchazdon.dndhelper.ui.homebrew
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,12 +10,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -32,7 +37,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                 },
                 items = listOf(
                     {
-                        FloatingActionButton(onClick = { navController.navigate("homebrewView/homebrewClassView/-1")  }) {
+                        FloatingActionButton(onClick = { navController.navigate("homebrewView/homebrewClassView/-1") }) {
                             Icon(
                                 painterResource(R.drawable.ic_class_icon___ranger),
                                 "New class",
@@ -56,26 +61,32 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
         var search by remember {
             mutableStateOf("")
         }
-        val showRaces = remember{
+        val showRaces = remember {
             mutableStateOf(true)
         }
-        val showClasses = remember{
+        val showClasses = remember {
             mutableStateOf(true)
         }
-        val showBackgrounds = remember{
+        val showBackgrounds = remember {
             mutableStateOf(true)
         }
-        val showSpells = remember{
+        val showSpells = remember {
             mutableStateOf(true)
         }
         val races = viewModel.races.observeAsState()
-        val classes =viewModel.classes.observeAsState()
-        Column(modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            LazyColumn(modifier = Modifier.fillMaxWidth(0.95f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        val classes = viewModel.classes.observeAsState()
+        Column(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(0.95f),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 //Search and filters
                 item {
+                    var expanded by remember { mutableStateOf(false) }
                     Card(modifier = Modifier.padding(top = 2.dp)) {
                         Column {
                             //Search field
@@ -86,6 +97,18 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                                 },
                                 onValueChange = {
                                     search = it
+                                },
+                                leadingIcon = {
+                                    val rotationDegrees by animateFloatAsState(targetValue = if (expanded) 180f else 0f)
+
+                                    Icon(
+                                        Icons.Default.ArrowDropDown,
+                                        if (expanded) { "collapse filters" } else { "expand filters" },
+                                        Modifier
+                                            .clickable { expanded = !expanded }
+                                            .rotate(rotationDegrees)
+                                            .size(36.dp)
+                                    )
                                 },
                                 singleLine = true,
                                 textStyle = TextStyle.Default.copy(fontSize = 20.sp),
@@ -98,37 +121,42 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                                 }
                             )
 
-                            //Filters
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceAround
+                            AnimatedVisibility(
+                                visible = expanded,
+                                enter = slideInVertically(initialOffsetY = { it / 2  }, animationSpec = tween(durationMillis = 100)) + fadeIn(),
+                                exit = slideOutVertically(targetOffsetY = { it / 2 }, animationSpec = tween(durationMillis = 100)) + fadeOut()
                             ) {
-                                FilterItem(
-                                    "classes",
-                                    showClasses
-                                )
+                                //Filters
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    FilterItem(
+                                        "classes",
+                                        showClasses
+                                    )
 
-                                FilterItem(
-                                    "races",
-                                    showRaces
-                                )
+                                    FilterItem(
+                                        "races",
+                                        showRaces
+                                    )
 
-                                FilterItem(
-                                    "backgrounds",
-                                    showBackgrounds
-                                )
+                                    FilterItem(
+                                        "backgrounds",
+                                        showBackgrounds
+                                    )
 
-                                FilterItem(
-                                    "spells",
-                                    showSpells
-                                )
+                                    FilterItem(
+                                        "spells",
+                                        showSpells
+                                    )
+                                }
                             }
                         }
                     }
                 }
 
                 //Races
-                if(showRaces.value) {
+                if (showRaces.value) {
                     items(races.value?.filter {
                         if (search.isBlank()) true else it.raceName.contains(
                             search
@@ -147,7 +175,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                 }
 
                 //Classes
-                if(showClasses.value) {
+                if (showClasses.value) {
                     items(classes.value?.filter {
                         if (search.isBlank()) true else it.name.contains(
                             search
@@ -176,19 +204,32 @@ private fun FilterItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(4.dp)
-            .clickable { checked.value = !checked.value },
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp)
     ) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.h6
-        )
-        Checkbox(
-            checked = checked.value,
-            onCheckedChange = null
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(4.dp)
+                .clickable { checked.value = !checked.value },
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Checkbox(
+                checked = checked.value,
+                onCheckedChange = null
+            )
+
+            Text(
+                text = name,
+                style = MaterialTheme.typography.h6
+            )
+        }
+
+        Button(
+            onClick = {}
+        ) {
+            Text("NEW")
+        }
     }
 }
 

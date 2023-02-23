@@ -1,5 +1,7 @@
 package gmail.loganchazdon.dndhelper.ui.homebrew
 
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -26,9 +28,13 @@ import androidx.navigation.NavController
 import gmail.loganchazdon.dndhelper.R
 import gmail.loganchazdon.dndhelper.model.Race
 import gmail.loganchazdon.dndhelper.ui.MultipleFABView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
+    val scope = rememberCoroutineScope()
+    val looper= Looper.getMainLooper()
     Scaffold(
         floatingActionButton = {
             MultipleFABView(
@@ -149,7 +155,15 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
 
                                     FilterItem(
                                         "spells",
-                                        showSpells
+                                        showSpells,
+                                        onClick = {
+                                            scope.launch(Dispatchers.IO){
+                                                val id = viewModel.createDefaultSpell()
+                                                Handler(looper).post {
+                                                    navController.navigate("homebrewView/homebrewSpellView/$id")
+                                                }
+                                            }
+                                        }
                                     )
                                 }
                             }
@@ -208,7 +222,9 @@ private fun FilterItem(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp, end = 4.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

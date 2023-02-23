@@ -9,6 +9,7 @@ import gmail.loganchazdon.dndhelper.model.database.daos.SubclassDao
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassSubclassCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubclassFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -121,5 +122,9 @@ class ClassRepository @Inject constructor(
             }
         }
         return result
+    }
+
+    fun getAllClassNameAndIds(): LiveData<List<NameAndIdPojo>> {
+        return classDao.allClassesNamesAndIds()
     }
 }

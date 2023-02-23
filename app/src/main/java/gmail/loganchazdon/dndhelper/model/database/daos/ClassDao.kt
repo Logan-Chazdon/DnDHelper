@@ -10,6 +10,7 @@ import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassSpellCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassSubclassCrossRef
+import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -90,4 +91,7 @@ WHERE classId IS :classId"""
     //This is in case a user creates a new class with the same name as a different class.
     @Query("SELECT id FROM classes WHERE name IS :name")
     abstract fun getClassIdsByName(name: String) : List<Int>
+
+    @Query("SELECT id, name FROM classes")
+    abstract fun allClassesNamesAndIds(): LiveData<List<NameAndIdPojo>>
 }

@@ -20,6 +20,7 @@ data class Spell(
     val damage: String,
     val isRitual: Boolean = false
 ) {
+
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
     val levelName: String

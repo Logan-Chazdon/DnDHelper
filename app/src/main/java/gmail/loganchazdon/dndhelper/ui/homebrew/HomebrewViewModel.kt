@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomebrewViewModel @Inject constructor(
     private val raceRepository: RaceRepository,
+    private val spellRepository: SpellRepository,
     private val classRepository: ClassRepository,
     application: Application
 ) : AndroidViewModel(application) {
@@ -26,6 +28,10 @@ class HomebrewViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             classRepository.deleteClass(id)
         }
+    }
+
+    fun createDefaultSpell(): Int {
+        return spellRepository.createDefaultSpell()
     }
 
     val races = raceRepository.getHomebrewRaces()

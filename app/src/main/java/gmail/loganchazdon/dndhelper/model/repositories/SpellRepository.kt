@@ -3,6 +3,8 @@ package gmail.loganchazdon.dndhelper.model.repositories
 import androidx.lifecycle.LiveData
 import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.database.daos.SpellDao
+import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassSpellCrossRef
+import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 import javax.inject.Inject
 
 class SpellRepository @Inject constructor(
@@ -16,6 +18,46 @@ class SpellRepository @Inject constructor(
 
     fun getAllSpells(): List<Spell> {
         return _spells.value ?: listOf()
+    }
+
+    fun getLiveSpell(id: Int): LiveData<Spell> {
+        return spellDao.getLiveSpell(id)
+    }
+
+    fun insertSpell(spell: Spell) {
+        spellDao.insertSpell(spell)
+    }
+
+    fun createDefaultSpell(): Int {
+        return spellDao.insertSpell(
+            Spell(
+                name = "",
+                level = 0,
+                components = emptyList(),
+                itemComponents = emptyList(),
+                school = "Evocation",
+                desc = "",
+                area = "",
+                castingTime = "",
+                duration = "",
+                classes = emptyList(),
+                damage = "",
+                isRitual = false,
+                range = ""
+            )
+        ).toInt()
+    }
+
+    fun getSpellClasses(id: Int): LiveData<List<NameAndIdPojo>> {
+        return spellDao.getSpellClasses(id)
+    }
+
+    fun removeClassSpellCrossRef(ref: ClassSpellCrossRef) {
+        spellDao.removeClassSpellCrossRef(ref)
+    }
+
+    fun addClassSpellCrossRef(ref: ClassSpellCrossRef) {
+        spellDao.addClassSpellCrossRef(ref)
     }
 
 

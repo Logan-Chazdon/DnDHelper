@@ -30,10 +30,17 @@ class HomebrewViewModel @Inject constructor(
         }
     }
 
+    fun deleteSpell(id: Int) {
+        viewModelScope.launch {
+            spellRepository.deleteSpell(id)
+        }
+    }
+
     fun createDefaultSpell(): Int {
         return spellRepository.createDefaultSpell()
     }
 
     val races = raceRepository.getHomebrewRaces()
+    val spells = spellRepository.getHomebrewSpells()
     val classes = classRepository.getHomebrewClasses()
 }

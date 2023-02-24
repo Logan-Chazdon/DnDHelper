@@ -11,9 +11,14 @@ class SpellRepository @Inject constructor(
     private val spellDao: SpellDao
 ) {
     private val _spells = spellDao.getAllSpells()
+    private val _homebrewSpells = spellDao.getHomebrewSpells()
 
     fun getLiveSpells(): LiveData<List<Spell>> {
         return _spells
+    }
+    
+    fun getHomebrewSpells(): LiveData<List<Spell>> {
+        return _homebrewSpells
     }
 
     fun getAllSpells(): List<Spell> {
@@ -58,6 +63,10 @@ class SpellRepository @Inject constructor(
 
     fun addClassSpellCrossRef(ref: ClassSpellCrossRef) {
         spellDao.addClassSpellCrossRef(ref)
+    }
+
+    fun deleteSpell(id: Int) {
+        spellDao.removeSpellById(id)
     }
 
 

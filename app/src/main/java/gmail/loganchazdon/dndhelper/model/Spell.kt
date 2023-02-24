@@ -18,7 +18,8 @@ data class Spell(
     val duration: String,
     val classes: List<String>,
     val damage: String,
-    val isRitual: Boolean = false
+    val isRitual: Boolean = false,
+    val isHomebrew : Boolean = false,
 ) {
 
     @PrimaryKey(autoGenerate = true)

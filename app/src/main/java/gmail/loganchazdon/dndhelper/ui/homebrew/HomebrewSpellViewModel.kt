@@ -45,22 +45,26 @@ class HomebrewSpellViewModel @Inject constructor(
         val components = mutableListOf<String>()
         val itemComponents = mutableListOf<Item>()
 
+        val spell = Spell(
+            name = name.value,
+            desc = desc.value,
+            damage = damage.value,
+            range = range.value,
+            level = level.value.toIntOrNull() ?: 1,
+            area = area.value,
+            castingTime = castingTime.value,
+            classes = emptyList(),
+            components = components,
+            itemComponents = itemComponents,
+            isRitual = isRitual.value,
+            duration = duration.value,
+            school = school.value,
+            isHomebrew = true,
+        )
+        spell.id = id
+
         spellRepository.insertSpell(
-            Spell(
-                name = name.value,
-                desc = desc.value,
-                damage = damage.value,
-                range = range.value,
-                level = level.value.toIntOrNull() ?: 1,
-                area = area.value,
-                castingTime = castingTime.value,
-                classes = emptyList(),
-                components = components,
-                itemComponents = itemComponents,
-                isRitual = isRitual.value,
-                duration = duration.value,
-                school = school.value
-            )
+            spell
         )
     }
 
@@ -68,7 +72,7 @@ class HomebrewSpellViewModel @Inject constructor(
         spellRepository.removeClassSpellCrossRef(
             ClassSpellCrossRef(
                 classId = classes.value!![index].id,
-                spellId=  id
+                spellId = id
             )
         )
     }
@@ -78,7 +82,7 @@ class HomebrewSpellViewModel @Inject constructor(
             classId = it.id,
             spellId = id
         )
-        if (classes.value?.firstOrNull { item -> item.id == it.id} != null) {
+        if (classes.value?.firstOrNull { item -> item.id == it.id } != null) {
             spellRepository.removeClassSpellCrossRef(
                 ref
             )

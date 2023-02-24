@@ -81,6 +81,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
         }
         val races = viewModel.races.observeAsState()
         val classes = viewModel.classes.observeAsState()
+        val spells = viewModel.spells.observeAsState()
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -204,6 +205,25 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                             },
                             onDelete = {
                                 viewModel.deleteClass(clazz.id)
+                            }
+                        )
+                    }
+                }
+
+                //Spells
+                if (showSpells.value) {
+                    items(spells.value?.filter {
+                        if (search.isBlank()) true else it.name.contains(
+                            search
+                        )
+                    } ?: listOf()) { spell ->
+                        HomebrewItem(
+                            name = spell.name.ifBlank { "Unnamed spell" },
+                            onClick = {
+                                navController.navigate("homebrewView/homebrewSpellView/${spell.id}")
+                            },
+                            onDelete = {
+                                viewModel.deleteSpell(spell.id)
                             }
                         )
                     }

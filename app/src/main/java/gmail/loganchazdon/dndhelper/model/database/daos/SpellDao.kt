@@ -34,4 +34,7 @@ WHERE ClassSpellCrossRef.spellId = :id""")
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun addClassSpellCrossRef(ref: ClassSpellCrossRef)
+
+    @Query("SELECT * FROM spells WHERE isHomebrew = 1")
+    abstract fun getHomebrewSpells(): LiveData<List<Spell>>
 }

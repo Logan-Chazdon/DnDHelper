@@ -151,7 +151,15 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
 
                                     FilterItem(
                                         "backgrounds",
-                                        showBackgrounds
+                                        showBackgrounds,
+                                        onClick = {
+                                            scope.launch(Dispatchers.IO){
+                                                val id = viewModel.createDefaultBackground()
+                                                Handler(looper).post {
+                                                    navController.navigate("homebrewView/homebrewBackgroundView/$id")
+                                                }
+                                            }
+                                        }
                                     )
 
                                     FilterItem(

@@ -3,8 +3,10 @@ package gmail.loganchazdon.dndhelper.model.repositories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import gmail.loganchazdon.dndhelper.model.Background
+import gmail.loganchazdon.dndhelper.model.BackgroundEntity
 import gmail.loganchazdon.dndhelper.model.database.daos.BackgroundDao
 import gmail.loganchazdon.dndhelper.model.database.daos.FeatureDao
+import gmail.loganchazdon.dndhelper.model.junctionEntities.BackgroundFeatureCrossRef
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -37,5 +39,27 @@ class BackgroundRepository @Inject constructor(
             }
         }
         return result
+    }
+
+    fun insertBackground(backgroundEntity: BackgroundEntity) {
+        backgroundDao.insertBackground(backgroundEntity)
+    }
+
+    fun insertBackgroundFeatureCrossRef(backgroundFeatureCrossRef: BackgroundFeatureCrossRef) {
+        backgroundDao.insertBackgroundFeatureCrossRef(backgroundFeatureCrossRef)
+    }
+
+    fun createDefaultBackground(): Int {
+        return backgroundDao.insertBackground(
+            BackgroundEntity(
+                name = "",
+                desc = "",
+                equipmentChoices = emptyList(),
+                equipment = emptyList(),
+                languages = emptyList(),
+                proficiencies = emptyList(),
+                spells = null
+            )
+        ).toInt()
     }
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gmail.loganchazdon.dndhelper.model.repositories.BackgroundRepository
 import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
@@ -16,6 +17,7 @@ class HomebrewViewModel @Inject constructor(
     private val raceRepository: RaceRepository,
     private val spellRepository: SpellRepository,
     private val classRepository: ClassRepository,
+    private val backgroundRepository: BackgroundRepository,
     application: Application
 ) : AndroidViewModel(application) {
     fun deleteRace(id: Int) {
@@ -38,6 +40,10 @@ class HomebrewViewModel @Inject constructor(
 
     fun createDefaultSpell(): Int {
         return spellRepository.createDefaultSpell()
+    }
+
+    fun createDefaultBackground(): Int {
+        return backgroundRepository.createDefaultBackground()
     }
 
     val races = raceRepository.getHomebrewRaces()

@@ -45,7 +45,7 @@ val MIGRATION_57_58 = object : Migration(57, 58) {
             val skillsJson = statJson.getJSONArray("skills")
             for (skillIndex in 0 until skillsJson.length()) {
                 val skillJson = skillsJson.getJSONObject(skillIndex)
-                val name  =skillJson.getString("name")
+                val name = skillJson.getString("name")
                 proficienciesJson.put("{name: ${name}, id : ${i++}}")
                 expertiseJson.put("{name: ${name}, id : ${i++}}")
             }
@@ -67,7 +67,8 @@ val MIGRATION_57_58 = object : Migration(57, 58) {
         fightingStylesJson = getJsonArrayFromFile("res/raw/fighting_styles.json", "fighting_styles")
         metamagicJson = getJsonArrayFromFile("res/raw/metamagic.json", "metamagic")
         languagesJson = getJsonArrayFromFile("res/raw/languages.json", "languages")
-        artisansToolsJson = getJsonArrayFromFile("res/raw/item_proficiencies.json", "artisans_tools")
+        artisansToolsJson =
+            getJsonArrayFromFile("res/raw/item_proficiencies.json", "artisans_tools")
         fillOutProficienciesAndExpertise()
 
         //Remove old version of unused tables
@@ -87,7 +88,7 @@ val MIGRATION_57_58 = object : Migration(57, 58) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `featChoices` (`name` TEXT NOT NULL, `choose` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `FeatChoiceChoiceEntity` (`characterId` INTEGER NOT NULL, `choiceId` INTEGER NOT NULL, `featId` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `choiceId`, `featId`))")
         db.execSQL("CREATE TABLE IF NOT EXISTS `ClassChoiceEntity` (`characterId` INTEGER NOT NULL, `classId` INTEGER NOT NULL, `level` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `totalNumOnGoldDie` INTEGER, `abilityImprovementsGranted` TEXT NOT NULL, `tookGold` INTEGER NOT NULL, `proficiencyChoicesByString` TEXT NOT NULL, PRIMARY KEY(`characterId`, `classId`))")
-        db.execSQL("CREATE TABLE IF NOT EXISTS `spells` (`name` TEXT NOT NULL, `level` INTEGER NOT NULL, `components` TEXT NOT NULL, `itemComponents` TEXT NOT NULL, `school` TEXT NOT NULL, `desc` TEXT NOT NULL, `range` TEXT NOT NULL, `area` TEXT NOT NULL, `castingTime` TEXT NOT NULL, `duration` TEXT NOT NULL, `classes` TEXT NOT NULL, `damage` TEXT NOT NULL, `isRitual` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `spells` (`name` TEXT NOT NULL, `level` INTEGER NOT NULL, `components` TEXT NOT NULL, `itemComponents` TEXT NOT NULL, `school` TEXT NOT NULL, `desc` TEXT NOT NULL, `range` TEXT NOT NULL, `area` TEXT NOT NULL, `castingTime` TEXT NOT NULL, `duration` TEXT NOT NULL, `classes` TEXT NOT NULL, `damage` TEXT NOT NULL, `isRitual` INTEGER NOT NULL, `isHomebrew` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `RaceFeatureCrossRef` (`featureId` INTEGER NOT NULL, `raceId` INTEGER NOT NULL, PRIMARY KEY(`raceId`, `featureId`))")
         db.execSQL("CREATE TABLE IF NOT EXISTS `CharacterRaceCrossRef` (`raceId` INTEGER NOT NULL, `id` INTEGER NOT NULL, PRIMARY KEY(`id`, `raceId`))")
         db.execSQL("CREATE TABLE IF NOT EXISTS `FeatureOptionsCrossRef` (`featureId` INTEGER NOT NULL, `id` INTEGER NOT NULL, PRIMARY KEY(`id`, `featureId`))")
@@ -361,7 +362,7 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         for (i in 0 until json.length()) {
             val obj = json.getJSONObject(i)
             val bonus = obj.getString("bonus")
-            val ability = obj.getJSONObject("ability")
+            val ability = obj.getString("ability")
             result.add("+$bonus $ability")
         }
         return gson.toJson(result)
@@ -514,7 +515,7 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
                 if (
                     (obj.optJSONObject("choose")?.optInt("static", 1) ?: 0) != 0
                 ) {
-                    val objWithIds = featureObjWithIds.getJSONArray("from").getJSONObject(i)
+                    val objWithIds = featureObjWithIds
                     val featureChoiceId =
                         objWithIds.optInt("choice_id", featureObjWithIds.getInt("choice_id"))
                     migrateFeatureChoice(characterId, obj, objWithIds, featureChoiceId)
@@ -524,32 +525,60 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         }
     }
 
-
-    private fun getFeatureChoiceFromList(choiceWithIds: JSONObject): JSONArray {
-        return try {
-            when (choiceWithIds.getString("index")) {
-                "infusions" -> infusionsJson
-                "invocations" -> invocationsJson
-                "proficiencies" -> expertiseJson
-                "skills" -> proficienciesJson
-                "all_spells" -> spellsJson
-                "spells" -> spellsJson
-                "maneuvers" -> maneuversJson
-                "metamagic" -> metamagicJson
-                "all_languages" -> languagesJson
-                "artisans_tools" -> artisansToolsJson
-                "fighting_styles" -> fightingStylesJson
-                else -> fightingStylesJson
-            }
-        } catch (e: JSONException) {
-            choiceWithIds.getJSONArray("from")
+    private fun getFeatureChoiceFromIndex(index: String): JSONArray {
+        return when (index) {
+            "infusions" -> infusionsJson
+            "invocations" -> invocationsJson
+            "proficiencies" -> expertiseJson
+            "skills" -> proficienciesJson
+            "all_spells" -> spellsJson
+            "spells" -> spellsJson
+            "maneuvers" -> maneuversJson
+            "metamagic" -> metamagicJson
+            "all_languages" -> languagesJson
+            "artisans_tools" -> artisansToolsJson
+            "fighting_styles" -> fightingStylesJson
+            "Draconic Ancestry" -> throw JSONException("")
+            else -> fightingStylesJson
         }
     }
 
-    private fun getJsonObjectFromList(name: String, list: JSONArray) : JSONObject {
-        for(i in 0 until list.length()) {
+    private fun getFeatureChoiceFromList(choiceWithIds: JSONObject): JSONArray {
+        return try {
+            getFeatureChoiceFromIndex(choiceWithIds.getString("index"))
+        } catch (e: JSONException) {
+            val result = choiceWithIds.getJSONArray("from")
+            val subResults = JSONArray()
+            val indexesToRemove = mutableListOf<Int>()
+            for (i in 0 until result.length()) {
+                val obj = result.getJSONObject(i)
+                indexesToRemove.add(i)
+                try {
+                    val sublist = getFeatureChoiceFromIndex(obj.getString("index"))
+                    for (j in 0 until sublist.length()) {
+                        subResults.put(sublist.getJSONObject(j))
+                    }
+                } catch (_: JSONException) {
+                }
+            }
+            if (subResults.length() == 0) {
+                result
+            } else {
+                indexesToRemove.asReversed().forEach {
+                    result.remove(it)
+                }
+                for(i in 0 until subResults.length()) {
+                    result.put(subResults.getJSONObject(i))
+                }
+                result
+            }
+        }
+    }
+
+    private fun getJsonObjectFromList(name: String, list: JSONArray): JSONObject {
+        for (i in 0 until list.length()) {
             val obj = list.getJSONObject(i)
-            if(obj.getString("name") == name) {
+            if (obj.getString("name") == name) {
                 return obj
             }
         }
@@ -565,7 +594,10 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
         choice.optJSONArray("chosen")?.let { chosen ->
             for (i in 0 until chosen.length()) {
                 val obj = chosen.getJSONObject(i)
-                val objWithId = getJsonObjectFromList(obj.getString("name"), getFeatureChoiceFromList(choiceWithIds))
+                val objWithId = getJsonObjectFromList(
+                    obj.getString("name"),
+                    getFeatureChoiceFromList(choiceWithIds)
+                )
                 val featureId = objWithId.getInt("id")
                 migrateFeature(characterId, obj, objWithId, featureId)
                 db.execSQL("INSERT INTO FeatureChoiceChoiceEntity (featureId, characterId, choiceId) VALUES ($featureId, $characterId, $choiceId)")

@@ -22,7 +22,7 @@ abstract class CharacterDao {
     languages AS backgroundlanguages, equipment AS backgroundequipment, equipmentChoices AS backgroundequipmentChoices
     FROM backgrounds)
     
-    SELECT * FROM characters 
+    SELECT characters.*, races.*, background.*, subrace.* FROM characters 
     LEFT JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id
     LEFT JOIN races ON CharacterRaceCrossRef.raceId IS races.raceId
     LEFT JOIN CharacterSubraceCrossRef ON CharacterSubraceCrossRef.characterId IS characters.id

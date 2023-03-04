@@ -7,8 +7,22 @@ import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 
 @Dao
 abstract class FeatureDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFeature(feature: FeatureEntity): Long
+    fun insertFeature(feature: FeatureEntity): Int {
+        val id = insertFeatureOrIgnore(feature).toInt()
+        if(id == -1) {
+            updateFeature(feature)
+            return feature.featureId
+        }
+        return id
+    }
+
+
+    @Update
+    protected abstract fun updateFeature(feature: FeatureEntity)
+
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertFeatureOrIgnore(feature: FeatureEntity) : Long
 
     @Query("SELECT * FROM features WHERE featureId = :id")
     abstract fun getLiveFeatureById(id: Int): LiveData<Feature>
@@ -28,8 +42,21 @@ abstract class FeatureDao {
     @Delete
     abstract fun removeOptionsFeatureCrossRef(ref: OptionsFeatureCrossRef)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFeatureChoice(option: FeatureChoiceEntity): Long
+
+    fun insertFeatureChoice(option: FeatureChoiceEntity): Int {
+        val id = insertFeatureChoiceOrIgnore(option).toInt()
+        if(id == -1) {
+            updateFeatureChoice(option)
+            return option.id
+        }
+        return id
+    }
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertFeatureChoiceOrIgnore(option : FeatureChoiceEntity) : Long
+
+    @Update
+    protected abstract fun updateFeatureChoice(option: FeatureChoiceEntity)
 
     @Query("DELETE FROM features WHERE featureId = :id")
     abstract fun removeFeatureChoice(id: Int)
@@ -116,8 +143,18 @@ WHERE featureId IS :featureId
     )
     abstract fun getFeatureSpells(featureId: Int): List<Spell>?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertIndexRef(ref: IndexRef)
+
+    fun insertIndexRef(ref: IndexRef) {
+        if(insertIndexRefOrIgnore(ref).toInt() == -1) {
+            updateIndexRef(ref)
+        }
+    }
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertIndexRefOrIgnore(ref: IndexRef) : Long
+
+    @Update
+    protected abstract fun updateIndexRef(ref: IndexRef)
 
     @Delete
     abstract fun deleteIndexRef(ref: IndexRef)

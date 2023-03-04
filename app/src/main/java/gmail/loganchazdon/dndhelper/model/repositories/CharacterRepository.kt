@@ -26,7 +26,9 @@ class CharacterRepository @Inject constructor(
     }
 
     fun insertCharacter(character: CharacterEntity) {
-        characterDao.insertCharacter(character)
+        if(characterDao.insertCharacter(character).toInt() == -1) {
+            characterDao.updateCharacter(character)
+        }
     }
 
     fun deleteCharacterById(id: Int) {

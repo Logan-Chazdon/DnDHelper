@@ -4,11 +4,13 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.room.withTransaction
 import dagger.Component
 import gmail.loganchazdon.dndhelper.AppModule
 import gmail.loganchazdon.dndhelper.R
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.Currency
+import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
 import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository.Companion.allSpellLevels
@@ -41,6 +43,7 @@ interface LocalDataSource {
 
 class LocalDataSourceImpl @Inject constructor(
     val context: Context,
+    val db: RoomDataBase,
     val featureDao: FeatureDao,
     val backgroundDao: BackgroundDao,
     val classDao: ClassDao,
@@ -175,47 +178,38 @@ class LocalDataSourceImpl @Inject constructor(
         "wizard" to 13
     )
 
+
     init {
-        //Items
         generateItems()
+        scope.launch(Dispatchers.Main) {
+            db.withTransaction {
+                updateSpells()
 
-        generateItemProficiencies()
+                generateSkills()
 
-        //Abilities
-        generateSkills()
+                generateItemProficiencies()
 
-        //Spells
-        updateSpells()
+                generateLanguages()
 
-        //Languages
-        generateLanguages()
+                generateInfusions()
 
-        //Infusions
-        generateInfusions()
+                generateInvocations()
 
-        //Invocations
-        generateInvocations()
+                generateMetaMagic()
 
-        //Metamagic
-        generateMetaMagic()
+                generateManeuvers()
 
-        //Maneuvers
-        generateManeuvers()
+                generateFightingStyles()
 
-        //Fighting Styles
-        generateFightingStyles()
+                generateFeats()
 
-        //Feats
-        generateFeats()
+                updateBackgrounds()
 
-        //Backgrounds
-        updateBackgrounds()
+                updateRaces()
 
-        //Races
-        updateRaces()
-
-        //Classes
-        updateClasses()
+                updateClasses()
+            }
+        }
     }
 
     private fun generateItemProficiencies() {
@@ -224,34 +218,33 @@ class LocalDataSourceImpl @Inject constructor(
         )
 
         val types = listOf("instruments", "artisans_tools", "gaming_sets")
-        scope.launch {
-            val ids = mutableListOf<Int>()
-            types.forEach { type ->
-                val array = rootJson.getJSONArray(type)
-                for (i in 0 until array.length()) {
-                    val item = array.getJSONObject(i)
-                    val id = item.getInt("id")
-                    ids.add(id)
-                    val name = item.getString("name")
-                    featureDao.insertFeature(
-                        FeatureEntity(
-                            featureId = id,
-                            name = name,
-                            description = "",
-                            proficiencies = listOf(
-                                Proficiency(name)
-                            )
+        val ids = mutableListOf<Int>()
+        types.forEach { type ->
+            val array = rootJson.getJSONArray(type)
+            for (i in 0 until array.length()) {
+                val item = array.getJSONObject(i)
+                val id = item.getInt("id")
+                ids.add(id)
+                val name = item.getString("name")
+                featureDao.insertFeature(
+                    FeatureEntity(
+                        featureId = id,
+                        name = name,
+                        description = "",
+                        proficiencies = listOf(
+                            Proficiency(name)
                         )
-                    )
-                }
-                featureDao.insertIndexRef(
-                    IndexRef(
-                        ids = ids,
-                        index = type.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                     )
                 )
             }
+            featureDao.insertIndexRef(
+                IndexRef(
+                    ids = ids,
+                    index = type.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                )
+            )
         }
+
     }
 
     private fun generateFightingStyles() {
@@ -261,14 +254,14 @@ class LocalDataSourceImpl @Inject constructor(
         val ids = extractFeatures(
             fightingStylesJson
         )
-        scope.launch {
-            featureDao.insertIndexRef(
-                IndexRef(
-                    index = "Fighting Styles",
-                    ids = ids
-                )
+
+        featureDao.insertIndexRef(
+            IndexRef(
+                index = "Fighting Styles",
+                ids = ids
             )
-        }
+        )
+
     }
 
     private fun generateMetaMagic() {
@@ -287,25 +280,24 @@ class LocalDataSourceImpl @Inject constructor(
             )
             ids.add(metamagicJson.getInt("id"))
         }
-        _metaMagics.value = metamagic
+        _metaMagics.postValue(metamagic)
 
-        scope.launch {
-            metamagic.forEachIndexed { index, metamagic ->
-                featureDao.insertFeature(
-                    FeatureEntity(
-                        featureId = ids[index],
-                        name = metamagic.name,
-                        description = metamagic.desc,
-                    )
-                )
-            }
-            featureDao.insertIndexRef(
-                IndexRef(
-                    index = "Metamagics",
-                    ids = ids
+
+        metamagic.forEachIndexed { index, metamagic ->
+            featureDao.insertFeature(
+                FeatureEntity(
+                    featureId = ids[index],
+                    name = metamagic.name,
+                    description = metamagic.desc,
                 )
             )
         }
+        featureDao.insertIndexRef(
+            IndexRef(
+                index = "Metamagics",
+                ids = ids
+            )
+        )
     }
 
     private fun generateManeuvers() {
@@ -324,20 +316,20 @@ class LocalDataSourceImpl @Inject constructor(
                 )
             )
         }
-        _maneuvers.value = maneuvers
+        _maneuvers.postValue(maneuvers)
 
-        scope.launch {
-            maneuvers.forEach {
-                featureDao.insertFeature(it)
-            }
 
-            featureDao.insertIndexRef(
-                IndexRef(
-                    index = "Maneuvers",
-                    ids = maneuvers.map { it.featureId }
-                )
-            )
+        maneuvers.forEach {
+            featureDao.insertFeature(it)
         }
+
+        featureDao.insertIndexRef(
+            IndexRef(
+                index = "Maneuvers",
+                ids = maneuvers.map { it.featureId }
+            )
+        )
+
     }
 
     private fun generateInvocations() {
@@ -360,20 +352,20 @@ class LocalDataSourceImpl @Inject constructor(
                 )
             )
         }
-        _invocations.value = invocations
-        scope.launch {
-            invocations.forEach {
-                featureDao.insertFeature(
-                    it
-                )
-            }
-            featureDao.insertIndexRef(
-                IndexRef(
-                    index = "Invocations",
-                    ids = invocations.map { it.featureId }
-                )
+        _invocations.postValue(invocations)
+
+        invocations.forEach {
+            featureDao.insertFeature(
+                it
             )
         }
+        featureDao.insertIndexRef(
+            IndexRef(
+                index = "Invocations",
+                ids = invocations.map { it.featureId }
+            )
+        )
+
     }
 
     private fun extractPrerequisite(jsonObject: JSONObject): Prerequisite {
@@ -442,29 +434,28 @@ class LocalDataSourceImpl @Inject constructor(
             val infusionJson = infusionsJson.getJSONObject(index)
             infusions.add(extractInfusion(infusionJson))
         }
-        _infusions.value = infusions
+        _infusions.postValue(infusions)
         val ids = mutableListOf<Int>()
-        scope.launch {
-            infusions.forEach { infusion ->
-                ids.add(infusion.id)
-                featureDao.insertFeature(
-                    Feature(
-                        maxTimesChosen = infusion.maxTimesChosen,
-                        grantedAtLevel = infusion.grantedAtLevel,
-                        name = infusion.name,
-                        description = infusion.desc,
-                        infusion = infusion,
-                        featureId = infusion.id
-                    )
-                )
-            }
-            featureDao.insertIndexRef(
-                IndexRef(
-                    index = "Infusions",
-                    ids = ids
+
+        infusions.forEach { infusion ->
+            ids.add(infusion.id)
+            featureDao.insertFeature(
+                Feature(
+                    maxTimesChosen = infusion.maxTimesChosen,
+                    grantedAtLevel = infusion.grantedAtLevel,
+                    name = infusion.name,
+                    description = infusion.desc,
+                    infusion = infusion,
+                    featureId = infusion.id
                 )
             )
         }
+        featureDao.insertIndexRef(
+            IndexRef(
+                index = "Infusions",
+                ids = ids
+            )
+        )
     }
 
     private fun extractInfusion(infusionJson: JSONObject): Infusion {
@@ -505,36 +496,35 @@ class LocalDataSourceImpl @Inject constructor(
             null
         }
 
-        scope.launch {
-            choice?.let { entity ->
-                val subIds = mutableListOf<Int>()
-                options?.forEach {
-                    subIds.add(it.featureId)
-                    featureDao.insertFeature(it)
-                }
-                featureDao.insertIndexRef(
-                    IndexRef(
-                        index = "Replicate magic item",
-                        ids = subIds
-                    )
-                )
 
-                featureDao.insertFeatureChoice(entity)
-
-                featureDao.insertFeatureChoiceIndexCrossRef(
-                    FeatureChoiceIndexCrossRef(
-                        choiceId = entity.id,
-                        index = "Replicate magic item"
-                    )
-                )
-
-                featureDao.insertFeatureOptionsCrossRef(
-                    FeatureOptionsCrossRef(
-                        featureId = infusionJson.getInt("id"),
-                        id = entity.id
-                    )
-                )
+        choice?.let { entity ->
+            val subIds = mutableListOf<Int>()
+            options?.forEach {
+                subIds.add(it.featureId)
+                featureDao.insertFeature(it)
             }
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Replicate magic item",
+                    ids = subIds
+                )
+            )
+
+            featureDao.insertFeatureChoice(entity)
+
+            featureDao.insertFeatureChoiceIndexCrossRef(
+                FeatureChoiceIndexCrossRef(
+                    choiceId = entity.id,
+                    index = "Replicate magic item"
+                )
+            )
+
+            featureDao.insertFeatureOptionsCrossRef(
+                FeatureOptionsCrossRef(
+                    featureId = infusionJson.getInt("id"),
+                    id = entity.id
+                )
+            )
         }
 
         return Infusion(
@@ -788,7 +778,7 @@ class LocalDataSourceImpl @Inject constructor(
                 )
             )
         }
-        _feats.value = feats
+        _feats.postValue(feats)
     }
 
     private fun generateItems() {
@@ -1058,59 +1048,57 @@ class LocalDataSourceImpl @Inject constructor(
             }
             abilitiesToSkills[baseStat] = skills
         }
-        _abilitiesToSkills.value = abilitiesToSkills
+        _abilitiesToSkills.postValue(abilitiesToSkills)
 
-        scope.launch {
-            val expertiseIds = mutableListOf<Int>()
-            val skillIds = mutableListOf<Int>()
-            var id = 0
-            abilitiesToSkills.forEach {
-                it.value.forEach { skill ->
-                    //Don't add saving throws
-                    if (!skill.lowercase().contains("throw")) {
-                        id++
-                        featureDao.insertFeature(
-                            Feature(
-                                name = skill,
-                                description = "",
-                                grantedAtLevel = 0,
-                                prerequisite = Prerequisite(
-                                    proficiency = Proficiency(
-                                        name = skill
-                                    )
-                                ),
-                                featureId = id,
-                            )
+        val expertiseIds = mutableListOf<Int>()
+        val skillIds = mutableListOf<Int>()
+        var id = 0
+        abilitiesToSkills.forEach {
+            it.value.forEach { skill ->
+                //Don't add saving throws
+                if (!skill.lowercase().contains("throw")) {
+                    id++
+                    featureDao.insertFeature(
+                        Feature(
+                            name = skill,
+                            description = "",
+                            grantedAtLevel = 0,
+                            prerequisite = Prerequisite(
+                                proficiency = Proficiency(
+                                    name = skill
+                                )
+                            ),
+                            featureId = id,
                         )
-                        expertiseIds.add(id)
+                    )
+                    expertiseIds.add(id)
 
-                        id++
-                        featureDao.insertFeature(
-                            Feature(
-                                name = skill,
-                                proficiencies = listOf(Proficiency(name = skill)),
-                                description = "",
-                                featureId = id
-                            )
+                    id++
+                    featureDao.insertFeature(
+                        Feature(
+                            name = skill,
+                            proficiencies = listOf(Proficiency(name = skill)),
+                            description = "",
+                            featureId = id
                         )
-                        skillIds.add(id)
-                    }
+                    )
+                    skillIds.add(id)
                 }
-
-                featureDao.insertIndexRef(
-                    IndexRef(
-                        index = "Expertise",
-                        expertiseIds
-                    )
-                )
-
-                featureDao.insertIndexRef(
-                    IndexRef(
-                        index = "Skills",
-                        skillIds
-                    )
-                )
             }
+
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Expertise",
+                    expertiseIds
+                )
+            )
+
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Skills",
+                    skillIds
+                )
+            )
         }
     }
 
@@ -1181,61 +1169,61 @@ class LocalDataSourceImpl @Inject constructor(
             }
             val id = spellJson.getInt("id")
             ids.add(id)
-            scope.launch {
-                spellDao.insertSpell(
-                    Spell(
-                        name = name,
-                        level = level,
-                        components = components,
-                        itemComponents = itemComponents,
-                        school = school,
-                        desc = desc,
-                        range = range,
-                        area = area,
-                        castingTime = castingTime,
-                        duration = duration,
-                        classes = classes,
-                        damage = damage,
-                        isRitual = ritual,
-                    ).run {
-                        this.id = id
-                        this
-                    })
 
-                featureDao.insertFeature(
-                    FeatureEntity(
-                        featureId = id,
-                        name = name,
-                        description = desc
-                    )
-                )
+            spellDao.insertSpell(
+                Spell(
+                    name = name,
+                    level = level,
+                    components = components,
+                    itemComponents = itemComponents,
+                    school = school,
+                    desc = desc,
+                    range = range,
+                    area = area,
+                    castingTime = castingTime,
+                    duration = duration,
+                    classes = classes,
+                    damage = damage,
+                    isRitual = ritual,
+                ).run {
+                    this.id = id
+                    this
+                })
 
-                featureDao.insertFeatureSpellCrossRef(
-                    FeatureSpellCrossRef(
-                        id,
-                        id
-                    )
-                )
-
-                classes.forEach {
-                    classDao.insertClassSpellCrossRef(
-                        ClassSpellCrossRef(
-                            classId = classNameToId[it.lowercase()]!!,
-                            spellId = id
-                        )
-                    )
-                }
-            }
-        }
-
-        scope.launch {
-            featureDao.insertIndexRef(
-                IndexRef(
-                    index = "Spells",
-                    ids = ids
+            featureDao.insertFeature(
+                FeatureEntity(
+                    featureId = id,
+                    name = name,
+                    description = desc
                 )
             )
+
+            featureDao.insertFeatureSpellCrossRef(
+                FeatureSpellCrossRef(
+                    id,
+                    id
+                )
+            )
+
+            classes.forEach {
+                classDao.insertClassSpellCrossRef(
+                    ClassSpellCrossRef(
+                        classId = classNameToId[it.lowercase()]!!,
+                        spellId = id
+                    )
+                )
+            }
+
         }
+
+
+        featureDao.insertIndexRef(
+            IndexRef(
+                index = "Spells",
+                ids = ids
+            )
+        )
+
     }
 
     private fun generateLanguages() {
@@ -1252,28 +1240,28 @@ class LocalDataSourceImpl @Inject constructor(
                 Language(languageJson.getString("name"))
             )
             ids.add(languageJson.getInt("id"))
-            _languages.value = languages
+            _languages.postValue(languages)
         }
 
-        scope.launch {
-            languages.forEachIndexed { index, it ->
-                featureDao.insertFeature(
-                    Feature(
-                        name = it.name!!,
-                        description = "",
-                        featureId = ids[index],
-                        languages = listOf(it)
-                    )
-                )
 
-                featureDao.insertIndexRef(
-                    IndexRef(
-                        index = "Languages",
-                        ids = ids
-                    )
+        languages.forEachIndexed { index, it ->
+            featureDao.insertFeature(
+                Feature(
+                    name = it.name!!,
+                    description = "",
+                    featureId = ids[index],
+                    languages = listOf(it)
                 )
-            }
+            )
+
+            featureDao.insertIndexRef(
+                IndexRef(
+                    index = "Languages",
+                    ids = ids
+                )
+            )
         }
+
     }
 
 
@@ -1378,33 +1366,33 @@ class LocalDataSourceImpl @Inject constructor(
                 null
             }
 
-            scope.launch {
-                backgroundDao.insertBackground(
-                    Background(
-                        name = name,
-                        desc = desc,
-                        spells = spells,
-                        proficiencies = proficiencies,
-                        proficiencyChoices = proficiencyChoices,
-                        languages = languages,
-                        languageChoices = languageChoices,
-                        equipment = equipment,
-                        equipmentChoices = equipmentChoices,
-                    ).run {
-                        this.id = backgroundIndex + 1
-                        this
-                    }
-                )
 
-                features.forEach {
-                    backgroundDao.insertBackgroundFeatureCrossRef(
-                        BackgroundFeatureCrossRef(
-                            backgroundId = backgroundIndex + 1,
-                            featureId = it
-                        )
-                    )
+            backgroundDao.insertBackground(
+                Background(
+                    name = name,
+                    desc = desc,
+                    spells = spells,
+                    proficiencies = proficiencies,
+                    proficiencyChoices = proficiencyChoices,
+                    languages = languages,
+                    languageChoices = languageChoices,
+                    equipment = equipment,
+                    equipmentChoices = equipmentChoices,
+                ).run {
+                    this.id = backgroundIndex + 1
+                    this
                 }
+            )
+
+            features.forEach {
+                backgroundDao.insertBackgroundFeatureCrossRef(
+                    BackgroundFeatureCrossRef(
+                        backgroundId = backgroundIndex + 1,
+                        featureId = it
+                    )
+                )
             }
+
         }
     }
 
@@ -1456,44 +1444,44 @@ class LocalDataSourceImpl @Inject constructor(
             } catch (_: JSONException) {
             }
 
-            scope.launch {
-                subraceIds.forEach {
-                    raceDao.insertRaceSubraceCrossRef(
-                        RaceSubraceCrossRef(
-                            subraceId = it,
-                            raceId = raceIndex + 1
-                        )
-                    )
-                }
 
-                raceDao.insertRace(
-                    Race(
-                        name = name,
-                        groundSpeed = groundSpeed,
-                        abilityBonuses = abilityBonuses,
-                        abilityBonusChoice = abilityBonusChoice,
-                        proficiencyChoices = proficiencyChoices,
-                        alignment = alignment,
-                        age = age,
-                        size = size,
-                        sizeDesc = sizeDesc,
-                        startingProficiencies = startingProficiencies,
-                        languages = languages,
-                        languageChoices = languageChoices,
-                        languageDesc = languageDesc,
-                        id = raceIndex + 1
+            raceDao.insertRace(
+                Race(
+                    name = name,
+                    groundSpeed = groundSpeed,
+                    abilityBonuses = abilityBonuses,
+                    abilityBonusChoice = abilityBonusChoice,
+                    proficiencyChoices = proficiencyChoices,
+                    alignment = alignment,
+                    age = age,
+                    size = size,
+                    sizeDesc = sizeDesc,
+                    startingProficiencies = startingProficiencies,
+                    languages = languages,
+                    languageChoices = languageChoices,
+                    languageDesc = languageDesc,
+                    id = raceIndex + 1
+                )
+            )
+
+            subraceIds.forEach {
+                raceDao.insertRaceSubraceCrossRef(
+                    RaceSubraceCrossRef(
+                        subraceId = it,
+                        raceId = raceIndex + 1
                     )
                 )
-
-                traits.forEach {
-                    raceDao.insertRaceFeatureCrossRef(
-                        RaceFeatureCrossRef(
-                            raceId = raceIndex + 1,
-                            featureId = it
-                        )
-                    )
-                }
             }
+
+            traits.forEach {
+                raceDao.insertRaceFeatureCrossRef(
+                    RaceFeatureCrossRef(
+                        raceId = raceIndex + 1,
+                        featureId = it
+                    )
+                )
+            }
+
         }
     }
 
@@ -1534,51 +1522,50 @@ class LocalDataSourceImpl @Inject constructor(
                 null
             }
             val id = subraceJson.getInt("id")
-            scope.launch {
-                try {
-                    extractFeatures(subraceJson.getJSONArray("features"))
-                } catch (e: JSONException) {
-                    listOf()
-                }.forEach {
-                    subraceDao.insertSubraceFeatureCrossRef(
-                        SubraceFeatureCrossRef(
-                            subraceId = id,
-                            featureId = it
-                        )
-                    )
-                }
 
-                featChoices?.forEach {
-                    subraceDao.insertSubraceFeatChoiceCrossRef(
-                        SubraceFeatChoiceCrossRef(
-                            featChoiceId = it,
-                            subraceId = id
-                        )
-                    )
-                }
+            subraceDao.insertSubrace(
+                Subrace(
+                    name = subraceJson.getString("name"),
+                    abilityBonuses = abilityBonuses,
+                    abilityBonusChoice = abilityBonusChoice,
+                    startingProficiencies = proficiencies,
+                    languages = languages,
+                    languageChoices = languageChoices,
+                    size = try {
+                        subraceJson.getString("size")
+                    } catch (e: JSONException) {
+                        null
+                    },
+                    groundSpeed = try {
+                        subraceJson.getInt("ground_speed")
+                    } catch (e: JSONException) {
+                        null
+                    }
+                ).run {
+                    this.id = id
+                    this
+                })
 
-                subraceDao.insertSubrace(
-                    Subrace(
-                        name = subraceJson.getString("name"),
-                        abilityBonuses = abilityBonuses,
-                        abilityBonusChoice = abilityBonusChoice,
-                        startingProficiencies = proficiencies,
-                        languages = languages,
-                        languageChoices = languageChoices,
-                        size = try {
-                            subraceJson.getString("size")
-                        } catch (e: JSONException) {
-                            null
-                        },
-                        groundSpeed = try {
-                            subraceJson.getInt("ground_speed")
-                        } catch (e: JSONException) {
-                            null
-                        }
-                    ).run {
-                        this.id = id
-                        this
-                    })
+            try {
+                extractFeatures(subraceJson.getJSONArray("features"))
+            } catch (e: JSONException) {
+                listOf()
+            }.forEach {
+                subraceDao.insertSubraceFeatureCrossRef(
+                    SubraceFeatureCrossRef(
+                        subraceId = id,
+                        featureId = it
+                    )
+                )
+            }
+
+            featChoices?.forEach {
+                subraceDao.insertSubraceFeatChoiceCrossRef(
+                    SubraceFeatChoiceCrossRef(
+                        featChoiceId = it,
+                        subraceId = id
+                    )
+                )
             }
             result.add(id)
         }
@@ -1595,9 +1582,9 @@ class LocalDataSourceImpl @Inject constructor(
                 from = extractFeats(featChoiceJson.getJSONArray("from"))
             )
             featChoice.id = featChoiceJson.getInt("id")
-            scope.launch {
-                featDao.insertFeatChoice(featChoice)
-            }
+
+            featDao.insertFeatChoice(featChoice)
+
             result.add(
                 featChoice.id
             )
@@ -1615,7 +1602,7 @@ class LocalDataSourceImpl @Inject constructor(
             when (featJson.getString("index")) {
                 "all_feats" -> {
                     result.addAll(
-                        _feats.value!!
+                        _feats.value ?: emptyList()
                     )
                 }
             }
@@ -1785,7 +1772,7 @@ class LocalDataSourceImpl @Inject constructor(
                 }
             }
             "skill_proficiencies" -> {
-                _abilitiesToSkills.value!!.values.forEach {
+                /*_abilitiesToSkills.value!!.values.forEach {
                     it.forEach { item ->
                         if (!item.contains("Saving")) {
                             proficiencies.add(
@@ -1795,7 +1782,7 @@ class LocalDataSourceImpl @Inject constructor(
                             )
                         }
                     }
-                }
+                }*/ //TODO replace me with an index
             }
             "musical_instruments" -> {
                 instrumentIndexes.forEach {
@@ -1852,54 +1839,57 @@ class LocalDataSourceImpl @Inject constructor(
                     false
                 }
 
-                scope.launch {
-                    val id = subclassJson.getInt("id")
-                    subclassDao.insertSubclass(
-                        SubclassEntity(
-                            name = subclassJson.getString("name"),
-                            spellCasting = try {
-                                extractSpellCasting(subclassJson.getJSONObject("spell_casting"))
-                            } catch (e: JSONException) {
-                                null
-                            },
-                            spellAreFree = spellsAreFree
-                        ).run {
-                            this.subclassId = id
-                            this
-                        }
-                    )
+                val id = subclassJson.getInt("id")
+                subclassDao.insertSubclass(
+                    SubclassEntity(
+                        name = subclassJson.getString("name"),
+                        spellCasting = try {
+                            extractSpellCasting(subclassJson.getJSONObject("spell_casting"))
+                        } catch (e: JSONException) {
+                            null
+                        },
+                        spellAreFree = spellsAreFree
+                    ).run {
+                        this.subclassId = id
+                        this
+                    }
+                )
 
-                    classDao.insertClassSubclassId(
-                        ClassSubclassCrossRef(
-                            classId = classIndex + 1,
+                classDao.insertClassSubclassId(
+                    ClassSubclassCrossRef(
+                        classId = classIndex + 1,
+                        subclassId = id
+                    )
+                )
+
+                extractFeatures(subclassJson.getJSONArray("features")).forEach {
+                    subclassDao.insertSubclassFeatureCrossRef(
+                        SubclassFeatureCrossRef(
+                            featureId = it,
                             subclassId = id
                         )
                     )
+                }
 
-                    extractFeatures(subclassJson.getJSONArray("features")).forEach {
-                        subclassDao.insertSubclassFeatureCrossRef(
-                            SubclassFeatureCrossRef(
-                                featureId = it,
-                                subclassId = id
+                try {
+                    val subclassSpellJson = subclassJson.getJSONArray("spells")
+                    for (index in 0 until subclassSpellJson.length()) {
+                        val spellJson = subclassSpellJson.getJSONObject(index)
+
+                        val cursor = db.query(
+                            "SELECT id FROM spells WHERE LOWER(spells.name) LIKE LOWER(\'${spellJson.getString("name").replace("'", "_")}\')",
+                            arrayOf()
+                        )
+
+                        cursor.moveToFirst()
+                        subclassDao.insertSubclassSpellCrossRef(
+                            SubclassSpellCrossRef(
+                                subclassId = id,
+                                spellId = cursor.getInt(0)
                             )
                         )
                     }
-
-                    try {
-                        val subclassSpellJson = subclassJson.getJSONArray("spells")
-                        for (index in 0 until subclassSpellJson.length()) {
-                            val spellJson = subclassSpellJson.getJSONObject(index)
-                            val spellId = spellDao.getSpellIdByName(spellJson.getString("name"))
-                            subclassDao.insertSubclassSpellCrossRef(
-                                SubclassSpellCrossRef(
-                                    subclassId = id,
-                                    spellId = spellId
-                                )
-                            )
-                        }
-
-                    } catch (_: JSONException) {
-                    }
+                } catch (_: JSONException) {
                 }
             }
 
@@ -1945,38 +1935,38 @@ class LocalDataSourceImpl @Inject constructor(
                 null
             }
 
-            scope.launch {
-                classDao.insertClass(
-                    Class(
-                        name = name,
-                        hitDie = hitDie,
-                        levelPath = null,
-                        proficiencyChoices = proficiencyChoices,
-                        proficiencies = proficiencies,
-                        equipmentChoices = equipmentChoices,
-                        equipment = equipment,
-                        spellCasting = spellCasting,
-                        pactMagic = pactMagic,
-                        subclassLevel = classJson.getInt("subclass_level"),
-                        startingGoldD4s = classJson.getInt("starting_gold_d4s"),
-                        startingGoldMultiplier = try {
-                            classJson.getInt("staring_gold_multiplier")
-                        } catch (e: JSONException) {
-                            10
-                        },
-                        id = classIndex + 1
+
+            classDao.insertClass(
+                Class(
+                    name = name,
+                    hitDie = hitDie,
+                    levelPath = null,
+                    proficiencyChoices = proficiencyChoices,
+                    proficiencies = proficiencies,
+                    equipmentChoices = equipmentChoices,
+                    equipment = equipment,
+                    spellCasting = spellCasting,
+                    pactMagic = pactMagic,
+                    subclassLevel = classJson.getInt("subclass_level"),
+                    startingGoldD4s = classJson.getInt("starting_gold_d4s"),
+                    startingGoldMultiplier = try {
+                        classJson.getInt("staring_gold_multiplier")
+                    } catch (e: JSONException) {
+                        10
+                    },
+                    id = classIndex + 1
+                )
+            )
+
+            featureIds.forEach {
+                classDao.insertClassFeatureCrossRef(
+                    ClassFeatureCrossRef(
+                        id = classIndex + 1,
+                        featureId = it
                     )
                 )
-
-                featureIds.forEach {
-                    classDao.insertClassFeatureCrossRef(
-                        ClassFeatureCrossRef(
-                            id = classIndex + 1,
-                            featureId = it
-                        )
-                    )
-                }
             }
+
         }
     }
 
@@ -2223,24 +2213,20 @@ class LocalDataSourceImpl @Inject constructor(
                 try {
                     when (val index = featureJson.getString("index")) {
                         "invocations" -> {
-                            scope.launch {
-                                featureDao.insertFeatureChoiceIndexCrossRef(
-                                    FeatureChoiceIndexCrossRef(
-                                        choiceId = parentChoiceId!!,
-                                        index = "Invocations"
-                                    )
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Invocations"
                                 )
-                            }
+                            )
                         }
                         "infusions" -> {
-                            scope.launch {
-                                featureDao.insertFeatureChoiceIndexCrossRef(
-                                    FeatureChoiceIndexCrossRef(
-                                        choiceId = parentChoiceId!!,
-                                        index = "Infusions"
-                                    )
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Infusions"
                                 )
-                            }
+                            )
                         }
                         "proficiencies" -> {
                             featureDao.insertFeatureChoiceIndexCrossRef(
@@ -2275,24 +2261,20 @@ class LocalDataSourceImpl @Inject constructor(
                             )
                         }
                         "maneuvers" -> {
-                            scope.launch {
-                                featureDao.insertFeatureChoiceIndexCrossRef(
-                                    FeatureChoiceIndexCrossRef(
-                                        choiceId = parentChoiceId!!,
-                                        index = "Maneuvers"
-                                    )
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Maneuvers"
                                 )
-                            }
+                            )
                         }
                         "metamagic" -> {
-                            scope.launch {
-                                featureDao.insertFeatureChoiceIndexCrossRef(
-                                    FeatureChoiceIndexCrossRef(
-                                        choiceId = parentChoiceId!!,
-                                        index = "Metamagics"
-                                    )
+                            featureDao.insertFeatureChoiceIndexCrossRef(
+                                FeatureChoiceIndexCrossRef(
+                                    choiceId = parentChoiceId!!,
+                                    index = "Metamagics"
                                 )
-                            }
+                            )
                         }
                         "all_languages" -> {
                             featureDao.insertFeatureChoiceIndexCrossRef(
@@ -2368,27 +2350,66 @@ class LocalDataSourceImpl @Inject constructor(
                             )
                         }
                         else -> {
-                            scope.launch {
-                                parentChoiceId?.let {
-                                    val id = featureDao.getFightingStyleIdByName(index)
-                                    featureDao.insertOptionsFeatureCrossRef(
-                                        OptionsFeatureCrossRef(
-                                            featureId = id,
-                                            choiceId = it
-                                        )
+                            parentChoiceId?.let {
+                                val cursor = db.query(
+                                    "SELECT featureId FROM features WHERE LOWER(features.name) LIKE LOWER('$index')",
+                                    arrayOf()
+                                )
+                                cursor.moveToFirst()
+                                featureDao.insertOptionsFeatureCrossRef(
+                                    OptionsFeatureCrossRef(
+                                        featureId = cursor.getInt(0),
+                                        choiceId = it
                                     )
-                                }
+                                )
                             }
                         }
                     }
                 } catch (e: JSONException) {
                     val extractAndAddChoice = fun(choiceJson: JSONObject) {
-                        scope.launch {
-                            val choiceId = try {
-                                choiceJson.getInt("choice_id")
+
+                        val choiceId = try {
+                            choiceJson.getInt("choice_id")
+                        } catch (e: JSONException) {
+                            null
+                        }
+
+                        val choose = try {
+                            Choose(choiceJson.getInt("choose"))
+                        } catch (e: JSONException) {
+                            try {
+                                val result = mutableListOf<Int>()
+                                val json = choiceJson.getJSONArray("choose")
+                                for (i in 0 until json.length()) {
+                                    result.add(json.getInt(i))
+                                }
+                                Choose(result)
                             } catch (e: JSONException) {
-                                null
+                                Choose(0)
                             }
+                        }
+                        if (choose != Choose(0) && choiceId != null) {
+                            val entity = FeatureChoiceEntity(
+                                choose
+                            ).run {
+                                this.id = choiceId
+                                this
+                            }
+
+                            val optionsRef = FeatureOptionsCrossRef(
+                                featureId = featureId,
+                                id = choiceId
+                            )
+
+                            featureDao.insertFeatureChoice(
+                                entity
+                            )
+
+
+                            featureDao.insertFeatureOptionsCrossRef(
+                                optionsRef
+                            )
+
 
                             val optionsIds = try {
                                 extractFeatures(choiceJson.getJSONArray("from"), choiceId)
@@ -2396,66 +2417,19 @@ class LocalDataSourceImpl @Inject constructor(
                                 null
                             }
 
-                            val choose = try {
-                                Choose(choiceJson.getInt("choose"))
-                            } catch (e: JSONException) {
-                                try {
-                                    val result = mutableListOf<Int>()
-                                    val json = choiceJson.getJSONArray("choose")
-                                    for (i in 0 until json.length()) {
-                                        result.add(json.getInt(i))
-                                    }
-                                    Choose(result)
-                                } catch (e: JSONException) {
-                                    Choose(0)
-                                }
+                            optionsIds?.forEach {
+                                val ref = OptionsFeatureCrossRef(
+                                    featureId = it,
+                                    choiceId = choiceId
+                                )
+
+                                featureDao.insertOptionsFeatureCrossRef(
+                                    ref
+                                )
+
                             }
-                            if (choose != Choose(0) && choiceId != null) {
-                                val entity = FeatureChoiceEntity(
-                                    choose
-                                ).run {
-                                    this.id = choiceId
-                                    this
-                                }
 
-                                val optionsRef = FeatureOptionsCrossRef(
-                                    featureId = featureId,
-                                    id = choiceId
-                                )
-
-                                featureDao.insertFeatureChoice(
-                                    entity
-                                )
-
-                                featureDao.insertFeatureOptionsCrossRef(
-                                    optionsRef
-                                )
-
-
-                                optionsIds?.forEach {
-                                    val ref = OptionsFeatureCrossRef(
-                                        featureId = it,
-                                        choiceId = choiceId
-                                    )
-
-                                    featureDao.insertOptionsFeatureCrossRef(
-                                        ref
-                                    )
-                                }
-                            }
                         }
-                    }
-
-                    //Look for an array called choices
-                    //If you cant find one try to make a feature choice by looking for a choose
-                    //And a from
-                    try {
-                        val choicesJson = featureJson.getJSONArray("choices")
-                        for (choiceIndex in 0 until choicesJson.length()) {
-                            extractAndAddChoice(choicesJson.getJSONObject(choiceIndex))
-                        }
-                    } catch (e: JSONException) {
-                        extractAndAddChoice(featureJson)
                     }
 
 
@@ -2601,9 +2575,21 @@ class LocalDataSourceImpl @Inject constructor(
                         featureId = featureId
                     )
                     ids.add(featureId)
-                    scope.launch {
-                        featureDao.insertFeature(feature)
+
+                    featureDao.insertFeature(feature)
+
+                    //Look for an array called choices
+                    //If you cant find one try to make a feature choice by looking for a choose
+                    //And a from
+                    try {
+                        val choicesJson = featureJson.getJSONArray("choices")
+                        for (choiceIndex in 0 until choicesJson.length()) {
+                            extractAndAddChoice(choicesJson.getJSONObject(choiceIndex))
+                        }
+                    } catch (e: JSONException) {
+                        extractAndAddChoice(featureJson)
                     }
+
                 }
             }
         } catch (e: JSONException) {

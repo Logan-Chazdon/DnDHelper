@@ -32,9 +32,11 @@ abstract class CharacterDao {
     WHERE characters.id = :id"""
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insertCharacter(character: CharacterEntity): Long
 
+    @Update
+    abstract fun updateCharacter(character: CharacterEntity)
 
     @MapInfo(valueColumn = "isPrepared")
     @Query(

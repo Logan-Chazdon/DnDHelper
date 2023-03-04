@@ -43,8 +43,7 @@
             "choose": 1,
             "from": [
                 {
-                    "index": "maneuvers",
-                    "id": 1349
+                    "index": "maneuvers"
                 }
             ],
             "id": 1348,

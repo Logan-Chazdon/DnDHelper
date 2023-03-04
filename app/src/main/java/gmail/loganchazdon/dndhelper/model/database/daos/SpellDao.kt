@@ -8,8 +8,21 @@ import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 
 @Dao
 abstract class SpellDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSpell(spell: Spell): Long
+
+    fun insertSpell(spell: Spell): Int {
+        val id = insertSpellOrIgnore(spell).toInt()
+        if(id == -1) {
+            updateSpell(spell)
+            return spell.id
+        }
+        return id
+    }
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertSpellOrIgnore(spell: Spell): Long
+
+    @Update
+    protected abstract fun updateSpell(spell: Spell)
 
     @Query("DELETE FROM spells WHERE id IS :id")
     abstract fun removeSpellById(id: Int)

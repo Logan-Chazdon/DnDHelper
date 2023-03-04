@@ -20,8 +20,21 @@ abstract class RaceDao {
     @Query("SELECT * FROM races WHERE isHomebrew IS 1")
     abstract fun getHomebrewRaces(): LiveData<List<Race>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertRace(newRace: RaceEntity): Long
+
+    fun insertRace(newRace: RaceEntity): Int {
+        val id = insertRaceOrIgnore(newRace).toInt()
+        if(id == -1) {
+            updateRace(newRace)
+            return newRace.raceId
+        }
+        return id
+    }
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertRaceOrIgnore(newRace: RaceEntity): Long
+
+    @Update
+    protected abstract fun updateRace(newRace: RaceEntity)
 
     @Query("DELETE FROM races WHERE raceId = :id")
     abstract fun deleteRace(id: Int)

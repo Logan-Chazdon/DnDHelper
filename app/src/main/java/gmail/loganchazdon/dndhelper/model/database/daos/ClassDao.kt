@@ -31,8 +31,21 @@ WHERE ClassFeatureCrossRef.id IS :id"""
     )
     abstract fun getUnfilledLevelPath(id: Int): MutableList<Feature>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertClass(newClass: ClassEntity): Long
+
+    fun insertClass(classEntity: ClassEntity): Int {
+        val id = insertClassOrIgnore(classEntity).toInt()
+        if(id == -1) {
+            updateClass(classEntity)
+            return classEntity.id
+        }
+        return id
+    }
+
+    @Update
+    protected abstract fun updateClass(classEntity: ClassEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertClassOrIgnore(classEntity: ClassEntity) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassFeatureCrossRef(ref: ClassFeatureCrossRef)

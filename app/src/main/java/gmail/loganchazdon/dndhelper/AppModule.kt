@@ -10,6 +10,7 @@ import dagger.hilt.components.SingletonComponent
 import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
 import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.database.migrations.MIGRATION_56_57
+import gmail.loganchazdon.dndhelper.model.database.migrations.MIGRATION_57_58
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSourceImpl
 import javax.inject.Singleton
@@ -24,7 +25,7 @@ object AppModule {
             appContext,
             RoomDataBase::class.java,
             "database"
-        ).addMigrations(MIGRATION_56_57).build()
+        ).addMigrations(MIGRATION_56_57, MIGRATION_57_58).fallbackToDestructiveMigration().build()
     }
 
     @Provides
@@ -38,7 +39,8 @@ object AppModule {
         raceDao: RaceDao,
         spellDao: SpellDao,
         subraceDao: SubraceDao,
-        subclassDao: SubclassDao
+        subclassDao: SubclassDao,
+        database: RoomDataBase
     ): LocalDataSource {
         return LocalDataSourceImpl(
             context = appContext,
@@ -49,7 +51,8 @@ object AppModule {
             spellDao = spellDao,
             featureDao = featureDao,
             subraceDao = subraceDao,
-            subclassDao = subclassDao
+            subclassDao = subclassDao,
+            db =database
         )
     }
 

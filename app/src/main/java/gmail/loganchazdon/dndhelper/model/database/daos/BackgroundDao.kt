@@ -23,8 +23,20 @@ WHERE backgroundId IS :backgroundId
     )
     abstract fun getBackgroundSpells(backgroundId: Int): List<Spell>?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertBackground(backgroundEntity: BackgroundEntity): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertBackgroundOrIgnore(backgroundEntity: BackgroundEntity) : Long
+
+    @Update
+    protected abstract fun updateBackground(backgroundEntity: BackgroundEntity)
+
+    fun insertBackground(backgroundEntity: BackgroundEntity): Int {
+        val id = insertBackgroundOrIgnore(backgroundEntity).toInt()
+        if(id == -1) {
+            updateBackground(backgroundEntity)
+            return backgroundEntity.id
+        }
+        return id
+    }
 
     @Query("DELETE FROM backgrounds WHERE id = :id")
     abstract fun removeBackgroundById(id: Int)

@@ -88,8 +88,21 @@ WHERE subclassId IS :id"""
     @Delete
     abstract fun removeSubclassSpellCrossRef(ref: SubclassSpellCrossRef)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSubclass(subClass: SubclassEntity): Long
+
+    fun insertSubclass(subClass: SubclassEntity): Int {
+        val id = insertSubclassOrIgnore(subClass).toInt()
+        if(id == -1) {
+            updateSubclass(subClass)
+            return subClass.subclassId
+        }
+        return id
+    }
+
+    @Update
+    protected abstract fun updateSubclass(subClass: SubclassEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertSubclassOrIgnore(subClass: SubclassEntity): Long
 
     @Query(
         """SELECT * FROM subclasses

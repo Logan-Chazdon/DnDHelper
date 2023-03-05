@@ -13,6 +13,7 @@ open class SubraceEntity(
     var languageChoices: List<LanguageChoice> = emptyList(),
     var size: String? = "Medium",
     var groundSpeed: Int? = null,
+    var isHomebrew : Boolean = false,
 )  {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

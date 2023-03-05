@@ -79,9 +79,18 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
         val showSpells = remember {
             mutableStateOf(true)
         }
+        val showSubraces = remember {
+            mutableStateOf(true)
+        }
+        val showSubclasses = remember {
+            mutableStateOf(true)
+        }
         val races = viewModel.races.observeAsState()
         val classes = viewModel.classes.observeAsState()
         val spells = viewModel.spells.observeAsState()
+        val subraces = viewModel.subraces.observeAsState()
+        val subclasses = viewModel.subclasses.observeAsState()
+
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -143,10 +152,37 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                                         onClick = { navController.navigate("homebrewView/homebrewClassView/-1") }
                                     )
 
+
+                                    FilterItem(
+                                        "subclasses",
+                                        showSubclasses,
+                                        onClick = {
+                                            scope.launch(Dispatchers.IO){
+                                                val id = viewModel.createDefaultSubclass()
+                                                Handler(looper).post {
+                                                    navController.navigate("homebrewView/homebrewSubclassView/$id")
+                                                }
+                                            }
+                                        }
+                                    )
+
                                     FilterItem(
                                         "races",
                                         showRaces,
                                         onClick = { navController.navigate("homebrewView/homebrewRaceView/-1") }
+                                    )
+
+                                    FilterItem(
+                                        "subraces",
+                                        showSubraces,
+                                        onClick = {
+                                            scope.launch(Dispatchers.IO){
+                                                val id = viewModel.createDefaultSubrace()
+                                                Handler(looper).post {
+                                                    navController.navigate("homebrewView/homebrewSubraceView/$id")
+                                                }
+                                            }
+                                        }
                                     )
 
                                     FilterItem(
@@ -232,6 +268,45 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                             },
                             onDelete = {
                                 viewModel.deleteSpell(spell.id)
+                            }
+                        )
+                    }
+                }
+
+                //Subraces
+                if (showSubraces.value) {
+                    items(subraces.value?.filter {
+                        if (search.isBlank()) true else it.name.contains(
+                            search
+                        )
+                    } ?: listOf()) { subrace ->
+                        HomebrewItem(
+                            name = subrace.name.ifBlank { "Unnamed subrace" },
+                            onClick = {
+                                navController.navigate("homebrewView/homebrewSubraceView/${subrace.id}")
+                            },
+                            onDelete = {
+                                viewModel.deleteSpell(subrace.id)
+                            }
+                        )
+                    }
+                }
+
+
+                //Subclasses
+                if (showSubclasses.value) {
+                    items(subclasses.value?.filter {
+                        if (search.isBlank()) true else it.name.contains(
+                            search
+                        )
+                    } ?: listOf()) { subclass ->
+                        HomebrewItem(
+                            name = subclass.name.ifBlank { "Unnamed subclass" },
+                            onClick = {
+                                navController.navigate("homebrewView/homebrewSubclassView/${subclass.subclassId}")
+                            },
+                            onDelete = {
+                                viewModel.deleteSpell(subclass.subclassId)
                             }
                         )
                     }

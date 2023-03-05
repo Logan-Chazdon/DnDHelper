@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,9 +24,9 @@ fun HomebrewSubclassView(
     viewModel: SubclassViewModel,
     navController: NavController
 ) {
-    val scope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope { Dispatchers.IO }
     val mainLooper = Looper.getMainLooper()
-    val subclass = viewModel.subclass?.observeAsState()
+    val subclass = viewModel.subclass.observeAsState()
 
     AutoSave(
         "homebrewSubclassView",
@@ -77,7 +78,7 @@ fun HomebrewSubclassView(
                 }
 
                 //Features
-                subclass?.value?.features?.let {
+                subclass.value?.features?.let {
                     if (it.isNotEmpty()) {
                         item {
                             FeaturesView(
@@ -91,6 +92,38 @@ fun HomebrewSubclassView(
                             )
                         }
                     }
+                }
+
+                item {
+                    Text(text = "Classes", style=  MaterialTheme.typography.h5)
+                }
+
+                item {
+                    val expanded = mutableStateOf(false)
+                    GenericSelectionView(
+                        chosen = viewModel.classes.observeAsState(emptyList()).value.map { it.name },
+                        onDelete = {
+                            scope.launch {
+                                viewModel.removeClass(it)
+                            }
+                        },
+                        onExpanded = { expanded.value = !expanded.value }
+                    )
+
+                    GenericSelectionPopupView(
+                        items = viewModel.allClasses.observeAsState(emptyList()).value,
+                        onItemClick = {
+                            scope.launch {
+                                viewModel.toggleClass(it)
+                            }
+                        },
+                        detailsView = null,
+                        isExpanded = expanded,
+                        getName = { it.name },
+                        isSelected = {
+                            viewModel.classes.value?.firstOrNull { item -> item.id == it.id } != null
+                        }
+                    )
                 }
             }
         }

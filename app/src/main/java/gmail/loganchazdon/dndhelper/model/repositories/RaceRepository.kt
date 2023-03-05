@@ -11,6 +11,7 @@ import gmail.loganchazdon.dndhelper.model.database.daos.SubraceDao
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubraceFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 import javax.inject.Inject
 
 class RaceRepository @Inject constructor(
@@ -75,7 +76,8 @@ class RaceRepository @Inject constructor(
     fun createDefaultSubrace(): Int {
         return subraceDao.insertSubrace(
             SubraceEntity(
-                name = "Homebrew Subrace"
+                name = "Homebrew Subrace",
+                isHomebrew = true
             )
         ).toInt()
     }
@@ -97,6 +99,18 @@ class RaceRepository @Inject constructor(
                 subraceId = subraceId
             )
         )
+    }
+
+    fun getHomebrewSubraces(): LiveData<List<SubraceEntity>> {
+        return subraceDao.getHomebrewSubraces()
+    }
+
+    fun getRaceSubraces(id: Int): LiveData<List<NameAndIdPojo>> {
+        return raceDao.getRaceSubraces(id)
+    }
+
+    fun getAllRaceIdsAndNames(): LiveData<List<NameAndIdPojo>> {
+        return raceDao.getAllRaceIdsAndNames()
     }
 
     companion object {

@@ -69,8 +69,9 @@ class ClassRepository @Inject constructor(
                 "",
                 spellCasting = null,
                 spellAreFree = true,
+                isHomebrew = true
             )
-        ).toInt()
+        )
     }
 
     fun getSubclass(it: Int): LiveData<Subclass> {
@@ -126,5 +127,13 @@ class ClassRepository @Inject constructor(
 
     fun getAllClassNameAndIds(): LiveData<List<NameAndIdPojo>> {
         return classDao.allClassesNamesAndIds()
+    }
+
+    fun getHomebrewSubclasses(): LiveData<List<SubclassEntity>> {
+        return subclassDao.getHomebrewSubclasses()
+    }
+
+    fun getSubclassClasses(id: Int): LiveData<List<NameAndIdPojo>> {
+        return classDao.getSubclassClasses(id)
     }
 }

@@ -9,6 +9,7 @@ import gmail.loganchazdon.dndhelper.model.Race
 import gmail.loganchazdon.dndhelper.model.RaceEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
+import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -90,4 +91,9 @@ WHERE raceId is :raceId"""
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
 
+    @Query("SELECT id, name FROM subraces JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.subraceId IS subraces.id WHERE raceId IS :id")
+    abstract fun getRaceSubraces(id: Int): LiveData<List<NameAndIdPojo>>
+
+    @Query("SELECT raceId AS id, raceName AS name FROM races")
+    abstract fun getAllRaceIdsAndNames(): LiveData<List<NameAndIdPojo>>
 }

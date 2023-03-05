@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,6 +109,38 @@ fun HomebrewSubraceView(
                             )
                         }
                     }
+                }
+
+                item {
+                    Text(text = "Races", style=  MaterialTheme.typography.h5)
+                }
+
+                item {
+                    val expanded = mutableStateOf(false)
+                    GenericSelectionView(
+                        chosen = viewModel.races.observeAsState(emptyList()).value.map { it.name },
+                        onDelete = {
+                            scope.launch {
+                                viewModel.removeRace(it)
+                            }
+                        },
+                        onExpanded = { expanded.value = !expanded.value }
+                    )
+
+                    GenericSelectionPopupView(
+                        items = viewModel.allRaces.observeAsState(emptyList()).value,
+                        onItemClick = {
+                            scope.launch {
+                                viewModel.toggleRace(it)
+                            }
+                        },
+                        detailsView = null,
+                        isExpanded = expanded,
+                        getName = { it.name },
+                        isSelected = {
+                            viewModel.races.value?.firstOrNull { item -> item.id == it.id } != null
+                        }
+                    )
                 }
             }
         }

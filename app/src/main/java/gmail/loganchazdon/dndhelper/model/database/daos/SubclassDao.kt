@@ -110,4 +110,6 @@ JOIN ClassSubclassCrossRef ON ClassSubclassCrossRef.subclassId IS subclasses.sub
 WHERE classId IS :id"""
     )
     protected abstract fun getUnfilledSubclassesByClassId(id: Int): LiveData<List<SubclassEntity>>
+    @Query("SELECT * FROM subclasses WHERE subclass_isHomebrew IS 1")
+    abstract fun getHomebrewSubclasses(): LiveData<List<SubclassEntity>>
 }

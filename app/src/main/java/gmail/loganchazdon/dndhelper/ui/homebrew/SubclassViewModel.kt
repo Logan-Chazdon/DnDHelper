@@ -9,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Subclass
 import gmail.loganchazdon.dndhelper.model.SubclassEntity
+import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassSubclassCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubclassFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +41,8 @@ class SubclassViewModel @Inject constructor(
         val subclass = SubclassEntity(
             name = name.value,
             spellCasting = null, //TODO
-            spellAreFree = false //TODO,
+            spellAreFree = false, //TODO,
+            isHomebrew = true
         )
         subclass.subclassId = id
         classRepository.insertSubclass(
@@ -56,6 +59,33 @@ class SubclassViewModel @Inject constructor(
         )
     }
 
+    fun removeClass(i: Int) {
+        classRepository.removeClassSubclassCrossRef(
+            ClassSubclassCrossRef(
+                subclassId = id,
+                classId = classes.value!![i].id
+            )
+        )
+    }
+
+    fun toggleClass(it: NameAndIdPojo) {
+        val ref = ClassSubclassCrossRef(
+            classId = it.id,
+            subclassId = id
+        )
+        if (classes.value?.firstOrNull { item -> item.id == it.id } != null) {
+            classRepository.removeClassSubclassCrossRef(
+                ref
+            )
+        } else {
+            classRepository.insertClassSubclassCrossRef(
+                ref
+            )
+        }
+    }
+
+    val allClasses = classRepository.getAllClassNameAndIds()
+    val classes = MediatorLiveData<List<NameAndIdPojo>>()
     val name = mutableStateOf("")
     val subclass: MediatorLiveData<Subclass> = MediatorLiveData()
     var id: Int = -1
@@ -77,6 +107,10 @@ class SubclassViewModel @Inject constructor(
 
                     subclass.removeSource(source)
                 }
+            }
+
+            classes.addSource(classRepository.getSubclassClasses(id)) {
+                classes.value = it
             }
         }
     }

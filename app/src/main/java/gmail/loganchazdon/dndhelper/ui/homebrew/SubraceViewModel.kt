@@ -11,7 +11,9 @@ import gmail.loganchazdon.dndhelper.model.AbilityBonus
 import gmail.loganchazdon.dndhelper.model.AbilityBonusChoice
 import gmail.loganchazdon.dndhelper.model.Subrace
 import gmail.loganchazdon.dndhelper.model.SubraceEntity
+import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubraceFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
 import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
 import javax.inject.Inject
@@ -50,6 +52,7 @@ class SubraceViewModel @Inject constructor(
             size = sizeClass.value,
             abilityBonuses = abilityBonuses,
             abilityBonusChoice = abilityBonusChoice.value,
+            isHomebrew = true
         )
         entity.id = id
         raceRepository.insertSubrace(
@@ -57,6 +60,27 @@ class SubraceViewModel @Inject constructor(
         )
     }
 
+    fun removeRace(i: Int) {
+        raceRepository.removeRaceSubraceCrossRef(
+            subraceId = id,
+            raceId = races.value!![i].id
+        )
+    }
+
+    fun toggleRace(it: NameAndIdPojo) {
+        if (races.value?.firstOrNull { item -> item.id == it.id } != null) {
+            raceRepository.removeRaceSubraceCrossRef(raceId = it.id, id)
+        } else {
+            raceRepository.insertRaceSubraceCrossRef(
+                RaceSubraceCrossRef(
+                    raceId = it.id,
+                    subraceId = id
+                )
+            )
+        }
+    }
+
+    val allRaces= raceRepository.getAllRaceIdsAndNames()
     val abilityBonuses = mutableStateListOf<AbilityBonus>()
     val abilityBonusChoice = mutableStateOf<AbilityBonusChoice?>(null)
     val speed = mutableStateOf("")
@@ -65,6 +89,7 @@ class SubraceViewModel @Inject constructor(
     val subrace = MediatorLiveData<Subrace>()
     val id = savedStateHandle.get<String>("id")?.toInt()!!
     val sizeClassOptions = RaceRepository.sizeClasses
+    val races = raceRepository.getRaceSubraces(id)
 
     init {
         subrace.addSource(raceRepository.getSubrace(id)) {

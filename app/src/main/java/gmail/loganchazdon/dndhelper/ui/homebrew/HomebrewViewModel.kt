@@ -46,7 +46,17 @@ class HomebrewViewModel @Inject constructor(
         return backgroundRepository.createDefaultBackground()
     }
 
+    fun createDefaultSubclass(): Int {
+        return classRepository.createDefaultSubclass()
+    }
+
+    fun createDefaultSubrace(): Any {
+        return raceRepository.createDefaultSubrace()
+    }
+
     val races = raceRepository.getHomebrewRaces()
     val spells = spellRepository.getHomebrewSpells()
     val classes = classRepository.getHomebrewClasses()
+    val subraces = raceRepository.getHomebrewSubraces()
+    val subclasses = classRepository.getHomebrewSubclasses()
 }

@@ -107,4 +107,7 @@ WHERE classId IS :classId"""
 
     @Query("SELECT id, name FROM classes")
     abstract fun allClassesNamesAndIds(): LiveData<List<NameAndIdPojo>>
+
+    @Query("SELECT classes.name, classes.id FROM classes JOIN ClassSubclassCrossRef ON classId IS classes.id WHERE subclassId IS :id")
+    abstract fun getSubclassClasses(id: Int): LiveData<List<NameAndIdPojo>>
 }

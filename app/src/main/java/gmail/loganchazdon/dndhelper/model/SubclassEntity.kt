@@ -10,7 +10,9 @@ open class SubclassEntity(
     var name: String,
     val spellAreFree: Boolean,
     @ColumnInfo(name = "subclass_spell_casting")
-    var spellCasting: SpellCasting?
+    var spellCasting: SpellCasting?,
+    @ColumnInfo(name = "subclass_isHomebrew")
+    var isHomebrew : Boolean = false
 ) {
     @PrimaryKey(autoGenerate = true)
     var subclassId : Int = 0

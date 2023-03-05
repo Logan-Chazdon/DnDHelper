@@ -105,4 +105,7 @@ WHERE subraceId IS :subraceId
 
     @Delete
     abstract fun removeRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
+
+    @Query("SELECT * FROM subraces WHERE isHomebrew IS 1")
+    abstract fun getHomebrewSubraces(): LiveData<List<SubraceEntity>>
 }

@@ -1,7 +1,6 @@
 package gmail.loganchazdon.dndhelper.model.database.daos
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.FeatChoiceEntity
 import gmail.loganchazdon.dndhelper.model.Feature
@@ -10,8 +9,6 @@ import gmail.loganchazdon.dndhelper.model.RaceEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 @Dao
 abstract class RaceDao {
@@ -41,18 +38,8 @@ abstract class RaceDao {
     abstract fun deleteRace(id: Int)
 
     @Query("SELECT * FROM races WHERE raceId = :id")
-    protected abstract fun findUnfilledLiveRaceById(id: Int): LiveData<Race>
+    abstract fun findUnfilledLiveRaceById(id: Int): LiveData<Race>
 
-    fun bindLiveRaceById(id: Int, result: MediatorLiveData<Race>) {
-        result.addSource(findUnfilledLiveRaceById(id)) {
-            if(it != null) {
-                GlobalScope.launch {
-                    it.traits = getRaceTraits(id)
-                    result.postValue(it)
-                }
-            }
-        }
-    }
 
     @Query(
         """SELECT * FROM featChoices
@@ -72,7 +59,7 @@ WHERE subraceId IS :subraceId"""
     abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
 
     @Query("SELECT * FROM features JOIN RaceFeatureCrossRef ON RaceFeatureCrossRef.featureId IS features.featureId WHERE raceId IS :id")
-    protected abstract fun getRaceTraits(id: Int) : List<Feature>
+    abstract fun getRaceTraits(id: Int) : List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)

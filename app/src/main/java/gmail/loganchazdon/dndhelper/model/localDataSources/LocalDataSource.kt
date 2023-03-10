@@ -2349,6 +2349,9 @@ class LocalDataSourceImpl @Inject constructor(
                                 )
                             )
                         }
+                        "Draconic Ancestry" -> {
+                            throw JSONException("") //Break out of the try catch and construct a feature.
+                        }
                         else -> {
                             parentChoiceId?.let {
                                 val cursor = db.query(

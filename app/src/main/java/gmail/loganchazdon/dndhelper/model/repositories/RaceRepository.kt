@@ -6,17 +6,21 @@ import gmail.loganchazdon.dndhelper.model.Race
 import gmail.loganchazdon.dndhelper.model.RaceEntity
 import gmail.loganchazdon.dndhelper.model.Subrace
 import gmail.loganchazdon.dndhelper.model.SubraceEntity
+import gmail.loganchazdon.dndhelper.model.database.daos.FeatureDao
 import gmail.loganchazdon.dndhelper.model.database.daos.RaceDao
 import gmail.loganchazdon.dndhelper.model.database.daos.SubraceDao
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.RaceSubraceCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.SubraceFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RaceRepository @Inject constructor(
     private val raceDao: RaceDao,
-    private val subraceDao: SubraceDao
+    private val subraceDao: SubraceDao,
+    private val featureDao: FeatureDao
 ) {
     private val _races =
         raceDao.getAllRaces()
@@ -44,7 +48,15 @@ class RaceRepository @Inject constructor(
 
     fun getLiveRaceById(id: Int): LiveData<Race> {
         val result = MediatorLiveData<Race>()
-        raceDao.bindLiveRaceById(id, result)
+        result.addSource(raceDao.findUnfilledLiveRaceById(id)) {
+            if(it != null) {
+                GlobalScope.launch {
+                    it.traits = raceDao.getRaceTraits(id)
+                    featureDao.fillOutFeatureListWithoutChosen(it.traits!!)
+                    result.postValue(it)
+                }
+            }
+        }
         return result
     }
 

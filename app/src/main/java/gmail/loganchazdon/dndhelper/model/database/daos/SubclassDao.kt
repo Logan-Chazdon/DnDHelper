@@ -112,4 +112,11 @@ WHERE classId IS :id"""
     protected abstract fun getUnfilledSubclassesByClassId(id: Int): LiveData<List<SubclassEntity>>
     @Query("SELECT * FROM subclasses WHERE subclass_isHomebrew IS 1")
     abstract fun getHomebrewSubclasses(): LiveData<List<SubclassEntity>>
+
+    @Query(
+        """SELECT * FROM features
+JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.featureId
+WHERE SubclassFeatureCrossRef.subclassId IS :subclassId AND features.grantedAtLevel <= :maxLevel
+    """)
+    abstract fun getSubclassFeatures(subclassId: Int, maxLevel: Int): List<Feature>
 }

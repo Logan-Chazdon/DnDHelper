@@ -17,6 +17,7 @@ class CharacterRepository @Inject constructor(
     private val raceDao: RaceDao,
     private val backgroundDao : BackgroundDao,
     private val classDao: ClassDao,
+    private val subclassDao: SubclassDao,
     private val featureDao: FeatureDao
 ) {
     val scope = CoroutineScope(Job())
@@ -393,7 +394,7 @@ class CharacterRepository @Inject constructor(
                         subclassId = subclass.subclassId
                     ).toList()
 
-                val subClassFeatures = classDao.getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
+                val subClassFeatures = subclassDao.getSubclassFeatures(subclassId = subclass.subclassId, maxLevel = clazz.level)
                 fillOutFeatureList(subClassFeatures, character.id)
                 subclass.features = subClassFeatures
             }

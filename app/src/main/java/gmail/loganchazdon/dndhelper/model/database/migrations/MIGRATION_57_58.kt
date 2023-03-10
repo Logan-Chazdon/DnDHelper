@@ -81,9 +81,9 @@ val MIGRATION_57_58 = object : Migration(57, 58) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `features` (`featureId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `index` TEXT, `grantedAtLevel` INTEGER NOT NULL, `maxTimesChosen` INTEGER, `prerequisite` TEXT, `activationRequirement` TEXT NOT NULL, `speedBoost` TEXT, `spells` TEXT, `infusion` TEXT, `maxActive` TEXT NOT NULL, `hpBonusPerLevel` INTEGER, `armorContingentAcBonus` INTEGER, `acBonus` INTEGER, `ac` TEXT, `proficiencies` TEXT, `expertises` TEXT, `languages` TEXT, `extraAttackAndDamageRollStat` TEXT, `rangedAttackBonus` INTEGER)")
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_features_featureId` ON `features` (`featureId`)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `FeatureChoiceEntity` (`choose` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
-        db.execSQL("CREATE TABLE IF NOT EXISTS `subclasses` (`subclass_name` TEXT NOT NULL, `spellAreFree` INTEGER NOT NULL, `subclass_spell_casting` TEXT, `subclassId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `subclasses` (`subclass_name` TEXT NOT NULL, `spellAreFree` INTEGER NOT NULL, `subclass_spell_casting` TEXT, `subclass_isHomebrew` INTEGER NOT NULL, `subclassId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `backgrounds` (`name` TEXT NOT NULL, `desc` TEXT NOT NULL, `spells` TEXT, `proficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT, `languages` TEXT NOT NULL, `languageChoices` TEXT, `equipment` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `isHomebrew` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
-        db.execSQL("CREATE TABLE IF NOT EXISTS `subraces` (`name` TEXT NOT NULL, `abilityBonuses` TEXT, `abilityBonusChoice` TEXT, `startingProficiencies` TEXT, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `size` TEXT, `groundSpeed` INTEGER, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
+        db.execSQL("CREATE TABLE IF NOT EXISTS `subraces` (`name` TEXT NOT NULL, `abilityBonuses` TEXT, `abilityBonusChoice` TEXT, `startingProficiencies` TEXT, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `size` TEXT, `groundSpeed` INTEGER, `isHomebrew` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `feats` (`name` TEXT NOT NULL, `desc` TEXT NOT NULL, `prerequisite` TEXT, `abilityBonuses` TEXT, `abilityBonusChoice` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `featChoices` (`name` TEXT NOT NULL, `choose` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)")
         db.execSQL("CREATE TABLE IF NOT EXISTS `FeatChoiceChoiceEntity` (`characterId` INTEGER NOT NULL, `choiceId` INTEGER NOT NULL, `featId` INTEGER NOT NULL, PRIMARY KEY(`characterId`, `choiceId`, `featId`), FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`choiceId`) REFERENCES `featChoices`(`id`) ON UPDATE CASCADE ON DELETE CASCADE , FOREIGN KEY(`featId`) REFERENCES `feats`(`id`) ON UPDATE CASCADE ON DELETE CASCADE )")
@@ -269,11 +269,11 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
             val values = ContentValues()
             values.put("characterId", id)
             values.put("classId", classId)
-            values.put("level", 0)
-            values.put("isBaseClass", false)
-            values.put("totalNumOnGoldDie", 10)
-            values.put("abilityImprovementsGranted", "[]")
-            values.put("tookGold", false)
+            values.put("level", classObj.getInt("level"))
+            values.put("isBaseClass", classObj.getBoolean("isBaseClass"))
+            values.put("totalNumOnGoldDie", classObj.getInt("totalNumOnGoldDie"))
+            values.put("abilityImprovementsGranted", classObj.getJSONArray("abilityImprovementsGranted").toString())
+            values.put("tookGold", classObj.getBoolean("tookGold"))
             values.put("proficiencyChoicesByString", proficiencyChoices)
             db.insert("ClassChoiceEntity", OnConflictStrategy.IGNORE, values)
         }
@@ -519,7 +519,6 @@ inspiration, positiveDeathSaves, negativeDeathSaves, spellSlots, addedLanguages,
                     val featureChoiceId =
                         objWithIds.optInt("choice_id", featureObjWithIds.getInt("choice_id"))
                     migrateFeatureChoice(characterId, obj, objWithIds, featureChoiceId)
-                    db.execSQL("INSERT INTO FeatureChoiceChoiceEntity (featureId, choiceId, characterId) VALUES($featureId, $featureChoiceId, $characterId)")
                 }
             }
         }

@@ -76,11 +76,11 @@ WHERE FeatureOptionsCrossRef.featureId IS :featureId"""
     )
     abstract fun getLiveFeatureChoices(featureId: Int): LiveData<List<FeatureChoiceEntity>>
 
-    //This returns all features which belong in the options field of a featureChoice.
+    /**This returns all features which belong in the options field of a featureChoice.*/
     @Query(
         """
 WITH spellDetails AS (SELECT classes, school, level, id FROM spells)        
-SELECT features.* FROM features
+SELECT DISTINCT features.* FROM features
 LEFT JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
 LEFT JOIN FeatureChoiceIndexCrossRef ON FeatureChoiceIndexCrossRef.choiceId IS :featureChoiceId
 LEFT JOIN IndexRef ON IndexRef.`index` IS FeatureChoiceIndexCrossRef.`index`
@@ -95,14 +95,13 @@ OR  FeatureChoiceIndexCrossRef.schools IS NULL
 OR ',' || FeatureChoiceIndexCrossRef.schools || ',' LIKE '%,' || spellDetails.school || ',%' )
 AND (
    FeatureChoiceIndexCrossRef.classes LIKE 'null' OR FeatureChoiceIndexCrossRef.classes IS NULL
-   OR EXISTS (
-   SELECT 1
-   FROM
-   (SELECT replace(replace(FeatureChoiceIndexCrossRef.classes, ',', ''), ',', '') AS class) AS fcic
-   JOIN
-   (SELECT replace(replace(spellDetails.classes, ',', ''), ',', '') AS class) AS sd
-   ON fcic.class = sd.class
-   ))
+   OR 0 NOT LIKE (
+SELECT COUNT(*)
+FROM
+  (SELECT replace(FeatureChoiceIndexCrossRef.classes, ',', '') AS fcic_class
+   FROM FeatureChoiceIndexCrossRef) AS vt
+WHERE spellDetails.classes LIKE '%' ||  vt.fcic_class || '%'  
+	))
 """
     )
     abstract fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>

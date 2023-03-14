@@ -20,7 +20,7 @@ import gmail.loganchazdon.dndhelper.model.stateEntities.CharacterFeatureState
         ClassFeatCrossRef::class, FeatureSpellCrossRef::class, BackgroundSpellCrossRef::class, SubclassSpellCrossRef::class, ClassSpellCrossRef::class,
         CharacterClassSpellCrossRef::class, SubclassSpellCastingSpellCrossRef::class, ClassSubclassCrossRef::class, SubclassFeatureCrossRef::class,
         RaceChoiceEntity::class, FeatureChoiceChoiceEntity::class, SubraceChoiceEntity::class, BackgroundChoiceEntity::class, IndexRef::class, FeatureChoiceIndexCrossRef::class,
-        CharacterFeatureState::class
+        CharacterFeatureState::class, FeatFeatureCrossRef::class
     ],
     version = 58,
     exportSchema = true

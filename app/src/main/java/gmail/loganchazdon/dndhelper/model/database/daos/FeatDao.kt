@@ -5,12 +5,14 @@ import androidx.room.*
 import gmail.loganchazdon.dndhelper.model.Feat
 import gmail.loganchazdon.dndhelper.model.FeatChoiceEntity
 import gmail.loganchazdon.dndhelper.model.FeatEntity
+import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatChoiceFeatCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatFeatureCrossRef
 
 @Dao
 abstract class FeatDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeat(feat: FeatEntity): Long
 
     fun insertFeatChoice(featChoiceEntity: FeatChoiceEntity): Int {
@@ -35,5 +37,14 @@ abstract class FeatDao {
     abstract fun insertFeatChoiceChoiceEntity(featChoiceChoiceEntity: FeatChoiceChoiceEntity)
 
     @Query("SELECT * FROM feats")
-    abstract fun getAllFeats(): LiveData<List<Feat>> //TODO impl
+    abstract fun getUnfilledFeats(): LiveData<List<Feat>>
+
+    @Insert
+    abstract fun insertFeatFeatureCrossRef(featFeatureCrossRef: FeatFeatureCrossRef)
+
+    @Query("""SELECT features.* FROM features
+JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
+WHERE featId IS :featId
+    """)
+    abstract fun getFeatFeatures(featId: Int) : List<Feature>
 }

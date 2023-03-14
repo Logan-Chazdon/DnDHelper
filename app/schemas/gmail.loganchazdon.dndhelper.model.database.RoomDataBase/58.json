@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 58,
-    "identityHash": "e74e58c116e31530e94d7999d509fc7d",
+    "identityHash": "169a39a08fa830b71fb44423bcbd9ee5",
     "entities": [
       {
         "tableName": "characters",
@@ -2692,12 +2692,62 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "FeatFeatureCrossRef",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`featId` INTEGER NOT NULL, `featureId` INTEGER NOT NULL, PRIMARY KEY(`featureId`, `featId`), FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED, FOREIGN KEY(`featId`) REFERENCES `feats`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)",
+        "fields": [
+          {
+            "fieldPath": "featId",
+            "columnName": "featId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "featureId",
+            "columnName": "featureId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "featureId",
+            "featId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "features",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "featureId"
+            ],
+            "referencedColumns": [
+              "featureId"
+            ]
+          },
+          {
+            "table": "feats",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "featId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e74e58c116e31530e94d7999d509fc7d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '169a39a08fa830b71fb44423bcbd9ee5')"
     ]
   }
 }

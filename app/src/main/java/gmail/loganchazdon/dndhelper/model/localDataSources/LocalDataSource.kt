@@ -31,7 +31,6 @@ interface LocalDataSource {
     fun getAbilitiesToSkills(abilitiesToSKills: MutableLiveData<Map<String, List<String>>>): MutableLiveData<Map<String, List<String>>>
     fun getLanguages(languages: MutableLiveData<List<Language>>): MutableLiveData<List<Language>>
     fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>>
-    fun getFeats(feats: MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>>
     fun getArmors(armors: MutableLiveData<List<Armor>>): MutableLiveData<List<Armor>>
     fun getMiscItems(miscItems: MutableLiveData<List<ItemInterface>>): MutableLiveData<List<ItemInterface>>
     fun getMartialWeapons(martialWeapons: MutableLiveData<List<Weapon>>): MutableLiveData<List<Weapon>>
@@ -72,14 +71,11 @@ class LocalDataSourceImpl @Inject constructor(
         MutableLiveData()
     private val _languages: MutableLiveData<List<Language>> =
         MutableLiveData()
-    private val _feats: MutableLiveData<List<Feat>> =
-        MutableLiveData()
     private val _metaMagics: MutableLiveData<List<Metamagic>> =
         MutableLiveData()
     private val _maneuvers: MutableLiveData<List<Feature>> =
         MutableLiveData()
-    private val _fightingStyles: MutableLiveData<List<Feature>> =
-        MutableLiveData()
+
 
     private val instrumentIndexes = mutableListOf(
         "Bagpipes",
@@ -143,7 +139,6 @@ class LocalDataSourceImpl @Inject constructor(
     override fun getMetaMagics(metamagics: MutableLiveData<List<Metamagic>>): MutableLiveData<List<Metamagic>> =
         _metaMagics
 
-    override fun getFeats(feats: MutableLiveData<List<Feat>>): MutableLiveData<List<Feat>> = _feats
     override fun getArmors(armors: MutableLiveData<List<Armor>>): MutableLiveData<List<Armor>> =
         _armors
 
@@ -257,7 +252,7 @@ class LocalDataSourceImpl @Inject constructor(
 
         featureDao.insertIndexRef(
             IndexRef(
-                index = "Fighting Styles",
+                index = "Fighting_Styles",
                 ids = ids
             )
         )
@@ -741,7 +736,6 @@ class LocalDataSourceImpl @Inject constructor(
     private fun generateFeats() {
         val dataAsString =
             context.resources.openRawResource(R.raw.feats).bufferedReader().readText()
-        val feats = mutableListOf<Feat>()
         val featsJson = JSONObject(dataAsString).getJSONArray("feats")
         for (featIndex in 0 until featsJson.length()) {
             val featJson = featsJson.getJSONObject(featIndex)
@@ -766,19 +760,27 @@ class LocalDataSourceImpl @Inject constructor(
             } catch (e: JSONException) {
             }
 
-
-            feats.add(
-                Feat(
-                    name = name,
-                    desc = desc,
-                    prerequisite = prerequisite,
-                    abilityBonuses = abilityBonuses,
-                    abilityBonusChoice = abilityBonusChoice,
-                    //features = features TODO
-                )
+            val feat = FeatEntity(
+                name = name,
+                desc = desc,
+                prerequisite = prerequisite,
+                abilityBonuses = abilityBonuses,
+                abilityBonusChoice = abilityBonusChoice,
             )
+            feat.id = featIndex + 1
+            featDao.insertFeat(
+                feat
+            )
+
+            features.forEach {
+                featDao.insertFeatFeatureCrossRef(
+                    FeatFeatureCrossRef(
+                        featId =featIndex + 1,
+                        featureId = it
+                    )
+                )
+            }
         }
-        _feats.postValue(feats)
     }
 
     private fun generateItems() {
@@ -1601,9 +1603,9 @@ class LocalDataSourceImpl @Inject constructor(
             val featJson = jsonArray.getJSONObject(i)
             when (featJson.getString("index")) {
                 "all_feats" -> {
-                    result.addAll(
+                  /*  result.addAll(
                         _feats.value ?: emptyList()
-                    )
+                    ) TODO */
                 }
             }
         }

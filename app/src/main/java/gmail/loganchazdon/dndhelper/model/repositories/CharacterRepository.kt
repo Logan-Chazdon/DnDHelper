@@ -347,7 +347,8 @@ class CharacterRepository @Inject constructor(
                             characterDao.getFeatChoiceChosen(
                                 characterId = character.id,
                                 choiceId = it.id
-                            )
+                            ),
+                            emptyList()
                         )
                     )
                 }

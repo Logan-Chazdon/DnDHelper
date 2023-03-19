@@ -1578,10 +1578,9 @@ class LocalDataSourceImpl @Inject constructor(
         val result = mutableListOf<Int>()
         for (index in 0 until jsonArray.length()) {
             val featChoiceJson = jsonArray.getJSONObject(index)
-            val featChoice = FeatChoice(
+            val featChoice = FeatChoiceEntity(
                 name = featChoiceJson.getString("name"),
                 choose = featChoiceJson.getInt("choose"),
-                from = extractFeats(featChoiceJson.getJSONArray("from"))
             )
             featChoice.id = featChoiceJson.getInt("id")
 
@@ -1593,25 +1592,6 @@ class LocalDataSourceImpl @Inject constructor(
         }
         return result
     }
-
-    //As far as we have implemented this only needs to work off of indexes.
-    //In the future it may be necessary to add more indexes or the ability to create feats
-    //from data in the list.
-    private fun extractFeats(jsonArray: JSONArray): List<Feat> {
-        val result = mutableListOf<Feat>()
-        for (i in 0 until jsonArray.length()) {
-            val featJson = jsonArray.getJSONObject(i)
-            when (featJson.getString("index")) {
-                "all_feats" -> {
-                  /*  result.addAll(
-                        _feats.value ?: emptyList()
-                    ) TODO */
-                }
-            }
-        }
-        return result
-    }
-
 
     private fun extractLangs(
         languagesJson: JSONArray,

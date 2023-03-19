@@ -11,11 +11,11 @@ open class FeatChoiceEntity(
     @PrimaryKey(autoGenerate = true)
     var id = 0
 
-    fun toFeatChoice(chosen: List<Feat>) : FeatChoice{
+    fun toFeatChoice(chosen: List<Feat>, from : List<Feat>) : FeatChoice{
         return FeatChoice(
             name = name,
             choose = choose,
-            from = listOf(),
+            from = from,
             chosen = chosen
         )
     }

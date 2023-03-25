@@ -142,12 +142,38 @@ WHERE featureId IS :featureId
     )
     abstract fun getFeatureSpells(featureId: Int): List<Spell>?
 
-
+    /**This checks if a IndexRef exists in the database.
+     * If it does not it inserts the one passed. If it
+     * does then it combines the two index refs and updates the database
+     * with the result.
+     */
     fun insertIndexRef(ref: IndexRef) {
         if(insertIndexRefOrIgnore(ref).toInt() == -1) {
-            updateIndexRef(ref)
+            val oldRef = getIndexRef(ref.index)
+            val newIds = oldRef.ids.union(ref.ids).toList()
+            val newRef = IndexRef(
+                index = ref.index,
+                ids = newIds
+            )
+            updateIndexRef(newRef)
         }
     }
+
+    /**Removes the passed id from the ids list of the IndexRef
+     */
+    fun removeIdFromRef(id: Int, ref: String) {
+        val oldRef = getIndexRef(ref)
+        val newIds = oldRef.ids.toMutableList()
+        newIds.remove(id)
+        val newIndexRef = IndexRef(
+            index = ref,
+            ids = newIds
+        )
+        updateIndexRef(newIndexRef)
+    }
+
+    @Query("SELECT * FROM IndexRef WHERE IndexRef.`index` = :index")
+    protected abstract fun getIndexRef(index: String) : IndexRef
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertIndexRefOrIgnore(ref: IndexRef) : Long
@@ -178,4 +204,7 @@ WHERE name LIKE :index
 
     @Query("DELETE FROM FeatureChoiceIndexCrossRef WHERE choiceId = :id")
     abstract fun clearFeatureChoiceIndexRefs(id: Int)
+
+    @Query("""SELECT featureId FROM FeatureSpellCrossRef WHERE spellId IS :id""")
+    abstract fun getFeatureIdOr0FromSpellId(id: Int): Int
 }

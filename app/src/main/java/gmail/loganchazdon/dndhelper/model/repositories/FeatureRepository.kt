@@ -8,9 +8,7 @@ import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.FeatureChoiceEntity
 import gmail.loganchazdon.dndhelper.model.Infusion
 import gmail.loganchazdon.dndhelper.model.database.daos.FeatureDao
-import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureChoiceIndexCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
-import gmail.loganchazdon.dndhelper.model.junctionEntities.OptionsFeatureCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import javax.inject.Inject
 
@@ -24,8 +22,8 @@ class FeatureRepository @Inject constructor(
         return _infusions
     }
 
-    fun insertFeature(newFeature: Feature) {
-        featureDao.insertFeature(newFeature)
+    fun insertFeature(newFeature: Feature): Int {
+       return featureDao.insertFeature(newFeature)
     }
 
     fun getLiveFeature(id: Int): LiveData<Feature> {
@@ -93,5 +91,21 @@ class FeatureRepository @Inject constructor(
 
     fun insertFeatureChoice(choice: FeatureChoiceEntity) {
         featureDao.insertFeatureChoice(choice)
+    }
+
+    fun updateIndexRef(ref: IndexRef) {
+        featureDao.insertIndexRef(ref)
+    }
+
+    fun removeIdFromRef(id: Int, ref: String) {
+        featureDao.removeIdFromRef(id, ref)
+    }
+
+    fun insertFeatureSpellCrossRef(featureSpellCrossRef: FeatureSpellCrossRef) {
+        featureDao.insertFeatureSpellCrossRef(featureSpellCrossRef)
+    }
+
+    fun getFeatureIdOr0FromSpellId(id: Int): Int {
+        return featureDao.getFeatureIdOr0FromSpellId(id)
     }
 }

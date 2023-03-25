@@ -4,10 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.repositories.BackgroundRepository
-import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
-import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
-import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
+import gmail.loganchazdon.dndhelper.model.repositories.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +15,7 @@ class HomebrewViewModel @Inject constructor(
     private val spellRepository: SpellRepository,
     private val classRepository: ClassRepository,
     private val backgroundRepository: BackgroundRepository,
+    private val featureRepository: FeatureRepository,
     application: Application
 ) : AndroidViewModel(application) {
     fun deleteRace(id: Int) {
@@ -33,8 +31,9 @@ class HomebrewViewModel @Inject constructor(
     }
 
     fun deleteSpell(id: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             spellRepository.deleteSpell(id)
+            featureRepository.removeIdFromRef(id, "Spells")
         }
     }
 

@@ -6,11 +6,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.Item
 import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassSpellCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureSpellCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.IndexRef
 import gmail.loganchazdon.dndhelper.model.pojos.NameAndIdPojo
 import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
+import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import gmail.loganchazdon.dndhelper.ui.utils.allNames
 import javax.inject.Inject
@@ -19,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomebrewSpellViewModel @Inject constructor(
     private val spellRepository: SpellRepository,
+    private val featureRepository: FeatureRepository,
     classRepository: ClassRepository,
     application: Application,
     savedStateHandle: SavedStateHandle
@@ -65,6 +70,26 @@ class HomebrewSpellViewModel @Inject constructor(
 
         spellRepository.insertSpell(
             spell
+        )
+
+        val spellFeature = Feature(
+            name = spell.name,
+            description = spell.desc,
+            featureId = featureRepository.getFeatureIdOr0FromSpellId(spell.id)
+        )
+        val featureId =  featureRepository.insertFeature(spellFeature)
+        featureRepository.insertFeatureSpellCrossRef(
+            FeatureSpellCrossRef(
+                featureId = featureId,
+                spellId = spell.id
+            )
+        )
+
+        featureRepository.updateIndexRef(
+            IndexRef(
+                index = "Spells",
+                ids = listOf(featureId)
+            )
         )
     }
 

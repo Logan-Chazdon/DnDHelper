@@ -23,9 +23,9 @@ import gmail.loganchazdon.dndhelper.ui.utils.greaterThan
 
 @Composable
 fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
-    var sizeMod = 1
+    var sizeMod = 1f
     MediaQuery(Dimensions.Width greaterThan 800.dp) {
-        sizeMod = 2
+        sizeMod = 1.5f
     }
 
     Column(
@@ -43,13 +43,10 @@ fun StatBoxView(stat: String, value: Int, mod: Int, onClick: () -> Unit) {
             shape = RoundedCornerShape((10* sizeMod).dp),
         ) {
             Column(
-
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.fillMaxHeight(0.02f))
-                Text(
-                    text = stat
-                )
+                Text(text = stat)
                 Spacer(modifier = Modifier.fillMaxHeight(0.12f * sizeMod))
                 Box(
                   modifier = Modifier

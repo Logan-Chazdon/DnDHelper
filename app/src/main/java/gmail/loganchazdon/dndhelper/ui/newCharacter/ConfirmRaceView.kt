@@ -23,16 +23,29 @@ import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceD
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.theme.noActionNeeded
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, DelicateCoroutinesApi::class)
 @Composable
 fun ConfirmRaceView(
     viewModel: NewCharacterConfirmRaceViewModel,
     navController: NavController,
 ) {
+    val setupSubraceCustomization = fun() {
+        val subrace = viewModel.races.value?.get(raceIndex)?.subraces?.get(viewModel.subraceIndex.value)
+        if(viewModel.customizeStats.value && viewModel.customSubraceStatsMap.isEmpty()) {
+            subrace?.abilityBonuses?.forEach {
+                viewModel.customSubraceStatsMap[it.ability] =
+                    it.ability
+            }
+        }
+    }
+
+    viewModel.raceIndex = raceIndex
+    val races = viewModel.races.observeAsState()
     val scrollState = rememberScrollState(0)
     val mainLooper = Looper.getMainLooper()
     val race = viewModel.race.observeAsState()
@@ -118,11 +131,12 @@ fun ConfirmRaceView(
                         onCheckedChange = {
                             viewModel.customizeStats.value = it
                             if (viewModel.customRaceStatsMap.isEmpty()) {
-                                race.value?.abilityBonuses!!.forEach {
-                                    viewModel.customRaceStatsMap[it.ability] =
-                                        it.ability
+                                race.value?.abilityBonuses!!.forEach { abilityBonus ->
+                                    viewModel.customRaceStatsMap[abilityBonus.ability] =
+                                        abilityBonus.ability
                                 }
                             }
+                            setupSubraceCustomization()
                         },
                         modifier = Modifier.padding(5.dp)
                     )
@@ -174,27 +188,24 @@ fun ConfirmRaceView(
                 assumedStatBonuses = assumedStatBonuses.value
             )
 
-            if (!(race.value?.proficiencyChoices.isNullOrEmpty() && race.value?.startingProficiencies.isNullOrEmpty())) {
-                RaceContentCard(
-                    title = "Proficiencies",
-                    race.value?.proficiencyChoices?.isNotEmpty() == true
-                ) {
-                    race.value?.startingProficiencies.let {
-                        var string = ""
-                        it?.forEachIndexed { index, prof ->
-                            string += prof.name
-                            if (index != it.size - 1) {
-                                string += ", "
+                if (!(race.proficiencyChoices.isEmpty() && race.startingProficiencies.isEmpty())) {
+                    RaceContentCard(title = "Proficiencies", race.proficiencyChoices.isNotEmpty()) {
+                        race.startingProficiencies.let {
+                            var string = ""
+                            it.forEachIndexed { index, prof ->
+                                string += prof.name
+                                if (index != it.size - 1) {
+                                    string += ", "
+                                }
                             }
+                            if (string.isNotEmpty()) {
+                                "$string."
+                            } else {
+                                null
+                            }
+                        }?.let {
+                            Text(it)
                         }
-                        if (string.isNotEmpty()) {
-                            "$string."
-                        } else {
-                            null
-                        }
-                    }?.let {
-                        Text(it)
-                    }
 
                     race.value?.proficiencyChoices?.forEach { proficiencyChoice ->
                         MultipleChoiceDropdownView(
@@ -242,7 +253,8 @@ fun ConfirmRaceView(
                             ) {
                                 subraces.value?.forEachIndexed { index, item ->
                                     DropdownMenuItem(onClick = {
-                                        viewModel.subraceIndex.value = index
+                                        viewModel.customSubraceStatsMap.clear()
+                                            setupSubraceCustomization()viewModel.subraceIndex.value = index
                                         expanded = false
                                     }) {
                                         Text(text = item.name)
@@ -275,7 +287,7 @@ fun ConfirmRaceView(
                     )
 
                 subraces.value!![viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
-                    RaceAbilityBonusesView(bonuses, viewModel, viewModel.customSubraceStatsMap)
+                    setupSubraceCustomization()RaceAbilityBonusesView(bonuses, viewModel, viewModel.customSubraceStatsMap)
                 }
 
                 subraces.value!![viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->
@@ -305,8 +317,8 @@ fun ConfirmRaceView(
                                 val newState = MultipleChoiceDropdownStateImpl()
                                 newState.names = choice.from.let { list ->
                                     val names = mutableListOf<String>()
-                                    list.forEach {
-                                        names.add(it.ability)
+                                    list.forEach { abilityBonus ->
+                                        names.add(abilityBonus.ability)
                                     }
                                     names
                                 }
@@ -333,7 +345,6 @@ fun ConfirmRaceView(
                     assumedStatBonuses = assumedStatBonuses.value
                 )
             }
-
         }
     }
 }
@@ -460,13 +471,13 @@ fun RaceAbilityBonusesView(
                     expanded = !expanded
                 }) {
                     Text(text = "+${bonus.bonus} ")
-                    Text(text = viewModel.customRaceStatsMap[bonus.ability] ?: "")
+                    Text(text = targetList[bonus.ability] ?: "")
                 }
 
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     viewModel.getStatOptions(bonus.ability, targetList).forEach {
                         DropdownMenuItem(onClick = {
-                            viewModel.customRaceStatsMap[bonus.ability] = it
+                            targetList[bonus.ability] = it
                             expanded = false
                         }) {
                             Text(text = it)

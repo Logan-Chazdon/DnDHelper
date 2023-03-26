@@ -92,9 +92,15 @@ class NewCharacterStatsViewModel @Inject constructor(
                         newStats.add(i, rollAStat())
                     }
                 }
+                //Manual
+                3 -> {
+                    selectedStatIndexes.postValue(mutableListOf(0, 1, 2, 3, 4, 5))
+                    newStats.addAll(mutableListOf(3, 3, 3, 3, 3, 3))
+                }
             }
             currentStats.postValue(newStats)
-            selectedStatIndexes.postValue(listOf(-1, -1, -1, -1, -1, -1))
+            if(currentStateGenTypeIndex.value != 3)
+                selectedStatIndexes.postValue(listOf(-1, -1, -1, -1, -1, -1))
             generateCurrentStatOptions(selectedStatIndexes.value!!, newStats)
         }
 

@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import gmail.loganchazdon.dndhelper.ui.character.*
+import gmail.loganchazdon.dndhelper.ui.homebrew.*
 import gmail.loganchazdon.dndhelper.ui.newCharacter.*
 import gmail.loganchazdon.dndhelper.ui.preferences.PreferencesView
 
@@ -19,10 +20,21 @@ import gmail.loganchazdon.dndhelper.ui.preferences.PreferencesView
 @Composable
 fun Navigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "allCharactersView") {
-
-
         composable("preferences") {
             PreferencesView()
+        }
+
+
+        composable("homebrewView") {
+            HomebrewView(navController = navController, viewModel = hiltViewModel())
+        }
+
+        composable("homebrewView/homebrewFeature/{featureId}") {
+            HomebrewFeatureView(viewModel = hiltViewModel(), navController= navController)
+        }
+
+        composable("homebrewView/homebrewRaceView/{raceId}") {
+            HomebrewRaceView(navController = navController, viewModel = hiltViewModel())
         }
 
         composable("allCharactersView") {
@@ -73,43 +85,49 @@ fun Navigation(navController: NavHostController) {
             ClassView(viewModel, navController = navController, characterId = characterId)
 
         }
-        composable("newCharacterView/ClassView/ConfirmClassView/{classIndex}/{characterId}") {
-            val viewModel = hiltViewModel<NewCharacterClassViewModel>()
-            ConfirmClassView(viewModel = viewModel, navController = navController)
+        composable("newCharacterView/ClassView/ConfirmClassView/{classId}/{characterId}") {
+            ConfirmClassView(viewModel = hiltViewModel(), navController = navController)
         }
 
-        composable("newCharacterView/BackgroundView/ConfirmBackGroundView/{backgroundIndex}/{characterId}") { backStackEntry ->
-            val backgroundIndex =
-                backStackEntry.arguments?.getString("backgroundIndex")?.toInt()
-            val viewModel = hiltViewModel<NewCharacterBackgroundViewModel>()
+        composable("newCharacterView/BackgroundView/ConfirmBackGroundView/{backgroundId}/{characterId}") {
             ConfirmBackgroundView(
                 navController = navController,
-                viewModel = viewModel,
-                backgroundIndex = backgroundIndex ?: 0
+                viewModel = hiltViewModel(),
             )
         }
-        composable("newCharacterView/RaceView/ConfirmRaceView/{raceIndex}/{characterId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("raceIndex")?.toInt()?.let { raceIndex ->
-                backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
-                    val viewModel = hiltViewModel<NewCharacterRaceViewModel>()
-                    ConfirmRaceView(
-                        viewModel = viewModel,
-                        navController = navController,
-                        raceIndex = raceIndex,
-                        characterId = characterId
-                    )
-                }
-            }
+        composable("newCharacterView/RaceView/ConfirmRaceView/{raceId}/{characterId}") { 
+            ConfirmRaceView(
+                viewModel = hiltViewModel(),
+                navController = navController
+            )
         }
-        composable("newCharacterView/RaceView/{characterId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("characterId")?.toInt().let { characterId ->
+        composable("newCharacterView/RaceView/{characterId}") {
                 val viewModel = hiltViewModel<NewCharacterRaceViewModel>()
-                RaceView(viewModel, navController = navController, characterId = characterId ?: -1)
-            }
+                RaceView(viewModel, navController = navController)
         }
-        composable("newCharacterView/StatsView/{characterId}") { backStackEntry ->
+        composable("newCharacterView/StatsView/{characterId}") {
             val viewModel = hiltViewModel<NewCharacterStatsViewModel>()
             StatsView(viewModel, navController)
+        }
+
+        composable("homebrewView/homebrewSubraceView/{id}"){
+            HomebrewSubraceView(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable("homebrewView/homebrewClassView/{id}") {
+            HomebrewClassView(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable("homebrewView/homebrewSubclassView/{id}") {
+            HomebrewSubclassView(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable("homebrewView/homebrewSpellView/{id}") {
+            HomebrewSpellView(viewModel = hiltViewModel(), navController = navController)
+        }
+
+        composable("homebrewView/homebrewBackgroundView/{id}") {
+            HomebrewBackgroundView(viewModel = hiltViewModel(), navController = navController)
         }
     }
 }

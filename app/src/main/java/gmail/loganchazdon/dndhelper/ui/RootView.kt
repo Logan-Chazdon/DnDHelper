@@ -38,8 +38,8 @@ fun RootView(allCharactersViewModel: AllCharactersViewModel = hiltViewModel()) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(allCharactersViewModel.getAllCharacters()?.observeAsState()?.value?.size) {
-        if(allCharactersViewModel.getAllCharacters()?.value?.size == 0) {
+    LaunchedEffect(allCharactersViewModel.allCharacters.observeAsState().value?.size) {
+        if(allCharactersViewModel.allCharacters.value?.size == 0) {
             scaffoldState.drawerState.open()
         }
     }
@@ -60,6 +60,12 @@ fun RootView(allCharactersViewModel: AllCharactersViewModel = hiltViewModel()) {
                             route = "newCharacterView/ClassView/-1",
                             baseRoute = "newCharacterView/ClassView",
                             icon = Icons.Default.Add
+                        ),
+                        NavItem(
+                            name = "Homebrew",
+                            route = "homebrewView",
+                            baseRoute = "homebrewView",
+                            icon = Icons.Default.Home
                         ),
                         NavItem(
                             name = "Settings",

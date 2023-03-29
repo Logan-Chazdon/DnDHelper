@@ -1,27 +1,51 @@
 package gmail.loganchazdon.dndhelper.model
 
-data class Feature(
-    val name: String,
-    val description: String,
-    val index : String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.
-    val grantedAtLevel: Int = 1,
-    val maxTimesChosen : Int? = null, //If the feature is in another features options. This is the max amount of times the user can select it.
-    val prerequisite: Prerequisite? = null,
-    val activationRequirement: ActivationRequirement = ActivationRequirement(),
-    val speedBoost: ScalingBonus? = null,
-    val spells: List<Spell>? = null, //Spells granted by this feature
-    val infusion: Infusion? = null,
-    val maxActive: Choose = Choose(0),
-    val hpBonusPerLevel: Int? = null,
-    val armorContingentAcBonus: Int? = null, //Extra ac only granted when wearing armor.
-    val acBonus: Int? = null,
-    val ac: ArmorClass? = null, //This will only be applied when not wearing armor.
-    val proficiencies: List<Proficiency>? = null,
-    val expertises: List<Proficiency>? = null,
-    val languages: List<Language>? = null,
-    val extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
-    val rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.
-    val choices: List<FeatureChoice>? = null
+
+class Feature(
+    featureId: Int = 0,
+    name: String,
+    description: String,
+    index: String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.
+    grantedAtLevel: Int = 1,
+    maxTimesChosen: Int? = null, //If the feature is in another features options. This is the max amount of times the user can select it.
+    prerequisite: Prerequisite? = null,
+    activationRequirement: ActivationRequirement = ActivationRequirement(),
+    speedBoost: ScalingBonus? = null,
+    spells: List<Spell>? = null, //Spells granted by this feature
+    infusion: Infusion? = null,
+    maxActive: Choose = Choose(0),
+    hpBonusPerLevel: Int? = null,
+    armorContingentAcBonus: Int? = null, //Extra ac only granted when wearing armor.
+    acBonus: Int? = null,
+    ac: ArmorClass? = null, //This will only be applied when not wearing armor.
+    proficiencies: List<Proficiency>? = null,
+    expertises: List<Proficiency>? = null,
+    languages: List<Language>? = null,
+    extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
+    rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.
+    var choices: List<FeatureChoice>? = null
+) : FeatureEntity(
+    featureId,
+    name,
+    description,
+    index,
+    grantedAtLevel,
+    maxTimesChosen,
+    prerequisite,
+    activationRequirement,
+    speedBoost,
+    spells,
+    infusion,
+    maxActive,
+    hpBonusPerLevel,
+    armorContingentAcBonus,
+    acBonus,
+    ac,
+    proficiencies,
+    expertises,
+    languages,
+    extraAttackAndDamageRollStat,
+    rangedAttackBonus,
 ) {
     var resource: Resource? = null
     val allChosen: List<Feature>
@@ -99,24 +123,25 @@ data class Feature(
     }
 
     val currentActive: Int
-    get() {
-        var result = 0
-        for (item in allChosen) {
-            if (item.infusion?.active == true) {
-                result += 1
+        get() {
+            var result = 0
+            for (item in allChosen) {
+                if (item.infusion?.active == true) {
+                    result += 1
+                }
             }
+            return result
         }
-        return result
-    }
 
-    fun activateInfusion(infusion: Infusion) : Boolean {
-        if(this.infusion == infusion) {
-            this.infusion.active = true
+
+    fun activateInfusion(infusion: Infusion): Boolean {
+        if (this.infusion == infusion) {
+            this.infusion!!.active = true
             return true
         } else {
             allChosen.forEach {
                 if (it.infusion == infusion) {
-                    it.infusion.active = true
+                    it.infusion!!.active = true
                     return true
                 }
             }
@@ -125,17 +150,46 @@ data class Feature(
     }
 
     fun deactivateInfusion(infusion: Infusion): Boolean {
-        if(this.infusion == infusion) {
-            this.infusion.active = false
+        if (this.infusion == infusion) {
+            this.infusion!!.active = false
             return true
         } else {
             allChosen.forEach {
                 if (it.infusion == infusion) {
-                    it.infusion.active = false
+                    it.infusion!!.active = false
                     return true
                 }
             }
         }
         return false
+    }
+
+    //This isn't ideal but it cant be a data class or else gson freaks out.
+    //TODO look for a  better solution.
+    fun copy(): Feature {
+        return Feature(
+            featureId,
+            name,
+            description,
+            index,
+            grantedAtLevel,
+            maxTimesChosen,
+            prerequisite,
+            activationRequirement,
+            speedBoost,
+            spells,
+            infusion,
+            maxActive,
+            hpBonusPerLevel,
+            armorContingentAcBonus,
+            acBonus,
+            ac,
+            proficiencies,
+            expertises,
+            languages,
+            extraAttackAndDamageRollStat,
+            rangedAttackBonus,
+            choices
+        )
     }
 }

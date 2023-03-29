@@ -1,17 +1,19 @@
 package gmail.loganchazdon.dndhelper.ui.character
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
 import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.Infusion
 import gmail.loganchazdon.dndhelper.model.ItemInterface
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,14 +22,12 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterMainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val repository: Repository, application: Application
+    val repository: CharacterRepository,
+    application: Application
 ): AndroidViewModel(application) {
     private val debounceTime: Long = 1000
     val characterFeatures: MediatorLiveData<List<Pair<Int, Feature>>> = MediatorLiveData()
-    var character : LiveData<Character> =
-        repository.getLiveCharacterById(
-            savedStateHandle.get<String>("characterId")!!.toInt()
-        )!!
+    var character : MediatorLiveData<Character> = MediatorLiveData()
 
     //Character Information.
     val name = MutableStateFlow("")
@@ -47,6 +47,11 @@ class CharacterMainViewModel @Inject constructor(
     )
 
     init {
+        repository.getLiveCharacterById(
+            savedStateHandle.get<String>("characterId")!!.toInt(),
+            character
+        )
+
         characterFeatures.addSource(character) {
             characterFeatures.value = it.displayFeatures
         }
@@ -64,10 +69,8 @@ class CharacterMainViewModel @Inject constructor(
 
 
     fun longRest() {
-        val newChar = character.value!!.copy()
-        newChar.id = character.value!!.id
-        newChar.longRest()
-        repository.insertCharacter(newChar)
+        character.value!!.longRest()
+        repository.insertCharacter(character.value!!)
     }
 
     fun shortRest() {
@@ -75,96 +78,74 @@ class CharacterMainViewModel @Inject constructor(
     }
 
     private fun setName(it: String) {
-        val newChar = character.value?.copy(name = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }
+        repository.changeName(it, character.value!!.id)
     }
 
     private fun setPersonalityTraits(it: String) {
-        val newChar = character.value?.copy(personalityTraits = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }
+        repository.setPersonalityTraits(it, character.value!!.id)
     }
 
     private fun setIdeals(it: String) {
-        val newChar = character.value?.copy(ideals = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }
+        repository.setIdeals(it, character.value!!.id)
     }
 
     private fun setBonds(it: String) {
-        val newChar = character.value?.copy(bonds = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }
+        repository.setBonds(it, character.value!!.id)
     }
 
     private fun setFlaws(it: String) {
-        val newChar = character.value?.copy(flaws = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }
+        repository.setFlaws(it, character.value!!.id)
     }
 
     private fun setNotes(it: String) {
-        val newChar = character.value?.copy(notes = it)
-        if (newChar != null) {
-            newChar.id = character.value!!.id
-            repository.insertCharacter(newChar)
-        }
+        repository.setNotes(it, character.value!!.id)
     }
 
     fun infuse(targetItem: ItemInterface?, infusion: Infusion) {
-        val newChar = activateInfusion(infusion, character.value!!.copy())
-        if(targetItem != null) {
-            newChar?.backpack?.applyInfusion(targetItem, infusion)
+        character.value?.let {
+            if(activateInfusion(infusion, it)) {
+                if (targetItem != null) {
+                    it.backpack.applyInfusion(targetItem, infusion)
+                }
+                repository.insertCharacter(it)
+            }
         }
-        newChar?.id = character.value!!.id
-        newChar?.let { character -> repository.insertCharacter(character) }
     }
 
     fun disableInfusion(infusion: Infusion) {
-        val newChar = deactivateInfusion(infusion, character.value!!.copy())
-        newChar?.backpack?.removeInfusion(infusion)
-        newChar?.id = character.value!!.id
-        newChar?.let { character -> repository.insertCharacter(character) }
+        character.value?.let {
+            if(deactivateInfusion(infusion, it)) {
+                it.backpack.removeInfusion(infusion)
+                repository.insertCharacter(it)
+            }
+        }
     }
 
-    //This function just returns the character passed in with the target infusion set to active or null.
-    private fun activateInfusion(infusion: Infusion, character: Character) : Character? {
-        //TODO check for other possible sources of infusions.
+    private fun activateInfusion(infusion: Infusion, character: Character) : Boolean {
         character.classes.values.forEachIndexed { classIndex, clazz  ->
-            clazz.levelPath.forEachIndexed { index, it ->
+            clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
-                    if(character.classes.values.elementAt(classIndex).levelPath[index].activateInfusion(infusion))
-                        return character
+                    if(character.classes.values.elementAt(classIndex).levelPath!![index].activateInfusion(infusion)) {
+                        repository.activateInfusion(infusion.id, character.id)
+                        return true
+                    }
                 }
             }
         }
-        return null
+        return false
     }
 
-    //Attempt to find an active infusion equal to the one passed and disable it.
-    fun deactivateInfusion(infusion: Infusion, character: Character): Character? {
-        //TODO check for other possible sources of infusions.
+    private fun deactivateInfusion(infusion: Infusion, character: Character) : Boolean {
         character.classes.values.forEachIndexed { classIndex, clazz  ->
-            clazz.levelPath.forEachIndexed { index, it ->
+            clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
-                    if(character.classes.values.elementAt(classIndex).levelPath[index].deactivateInfusion(infusion))
-                        return character
+                    if(character.classes.values.elementAt(classIndex).levelPath!![index].deactivateInfusion(infusion)) {
+                        repository.deactivateInfusion(infusion.id, character.id)
+                        return true
+                    }
                 }
             }
         }
-        return null
+        return false
     }
-
-
 }

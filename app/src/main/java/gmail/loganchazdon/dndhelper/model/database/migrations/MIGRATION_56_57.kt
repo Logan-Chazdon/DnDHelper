@@ -1,4 +1,4 @@
-package gmail.loganchazdon.dndhelper.model.database
+package gmail.loganchazdon.dndhelper.model.database.migrations
 
 import android.content.ContentValues
 import androidx.room.OnConflictStrategy

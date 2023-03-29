@@ -6,8 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.indexOf
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -15,29 +16,27 @@ import javax.inject.Inject
 import kotlin.collections.set
 
 @HiltViewModel
-public class NewCharacterStatsViewModel @Inject constructor(
-    private val repository: Repository,
+class NewCharacterStatsViewModel @Inject constructor(
+    private val characterRepository: CharacterRepository,
     application: Application,
     savedStateHandle : SavedStateHandle
-): AndroidViewModel(application)
-
-{
+): AndroidViewModel(application) {
     var character: Character? = null
     var currentStateGenTypeIndex : MutableLiveData<Int> = MutableLiveData(0)
     var currentStats = MutableLiveData(listOf<Int>())
-    var selectedStatIndexes = MutableLiveData(listOf<Int>(-1, -1, -1, -1, -1, -1))
+    var selectedStatIndexes = MutableLiveData(listOf(-1, -1, -1, -1, -1, -1))
     var currentStatsOptions = MutableLiveData(listOf<Int>())
     var pointsRemaining = MutableLiveData(27)
     var id = -1
 
-    private suspend fun updateStats() {
+    private fun updateStats() {
         if(id == -1)
-            id = repository.createDefaultCharacter()!!
-        character = repository.getCharacterById(id)
+            id = characterRepository.createDefaultCharacter()
+        character = characterRepository.getCharacterById(id)
         character!!.baseStats = generateStatMap()
         character!!.statGenerationMethodIndex = currentStateGenTypeIndex.value!!
         if(character!!.baseStats.isNotEmpty())
-            repository.insertCharacter(character!!)
+            characterRepository.insertCharacter(character!!)
     }
 
     private fun generateStatMap() : MutableMap<String, Int> {
@@ -58,8 +57,8 @@ public class NewCharacterStatsViewModel @Inject constructor(
         } catch (E : Exception) {
             -1
         }
-        viewModelScope.launch {
-            character = repository.getCharacterById(id)
+        viewModelScope.launch(Dispatchers.IO) {
+            character = characterRepository.getCharacterById(id)
             character?.let {
                 if(!it.baseStats.values.contains(0) && it.baseStats.isNotEmpty()) {
                     currentStateGenTypeIndex.value = it.statGenerationMethodIndex
@@ -218,13 +217,7 @@ public class NewCharacterStatsViewModel @Inject constructor(
     }
 
     suspend fun longRest() {
-        updateStats()
-        val tempChar = character?.copy()
-        tempChar?.id = character?.id!!
-        tempChar?.longRest()
-        if (tempChar != null) {
-            repository.insertCharacter(tempChar)
-        }
+        characterRepository.setHp(id, (character?.maxHp ?: 0).toString())
     }
 }
 

@@ -1,36 +1,43 @@
 package gmail.loganchazdon.dndhelper.model
 
-import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import gmail.loganchazdon.dndhelper.model.database.Converters
+import androidx.room.Embedded
 
-@Entity(tableName="races")
-@TypeConverters(Converters::class)
-data class Race (
-        @PrimaryKey(autoGenerate = false)
-    @NonNull
-    @ColumnInfo(name="name")
-    val name : String,
-        val groundSpeed: Int,
-        var abilityBonuses: List<AbilityBonus>?,
-        val abilityBonusChoice: AbilityBonusChoice?,
-        val alignment: String?,
-        val age : String,
-        val size: String,
-        val sizeDesc: String,
-        val startingProficiencies: List<Proficiency>,
-        val proficiencyChoices : List<ProficiencyChoice>,
-        val languages: List<Language>,
-        val languageChoices: List<LanguageChoice>,
-        val languageDesc: String,
-        val traits: List<Feature>,
-        val subraces: List<Subrace>?,
-        var subrace: Subrace? = null
+
+class Race(
+    id: Int = 0,
+    name : String = "",
+    groundSpeed: Int = 30,
+    abilityBonuses: List<AbilityBonus>? = null,
+    abilityBonusChoice: AbilityBonusChoice? = null,
+    alignment: String? = null,
+    age : String = "",
+    size: String = "Medium",
+    sizeDesc: String = "",
+    var traits: List<Feature>? = listOf(),
+    startingProficiencies: List<Proficiency> = listOf(),
+    proficiencyChoices : List<ProficiencyChoice> = listOf(),
+    languages: List<Language> = listOf(),
+    languageChoices: List<LanguageChoice> = listOf(),
+    languageDesc: String = "",
+    @Embedded(prefix = "subrace")
+    var subrace: Subrace? = null
+) : RaceEntity(
+    raceId = id,
+    raceName = name,
+    groundSpeed = groundSpeed,
+    abilityBonuses = abilityBonuses,
+    abilityBonusChoice = abilityBonusChoice,
+    alignment = alignment,
+    age = age,
+    size = size,
+    sizeDesc = sizeDesc,
+    startingProficiencies = startingProficiencies,
+    proficiencyChoices = proficiencyChoices,
+    languages = languages,
+    languageChoices = languageChoices,
+    languageDesc = languageDesc,
 ) {
-    val totalGroundSpeed: Int?
+    val totalGroundSpeed: Int
     get() {
         return maxOf(groundSpeed, subrace?.groundSpeed ?: 0)
     }
@@ -53,7 +60,7 @@ data class Race (
         result.addAll(languageChoices.let { languageChoices ->
             val langs = mutableListOf<Language>()
             languageChoices.forEach {
-                it.chosen?.let { chosen -> langs.addAll(chosen) }
+                it.chosen.let { chosen -> langs.addAll(chosen) }
             }
             langs
         })
@@ -61,7 +68,7 @@ data class Race (
     }
 
     fun longRest() {
-        traits.forEach {
+        traits!!.forEach {
             it.recharge(1)
         }
     }
@@ -75,7 +82,7 @@ data class Race (
     }
 
     fun filterRaceFeatures(): List<Feature> {
-        return traits.filter { feature ->
+        return traits!!.filter { feature ->
             subrace?.traits?.none { it.index == feature.index }
                 ?: true
         }
@@ -102,7 +109,7 @@ data class Race (
         val result = mutableListOf<Proficiency>()
         result.addAll(startingProficiencies)
         proficiencyChoices.forEach {
-            it.chosen?.let { chosen -> result.addAll(chosen) }
+            it.chosen.let { chosen -> result.addAll(chosen) }
         }
         return result
     }

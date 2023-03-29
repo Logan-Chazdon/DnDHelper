@@ -75,7 +75,7 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                     state = lazyState
                 ) {
-                    viewModel.character?.value?.backpack?.allItems.let { items ->
+                    viewModel.character.value?.backpack?.allItems.let { items ->
                         items(items?.size ?: 0) { i ->
                             Card(
                                 elevation = 5.dp,
@@ -87,7 +87,7 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
                                         onClick = {
                                             //Take the user to the items detail view
                                             navController.navigate(
-                                                "characterView/ItemsView/ItemDetailView/${viewModel.character!!.value!!.id}/$i"
+                                                "characterView/ItemsView/ItemDetailView/${viewModel.character.value!!.id}/$i"
                                             )
                                         },
                                         onLongClick = {
@@ -201,8 +201,8 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
                         }
                     )
                 ) {
-                    val character = viewModel.character?.observeAsState()
-                    val currencies = character?.value?.backpack?.allCurrency
+                    val character = viewModel.character.observeAsState()
+                    val currencies = character.value?.backpack?.allCurrency
 
                     currencies?.forEach { (i, it) ->
                         Card(
@@ -274,7 +274,7 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
                 },
                 canBuy = {
                     (it.cost!!.getValueInCopper()
-                            <= viewModel.character!!.value!!.backpack.allCurrency.getValueInCopper())
+                            <= viewModel.character.value!!.backpack.allCurrency.getValueInCopper())
                 },
                 renderBuyButton = true,
                 onDismissRequest = { expanded = false }
@@ -290,7 +290,7 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
                 text = {
                     Text(
                         "Would you like to delete " +
-                                viewModel.character?.value?.backpack?.allItems!![itemToDeleteIndex].displayName
+                                viewModel.character.value?.backpack?.allItems!![itemToDeleteIndex].displayName
                     )
                 },
                 confirmButton = {

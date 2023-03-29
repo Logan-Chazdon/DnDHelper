@@ -1,0 +1,176 @@
+{
+    "instruments": [
+        {
+            "name": "Bagpipes",
+            "id": 2034
+        },
+        {
+            "name": "Drum",
+            "id": 2035
+        },
+        {
+            "name": "Dulcimer",
+            "id": 2036
+        },
+        {
+            "name": "Flute",
+            "id": 2037
+        },
+        {
+            "name": "Lute",
+            "id": 2038
+        },
+        {
+            "name": "Lyre",
+            "id": 2039
+        },
+        {
+            "name": "Horn",
+            "id": 2040
+        },
+        {
+            "name": "Pan Flute",
+            "id": 2041
+        },
+        {
+            "name": "Shawm",
+            "id": 2042
+        },
+        {
+            "name": "Viol",
+            "id": 2043
+        },
+        {
+            "name": "Hurdy-Gurdy",
+            "id": 2044
+        },
+        {
+            "name": "Sackbut",
+            "id": 2045
+        },
+        {
+            "name": "Whistle-Stick",
+            "id": 2046
+        },
+        {
+            "name": "Harp",
+            "id": 2047
+        },
+        {
+            "name": "Tambourine",
+            "id": 2048
+        },
+        {
+            "name": "Erhu",
+            "id": 2049
+        },
+        {
+            "name": "Hulusi",
+            "id": 2050
+        },
+        {
+            "name": "Udu",
+            "id": 2051
+        },
+        {
+            "name": "Maracas",
+            "id": 2052
+        },
+        {
+            "name": "Gong",
+            "id": 2053
+        },
+        {
+            "name": "Wargong",
+            "id": 2054
+        }
+    ],
+    "artisans_tools": [
+        {
+            "name": "Alchemist's supplies",
+            "id": 2055
+        },
+        {
+            "name": "Brewer's supplies",
+            "id": 2056
+        },
+        {
+            "name": "Calligrapher's Supplies",
+            "id": 2057
+        },
+        {
+            "name": "Carpenter's tools",
+            "id": 2058
+        },
+        {
+            "name": "Cartographer's tools",
+            "id": 2059
+        },
+        {
+            "name": "Cobbler's tools",
+            "id": 2060
+        },
+        {
+            "name": "Cook's utensils",
+            "id": 2061
+        },
+        {
+            "name": "Glassblower's tools",
+            "id": 2062
+        },
+        {
+            "name": "Jeweler's tools",
+            "id": 2063
+        },
+        {
+            "name": "Leatherworker's tools",
+            "id": 2064
+        },
+        {
+            "name": "Mason's tools",
+            "id": 2065
+        },
+        {
+            "name": "Painter's supplies",
+            "id": 2066
+        },
+        {
+            "name": "Potter's tools",
+            "id": 2067
+        },
+        {
+            "name": "Smith's tools",
+            "id": 2068
+        },
+        {
+            "name": "Tinker's tools",
+            "id": 2069
+        },
+        {
+            "name": "Weaver's tools",
+            "id": 2070
+        },
+        {
+            "name": "Woodcarver's tools",
+            "id": 2071
+        }
+    ],
+    "gaming_sets": [
+        {
+            "name": "Dice set",
+            "id": 2072
+        },
+        {
+            "name": "Dragonchess set",
+            "id": 2073
+        },
+        {
+            "name": "Playing card set",
+            "id": 2074
+        },
+        {
+            "name": "Three-Dragon Ante set",
+            "id": 2075
+        }
+    ]
+}

@@ -60,7 +60,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 hpPopUpExpanded = false
                                 scope.launch(Dispatchers.IO) {
                                     try {
-                                        viewModel.addTemp(temp)
+                                        viewModel.setTemp(temp)
                                     } catch (e: NumberFormatException) {
                                     }
                                 }
@@ -135,7 +135,7 @@ fun CombatView(viewModel: CombatViewModel) {
         }
     }
 
-    val character = viewModel.character?.observeAsState()
+    val character = viewModel.character.observeAsState()
     val isVertical = LocalConfiguration.current.orientation == ORIENTATION_PORTRAIT
     VariableOrientationView(isVertical = isVertical, arrangement = Arrangement.SpaceBetween) {
         Column(
@@ -149,14 +149,14 @@ fun CombatView(viewModel: CombatViewModel) {
                 }
             )
         ) {
-            viewModel.character?.observeAsState()?.value?.let {
+            viewModel.character.observeAsState().value?.let {
                 HeathStatsView(
                     currentHp = it.currentHp,
                     maxHp = it.maxHp,
                     tempHp = it.tempHp,
                     setTemp = {
                         scope.launch(Dispatchers.IO) {
-                            viewModel.addTemp(it)
+                            viewModel.setTemp(it)
                         }
                     },
                     setHp = {
@@ -203,7 +203,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 "",
                                 Modifier.size(75.dp)
                             )
-                            val ac = character?.value?.armorClass
+                            val ac = character.value?.armorClass
                             Text(
                                 text = "$ac",
                                 modifier = Modifier.padding(bottom = 5.dp),
@@ -232,7 +232,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 Modifier.size(75.dp)
                             )
                             Text(
-                                text = character?.value?.groundSpeed.toString(),
+                                text = character.value?.groundSpeed.toString(),
                                 modifier = Modifier.padding(bottom = 5.dp),
                                 style = MaterialTheme.typography.h5
                             )
@@ -259,7 +259,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 Modifier.size(75.dp)
                             )
                             Text(
-                                text = character?.value?.maxHitDice ?: "",
+                                text = character.value?.maxHitDice ?: "",
                                 modifier = Modifier.padding(bottom = 5.dp),
                                 style = MaterialTheme.typography.h5
                             )
@@ -277,7 +277,7 @@ fun CombatView(viewModel: CombatViewModel) {
 
                 DeathSavesView(
                     type = "Success",
-                    num = viewModel.character?.observeAsState()?.value?.positiveDeathSaves,
+                    num = viewModel.character.observeAsState().value?.positiveDeathSaves,
                     onClick = {
                         scope.launch(Dispatchers.IO) {
                             viewModel.updateDeathSaveSuccesses(it)
@@ -287,7 +287,7 @@ fun CombatView(viewModel: CombatViewModel) {
 
                 DeathSavesView(
                     type = "Fail",
-                    num = viewModel.character?.observeAsState()?.value?.negativeDeathSaves,
+                    num = viewModel.character.observeAsState().value?.negativeDeathSaves,
                     onClick = {
                         scope.launch(Dispatchers.IO) {
                             viewModel.updateDeathSaveFailures(it)
@@ -318,15 +318,23 @@ fun CombatView(viewModel: CombatViewModel) {
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
-                val allSpells = viewModel.getAllSpells()
-                if (allSpells.isNotEmpty()) {
+                //This is used to force a recalculation of allSpells.
+                val allSpellsKey = remember {
+                    mutableStateOf(0)
+                }
+                val allSpells: State<Map<Int, List<Pair<Boolean?, Spell>>>> = produceState(emptyMap(), character.value, allSpellsKey.value)  {
+                    this.launch(Dispatchers.IO) {
+                        value = viewModel.getAllSpells()
+                    }
+                }
+                if (allSpells.value.isNotEmpty()) {
                     Box(
                         Modifier.width(width)
                     ) {
-                        character?.value?.let {
+                        character.value?.let {
                             SpellCastingView(
                                 spellSlotsOffsetForCantrips = viewModel.getSpellSlotsAndCantrips(),
-                                allSpells = allSpells,
+                                allSpells = allSpells.value,
                                 cast = { newSpell ->
                                     spell = newSpell
                                     castIsExpanded = true
@@ -341,9 +349,10 @@ fun CombatView(viewModel: CombatViewModel) {
                                         viewModel.useSlot(slot)
                                     }
                                 },
-                                togglePreparation = { spell ->
-                                    GlobalScope.launch {
-                                        viewModel.togglePreparation(spell)
+                                togglePreparation = { spell, prepared ->
+                                    scope.launch(Dispatchers.IO) {
+                                        viewModel.togglePreparation(spell, prepared)
+                                        allSpellsKey.value = allSpellsKey.value + 1
                                     }
                                 }
                             )
@@ -356,7 +365,7 @@ fun CombatView(viewModel: CombatViewModel) {
                 Box(
                     Modifier.width(width)
                 ) {
-                    character?.value?.let { ItemsAndAbilitiesView(character = it) }
+                    character.value?.let { ItemsAndAbilitiesView(character = it) }
                 }
             }
 

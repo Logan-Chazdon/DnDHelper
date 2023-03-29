@@ -1,410 +1,422 @@
 {
-    "formatVersion": 1,
-    "database": {
-        "version": 57,
-        "identityHash": "8a2b7bc31f0b5aa537830ac1b0c26e3b",
-        "entities": [
-            {
-                "tableName": "characters",
-                "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `personalityTraits` TEXT NOT NULL, `ideals` TEXT NOT NULL, `bonds` TEXT NOT NULL, `flaws` TEXT NOT NULL, `notes` TEXT NOT NULL, `race` TEXT, `currentHp` INTEGER NOT NULL, `tempHp` INTEGER NOT NULL, `conditions` TEXT NOT NULL, `resistances` TEXT NOT NULL, `classes` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `statGenerationMethodIndex` INTEGER NOT NULL, `baseStats` TEXT NOT NULL, `background` TEXT, `backpack` TEXT NOT NULL, `inspiration` INTEGER NOT NULL, `positiveDeathSaves` INTEGER NOT NULL, `negativeDeathSaves` INTEGER NOT NULL, `spellSlots` TEXT NOT NULL, `addedLanguages` TEXT NOT NULL, `addedProficiencies` TEXT NOT NULL)",
-                "fields": [
-                    {
-                        "fieldPath": "name",
-                        "columnName": "name",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "personalityTraits",
-                        "columnName": "personalityTraits",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "ideals",
-                        "columnName": "ideals",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "bonds",
-                        "columnName": "bonds",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "flaws",
-                        "columnName": "flaws",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "notes",
-                        "columnName": "notes",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "race",
-                        "columnName": "race",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "currentHp",
-                        "columnName": "currentHp",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "tempHp",
-                        "columnName": "tempHp",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "conditions",
-                        "columnName": "conditions",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "resistances",
-                        "columnName": "resistances",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "classes",
-                        "columnName": "classes",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "id",
-                        "columnName": "id",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "statGenerationMethodIndex",
-                        "columnName": "statGenerationMethodIndex",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "baseStats",
-                        "columnName": "baseStats",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "background",
-                        "columnName": "background",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "backpack",
-                        "columnName": "backpack",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "inspiration",
-                        "columnName": "inspiration",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "positiveDeathSaves",
-                        "columnName": "positiveDeathSaves",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "negativeDeathSaves",
-                        "columnName": "negativeDeathSaves",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "spellSlots",
-                        "columnName": "spellSlots",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "addedLanguages",
-                        "columnName": "addedLanguages",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "addedProficiencies",
-                        "columnName": "addedProficiencies",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    }
-                ],
-                "primaryKey": {
-                    "columnNames": [
-                        "id"
-                    ],
-                    "autoGenerate": true
-                },
-                "indices": [],
-                "foreignKeys": []
-            },
-            {
-                "tableName": "classes",
-                "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `hitDie` INTEGER NOT NULL, `subClasses` TEXT NOT NULL, `subclassLevel` INTEGER NOT NULL, `levelPath` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `proficiencies` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `equipment` TEXT NOT NULL, `spellCasting` TEXT, `pactMagic` TEXT, `startingGoldD4s` INTEGER NOT NULL, `startingGoldMultiplier` INTEGER NOT NULL, `isBaseClass` INTEGER NOT NULL, `level` INTEGER NOT NULL, `subclass` TEXT, `tookGold` INTEGER, `totalNumOnGoldDie` INTEGER, `featsGranted` TEXT NOT NULL, `abilityImprovementsGranted` TEXT NOT NULL, PRIMARY KEY(`name`))",
-                "fields": [
-                    {
-                        "fieldPath": "name",
-                        "columnName": "name",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "hitDie",
-                        "columnName": "hitDie",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "subClasses",
-                        "columnName": "subClasses",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "subclassLevel",
-                        "columnName": "subclassLevel",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "levelPath",
-                        "columnName": "levelPath",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "proficiencyChoices",
-                        "columnName": "proficiencyChoices",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "proficiencies",
-                        "columnName": "proficiencies",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "equipmentChoices",
-                        "columnName": "equipmentChoices",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "equipment",
-                        "columnName": "equipment",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "spellCasting",
-                        "columnName": "spellCasting",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "pactMagic",
-                        "columnName": "pactMagic",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "startingGoldD4s",
-                        "columnName": "startingGoldD4s",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "startingGoldMultiplier",
-                        "columnName": "startingGoldMultiplier",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "isBaseClass",
-                        "columnName": "isBaseClass",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "level",
-                        "columnName": "level",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "subclass",
-                        "columnName": "subclass",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "tookGold",
-                        "columnName": "tookGold",
-                        "affinity": "INTEGER",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "totalNumOnGoldDie",
-                        "columnName": "totalNumOnGoldDie",
-                        "affinity": "INTEGER",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "featsGranted",
-                        "columnName": "featsGranted",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "abilityImprovementsGranted",
-                        "columnName": "abilityImprovementsGranted",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    }
-                ],
-                "primaryKey": {
-                    "columnNames": [
-                        "name"
-                    ],
-                    "autoGenerate": false
-                },
-                "indices": [],
-                "foreignKeys": []
-            },
-            {
-                "tableName": "races",
-                "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `groundSpeed` INTEGER NOT NULL, `abilityBonuses` TEXT, `abilityBonusChoice` TEXT, `alignment` TEXT, `age` TEXT NOT NULL, `size` TEXT NOT NULL, `sizeDesc` TEXT NOT NULL, `startingProficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `languageDesc` TEXT NOT NULL, `traits` TEXT NOT NULL, `subraces` TEXT, `subrace` TEXT, PRIMARY KEY(`name`))",
-                "fields": [
-                    {
-                        "fieldPath": "name",
-                        "columnName": "name",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "groundSpeed",
-                        "columnName": "groundSpeed",
-                        "affinity": "INTEGER",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "abilityBonuses",
-                        "columnName": "abilityBonuses",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "abilityBonusChoice",
-                        "columnName": "abilityBonusChoice",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "alignment",
-                        "columnName": "alignment",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "age",
-                        "columnName": "age",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "size",
-                        "columnName": "size",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "sizeDesc",
-                        "columnName": "sizeDesc",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "startingProficiencies",
-                        "columnName": "startingProficiencies",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "proficiencyChoices",
-                        "columnName": "proficiencyChoices",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "languages",
-                        "columnName": "languages",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "languageChoices",
-                        "columnName": "languageChoices",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "languageDesc",
-                        "columnName": "languageDesc",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "traits",
-                        "columnName": "traits",
-                        "affinity": "TEXT",
-                        "notNull": true
-                    },
-                    {
-                        "fieldPath": "subraces",
-                        "columnName": "subraces",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    },
-                    {
-                        "fieldPath": "subrace",
-                        "columnName": "subrace",
-                        "affinity": "TEXT",
-                        "notNull": false
-                    }
-                ],
-                "primaryKey": {
-                    "columnNames": [
-                        "name"
-                    ],
-                    "autoGenerate": false
-                },
-                "indices": [],
-                "foreignKeys": []
-            }
+  "formatVersion": 1,
+  "database": {
+    "version": 57,
+    "identityHash": "6e11c3a10d749fc6d5bf8b096455d601",
+    "entities": [
+      {
+        "tableName": "characters",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `personalityTraits` TEXT NOT NULL, `ideals` TEXT NOT NULL, `bonds` TEXT NOT NULL, `flaws` TEXT NOT NULL, `notes` TEXT NOT NULL, `race` TEXT, `currentHp` INTEGER NOT NULL, `tempHp` INTEGER NOT NULL, `conditions` TEXT NOT NULL, `resistances` TEXT NOT NULL, `classes` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `statGenerationMethodIndex` INTEGER NOT NULL, `baseStats` TEXT NOT NULL, `background` TEXT, `backpack` TEXT NOT NULL, `inspiration` INTEGER NOT NULL, `positiveDeathSaves` INTEGER NOT NULL, `negativeDeathSaves` INTEGER NOT NULL, `spellSlots` TEXT NOT NULL, `addedLanguages` TEXT NOT NULL, `addedProficiencies` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "personalityTraits",
+            "columnName": "personalityTraits",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ideals",
+            "columnName": "ideals",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bonds",
+            "columnName": "bonds",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "flaws",
+            "columnName": "flaws",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notes",
+            "columnName": "notes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "race",
+            "columnName": "race",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentHp",
+            "columnName": "currentHp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tempHp",
+            "columnName": "tempHp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "conditions",
+            "columnName": "conditions",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resistances",
+            "columnName": "resistances",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "classes",
+            "columnName": "classes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statGenerationMethodIndex",
+            "columnName": "statGenerationMethodIndex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "baseStats",
+            "columnName": "baseStats",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "background",
+            "columnName": "background",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "backpack",
+            "columnName": "backpack",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inspiration",
+            "columnName": "inspiration",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "positiveDeathSaves",
+            "columnName": "positiveDeathSaves",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "negativeDeathSaves",
+            "columnName": "negativeDeathSaves",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spellSlots",
+            "columnName": "spellSlots",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "addedLanguages",
+            "columnName": "addedLanguages",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "addedProficiencies",
+            "columnName": "addedProficiencies",
+            "affinity": "TEXT",
+            "notNull": true
+          }
         ],
-        "views": [],
-        "setupQueries": [
-            "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-            "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8a2b7bc31f0b5aa537830ac1b0c26e3b')"
-        ]
-    }
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "classes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `hitDie` INTEGER NOT NULL, `subClasses` TEXT NOT NULL, `subclassLevel` INTEGER NOT NULL, `levelPath` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `proficiencies` TEXT NOT NULL, `equipmentChoices` TEXT NOT NULL, `equipment` TEXT NOT NULL, `spellCasting` TEXT, `pactMagic` TEXT, `startingGoldD4s` INTEGER NOT NULL, `startingGoldMultiplier` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `isBaseClass` INTEGER NOT NULL, `level` INTEGER NOT NULL, `subclass` TEXT, `tookGold` INTEGER, `totalNumOnGoldDie` INTEGER, `featsGranted` TEXT NOT NULL, `abilityImprovementsGranted` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hitDie",
+            "columnName": "hitDie",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subClasses",
+            "columnName": "subClasses",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subclassLevel",
+            "columnName": "subclassLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "levelPath",
+            "columnName": "levelPath",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "proficiencyChoices",
+            "columnName": "proficiencyChoices",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "proficiencies",
+            "columnName": "proficiencies",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "equipmentChoices",
+            "columnName": "equipmentChoices",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "equipment",
+            "columnName": "equipment",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spellCasting",
+            "columnName": "spellCasting",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pactMagic",
+            "columnName": "pactMagic",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startingGoldD4s",
+            "columnName": "startingGoldD4s",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startingGoldMultiplier",
+            "columnName": "startingGoldMultiplier",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isBaseClass",
+            "columnName": "isBaseClass",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subclass",
+            "columnName": "subclass",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tookGold",
+            "columnName": "tookGold",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalNumOnGoldDie",
+            "columnName": "totalNumOnGoldDie",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "featsGranted",
+            "columnName": "featsGranted",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityImprovementsGranted",
+            "columnName": "abilityImprovementsGranted",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "races",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `groundSpeed` INTEGER NOT NULL, `abilityBonuses` TEXT, `abilityBonusChoice` TEXT, `alignment` TEXT, `age` TEXT NOT NULL, `size` TEXT NOT NULL, `sizeDesc` TEXT NOT NULL, `startingProficiencies` TEXT NOT NULL, `proficiencyChoices` TEXT NOT NULL, `languages` TEXT NOT NULL, `languageChoices` TEXT NOT NULL, `languageDesc` TEXT NOT NULL, `traits` TEXT NOT NULL, `subraces` TEXT, `subrace` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "groundSpeed",
+            "columnName": "groundSpeed",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "abilityBonuses",
+            "columnName": "abilityBonuses",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "abilityBonusChoice",
+            "columnName": "abilityBonusChoice",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "alignment",
+            "columnName": "alignment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "age",
+            "columnName": "age",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sizeDesc",
+            "columnName": "sizeDesc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startingProficiencies",
+            "columnName": "startingProficiencies",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "proficiencyChoices",
+            "columnName": "proficiencyChoices",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "languages",
+            "columnName": "languages",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "languageChoices",
+            "columnName": "languageChoices",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "languageDesc",
+            "columnName": "languageDesc",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "traits",
+            "columnName": "traits",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subraces",
+            "columnName": "subraces",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "subrace",
+            "columnName": "subrace",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6e11c3a10d749fc6d5bf8b096455d601')"
+    ]
+  }
 }

@@ -1,5 +1,10 @@
 package gmail.loganchazdon.dndhelper.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+
+@Entity(tableName = "spells")
 data class Spell(
     val name: String,
     val level: Int,
@@ -13,8 +18,12 @@ data class Spell(
     val duration: String,
     val classes: List<String>,
     val damage: String,
-    val isRitual: Boolean = false
+    val isRitual: Boolean = false,
+    val isHomebrew : Boolean = false,
 ) {
+
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
     val levelName: String
     get() {
         return when(level) {

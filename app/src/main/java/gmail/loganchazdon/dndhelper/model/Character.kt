@@ -1,46 +1,64 @@
 package gmail.loganchazdon.dndhelper.model
 
 
-import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import gmail.loganchazdon.dndhelper.model.database.Converters
-import gmail.loganchazdon.dndhelper.model.repositories.Repository
+import androidx.room.Embedded
+import androidx.room.Ignore
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlin.math.floor
 
-@Entity(tableName="characters")
-@TypeConverters(Converters::class)
-data class Character(
-    @ColumnInfo(name="name")
-    var name: String,
-    var personalityTraits: String = "",
-    var ideals: String = "",
-    var bonds: String = "",
-    var flaws: String = "",
-    var notes: String = "",
-    var race: Race? = null,
-    var currentHp: Int = 0,
-    var tempHp: Int = 0,
-    var conditions: MutableList<String> = mutableListOf<String>(),
-    var resistances: MutableList<String> = mutableListOf<String>(),
-    var classes: MutableMap<String, Class> = mutableMapOf(),
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    @ColumnInfo(name="id")
-    var id: Int = 0,
-    var statGenerationMethodIndex: Int = 0,
-    var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
-    var background: Background? = null,
-    var backpack: Backpack = Backpack(),
-    var inspiration: Boolean = false,
-    var positiveDeathSaves: Int = 0,
-    var negativeDeathSaves: Int = 0,
-    var spellSlots: List<Resource> = listOf(),
-    val addedLanguages: MutableList<Language> = mutableListOf<Language>(),
-    val addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
+
+class Character (
+    name: String = "",
+    personalityTraits: String = "",
+    ideals: String = "",
+    bonds: String = "",
+    flaws: String = "",
+    notes: String = "",
+    currentHp: Int = 0,
+    tempHp: Int = 0,
+    conditions: MutableList<String> = mutableListOf<String>(),
+    resistances: MutableList<String> = mutableListOf<String>(),
+    id: Int = 0,
+    statGenerationMethodIndex: Int = 0,
+    baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),
+    backpack: Backpack = Backpack(),
+    inspiration: Boolean = false,
+    positiveDeathSaves: Int = 0,
+    negativeDeathSaves: Int = 0,
+    spellSlots: List<Resource> = listOf(),
+    addedLanguages: MutableList<Language> = mutableListOf<Language>(),
+    addedProficiencies: MutableList<Proficiency> = mutableListOf<Proficiency>()
+) : CharacterEntity(
+    name,
+    personalityTraits,
+    ideals,
+    bonds,
+    flaws,
+    notes,
+    currentHp,
+    tempHp,
+    conditions,
+    resistances,
+    id,
+    statGenerationMethodIndex,
+    baseStats,
+    backpack,
+    inspiration,
+    positiveDeathSaves,
+    negativeDeathSaves,
+    spellSlots,
+    addedLanguages,
+    addedProficiencies
 ){
+    @Embedded(prefix = "background")
+    var background: Background? = null
+
+    @Embedded
+    var race: Race? = null
+
+    @Ignore
+    var classes: MutableMap<String, Class> = mutableMapOf()
+
     val hasSpells: Boolean
     get() {
         classes.forEach { (_, clazz) ->
@@ -52,7 +70,7 @@ data class Character(
             }
         }
 
-        if(!additionalSpells.isNullOrEmpty()) {
+        if(additionalSpells.isNotEmpty()) {
             return true
         }
 
@@ -67,7 +85,7 @@ data class Character(
 
         //Classes
         classes.forEach { (_, clazz) ->
-            result.addAll(clazz.featsGranted)
+            result.addAll(clazz.featsGranted ?: emptyList())
         }
         return result
     }
@@ -174,7 +192,7 @@ data class Character(
         }
 
         classes.values.forEach {
-            it.levelPath.forEach { feature ->
+            it.levelPath!!.forEach { feature ->
                 if(feature.grantedAtLevel <= it.level) {
                     result.add(it.level to feature)
                 }
@@ -189,7 +207,7 @@ data class Character(
 
 
         background?.let { background ->
-            background.features.forEach {
+            background.features?.forEach {
                 result.add(totalClassLevels to it)
             }
         }
@@ -233,7 +251,7 @@ data class Character(
             }
 
             if(item.abilityBonusChoice != null) {
-                item.abilityBonusChoice.chosen?.forEach {
+                item.abilityBonusChoice.chosen.forEach {
                     stats[it.ability.substring(0, 3)] =
                         stats[it.ability.substring(0, 3)]?.plus(it.bonus)  ?: it.bonus
                 }
@@ -285,7 +303,7 @@ data class Character(
 
     fun addClass(newClass: Class, takeGold: Boolean) {
         //Clear out the unused level path too save memory.
-        newClass.levelPath.forEach { feature ->
+        newClass.levelPath!!.forEach { feature ->
             feature.choices?.forEach {
                 it.options?.clear()
             }
@@ -560,7 +578,6 @@ data class Character(
 
     private fun checkForExpertise(it: String) : Boolean {
         features.forEach { feature ->
-            //TODO replace this system with the new feature.expertises
             if(feature.second.name == "Expertise") {
                 feature.second.allChosen.forEach { item ->
                     if (item.name == it) {
@@ -654,7 +671,7 @@ data class Character(
         race?.getAllLanguages()?.let { result.addAll(it) }
         background?.languages?.let {result.addAll(it) }
         background?.languageChoices?.forEach { choice ->
-            choice.chosen?.let { result.addAll(it) }
+            choice.chosen.let { result.addAll(it) }
         }
         features.forEach { feature ->
             feature.second.languages?.let {
@@ -672,7 +689,7 @@ data class Character(
         classes.forEach {
             result.addAll(it.value.proficiencies)
             it.value.proficiencyChoices.forEach { choice ->
-                choice.chosen?.let { chosen -> result.addAll(chosen) }
+                choice.chosen.let { chosen -> result.addAll(chosen) }
             }
         }
         race?.getAllProficiencies()?.let { result.addAll(it) }
@@ -830,7 +847,7 @@ data class Character(
         var bonusFromFeatures = 0
         val applyFeature = fun(it : Feature) {
             if(it.rangedAttackBonus != null && weapon.range != "5 ft") {
-                bonusFromFeatures += it.rangedAttackBonus
+                bonusFromFeatures += it.rangedAttackBonus!!
             }
         }
         features.forEach {
@@ -859,7 +876,7 @@ data class Character(
                 } else {
                     slots.add(
                         Resource(
-                            name = Repository.allSpellLevels[level].second,
+                            name = SpellRepository.allSpellLevels[level].second,
                             currentAmount = amount,
                             maxAmountType = maxAmount.toString(),
                             rechargeAmountType = maxAmount.toString()

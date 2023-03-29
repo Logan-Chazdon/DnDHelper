@@ -21,9 +21,7 @@ import androidx.navigation.NavController
 fun RaceView(
     viewModel: NewCharacterRaceViewModel,
     navController: NavController,
-    characterId: Int
 ) {
-    viewModel.id = characterId
     val races = viewModel.races.observeAsState()
 
     Column {
@@ -58,16 +56,16 @@ fun RaceView(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             state = rememberLazyListState()
         ) {
-            races.value?.forEachIndexed { i, race ->
+            races.value?.forEach { race ->
                 //TODO upgrade search
-                if (search == "" || race.name.lowercase().contains(search.lowercase())) {
+                if (search == "" || race.raceName.lowercase().contains(search.lowercase())) {
                     item {
                         Card(
                             backgroundColor = MaterialTheme.colors.surface,
                             modifier = Modifier
                                 .fillMaxWidth(0.95f)
                                 .clickable {
-                                    navController.navigate("newCharacterView/RaceView/ConfirmRaceView/$i/$characterId")
+                                    navController.navigate("newCharacterView/RaceView/ConfirmRaceView/${race.raceId}/${viewModel.characterId}")
                                 },
                             shape = RoundedCornerShape(10.dp),
                             elevation = 10.dp
@@ -79,7 +77,7 @@ fun RaceView(
                                 Row(
                                     verticalAlignment = Alignment.Bottom
                                 ) {
-                                    Text(text = race.name, fontSize = 24.sp)
+                                    Text(text = race.raceName, fontSize = 24.sp)
                                     Spacer(Modifier.fillMaxWidth(0.1f))
                                     Text(text = race.size, fontSize = 18.sp)
                                 }
@@ -99,7 +97,7 @@ fun RaceView(
                                         }
                                     }
 
-                                    for (trait in race.traits) {
+                                    for (trait in race.traits!!) {
                                         Text(
                                             text = trait.name,
                                             style = MaterialTheme.typography.subtitle1

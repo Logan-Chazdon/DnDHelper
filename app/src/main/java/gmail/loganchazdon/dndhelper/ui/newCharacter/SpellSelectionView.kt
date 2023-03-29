@@ -20,7 +20,6 @@ import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.SpellCasting
 import gmail.loganchazdon.dndhelper.ui.SpellDetailsView
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SpellSelectionView(
     pactMagic: PactMagic,
@@ -39,7 +38,6 @@ fun SpellSelectionView(
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SpellSelectionView(
     spellCasting: SpellCasting,

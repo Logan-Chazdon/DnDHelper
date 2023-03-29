@@ -2,18 +2,33 @@ package gmail.loganchazdon.dndhelper.model
 
 
 
-data class Subrace(
-    val name : String,
-    var abilityBonuses: List<AbilityBonus>?,
-    val abilityBonusChoice: AbilityBonusChoice?,
-    val startingProficiencies: List<Proficiency>?,
-    val languages : List<Language>,
-    val languageChoices: List<LanguageChoice>,
-    val traits: List<Feature>,
-    val size: String?,
-    val groundSpeed: Int?,
-    val featChoices: List<FeatChoice>? = null
-) {
+class Subrace(
+    name : String,
+    abilityBonuses: List<AbilityBonus>?,
+    abilityBonusChoice: AbilityBonusChoice?,
+    startingProficiencies: List<Proficiency>?,
+    languages : List<Language>,
+    languageChoices: List<LanguageChoice>,
+    var traits: List<Feature>? = emptyList(),
+    size: String?,
+    groundSpeed: Int?,
+    var featChoices: List<FeatChoice>? = null
+) : SubraceEntity(name, abilityBonuses, abilityBonusChoice, startingProficiencies, languages, languageChoices, size, groundSpeed){
+    constructor(entity: SubraceEntity, traits: List<Feature>?, featChoices: List<FeatChoice>?) : this(
+        name = entity.name,
+        abilityBonuses = entity.abilityBonuses,
+        abilityBonusChoice = entity.abilityBonusChoice,
+        startingProficiencies = entity.startingProficiencies,
+        languages = entity.languages,
+        languageChoices = entity.languageChoices,
+        traits = traits,
+        featChoices = featChoices,
+        groundSpeed = entity.groundSpeed,
+        size = entity.size
+    ) {
+        this.id = entity.id
+    }
+
     val totalAbilityBonuses: List<AbilityBonus>
     get() {
         val result = mutableListOf<AbilityBonus>()
@@ -29,7 +44,7 @@ data class Subrace(
         result.addAll(languageChoices.let { languageChoices ->
             val langs = mutableListOf<Language>()
             languageChoices.forEach {
-                it.chosen?.let { chosen -> langs.addAll(chosen) }
+                it.chosen.let { chosen -> langs.addAll(chosen) }
             }
             langs
         })

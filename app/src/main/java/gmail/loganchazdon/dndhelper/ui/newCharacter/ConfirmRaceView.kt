@@ -35,7 +35,7 @@ fun ConfirmRaceView(
     navController: NavController,
 ) {
     val setupSubraceCustomization = fun() {
-        val subrace = viewModel.races.value?.get(raceIndex)?.subraces?.get(viewModel.subraceIndex.value)
+        val subrace = viewModel.subraces.value?.getOrNull(viewModel.subraceIndex.value)
         if(viewModel.customizeStats.value && viewModel.customSubraceStatsMap.isEmpty()) {
             subrace?.abilityBonuses?.forEach {
                 viewModel.customSubraceStatsMap[it.ability] =
@@ -44,8 +44,6 @@ fun ConfirmRaceView(
         }
     }
 
-    viewModel.raceIndex = raceIndex
-    val races = viewModel.races.observeAsState()
     val scrollState = rememberScrollState(0)
     val mainLooper = Looper.getMainLooper()
     val race = viewModel.race.observeAsState()
@@ -188,11 +186,11 @@ fun ConfirmRaceView(
                 assumedStatBonuses = assumedStatBonuses.value
             )
 
-                if (!(race.proficiencyChoices.isEmpty() && race.startingProficiencies.isEmpty())) {
-                    RaceContentCard(title = "Proficiencies", race.proficiencyChoices.isNotEmpty()) {
-                        race.startingProficiencies.let {
+                if (!(race.value?.proficiencyChoices?.isEmpty() == true && race.value?.startingProficiencies?.isEmpty() == true)) {
+                    RaceContentCard(title = "Proficiencies", race.value?.proficiencyChoices?.isNotEmpty() == true) {
+                        race.value?.startingProficiencies.let {
                             var string = ""
-                            it.forEachIndexed { index, prof ->
+                            it?.forEachIndexed { index, prof ->
                                 string += prof.name
                                 if (index != it.size - 1) {
                                     string += ", "
@@ -254,7 +252,8 @@ fun ConfirmRaceView(
                                 subraces.value?.forEachIndexed { index, item ->
                                     DropdownMenuItem(onClick = {
                                         viewModel.customSubraceStatsMap.clear()
-                                            setupSubraceCustomization()viewModel.subraceIndex.value = index
+                                        viewModel.subraceIndex.value = index
+                                        setupSubraceCustomization()
                                         expanded = false
                                     }) {
                                         Text(text = item.name)
@@ -287,7 +286,8 @@ fun ConfirmRaceView(
                     )
 
                 subraces.value!![viewModel.subraceIndex.value].abilityBonuses?.let { bonuses ->
-                    setupSubraceCustomization()RaceAbilityBonusesView(bonuses, viewModel, viewModel.customSubraceStatsMap)
+                    setupSubraceCustomization()
+                    RaceAbilityBonusesView(bonuses, viewModel, viewModel.customSubraceStatsMap)
                 }
 
                 subraces.value!![viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->

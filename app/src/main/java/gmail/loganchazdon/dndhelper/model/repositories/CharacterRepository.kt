@@ -323,6 +323,12 @@ class CharacterRepository @Inject constructor(
                     choice.chosenByString = data.languageChoice.getOrNull(index) ?: emptyList()
                 }
 
+                data.abilityBonusOverrides?.let {
+                    if(it.isNotEmpty()) {
+                        race.abilityBonuses = it
+                    }
+                }
+
                 val features = raceDao.getRaceFeatures(race.raceId)
                 fillOutFeatureList(features, character.id)
                 race.traits = features
@@ -333,6 +339,14 @@ class CharacterRepository @Inject constructor(
             characterDao.getSubraceChoiceData(subraceId = subrace.id, charId = character.id).let { data ->
                 subrace.languageChoices.forEachIndexed { index, choice ->
                     choice.chosenByString = data.languageChoice.getOrNull(index) ?: emptyList()
+                }
+
+                subrace.abilityBonusChoice?.chosenByString = data.abilityBonusChoice
+
+                data.abilityBonusOverrides?.let {
+                    if(it.isNotEmpty()) {
+                        subrace.abilityBonuses = it
+                    }
                 }
 
                 val features = raceDao.getSubraceFeatures(subrace.id)

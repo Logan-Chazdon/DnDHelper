@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
+import gmail.loganchazdon.dndhelper.model.AbilityBonus
 import gmail.loganchazdon.dndhelper.model.CharacterEntity
 import gmail.loganchazdon.dndhelper.model.RaceEntity
 
@@ -34,5 +35,6 @@ data class RaceChoiceEntity(
     @ColumnInfo(name = "abcchosenByString")
     var abilityBonusChoice: List<String> = emptyList(),
     var proficiencyChoice: List<List<String>> = emptyList(),
-    var languageChoice: List<List<String>> = emptyList()
+    var languageChoice: List<List<String>> = emptyList(),
+    var abilityBonusOverrides: List<AbilityBonus>? = null
 )

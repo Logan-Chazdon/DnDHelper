@@ -71,6 +71,12 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
                 id = id
             )
         )
+         val languageChoices = mutableListOf<List<String>>()
+         race.value!!.languageChoices.forEach { languageChoice ->
+             languageChoices.add((
+                     languageDropdownStates[languageChoice.name]?.getSelected(languageChoice.from)
+                             as List<Language>).map { it.name ?: "" } )
+         }
 
         race.value!!.proficiencyChoices.forEach {
             it.chosen = raceProficiencyChoiceDropdownStates[it.name]
@@ -81,12 +87,13 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
             RaceChoiceEntity(
                 raceId = race.value!!.raceId,
                 characterId = id,
-                abilityBonusChoice = getStateBonuses(
+                abilityBonusChoice = emptyList(),
+                proficiencyChoice = race.value!!.proficiencyChoices.toStringList(),
+                languageChoice = languageChoices,
+                abilityBonusOverrides = getStateBonuses(
                     race.value?.abilityBonuses ?: emptyList(),
                     customRaceStatsMap
-                ).toStringList(),
-                proficiencyChoice = race.value!!.proficiencyChoices.toStringList(),
-                languageChoice = race.value!!.languageChoices.toStringList()
+                )
             )
         )
 
@@ -106,19 +113,24 @@ public class NewCharacterConfirmRaceViewModel @Inject constructor(
                     ?.getSelected(it.from) as List<Language>
             }
 
-            subrace.abilityBonuses = subrace.abilityBonuses?.let {
-                getStateBonuses(
-                    it,
-                    customSubraceStatsMap
-                )
+            val languageChoices = mutableListOf<List<String>>()
+            subrace.languageChoices.forEach { languageChoice ->
+                languageChoices.add((
+                        languageDropdownStates[languageChoice.name]?.getSelected(languageChoice.from)
+                                as List<Language>).map { it.name ?: "" } )
             }
-
             characterRepository.insertSubraceChoiceEntity(
                 SubraceChoiceEntity(
                     subraceId = subrace.id,
                     characterId = id,
-                    languageChoice = subrace.languageChoices.toStringList(),
-                    abilityBonusChoice = subrace.abilityBonuses?.toStringList() ?: emptyList()
+                    languageChoice = languageChoices,
+                    abilityBonusChoice = subraceASIDropdownState.value?.getSelected(
+                        subrace.abilityBonusChoice?.from?.toStringList() ?: emptyList()
+                    ) as List<String>? ?: emptyList(),
+                    abilityBonusOverrides = getStateBonuses(
+                        subrace.abilityBonuses ?: emptyList(),
+                        customSubraceStatsMap
+                    )
                 )
             )
         }

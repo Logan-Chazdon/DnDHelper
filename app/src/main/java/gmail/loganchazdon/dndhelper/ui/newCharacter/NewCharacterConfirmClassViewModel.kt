@@ -147,19 +147,25 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
 
         //Calculate equipment choices and proficiency choices,
         if (isBaseClass.value) {
-            clazz.value!!.equipmentChoices.forEach {
-                it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
-            }
             clazz.value!!.proficiencyChoices.forEach {
                 it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>
             }
 
-            //Store equipment choices
-            characterRepository.insertCharacterClassEquipment(
-                clazz.value!!.equipmentChoices,
-                clazz.value!!.equipment,
-                id
-            )
+            if(!takeGold.value) {
+                clazz.value!!.equipmentChoices.forEach {
+                    it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
+                }
+
+                //Store equipment choices
+                characterRepository.insertCharacterClassEquipment(
+                    clazz.value!!.equipmentChoices,
+                    clazz.value!!.equipment,
+                    id
+                )
+            } else {
+                val gold = goldRolled.value.toIntOrNull()?.times(clazz.value!!.startingGoldMultiplier)
+                characterRepository.setClassGold(gold ?: 0, id)
+            }
         }
 
         //Insert a classChoiceEntity.

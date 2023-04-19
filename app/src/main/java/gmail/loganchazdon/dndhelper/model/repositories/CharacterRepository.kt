@@ -109,6 +109,12 @@ class CharacterRepository @Inject constructor(
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 
+    fun setClassGold(gold: Int, characterId: Int) {
+        val backpack = characterDao.getCharacterBackPack(characterId)
+        backpack.classCurrency["gp"]!!.amount = gold
+        characterDao.insertCharacterBackPack(backpack, characterId)
+    }
+
     fun removeClassFromCharacter(classId: Int, characterId: Int) {
         characterDao.removeCharacterClassCrossRef(
             CharacterClassCrossRef(

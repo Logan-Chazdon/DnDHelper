@@ -6,10 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.Character
-import gmail.loganchazdon.dndhelper.model.Feature
-import gmail.loganchazdon.dndhelper.model.Item
-import gmail.loganchazdon.dndhelper.model.Language
+import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.BackgroundChoiceEntity
 import gmail.loganchazdon.dndhelper.model.choiceEntities.FeatureChoiceChoiceEntity
 import gmail.loganchazdon.dndhelper.model.repositories.BackgroundRepository
@@ -66,6 +63,13 @@ class NewCharacterConfirmBackgroundViewModel @Inject constructor(
         background.value!!.equipmentChoices.forEach {
             it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
         }
+
+        characterRepository.setBackgroundGold(
+            (background.value!!.equipment.
+                filterIsInstance<Currency>()).
+                sumOf { it.getValueInCopper } / 100,
+            id
+        )
 
         characterRepository.insertBackgroundChoiceEntity(
             BackgroundChoiceEntity(

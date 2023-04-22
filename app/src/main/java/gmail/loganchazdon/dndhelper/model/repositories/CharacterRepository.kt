@@ -115,9 +115,9 @@ class CharacterRepository @Inject constructor(
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 
-    fun setBackgroundGold(gold: Int, characterId: Int) {
+    fun setBackgroundCurrency(backgroundCurrencyMap: Map<String, Currency>, characterId: Int) {
         val backpack = characterDao.getCharacterBackPack(characterId)
-        backpack.backgroundCurrency["gp"]!!.amount = gold
+        backpack.backgroundCurrency = backgroundCurrencyMap
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 

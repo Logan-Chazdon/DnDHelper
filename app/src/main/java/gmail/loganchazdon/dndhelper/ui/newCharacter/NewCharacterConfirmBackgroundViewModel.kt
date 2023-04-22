@@ -64,10 +64,14 @@ class NewCharacterConfirmBackgroundViewModel @Inject constructor(
             it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
         }
 
-        characterRepository.setBackgroundGold(
-            (background.value!!.equipment.
-                filterIsInstance<Currency>()).
-                sumOf { it.getValueInCopper } / 100,
+        val backgroundCurrencyMap = Currency.getEmptyCurrencyMap()
+        background.value!!.equipment.forEach {
+            if(it is Currency) {
+                backgroundCurrencyMap[it.abbreviatedName]!!.amount += it.amount
+            }
+        }
+        characterRepository.setBackgroundCurrency(
+            backgroundCurrencyMap,
             id
         )
 

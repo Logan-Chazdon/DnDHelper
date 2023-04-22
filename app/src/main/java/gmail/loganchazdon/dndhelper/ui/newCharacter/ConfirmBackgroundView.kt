@@ -110,7 +110,7 @@ fun ConfirmBackgroundView(
                                 Text(background.value?.equipment?.let { items ->
                                     var result = ""
                                     items.forEachIndexed { i, item ->
-                                        result += item.name
+                                        result += item.displayName
                                         if (i != items.size - 1) {
                                             result += ", "
                                         }

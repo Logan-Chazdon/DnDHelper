@@ -33,6 +33,7 @@ class BackgroundRepository @Inject constructor(
                         it,
                         backgroundDao.getUnfilledBackgroundFeatures(id)
                     )
+                    background.spells = backgroundDao.getBackgroundSpells(id)
                     featureDao.fillOutFeatureListWithoutChosen(background.features!!)
                     result.postValue(background)
                 }

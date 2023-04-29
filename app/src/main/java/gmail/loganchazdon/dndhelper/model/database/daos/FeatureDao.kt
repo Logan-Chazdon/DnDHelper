@@ -207,4 +207,7 @@ WHERE name LIKE :index
 
     @Query("""SELECT featureId FROM FeatureSpellCrossRef WHERE spellId IS :id""")
     abstract fun getFeatureIdOr0FromSpellId(id: Int): Int
+
+    @Query("DELETE FROM FeatureChoiceChoiceEntity WHERE choiceId IS :choiceId AND characterId IS :characterId")
+    abstract fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int)
 }

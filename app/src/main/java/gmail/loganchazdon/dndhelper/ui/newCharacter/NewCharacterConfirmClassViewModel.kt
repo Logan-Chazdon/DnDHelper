@@ -110,6 +110,12 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
     suspend fun addClassLevels() {
         if (id == -1)
             id = characterRepository.createDefaultCharacter()
+
+        characterRepository.removeFeatureChoiceCrossRefs(
+            clazz.value!!,
+            id
+        )
+
         characterRepository.insertCharacterClassCrossRef(
             characterId = id,
             classId = clazz.value!!.id
@@ -467,20 +473,22 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
 
     fun applyAlreadySelectedChoices() {
         character.value?.classes
-            ?.getOrDefault(clazz.value?.name, null)?.let { clazz ->
+            ?.getOrDefault(clazz.value?.name, null)?.let { clazzWithChoices ->
                 //Apply level choice.
-                levels.value = TextFieldValue(clazz.level.toString())
+                levels.value = TextFieldValue(clazzWithChoices.level.toString())
 
                 //Apply feature choices.
-                clazz.levelPath?.filter { it.grantedAtLevel <= clazz.level }
+                clazzWithChoices.levelPath?.filter { it.grantedAtLevel <= clazzWithChoices.level }
                     ?.forEachIndexed { index, feature ->
                         feature.choices?.forEachIndexed { choiceIndex, _ ->
                             val featureToPass =
-                                clazz.levelPath?.filter { it.grantedAtLevel <= clazz.level }
+                                clazzWithChoices.levelPath?.filter { it.grantedAtLevel <= clazzWithChoices.level }
                                     ?.get(index)
                                     ?.copy()?.run {
+                                        val featureWithOptions = clazz.value!!.levelPath!!.first { it.featureId == this.featureId }
                                         this.choices?.forEachIndexed { choiceIndex, it ->
                                             it.chosen = feature.choices!![choiceIndex].chosen
+                                            it.options = featureWithOptions.choices?.get(choiceIndex)?.options
                                         }
                                         this
                                     }
@@ -490,7 +498,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                                     choiceIndex = choiceIndex,
                                     feature = it,
                                     character = character.value,
-                                    level = clazz.level,
+                                    level = clazzWithChoices.level,
                                     assumedClass = null,
                                     assumedSpells = listOf(),
                                     assumedFeatures = listOf(),
@@ -503,10 +511,10 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
 
 
                 //Apply base class choice
-                isBaseClass.value = clazz.isBaseClass
+                isBaseClass.value = clazzWithChoices.isBaseClass
                 if (isBaseClass.value) {
                     //Apply proficiency choices
-                    clazz.proficiencyChoices.forEach { choice ->
+                    clazzWithChoices.proficiencyChoices.forEach { choice ->
                         //Get or create the drop down state for the choice.
                         val names = mutableListOf<String>()
                         for (item in choice.from) {
@@ -527,13 +535,13 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                         state.setSelected(selectedNames)
                     }
 
-                    if (clazz.tookGold == true) {
+                    if (clazzWithChoices.tookGold == true) {
                         //Apply gold choices.
                         takeGold.value = true
-                        goldRolled.value = clazz.totalNumOnGoldDie.toString()
+                        goldRolled.value = clazzWithChoices.totalNumOnGoldDie.toString()
                     } else {
                         //Apply equipment choices.
-                        clazz.equipmentChoices.forEach { choice ->
+                        clazzWithChoices.equipmentChoices.forEach { choice ->
                             //Get or create the drop down state for the choice.
                             val names = mutableListOf<String>()
                             for (item in choice.from) {
@@ -557,15 +565,15 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 }
 
                 //Apply spell class choices.
-                if (clazz.spellCasting?.type != 0.0) {
-                    clazz.spellCasting?.known?.let { pairs -> classSpells.addAll(pairs.map { it.first }) }
+                if (clazzWithChoices.spellCasting?.type != 0.0) {
+                    clazzWithChoices.spellCasting?.known?.let { pairs -> classSpells.addAll(pairs.map { it.first }) }
                 }
-                clazz.pactMagic?.let {
+                clazzWithChoices.pactMagic?.let {
                     classSpells.addAll(it.known)
                 }
 
                 //Apply feat and asi choices.
-                clazz.featsGranted?.forEachIndexed { i, it ->
+                clazzWithChoices.featsGranted?.forEachIndexed { i, it ->
                     isFeat.add(i, true)
                     featNames.value?.let { featNames ->
                         featDropDownStates
@@ -589,7 +597,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
 
                             featChoiceDropDownStates.getDropDownState(
                                 key = "${feature.name}$i",
-                                maxSelections = choice.choose.num(clazz.level),
+                                maxSelections = choice.choose.num(clazzWithChoices.level),
                                 names = choice.options.let { featureList ->
                                     val result = mutableListOf<String>()
                                     featureList?.forEach {
@@ -604,7 +612,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                     }
                 }
                 val offset = isFeat.size
-                clazz.abilityImprovementsGranted.forEachIndexed { i, it ->
+                clazzWithChoices.abilityImprovementsGranted.forEachIndexed { i, it ->
                     isFeat.add(i + offset, false)
                     val state = absDropDownStates
                         .getDropDownState(
@@ -627,16 +635,16 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 }
 
                 //Apply subclass choices.
-                clazz.subclass?.let { subclass ->
+                clazzWithChoices.subclass?.let { subclass ->
                     //Set the subclass
                     val state = getSubclassDropdownState()
                     state.setSelected(listOf(subclass.name))
 
                     //Apply subclass spell choices.
-                    if (clazz.spellCasting?.type != 0.0) {
-                        clazz.spellCasting?.known?.let { pairs -> subclassSpells.addAll(pairs.map { it.first }) }
+                    if (clazzWithChoices.spellCasting?.type != 0.0) {
+                        clazzWithChoices.spellCasting?.known?.let { pairs -> subclassSpells.addAll(pairs.map { it.first }) }
                     }
-                    clazz.pactMagic?.let {
+                    clazzWithChoices.pactMagic?.let {
                         subclassSpells.addAll(it.known)
                     }
                 }

@@ -26,6 +26,13 @@ class CharacterRepository @Inject constructor(
         return characterDao.getAllCharacters()
     }
 
+    fun removeFeatureChoiceChoiceEntity(
+        choiceId: Int,
+        characterId: Int
+    ) {
+        featureDao.removeFeatureFeatureChoice(choiceId, characterId)
+    }
+
     fun insertCharacter(character: CharacterEntity) {
         if(characterDao.insertCharacter(character).toInt() == -1) {
             characterDao.updateCharacter(character)
@@ -530,6 +537,17 @@ class CharacterRepository @Inject constructor(
                 isActive = false
             )
         )
+    }
+
+    fun removeFeatureChoiceCrossRefs(clazz: Class, characterId: Int) {
+        clazz.levelPath?.forEach { feature ->
+            feature.choices?.forEach {
+                featureDao.removeFeatureFeatureChoice(
+                    choiceId = it.id,
+                    characterId = characterId
+                )
+            }
+        }
     }
 
 

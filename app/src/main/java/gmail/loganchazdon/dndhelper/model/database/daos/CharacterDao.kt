@@ -149,7 +149,7 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
         return result
     }
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterRaceCrossRef(ref: CharacterRaceCrossRef)
 
     @Delete

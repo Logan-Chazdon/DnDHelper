@@ -143,10 +143,13 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 )
             } else {
                 clazz.value!!.abilityImprovementsGranted.add(
-                    (absDropDownStates[i].getSelected(shortStatNames) as List<Pair<String, Int>>)
-                        .associateBy(
-                            { it.first }, { it.second }
-                        )
+                    (absDropDownStates[i].getSelected(shortStatNames) as List<String>).let {
+                        val temp = mutableMapOf<String, Int>()
+                        it.forEach { name ->
+                            temp[name] = temp.getOrDefault(name, 0) + 1
+                        }
+                        temp
+                    }
                 )
             }
         }
@@ -447,11 +450,8 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                     }
                 }
             } else {
-                (absDropDownStates[i].getSelected(shortStatNames) as List<Pair<String, Int>>)
-                    .associateBy(
-                        { it.first }, { it.second }
-                    ).forEach { (name, bonus) ->
-                        applyBonus(name, bonus)
+                absDropDownStates[i].getSelected(shortStatNames).forEach { name ->
+                        applyBonus(name as String, 1)
                     }
             }
         }

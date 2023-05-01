@@ -9,7 +9,7 @@ data class Spell(
     val name: String,
     val level: Int,
     val components: List<String>,
-    val itemComponents: List<Item>,
+    val itemComponents: List<ItemInterface>,
     val school: String,
     val desc: String,
     val range: String,

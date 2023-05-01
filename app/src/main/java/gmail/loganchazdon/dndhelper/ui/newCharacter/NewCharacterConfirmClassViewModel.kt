@@ -127,6 +127,16 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
             id
         )
 
+        val temp = if (character.value != null) {
+            character.value!!
+        } else {
+            characterRepository.getCharacterById(id)
+        }
+        clazz.value!!.level = toNumber(levels)
+        temp.addClass(clazz.value!!, takeGold = takeGold.value)
+        characterRepository.insertSpellSlots(temp.spellSlots, id)
+        characterRepository.setHp(id, temp.maxHp.toString())
+
         //Persist feat choices and calculate ASIs.
         for ((i, item) in isFeat.withIndex()) {
             if (item) {
@@ -238,15 +248,6 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 }
             }
         }
-
-        val temp = if (character.value != null) {
-            character.value!!
-        } else {
-            characterRepository.getCharacterById(id)
-        }
-        temp.addClass(clazz.value!!, takeGold = takeGold.value)
-        characterRepository.insertSpellSlots(temp.spellSlots, id)
-        characterRepository.setHp(id, temp.maxHp.toString())
     }
 
 

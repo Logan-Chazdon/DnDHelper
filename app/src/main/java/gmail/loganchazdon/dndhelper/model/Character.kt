@@ -3,6 +3,7 @@ package gmail.loganchazdon.dndhelper.model
 
 import androidx.room.Embedded
 import androidx.room.Ignore
+import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlin.math.floor
 
@@ -330,7 +331,7 @@ class Character (
         val alreadyHasCasterClass = classes.run {
             var result = false
             for (it in this.values) {
-                if(it.spellCasting?.type ?: 0.0 != 0.0) {
+                if((it.spellCasting?.type ?: 0.0) != 0.0) {
                     result = true
                     break
                 }
@@ -340,172 +341,17 @@ class Character (
         classes[newClass.name] = newClass
 
 
-        if(alreadyHasCasterClass && (newClass.spellCasting?.type ?: 0.0 != 0.0  || newClass.subclass?.spellCasting?.type != 0.0)) {
+        spellSlots = if(alreadyHasCasterClass && ((newClass.spellCasting?.type
+                ?: 0.0) != 0.0 || newClass.subclass?.spellCasting?.type != 0.0)
+        ) {
             //Use the spells slots from the multiclass table
-            spellSlots = when(totalCasterLevels) {
-                1 -> {
-                    listOf(Resource(name = "1st", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"))
-                }
-                2 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3")
-                    )
-                }
-                3 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2")
-                    )
-                }
-                4 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3")
-                    )
-                }
-                5 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2")
-                    )
-                }
-                6 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3")
-                    )
-                }
-                7 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1")
-                    )
-                }
-                8 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2")
-                    )
-                }
-                9 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1")
-                    )
-                }
-                10 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2")
-                    )
-                }
-                11 or 12 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "6th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1")
-                    )
-                }
-                13 or 14-> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "6th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "7th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1")
-                    )
-                }
-                15 or 16 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "6th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "7th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "8th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                    )
-                }
-                17 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "6th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "7th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "8th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "9th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1")
-                    )
-                }
-                18 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "6th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "7th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "8th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "9th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1")
-                    )
-                }
-                19 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "6th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "7th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "8th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "9th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1")
-                    )
-                }
-                20 -> {
-                    listOf(
-                        Resource(name = "1st", currentAmount = 4, rechargeAmountType = "4", maxAmountType = "4"),
-                        Resource(name = "2nd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "3rd", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "4th", currentAmount = 3, rechargeAmountType = "3", maxAmountType = "3"),
-                        Resource(name = "5th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "6th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "7th", currentAmount = 2, rechargeAmountType = "2", maxAmountType = "2"),
-                        Resource(name = "8th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1"),
-                        Resource(name = "9th", currentAmount = 1, rechargeAmountType = "1", maxAmountType = "1")
-                    )
-                }
-                else -> {
-                    listOf()
-                }
-            }
+            ClassRepository.getMulticlassSpellSlots(totalCasterLevels)
+
         } else {
             //Get the spell slots from the class itself
-            spellSlots =
-                newClass.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1)
-                    ?: newClass.subclass?.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1)
-                            ?: listOf()
+            newClass.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1)
+                ?: newClass.subclass?.spellCasting?.spellSlotsByLevel?.get(newClass.level - 1)
+                ?: listOf()
         }
 
         this.longRest()

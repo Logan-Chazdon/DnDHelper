@@ -136,4 +136,39 @@ class ClassRepository @Inject constructor(
     fun getSubclassClasses(id: Int): LiveData<List<NameAndIdPojo>> {
         return classDao.getSubclassClasses(id)
     }
+
+    companion object {
+        val getMulticlassSpellSlots = fun(levels: Int): MutableList<Resource> {
+            val result = mutableListOf<Resource>()
+            multiclassSpellSlots[levels - 1].forEachIndexed { index, i ->
+                result.add(
+                    Resource(SpellRepository.allSpellLevels[index].second, i, i.toString(), i.toString())
+                )
+            }
+            return result
+        }
+        private val multiclassSpellSlots = mutableListOf<List<Int>>().apply {
+            add(listOf(2))
+            add(listOf(3))
+            add(listOf(4))
+            add(listOf(4, 2))
+            add(listOf(4, 3))
+            add(listOf(4, 3, 2))
+            add(listOf(4, 3, 3))
+            add(listOf(4, 3, 3, 1))
+            add(listOf(4, 3, 3, 2))
+            add(listOf(4, 3, 3, 3, 1))
+            add(listOf(4, 3, 3, 3, 2))
+            add(listOf(4, 3, 3, 3, 2, 1))
+            add(listOf(4, 3, 3, 3, 2, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 3, 1, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 3, 2, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 3, 2, 2, 1, 1))
+        }
+    }
 }

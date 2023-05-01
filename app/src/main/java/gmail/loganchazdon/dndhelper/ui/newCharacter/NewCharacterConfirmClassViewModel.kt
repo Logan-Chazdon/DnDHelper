@@ -162,7 +162,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
 
             if(!takeGold.value) {
                 clazz.value!!.equipmentChoices.forEach {
-                    it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
+                    it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<ItemInterface>>
                 }
 
                 //Store equipment choices

@@ -150,7 +150,6 @@ class ClassRepository @Inject constructor(
         private val multiclassSpellSlots = mutableListOf<List<Int>>().apply {
             add(listOf(2))
             add(listOf(3))
-            add(listOf(4))
             add(listOf(4, 2))
             add(listOf(4, 3))
             add(listOf(4, 3, 2))

@@ -58,12 +58,14 @@ class NewCharacterStatsViewModel @Inject constructor(
             -1
         }
         viewModelScope.launch(Dispatchers.IO) {
-            character = characterRepository.getCharacterById(id)
-            character?.let {
-                if(!it.baseStats.values.contains(0) && it.baseStats.isNotEmpty()) {
-                    currentStateGenTypeIndex.value = it.statGenerationMethodIndex
-                    selectedStatIndexes.postValue(listOf(0, 1 ,2 ,3 ,4, 5))
-                    currentStats.postValue(it.baseStats.values.toList())
+            if(id != -1) {
+                character = characterRepository.getCharacterById(id)
+                character?.let {
+                    if (!it.baseStats.values.contains(0) && it.baseStats.isNotEmpty()) {
+                        currentStateGenTypeIndex.value = it.statGenerationMethodIndex
+                        selectedStatIndexes.postValue(listOf(0, 1, 2, 3, 4, 5))
+                        currentStats.postValue(it.baseStats.values.toList())
+                    }
                 }
             }
         }

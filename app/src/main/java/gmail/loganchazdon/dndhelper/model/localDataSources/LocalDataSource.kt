@@ -1888,7 +1888,7 @@ class LocalDataSourceImpl @Inject constructor(
                     val amount = pactSlotJson.getInt("amount")
                     pactSlots.add(
                         Resource(
-                            name = pactSlotJson.getInt("level").toString(),
+                            name = allSpellLevels[pactSlotJson.getInt("level") - 1].second,
                             rechargeAmountType = amount.toString(),
                             currentAmount = amount,
                             maxAmountType = amount.toString()

@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Ignore
 import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository.Companion.allSpellLevels
 import kotlin.math.floor
 
 
@@ -712,7 +713,7 @@ class Character (
         slots.addAll(spellSlots)
         classes.forEach { (_, clazz) ->
             clazz.pactMagic?.pactSlots?.let {
-                val level = it[clazz.level - 1].name.toInt()
+                val level = allSpellLevels.first { pair -> pair.second == it[clazz.level - 1].name }.first
                 val maxAmount = it[clazz.level - 1].maxAmountType.toInt()
                 val amount = it[clazz.level - 1].currentAmount
                 if(slots.size  >= level) {

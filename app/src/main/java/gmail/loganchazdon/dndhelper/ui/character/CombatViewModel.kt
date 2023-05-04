@@ -63,7 +63,7 @@ public class CombatViewModel @Inject constructor(
 
     fun refundSlot(slot: Int) {
         if (
-            updatePactSlots(+1) &&
+            !updatePactSlots(+1) &&
             (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0)
             != (character.value!!.spellSlots.getOrNull(slot - 1)?.maxAmountType ?: "0").toInt()
         ) {
@@ -73,7 +73,7 @@ public class CombatViewModel @Inject constructor(
     }
 
     fun useSlot(slot: Int) {
-        if (updatePactSlots(-1) && (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
+        if (!updatePactSlots(-1) && (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
             character.value!!.spellSlots[slot - 1].currentAmount -= 1
             repository.insertSpellSlots(character.value!!.spellSlots, character.value!!.id)
         }

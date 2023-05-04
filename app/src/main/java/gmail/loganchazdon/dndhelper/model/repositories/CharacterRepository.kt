@@ -234,6 +234,9 @@ class CharacterRepository @Inject constructor(
             null -> {
                 //Non preparation casters
                 spellCasting?.known?.forEach { spell ->
+                    if (spells.getOrDefault(spell.first.level, null) == null) {
+                        spells[spell.first.level] = mutableListOf()
+                    }
                     spells[spell.first.level]?.add(Pair(first = null, second = spell.first))
                 }
             }

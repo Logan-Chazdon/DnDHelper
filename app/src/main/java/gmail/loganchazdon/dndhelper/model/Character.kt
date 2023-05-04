@@ -722,7 +722,7 @@ class Character (
                 } else {
                     slots.add(
                         Resource(
-                            name = SpellRepository.allSpellLevels[level].second,
+                            name = SpellRepository.allSpellLevels[level - 1].second,
                             currentAmount = amount,
                             maxAmountType = maxAmount.toString(),
                             rechargeAmountType = maxAmount.toString()

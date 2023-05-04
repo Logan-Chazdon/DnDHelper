@@ -1,5 +1,6 @@
 package gmail.loganchazdon.dndhelper.model.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -8,6 +9,7 @@ import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.stateEntities.CharacterFeatureState
+import gmail.loganchazdon.dndhelper.model.stateEntities.PactMagicStateEntity
 
 
 @Database(
@@ -20,9 +22,12 @@ import gmail.loganchazdon.dndhelper.model.stateEntities.CharacterFeatureState
         ClassFeatCrossRef::class, FeatureSpellCrossRef::class, BackgroundSpellCrossRef::class, SubclassSpellCrossRef::class, ClassSpellCrossRef::class,
         CharacterClassSpellCrossRef::class, SubclassSpellCastingSpellCrossRef::class, ClassSubclassCrossRef::class, SubclassFeatureCrossRef::class,
         RaceChoiceEntity::class, FeatureChoiceChoiceEntity::class, SubraceChoiceEntity::class, BackgroundChoiceEntity::class, IndexRef::class, FeatureChoiceIndexCrossRef::class,
-        CharacterFeatureState::class, FeatFeatureCrossRef::class
+        CharacterFeatureState::class, FeatFeatureCrossRef::class, PactMagicStateEntity::class
     ],
-    version = 58,
+    autoMigrations = [
+        AutoMigration(from = 58, to = 59)
+    ],
+    version = 59,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

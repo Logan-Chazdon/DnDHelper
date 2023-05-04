@@ -3,6 +3,7 @@ package gmail.loganchazdon.dndhelper.ui.character
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import gmail.loganchazdon.dndhelper.model.Character
@@ -15,8 +16,9 @@ import javax.inject.Inject
 @HiltViewModel
 public class CombatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val repository: CharacterRepository, application: Application
+    private val repository: CharacterRepository, application: Application
 ) : AndroidViewModel(application) {
+    private val characterKey = MutableLiveData<Int>(0)
     fun setTemp(temp: String) {
         repository.setTemp(character.value?.id, temp)
     }
@@ -56,53 +58,47 @@ public class CombatViewModel @Inject constructor(
     }
 
     fun cast(spell: Spell, level: Int) {
-        repository.insertCharacter(getCharacterMinusSlot(level))
+        useSlot(level)
     }
 
     fun refundSlot(slot: Int) {
-        repository.insertCharacter(getCharacterPlusSlot(slot))
+        if (
+            updatePactSlots(+1) &&
+            (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0)
+            != (character.value!!.spellSlots.getOrNull(slot - 1)?.maxAmountType ?: "0").toInt()
+        ) {
+            character.value!!.spellSlots[slot - 1].currentAmount += 1
+            repository.insertSpellSlots(character.value!!.spellSlots, character.value!!.id)
+        }
     }
 
     fun useSlot(slot: Int) {
-        repository.insertCharacter(getCharacterMinusSlot(slot))
+        if (updatePactSlots(-1) && (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
+            character.value!!.spellSlots[slot - 1].currentAmount -= 1
+            repository.insertSpellSlots(character.value!!.spellSlots, character.value!!.id)
+        }
     }
 
-    private fun getCharacterMinusSlot(slot: Int): Character {
-        val newSlots = character.value!!.spellSlots
-        if ((newSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
-            newSlots[slot - 1].currentAmount -= 1
-            character.value!!.spellSlots = newSlots
-        } else {
-            for ((_, clazz) in character.value!!.classes) {
-                if (clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount != 0) {
-                    clazz.pactMagic?.pactSlots!![clazz.level - 1].currentAmount -= 1
-                    break
+    private fun updatePactSlots(amount: Int) : Boolean{
+        character.value!!.classes.forEach { entry ->
+            val slots=  entry.value.pactMagic?.pactSlots?.get(entry.value.level - 1)
+            (slots?.currentAmount?.plus(amount))?.let {
+                if(it <= slots.maxAmountType.toInt() && it >= 0) {
+                    repository.insertPactMagicStateEntity(
+                        characterId = character.value!!.id,
+                        classId = entry.value.id,
+                        slotsCurrentAmount = it
+                    )
+                    invalidateCharacter()
+                    return true
                 }
             }
         }
-        return character.value!!
+        return false
     }
 
-    private fun getCharacterPlusSlot(slot: Int): Character {
-        val newSlots = character.value!!.spellSlots
-        if (
-            (newSlots.getOrNull(slot - 1)?.currentAmount ?: 0)
-            != (newSlots.getOrNull(slot - 1)?.maxAmountType ?: "0").toInt()
-        ) {
-            newSlots[slot - 1].currentAmount += 1
-            character.value!!.spellSlots = newSlots
-        } else {
-            for ((_, clazz) in character.value!!.classes) {
-                if (
-                    clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount !=
-                    clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.maxAmountType?.toInt()
-                ) {
-                    clazz.pactMagic?.pactSlots!![clazz.level - 1].currentAmount += 1
-                    break
-                }
-            }
-        }
-        return character.value!!
+    private fun invalidateCharacter() {
+        repository.recalculateCharacter()
     }
 
     fun getSpellSlotsAndCantrips(): MutableList<Resource> {
@@ -172,7 +168,8 @@ public class CombatViewModel @Inject constructor(
     init {
         repository.getLiveCharacterById(
             savedStateHandle.get<String>("characterId")!!.toInt(),
-            character
+            character,
+            characterKey
         )
     }
 }

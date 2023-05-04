@@ -2,11 +2,13 @@ package gmail.loganchazdon.dndhelper.model.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.database.daos.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.stateEntities.CharacterFeatureState
+import gmail.loganchazdon.dndhelper.model.stateEntities.PactMagicStateEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -21,6 +23,16 @@ class CharacterRepository @Inject constructor(
     private val featureDao: FeatureDao
 ) {
     val scope = CoroutineScope(Job())
+
+    fun insertPactMagicStateEntity(characterId: Int, classId: Int, slotsCurrentAmount: Int) {
+        characterDao.insertPactMagicStateEntity(
+            PactMagicStateEntity(
+                characterId = characterId,
+                classId = classId,
+                slotsCurrentAmount = slotsCurrentAmount
+            )
+        )
+    }
 
     fun getAllCharacters(): LiveData<List<Character>> {
         return characterDao.getAllCharacters()
@@ -314,14 +326,31 @@ class CharacterRepository @Inject constructor(
         return character
     }
 
-    fun getLiveCharacterById(id: Int, character: MediatorLiveData<Character>) {
+    fun getLiveCharacterById(
+        id: Int,
+        character: MediatorLiveData<Character>,
+        characterKey: MutableLiveData<Int>? = null
+    ) {
         val characterLiveData = characterDao.findLiveCharacterWithoutListChoices(id)
-        character.addSource(characterLiveData) {
+        val calculate = fun(it: Character?) {
             if (it != null) {
                 scope.launch {
                     fillOutCharacterChoiceLists(it)
                     character.postValue(it)
                 }
+            }
+        }
+
+        character.addSource(characterLiveData) {
+            calculate(it)
+        }
+
+        //If the key is changed force recalculation.
+        //This is needed because not all the tables used in fetching a character are
+        //accessed in the initial sql query meaning room will not automatically update live data.
+        characterKey?.let { key ->
+            character.addSource(key) {
+                calculate(characterLiveData.value)
             }
         }
     }
@@ -412,6 +441,12 @@ class CharacterRepository @Inject constructor(
                     characterId = character.id,
                     classId = clazz.id
                 ).toList()
+            clazz.pactMagic?.pactSlots?.get(clazz.level - 1)?.currentAmount =
+                characterDao.getCharacterPactSlots(characterId = character.id, classId = clazz.id)
+            clazz.pactMagic?.known = characterDao.getPactMagicSpells(
+                characterId = character.id,
+                classId = clazz.id
+            )
 
             val features = characterDao.getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
             fillOutFeatureList(features, character.id)
@@ -548,6 +583,11 @@ class CharacterRepository @Inject constructor(
                 )
             }
         }
+    }
+
+
+    fun recalculateCharacter() {
+
     }
 
 

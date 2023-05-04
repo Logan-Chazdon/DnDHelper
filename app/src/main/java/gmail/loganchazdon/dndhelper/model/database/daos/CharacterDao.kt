@@ -7,20 +7,25 @@ import gmail.loganchazdon.dndhelper.model.*
 import gmail.loganchazdon.dndhelper.model.choiceEntities.*
 import gmail.loganchazdon.dndhelper.model.junctionEntities.*
 import gmail.loganchazdon.dndhelper.model.stateEntities.CharacterFeatureState
+import gmail.loganchazdon.dndhelper.model.stateEntities.PactMagicStateEntity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Dao
 abstract class CharacterDao {
     companion object {
+        //The query to PactMagicStateEntity is just so that any liveData created by this query will be invalidated and updated when
+        //pactMagicStateEntity is changed.
         private const val fullCharacterSql =
-            """WITH subrace AS (SELECT id AS subraceid, name AS subracename, abilityBonuses AS subraceabilityBonuses, abilityBonusChoice AS subraceabilityBonusChoice, 
+            """WITH subrace  AS (SELECT id AS subraceid, name AS subracename, abilityBonuses AS subraceabilityBonuses, abilityBonusChoice AS subraceabilityBonusChoice, 
     startingProficiencies AS subracestartingProficiencies, languages AS subracelanguages, languageChoices AS subracelanguageChoices, size AS subracesize, 
     groundSpeed AS subracegroundSpeed FROM subraces),
     
     background AS (SELECT id AS backgroundid, name AS backgroundname, [desc] AS backgrounddesc, spells AS backgroundspells, proficiencies AS backgroundproficiencies, 
     languages AS backgroundlanguages, equipment AS backgroundequipment, equipmentChoices AS backgroundequipmentChoices
-    FROM backgrounds)
+    FROM backgrounds),
+    _ AS (SELECT characterId FROM PactMagicStateEntity WHERE characterId IS :id)
+
     
     SELECT characters.*, races.*, background.*, subrace.* FROM characters 
     LEFT JOIN CharacterRaceCrossRef ON characters.id IS CharacterRaceCrossRef.id
@@ -288,4 +293,15 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
 
     @Query("SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId")
     abstract fun isFeatureActive(featureId: Int, characterId: Int): Boolean
+
+    @Query("SELECT slotsCurrentAmount FROM PactMagicStateEntity WHERE classId = :classId AND characterId = :characterId")
+    abstract fun getCharacterPactSlots(classId: Int, characterId : Int) : Int
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun insertPactMagicStateEntity(entity: PactMagicStateEntity)
+
+    @Query("""SELECT * FROM spells
+JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spellId
+WHERE characterId IS :characterId AND classId IS :classId    """)
+    abstract fun getPactMagicSpells(characterId: Int, classId: Int): MutableList<Spell>
 }

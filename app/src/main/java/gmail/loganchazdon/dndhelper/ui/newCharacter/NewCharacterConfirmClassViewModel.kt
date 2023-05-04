@@ -201,6 +201,14 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
             )
         )
 
+        clazz.value!!.pactMagic?.let {
+            characterRepository.insertPactMagicStateEntity(
+                characterId = id,
+                classId = clazz.value!!.id,
+                slotsCurrentAmount = it.pactSlots[toNumber(levels) - 1].currentAmount
+            )
+        }
+
         //Store all class spells.
         if (clazz.value!!.spellCasting != null || clazz.value!!.pactMagic != null) {
             val defaultPreparedness =

@@ -89,16 +89,12 @@ public class CombatViewModel @Inject constructor(
                         classId = entry.value.id,
                         slotsCurrentAmount = it
                     )
-                    invalidateCharacter()
+
                     return true
                 }
             }
         }
         return false
-    }
-
-    private fun invalidateCharacter() {
-        repository.recalculateCharacter()
     }
 
     fun getSpellSlotsAndCantrips(): MutableList<Resource> {

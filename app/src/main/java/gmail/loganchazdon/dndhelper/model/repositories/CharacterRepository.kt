@@ -589,11 +589,6 @@ class CharacterRepository @Inject constructor(
     }
 
 
-    fun recalculateCharacter() {
-
-    }
-
-
     companion object {
         val statNames = listOf(
             "Strength",

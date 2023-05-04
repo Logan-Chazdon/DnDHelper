@@ -1,6 +1,6 @@
 package gmail.loganchazdon.dndhelper.model
 
-class Resource(
+data class Resource(
     val name: String,
     var currentAmount: Int = 0,
     var maxAmountType: String,

@@ -716,9 +716,10 @@ class Character (
                 val maxAmount = it[clazz.level - 1].maxAmountType.toInt()
                 val amount = it[clazz.level - 1].currentAmount
                 if(slots.size  == level) {
-                    slots[level - 1].currentAmount = slots[level- 1].currentAmount + amount
-                    slots[level - 1].maxAmountType = (maxAmount + slots[level - 1].maxAmountType.toInt()).toString()
-                    slots[level - 1].rechargeAmountType = (maxAmount + slots[level - 1].maxAmountType.toInt()).toString()
+                    val temp = slots[level - 1].copy()
+                    temp.currentAmount = temp.currentAmount + amount
+                    temp.maxAmountType = (maxAmount + temp.maxAmountType.toInt()).toString()
+                    slots[level - 1] = temp
                 } else {
                     slots.add(
                         Resource(

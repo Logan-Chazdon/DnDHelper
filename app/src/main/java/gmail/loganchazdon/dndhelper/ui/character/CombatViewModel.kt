@@ -63,7 +63,7 @@ public class CombatViewModel @Inject constructor(
 
     fun refundSlot(slot: Int) {
         if (
-            !updatePactSlots(+1) &&
+            !updatePactSlots(slot,+1) &&
             (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0)
             != (character.value!!.spellSlots.getOrNull(slot - 1)?.maxAmountType ?: "0").toInt()
         ) {
@@ -73,24 +73,25 @@ public class CombatViewModel @Inject constructor(
     }
 
     fun useSlot(slot: Int) {
-        if (!updatePactSlots(-1) && (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
+        if (!updatePactSlots(slot,-1) && (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
             character.value!!.spellSlots[slot - 1].currentAmount -= 1
             repository.insertSpellSlots(character.value!!.spellSlots, character.value!!.id)
         }
     }
 
-    private fun updatePactSlots(amount: Int) : Boolean{
+    private fun updatePactSlots(level: Int, amount: Int) : Boolean{
         character.value!!.classes.forEach { entry ->
             val slots=  entry.value.pactMagic?.pactSlots?.get(entry.value.level - 1)
-            (slots?.currentAmount?.plus(amount))?.let {
-                if(it <= slots.maxAmountType.toInt() && it >= 0) {
-                    repository.insertPactMagicStateEntity(
-                        characterId = character.value!!.id,
-                        classId = entry.value.id,
-                        slotsCurrentAmount = it
-                    )
-
-                    return true
+            if(slots?.name == allSpellLevels[level - 1].second) {
+                (slots.currentAmount.plus(amount)).let {
+                    if (it <= slots.maxAmountType.toInt() && it >= 0) {
+                        repository.insertPactMagicStateEntity(
+                            characterId = character.value!!.id,
+                            classId = entry.value.id,
+                            slotsCurrentAmount = it
+                        )
+                        return true
+                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository
 import gmail.loganchazdon.dndhelper.model.repositories.CharacterRepository.Companion.shortStatNames
 import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
 import gmail.loganchazdon.dndhelper.model.repositories.FeatRepository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
@@ -359,7 +360,8 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 try {
                     val maxLevel =
                         clazz.value?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
-                            ?: clazz.value?.pactMagic?.pactSlots?.get(level - 1)?.name?.toInt() ?: 0
+                            ?: SpellRepository.allSpellLevels.first { pair -> pair.second == clazz.value!!.pactMagic?.pactSlots?.get(
+                                level - 1)!!.name }.first
                     this.removeAll {
                         it.level > maxLevel
                     }

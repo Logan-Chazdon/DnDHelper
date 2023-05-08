@@ -86,7 +86,7 @@ LEFT JOIN FeatureChoiceIndexCrossRef ON FeatureChoiceIndexCrossRef.choiceId IS :
 LEFT JOIN IndexRef ON IndexRef.`index` IS FeatureChoiceIndexCrossRef.`index`
 LEFT JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.featureId IS features.featureId
 LEFT JOIN spellDetails ON spellDetails.id IS FeatureSpellCrossRef.spellId
-WHERE (',' || ids || ',' LIKE '%,' || features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
+WHERE (REPLACE(REPLACE(ids, '[', ','), ']', ',') LIKE '%,' || features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
 AND (FeatureChoiceIndexCrossRef.levels = 'null'
 OR  FeatureChoiceIndexCrossRef.levels IS NULL 
 OR FeatureChoiceIndexCrossRef.levels LIKE '%' || spellDetails.level || '%') 

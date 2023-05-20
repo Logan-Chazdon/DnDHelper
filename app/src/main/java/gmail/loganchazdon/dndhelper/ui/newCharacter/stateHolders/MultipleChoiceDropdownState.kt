@@ -3,6 +3,8 @@ package gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders
 import androidx.lifecycle.LiveData
 
 interface MultipleChoiceDropdownState {
+    val getDescription: ((Int) -> String)?
+        get() = null
     val choiceName : String
     val selectedList : List<Int>
     val selectedNames: LiveData<String>

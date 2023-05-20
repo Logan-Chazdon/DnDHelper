@@ -21,6 +21,10 @@ class MultipleChoiceDropdownStateFeatureImpl(
     var assumedStatBonuses: Map<String, Int>? = null
     var assumedFeatures: List<Feature> = listOf()
     override val selectedNames: MutableLiveData<String> = MutableLiveData(feature.name)
+    override val getDescription: ((Int) -> String)
+        get() = { index ->
+            feature.choices!!.getOrNull(choiceIndex)!!.options!![index].description
+        }
     override var choiceName = ""
         set(newName) {
             field = newName

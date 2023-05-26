@@ -1743,7 +1743,7 @@ class LocalDataSourceImpl @Inject constructor(
                 }
             }
             "skill_proficiencies" -> {
-                /*_abilitiesToSkills.value!!.values.forEach {
+                _abilitiesToSkills.value!!.values.forEach {
                     it.forEach { item ->
                         if (!item.contains("Saving")) {
                             proficiencies.add(
@@ -1753,7 +1753,7 @@ class LocalDataSourceImpl @Inject constructor(
                             )
                         }
                     }
-                }*/ //TODO replace me with an index
+                }
             }
             "musical_instruments" -> {
                 instrumentIndexes.forEach {

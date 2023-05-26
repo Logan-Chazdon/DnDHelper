@@ -22,7 +22,6 @@ import gmail.loganchazdon.dndhelper.ui.newCharacter.stateHolders.MultipleChoiceD
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getDropDownState
 import gmail.loganchazdon.dndhelper.ui.newCharacter.utils.getFeatsAt
 import gmail.loganchazdon.dndhelper.ui.utils.allNames
-import gmail.loganchazdon.dndhelper.ui.utils.toStringList
 import javax.inject.Inject
 
 
@@ -198,7 +197,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                 totalNumOnGoldDie = goldRolled.value.toInt(),
                 tookGold = takeGold.value,
                 abilityImprovementsGranted = clazz.value!!.abilityImprovementsGranted,
-                proficiencyChoicesByString = clazz.value!!.proficiencyChoices.toStringList(),
+                proficiencyChoicesByString = clazz.value!!.proficiencyChoices.map { it.chosenByString },
             )
         )
 

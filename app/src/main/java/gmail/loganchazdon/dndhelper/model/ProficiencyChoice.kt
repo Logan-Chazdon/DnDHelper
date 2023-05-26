@@ -14,7 +14,7 @@ data class ProficiencyChoice(
     set(value : List<Proficiency>) {
         val newChosen = mutableListOf<String>()
         value.forEach {
-            newChosen += it.toString()
+            newChosen += it.name!!
         }
         chosenByString = newChosen
     }

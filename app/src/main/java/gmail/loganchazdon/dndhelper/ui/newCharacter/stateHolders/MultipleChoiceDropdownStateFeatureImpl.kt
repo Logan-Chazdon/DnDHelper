@@ -160,8 +160,10 @@ class MultipleChoiceDropdownStateFeatureImpl(
     }
 
     override fun decrementSelection(index: Int) {
-        selectedFeatures[options[index].name]=
-            selectedFeatures[options[index].name]?.minus(1) ?: 0
+        if((selectedFeatures[options[index].name] ?: 1) > 0) {
+            selectedFeatures[options[index].name] =
+                selectedFeatures[options[index].name]?.minus(1) ?: 0
+        }
     }
 
     override fun getMaxSameSelectionsAt(index: Int): Int {

@@ -23,7 +23,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
     override val selectedNames: MutableLiveData<String> = MutableLiveData(feature.name)
     override val getDescription: ((Int) -> String)
         get() = { index ->
-            feature.choices!!.getOrNull(choiceIndex)!!.options!![index].description
+            options[index].description
         }
     override var choiceName = ""
         set(newName) {

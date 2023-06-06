@@ -83,7 +83,7 @@ WITH spellDetails AS (SELECT classes, school, level, id FROM spells)
 SELECT DISTINCT features.* FROM features
 LEFT JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
 LEFT JOIN FeatureChoiceIndexCrossRef ON FeatureChoiceIndexCrossRef.choiceId IS :featureChoiceId
-LEFT JOIN IndexRef ON IndexRef.`index` IS FeatureChoiceIndexCrossRef.`index`
+LEFT JOIN IndexRef ON LOWER(IndexRef.`index`) IS LOWER(FeatureChoiceIndexCrossRef.`index`)
 LEFT JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.featureId IS features.featureId
 LEFT JOIN spellDetails ON spellDetails.id IS FeatureSpellCrossRef.spellId
 WHERE (REPLACE(REPLACE(ids, '[', ','), ']', ',') LIKE '%,' || features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)

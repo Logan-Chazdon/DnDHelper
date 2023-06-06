@@ -747,7 +747,7 @@
                     "index": "warlock"
                 }
             ],
-            "damage": "bludgeoning damage equal to 1d6 + your spellcasting ability modifier",
+            "damage": "1d6 + mod",
             "id": 1417
         },
         {
@@ -1322,7 +1322,7 @@
                     "index": "wizard"
                 }
             ],
-            "damage": "1d8 lightning damage",
+            "damage": "1d8 lightning",
             "id": 1433
         },
         {

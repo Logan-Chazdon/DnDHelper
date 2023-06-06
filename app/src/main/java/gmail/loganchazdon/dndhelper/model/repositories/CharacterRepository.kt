@@ -388,6 +388,8 @@ class CharacterRepository @Inject constructor(
     This method is used to fill out choices that require lists. It cannot be done in SQL due to lack of support.
     Note that there is no need to set non-list choices.
      */
+    @Suppress("SAFE_CALL_WILL_CHANGE_NULLABILITY", "UNNECESSARY_SAFE_CALL")
+    //The safe call is actually necessary here because of how room handles null values
     private fun fillOutCharacterChoiceLists(character: Character) {
         //Fill out race choices
         character.race?.let { race ->
@@ -416,7 +418,7 @@ class CharacterRepository @Inject constructor(
 
         character.race?.subrace?.let { subrace ->
             characterDao.getSubraceChoiceData(subraceId = subrace.id, charId = character.id)
-                .let { data ->
+                ?.let { data ->
                     subrace.languageChoices.forEachIndexed { index, choice ->
                         choice.chosenByString = data.languageChoice.getOrNull(index) ?: emptyList()
                     }

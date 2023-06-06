@@ -120,9 +120,9 @@ class CharacterRepository @Inject constructor(
     ) {
         val backpack = characterDao.getCharacterBackPack(characterId)
         if (backpack.classItems.isEmpty()) {
-            backpack.classItems.addAll(equipment)
+            backpack.addClassItems(equipment)
             equipmentChoices.forEach {
-                backpack.classItems.addAll(it.chosen?.flatten() ?: emptyList())
+                backpack.addClassItems(it.chosen?.flatten() ?: emptyList())
             }
         }
 

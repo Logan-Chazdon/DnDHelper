@@ -394,7 +394,7 @@ class CharacterRepository @Inject constructor(
         //Fill out race choices
         character.race?.let { race ->
             characterDao.getRaceChoiceData(raceId = race.raceId, charId = character.id)
-                .let { data ->
+                ?.let { data ->
                     race.proficiencyChoices.forEachIndexed { index, choice ->
                         choice.chosenByString =
                             data.proficiencyChoice.getOrNull(index) ?: emptyList()
@@ -453,7 +453,7 @@ class CharacterRepository @Inject constructor(
         }
 
         character.background?.let { background ->
-            characterDao.getBackgroundChoiceData(charId = character.id).let { data ->
+            characterDao.getBackgroundChoiceData(charId = character.id)?.let { data ->
                 val features = backgroundDao.getBackgroundFeatures(background.id)
                 fillOutFeatureList(features, character.id)
                 background.features = features

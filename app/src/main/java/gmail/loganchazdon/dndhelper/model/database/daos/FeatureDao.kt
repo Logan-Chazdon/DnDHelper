@@ -92,7 +92,7 @@ OR  FeatureChoiceIndexCrossRef.levels IS NULL
 OR FeatureChoiceIndexCrossRef.levels LIKE '%' || spellDetails.level || '%') 
 AND(FeatureChoiceIndexCrossRef.schools = 'null' 
 OR  FeatureChoiceIndexCrossRef.schools IS NULL 
-OR ',' || FeatureChoiceIndexCrossRef.schools || ',' LIKE '%,' || spellDetails.school || ',%' )
+OR FeatureChoiceIndexCrossRef.schools  LIKE '%' || spellDetails.school || '%' )
 AND (
    FeatureChoiceIndexCrossRef.classes LIKE 'null' OR FeatureChoiceIndexCrossRef.classes IS NULL
    OR 0 NOT LIKE (

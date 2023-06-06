@@ -256,6 +256,13 @@ class CharacterRepository @Inject constructor(
             }
             "all" -> {
                 //Spell casters that prepare from all of their respective class spells
+                spellCasting.known.filter { it.first.level == 0}.forEach { spell ->
+                    if (spells.getOrDefault(spell.first.level, null) == null) {
+                        spells[spell.first.level] = mutableListOf()
+                    }
+                    spells[spell.first.level]?.add(Pair(first = null, second = spell.first))
+                }
+
                 val listsToCheck = mutableListOf<String>()
 
                 lists?.let {

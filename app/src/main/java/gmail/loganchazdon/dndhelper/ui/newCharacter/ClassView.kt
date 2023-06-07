@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -168,15 +169,25 @@ fun ClassView(
                             navController.navigate("newCharacterView/ClassView/ConfirmClassView/${item.id}/$characterId")
                         }
                 ) {
-                    Row()
-                    {
-                        Icon(
-                            painter = classIcons[i],
-                            contentDescription = "${item.name} Icon",
-                            modifier = Modifier.padding(
-                                all = 10.dp
+                    Row {
+                        if(classIcons.getOrNull(i) != null) {
+                            Icon(
+                                painter = classIcons[i],
+                                contentDescription = "${item.name} Icon",
+                                modifier = Modifier.padding(
+                                    all = 10.dp
+                                )
                             )
-                        )
+                        } else {
+                            Icon(
+                                Icons.Default.Home,
+                                contentDescription = "${item.name} Icon",
+                                modifier = Modifier
+                                    .padding(all = 10.dp)
+                                    .size(80.dp)
+                            )
+                        }
+
                         Column {
                             Text(
                                 text = item.name,

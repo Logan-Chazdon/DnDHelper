@@ -369,6 +369,7 @@ class NewCharacterConfirmClassViewModel @Inject constructor(
                         true
                     }
                 }
+                this.sortBy { spell -> spell.level }
                 this
             }
         } ?: mutableListOf())

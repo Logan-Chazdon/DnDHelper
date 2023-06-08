@@ -104,7 +104,7 @@ class SubclassViewModel @Inject constructor(
             subclass.addSource(source) {
                 if(it != null) {
                     name.value = it.name
-
+                    subclass.value = it
                     subclass.removeSource(source)
                 }
             }

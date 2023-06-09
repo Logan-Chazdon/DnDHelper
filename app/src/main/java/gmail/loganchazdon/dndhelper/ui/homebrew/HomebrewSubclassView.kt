@@ -26,7 +26,7 @@ fun HomebrewSubclassView(
 ) {
     val scope = rememberCoroutineScope { Dispatchers.IO }
     val mainLooper = Looper.getMainLooper()
-    val subclass = viewModel.subclass.observeAsState()
+    val features = viewModel.features.observeAsState()
 
     AutoSave(
         "homebrewSubclassView",
@@ -78,7 +78,7 @@ fun HomebrewSubclassView(
                 }
 
                 //Features
-                subclass.value?.features?.let {
+                features.value?.let {
                     if (it.isNotEmpty()) {
                         item {
                             FeaturesView(

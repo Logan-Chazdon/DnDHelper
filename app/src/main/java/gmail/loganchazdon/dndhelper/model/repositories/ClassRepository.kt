@@ -32,6 +32,10 @@ class ClassRepository @Inject constructor(
         return _classes
     }
 
+    fun getSubclassLiveFeaturesById(id: Int) : LiveData<List<Feature>> {
+        return subclassDao.getSubclassLiveFeaturesById(id)
+    }
+
     fun getSubclassesByClassId(id: Int): LiveData<List<Subclass>> {
         return subclassDao.getSubclassesByClassId(id)
     }

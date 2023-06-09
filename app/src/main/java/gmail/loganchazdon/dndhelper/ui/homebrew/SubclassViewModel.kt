@@ -7,6 +7,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.Subclass
 import gmail.loganchazdon.dndhelper.model.SubclassEntity
 import gmail.loganchazdon.dndhelper.model.junctionEntities.ClassSubclassCrossRef
@@ -87,6 +88,7 @@ class SubclassViewModel @Inject constructor(
     val allClasses = classRepository.getAllClassNameAndIds()
     val classes = MediatorLiveData<List<NameAndIdPojo>>()
     val name = mutableStateOf("")
+    val features: MediatorLiveData<List<Feature>> = MediatorLiveData()
     val subclass: MediatorLiveData<Subclass> = MediatorLiveData()
     var id: Int = -1
 
@@ -107,6 +109,10 @@ class SubclassViewModel @Inject constructor(
                     subclass.value = it
                     subclass.removeSource(source)
                 }
+            }
+
+            features.addSource(classRepository.getSubclassLiveFeaturesById(id)) {
+                features.value = it
             }
 
             classes.addSource(classRepository.getSubclassClasses(id)) {

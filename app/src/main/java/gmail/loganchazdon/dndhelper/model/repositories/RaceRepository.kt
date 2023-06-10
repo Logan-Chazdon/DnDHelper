@@ -2,6 +2,7 @@ package gmail.loganchazdon.dndhelper.model.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.Race
 import gmail.loganchazdon.dndhelper.model.RaceEntity
 import gmail.loganchazdon.dndhelper.model.Subrace
@@ -123,6 +124,10 @@ class RaceRepository @Inject constructor(
 
     fun getAllRaceIdsAndNames(): LiveData<List<NameAndIdPojo>> {
         return raceDao.getAllRaceIdsAndNames()
+    }
+
+    fun getSubraceLiveFeaturesById(id: Int): LiveData<List<Feature>> {
+        return subraceDao.getSubraceLiveFeaturesById(id)
     }
 
     companion object {

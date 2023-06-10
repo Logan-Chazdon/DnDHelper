@@ -53,8 +53,20 @@ WHERE subraceId IS :subraceId"""
     )
     protected abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSubrace(subrace: SubraceEntity): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertSubraceOrIgnore(subrace: SubraceEntity): Long
+
+    fun insertSubrace(subrace: SubraceEntity): Int {
+        val id = insertSubraceOrIgnore(subrace).toInt()
+        if(id == -1) {
+            updateSubrace(subrace)
+            return subrace.id
+        }
+        return id
+    }
+
+    @Update
+    abstract fun updateSubrace(subrace: SubraceEntity)
 
     @Query(
         """SELECT * FROM subraces
@@ -120,4 +132,12 @@ WHERE featChoiceId IS :id OR featIds.amt IS 0""")
 
     @Query("SELECT * FROM subraces WHERE isHomebrew IS 1")
     abstract fun getHomebrewSubraces(): LiveData<List<SubraceEntity>>
+
+
+    @Query(
+        """SELECT * FROM features 
+JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId 
+WHERE subraceId IS :id"""
+    )
+    abstract fun getSubraceLiveFeaturesById(id: Int): LiveData<List<Feature>>
 }

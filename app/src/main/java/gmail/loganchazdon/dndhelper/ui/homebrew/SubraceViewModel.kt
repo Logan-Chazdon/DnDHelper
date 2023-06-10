@@ -90,6 +90,7 @@ class SubraceViewModel @Inject constructor(
     val id = savedStateHandle.get<String>("id")?.toInt()!!
     val sizeClassOptions = RaceRepository.sizeClasses
     val races = raceRepository.getRaceSubraces(id)
+    val features = raceRepository.getSubraceLiveFeaturesById(id)
 
     init {
         subrace.addSource(raceRepository.getSubrace(id)) {

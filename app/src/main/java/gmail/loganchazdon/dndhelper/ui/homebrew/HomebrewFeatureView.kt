@@ -58,7 +58,7 @@ fun HomebrewFeatureView(
                 grantsInfusions.value = it.grantsInfusions
                 if (grantsInfusions.value) {
                     //Fill out infusions
-
+                    it.infusion?.let { newInfusion -> infusion.value = newInfusion }
                 }
 
                 grantsExpertise.value = !it.expertises.isNullOrEmpty()
@@ -148,11 +148,7 @@ fun HomebrewFeatureView(
     GenericSelectionPopupView(
         isExpanded = infusionIsExpanded,
         onItemClick = {
-            if (viewModel.infusions.contains(it)) {
-                viewModel.infusions.remove(it)
-            } else {
-                viewModel.infusions.add(it)
-            }
+            viewModel.infusion.value = it
         },
         items = viewModel.allInfusions.observeAsState(emptyList()).value,
         detailsView = null,
@@ -160,7 +156,7 @@ fun HomebrewFeatureView(
             it.name
         },
         isSelected = {
-            viewModel.infusions.contains(it)
+            viewModel.infusion.value == it
         }
     )
 
@@ -268,19 +264,17 @@ fun HomebrewFeatureView(
                     }
 
                     AttributeView(
-                        title = "Grants infusions",
+                        title = "Grants infusion",
                         active = viewModel.grantsInfusions
                     ) {
                         GenericSelectionView(
-                            chosen = viewModel.infusions.let {
+                            chosen = viewModel.infusion.let {
                                 val result = mutableListOf<String>()
-                                it.forEach { infusion ->
-                                    result.add(infusion.name)
-                                }
+                                it.value?.name?.let { it1 -> result.add(it1) }
                                 result
                             },
                             onDelete = {
-                                viewModel.infusions.removeAt(it)
+                                viewModel.infusion.value = null
                             },
                             onExpanded = { infusionIsExpanded.value = !infusionIsExpanded.value }
                         )

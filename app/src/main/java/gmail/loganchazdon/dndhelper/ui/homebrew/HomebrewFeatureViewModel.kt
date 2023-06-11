@@ -45,7 +45,8 @@ class HomebrewFeatureViewModel @Inject constructor(
                 grantedAtLevel = featureLevel.value.toIntOrNull() ?: 1,
                 featureId = id,
                 expertises = expertises,
-                proficiencies = proficiencies
+                proficiencies = proficiencies,
+                infusion = infusion.value
             )
             featureRepository.insertFeature(newFeature)
         }
@@ -133,7 +134,7 @@ class HomebrewFeatureViewModel @Inject constructor(
 
     val selectedIndexes: SnapshotStateList<FeatureChoiceIndexCrossRef> = mutableStateListOf()
     val featureIndexes = featureRepository.getAllIndexes()
-    val infusions = mutableStateListOf<Infusion>()
+    val infusion = mutableStateOf<Infusion?>(null)
     val spells = MediatorLiveData<List<Spell>>()
     val languages = mutableStateListOf<Language>()
     val featureName = mutableStateOf("")

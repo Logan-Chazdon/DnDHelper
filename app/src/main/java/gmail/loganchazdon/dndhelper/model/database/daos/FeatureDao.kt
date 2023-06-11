@@ -210,4 +210,13 @@ WHERE name LIKE :index
 
     @Query("DELETE FROM FeatureChoiceChoiceEntity WHERE choiceId IS :choiceId AND characterId IS :characterId")
     abstract fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int)
+
+    @Transaction
+    @Query(
+        """SELECT * FROM spells
+JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.spellId IS spells.id
+WHERE featureId IS :id
+"""
+    )
+    abstract fun getLiveFeatureSpells(id: Int): LiveData<List<Spell>?>
 }

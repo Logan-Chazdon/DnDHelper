@@ -9,9 +9,16 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.Choose
+import gmail.loganchazdon.dndhelper.model.Feature
+import gmail.loganchazdon.dndhelper.model.FeatureChoiceEntity
+import gmail.loganchazdon.dndhelper.model.Infusion
+import gmail.loganchazdon.dndhelper.model.Language
+import gmail.loganchazdon.dndhelper.model.Proficiency
+import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureChoiceIndexCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureSpellCrossRef
 import gmail.loganchazdon.dndhelper.model.junctionEntities.OptionsFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
 import gmail.loganchazdon.dndhelper.model.repositories.ProficiencyRepository
@@ -33,7 +40,6 @@ class HomebrewFeatureViewModel @Inject constructor(
     fun saveFeature() {
         viewModelScope.launch(Dispatchers.IO) {
             val newFeature = Feature(
-                spells = if(grantsSpells.value) spells else listOf(),
                 name = featureName.value,
                 description = featureDesc.value,
                 grantedAtLevel = featureLevel.value.toIntOrNull() ?: 1,
@@ -107,10 +113,28 @@ class HomebrewFeatureViewModel @Inject constructor(
         )
     }
 
+    fun addSpell(it: Spell) {
+        featureRepository.insertFeatureSpellCrossRef(
+            FeatureSpellCrossRef(
+                featureId = id,
+                spellId = it.id
+            )
+        )
+    }
+
+    fun removeSpell(it: Spell) {
+        featureRepository.removeFeatureSpellCrossRef(
+            FeatureSpellCrossRef(
+                featureId = id,
+                spellId = it.id
+            )
+        )
+    }
+
     val selectedIndexes: SnapshotStateList<FeatureChoiceIndexCrossRef> = mutableStateListOf()
     val featureIndexes = featureRepository.getAllIndexes()
     val infusions = mutableStateListOf<Infusion>()
-    val spells = mutableStateListOf<Spell>()
+    val spells = MediatorLiveData<List<Spell>>()
     val languages = mutableStateListOf<Language>()
     val featureName = mutableStateOf("")
     val featureDesc = mutableStateOf("")
@@ -156,55 +180,11 @@ class HomebrewFeatureViewModel @Inject constructor(
             }
 
             feature.addSource(featureRepository.getLiveFeature(id)) {
-                //General
-                featureName.value = it.name
-                featureDesc.value = it.description
-                featureLevel.value = it.grantedAtLevel.toString()
+                feature.value = it
+            }
 
-                //Toggles and data
-                grantsSpells.value = it.getSpellsGiven().isNotEmpty()
-                if(grantsSpells.value) {
-                    //Fill out spells
-                    if(spells.isEmpty()) {
-                        spells.addAll(it.spells!!)
-                    }
-                }
-
-                grantsInfusions.value = it.grantsInfusions
-                if(grantsInfusions.value) {
-                    //Fill out infusions
-
-                }
-
-                grantsExpertise.value = !it.expertises.isNullOrEmpty()
-                if(grantsExpertise.value) {
-                    //Fill out expertises
-                    if(expertises.isEmpty()) {
-                        it.expertises?.let { it1 -> expertises.addAll(it1) }
-                    }
-                }
-
-                grantsProficiencies.value = !it.languages.isNullOrEmpty()
-                if(grantsProficiencies.value) {
-                    //Fill out proficiencies
-                    if(proficiencies.isEmpty()) {
-                        it.proficiencies?.let { it1 -> proficiencies.addAll(it1) }
-                    }
-                }
-
-                grantsLanguages.value = !it.languages.isNullOrEmpty()
-                if(grantsLanguages.value) {
-                    //Fill out languages
-                    if(languages.isEmpty()) {
-                        it.languages?.let { it1 -> languages.addAll(it1) }
-                    }
-                }
-
-                grantsAcBonus.value = it.acBonus != 0
-                if(grantsAcBonus.value) {
-                    //Fill out ac bonus
-                    acBonus.value = it.acBonus.toString()
-                }
+            spells.addSource(featureRepository.getFeatureSpells(id)) {
+                spells.value = it
             }
         }
     }

@@ -126,4 +126,7 @@ JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.fe
 WHERE SubclassFeatureCrossRef.subclassId IS :subclassId AND features.grantedAtLevel <= :maxLevel
     """)
     abstract fun getSubclassFeatures(subclassId: Int, maxLevel: Int): List<Feature>
+
+    @Query("DELETE FROM subclasses WHERE subclassId = :subclassId")
+    abstract fun deleteSubclass(subclassId: Int)
 }

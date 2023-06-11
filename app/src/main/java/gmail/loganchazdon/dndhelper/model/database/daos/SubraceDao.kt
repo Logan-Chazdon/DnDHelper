@@ -140,4 +140,7 @@ JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.feat
 WHERE subraceId IS :id"""
     )
     abstract fun getSubraceLiveFeaturesById(id: Int): LiveData<List<Feature>>
+
+    @Query("DELETE FROM subraces WHERE id = :id")
+    abstract fun deleteSubrace(id: Int)
 }

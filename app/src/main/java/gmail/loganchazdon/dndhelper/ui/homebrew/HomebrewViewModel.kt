@@ -4,7 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.repositories.*
+import gmail.loganchazdon.dndhelper.model.repositories.BackgroundRepository
+import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
+import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
+import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -51,6 +55,18 @@ class HomebrewViewModel @Inject constructor(
 
     fun createDefaultSubrace(): Any {
         return raceRepository.createDefaultSubrace()
+    }
+
+    fun deleteSubrace(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            raceRepository.deleteSubrace(id)
+        }
+    }
+
+    fun deleteSubclass(subclassId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            classRepository.deleteSubclass(subclassId)
+        }
     }
 
     val races = raceRepository.getHomebrewRaces()

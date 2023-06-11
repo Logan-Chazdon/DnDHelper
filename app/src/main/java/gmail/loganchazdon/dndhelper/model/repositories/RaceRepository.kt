@@ -130,6 +130,10 @@ class RaceRepository @Inject constructor(
         return subraceDao.getSubraceLiveFeaturesById(id)
     }
 
+    fun deleteSubrace(id: Int) {
+        subraceDao.deleteSubrace(id)
+    }
+
     companion object {
         val sizeClasses = listOf(
             "Tiny",

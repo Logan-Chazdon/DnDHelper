@@ -2,7 +2,13 @@ package gmail.loganchazdon.dndhelper.model.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.Class
+import gmail.loganchazdon.dndhelper.model.ClassEntity
+import gmail.loganchazdon.dndhelper.model.Feature
+import gmail.loganchazdon.dndhelper.model.Resource
+import gmail.loganchazdon.dndhelper.model.Spell
+import gmail.loganchazdon.dndhelper.model.Subclass
+import gmail.loganchazdon.dndhelper.model.SubclassEntity
 import gmail.loganchazdon.dndhelper.model.database.daos.ClassDao
 import gmail.loganchazdon.dndhelper.model.database.daos.FeatureDao
 import gmail.loganchazdon.dndhelper.model.database.daos.SubclassDao
@@ -139,6 +145,10 @@ class ClassRepository @Inject constructor(
 
     fun getSubclassClasses(id: Int): LiveData<List<NameAndIdPojo>> {
         return classDao.getSubclassClasses(id)
+    }
+
+    fun deleteSubclass(subclassId: Int) {
+        subclassDao.deleteSubclass(subclassId)
     }
 
     companion object {

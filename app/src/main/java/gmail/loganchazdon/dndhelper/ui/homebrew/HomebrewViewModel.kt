@@ -69,9 +69,16 @@ class HomebrewViewModel @Inject constructor(
         }
     }
 
+    fun deleteBackground(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            backgroundRepository.deleteBackground(id)
+        }
+    }
+
     val races = raceRepository.getHomebrewRaces()
     val spells = spellRepository.getHomebrewSpells()
     val classes = classRepository.getHomebrewClasses()
     val subraces = raceRepository.getHomebrewSubraces()
     val subclasses = classRepository.getHomebrewSubclasses()
+    val backgrounds = backgroundRepository.getHomebrewBackgrounds()
 }

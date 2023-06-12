@@ -114,7 +114,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
         val spells = viewModel.spells.observeAsState()
         val subraces = viewModel.subraces.observeAsState()
         val subclasses = viewModel.subclasses.observeAsState()
-
+        val backgrounds = viewModel.backgrounds.observeAsState()
         Column(
             modifier = Modifier
                 .padding(paddingValues)
@@ -331,6 +331,25 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                             },
                             onDelete = {
                                 viewModel.deleteSubclass(subclass.subclassId)
+                            }
+                        )
+                    }
+                }
+
+                //Backgrounds
+                if (showBackgrounds.value) {
+                    items(backgrounds.value?.filter {
+                        if (search.isBlank()) true else it.name.contains(
+                            search
+                        )
+                    } ?: listOf()) { background ->
+                        HomebrewItem(
+                            name = background.name.ifBlank { "Unnamed background" },
+                            onClick = {
+                                navController.navigate("homebrewView/homebrewBackgroundView/${background.id}")
+                            },
+                            onDelete = {
+                                viewModel.deleteBackground(background.id)
                             }
                         )
                     }

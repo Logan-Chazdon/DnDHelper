@@ -63,4 +63,12 @@ class BackgroundRepository @Inject constructor(
             )
         ).toInt()
     }
+
+    fun getHomebrewBackgrounds(): LiveData<List<BackgroundEntity>> {
+        return backgroundDao.getHomebrewBackgrounds()
+    }
+
+    fun deleteBackground(id: Int) {
+        backgroundDao.deleteBackground(id)
+    }
 }

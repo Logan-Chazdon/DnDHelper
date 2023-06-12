@@ -17,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,17 @@ fun HomebrewBackgroundView(
     val background = viewModel.background.observeAsState()
     val looper = Looper.getMainLooper()
     val scope = rememberCoroutineScope { Dispatchers.IO }
+
+    LaunchedEffect(background.value?.id) {
+        viewModel.apply {
+            background.value?.let {
+                name.value = it.name
+                desc.value = it.desc
+                equipment.addAll(it.equipment)
+            }
+        }
+    }
+
     var itemsExpanded by remember { mutableStateOf(false) }
     if (itemsExpanded) {
         ItemSelectionView(

@@ -1,11 +1,18 @@
 package gmail.loganchazdon.dndhelper.ui.navigation.sideDrawer
 
-import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.BadgedBox
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
@@ -36,15 +43,7 @@ fun DrawerNavigationItem(
             .clickable {
                 onItemClick(item)
                 scope.launch {
-                    //scaffoldState.drawerState.close(
-                    scaffoldState.drawerState.animateTo(
-                        targetValue = DrawerValue.Closed,
-                        anim = tween(
-                            durationMillis = 300,
-                            delayMillis = 0,
-                            easing = FastOutLinearInEasing
-                        )
-                    )
+                    scaffoldState.drawerState.close()
                 }
             }
             .fillMaxWidth()

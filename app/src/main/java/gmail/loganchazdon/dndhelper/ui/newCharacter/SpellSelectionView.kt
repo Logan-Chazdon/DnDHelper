@@ -256,11 +256,12 @@ private fun SpellSelectionView(
                                             )
                                             Text(
                                                 text = spell.damage,
-                                                modifier = Modifier.width(150.dp)
+                                                modifier = Modifier.width(130.dp)
                                             )
                                             Text(
                                                 text = spell.range,
-                                                modifier = Modifier.width(40.dp)
+                                                modifier = Modifier.width(70.dp),
+
                                             )
                                             Text(
                                                 text = spell.castingTime,

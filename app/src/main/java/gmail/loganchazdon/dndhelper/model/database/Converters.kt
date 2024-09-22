@@ -74,7 +74,6 @@ class Converters {
         return gson.fromJson(data, listType)
     }
 
-
     @TypeConverter
     fun backpackToStoredString(myObjects: Backpack): String? {
         return gson.toJson(myObjects)
@@ -329,7 +328,7 @@ class Converters {
         if (data == null) {
             return emptyList()
         }
-        val listType: Type = object : TypeToken<List<Item>>() {}.type
+        val listType: Type = object : TypeToken<List<ItemInterface>>() {}.type
         return gson.fromJson(data, listType)
     }
 

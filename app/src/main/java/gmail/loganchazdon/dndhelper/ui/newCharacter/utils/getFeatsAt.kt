@@ -26,7 +26,7 @@ fun getFeatsAt(
                                             maxSelections = featureChoice.choose.num(level),
                                             names = featureChoice.options.let { featureList ->
                                                 val result = mutableListOf<String>()
-                                                featureList.forEach {
+                                                featureList?.forEach {
                                                     result.add(it.name)
                                                 }
                                                 result

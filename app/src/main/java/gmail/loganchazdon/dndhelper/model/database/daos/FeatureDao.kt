@@ -83,16 +83,16 @@ WITH spellDetails AS (SELECT classes, school, level, id FROM spells)
 SELECT DISTINCT features.* FROM features
 LEFT JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
 LEFT JOIN FeatureChoiceIndexCrossRef ON FeatureChoiceIndexCrossRef.choiceId IS :featureChoiceId
-LEFT JOIN IndexRef ON IndexRef.`index` IS FeatureChoiceIndexCrossRef.`index`
+LEFT JOIN IndexRef ON LOWER(IndexRef.`index`) IS LOWER(FeatureChoiceIndexCrossRef.`index`)
 LEFT JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.featureId IS features.featureId
 LEFT JOIN spellDetails ON spellDetails.id IS FeatureSpellCrossRef.spellId
-WHERE (',' || ids || ',' LIKE '%,' || features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
+WHERE (REPLACE(REPLACE(ids, '[', ','), ']', ',') LIKE '%,' || features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
 AND (FeatureChoiceIndexCrossRef.levels = 'null'
 OR  FeatureChoiceIndexCrossRef.levels IS NULL 
 OR FeatureChoiceIndexCrossRef.levels LIKE '%' || spellDetails.level || '%') 
 AND(FeatureChoiceIndexCrossRef.schools = 'null' 
 OR  FeatureChoiceIndexCrossRef.schools IS NULL 
-OR ',' || FeatureChoiceIndexCrossRef.schools || ',' LIKE '%,' || spellDetails.school || ',%' )
+OR FeatureChoiceIndexCrossRef.schools  LIKE '%' || spellDetails.school || '%' )
 AND (
    FeatureChoiceIndexCrossRef.classes LIKE 'null' OR FeatureChoiceIndexCrossRef.classes IS NULL
    OR 0 NOT LIKE (
@@ -207,4 +207,16 @@ WHERE name LIKE :index
 
     @Query("""SELECT featureId FROM FeatureSpellCrossRef WHERE spellId IS :id""")
     abstract fun getFeatureIdOr0FromSpellId(id: Int): Int
+
+    @Query("DELETE FROM FeatureChoiceChoiceEntity WHERE choiceId IS :choiceId AND characterId IS :characterId")
+    abstract fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int)
+
+    @Transaction
+    @Query(
+        """SELECT * FROM spells
+JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.spellId IS spells.id
+WHERE featureId IS :id
+"""
+    )
+    abstract fun getLiveFeatureSpells(id: Int): LiveData<List<Spell>?>
 }

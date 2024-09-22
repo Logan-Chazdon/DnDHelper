@@ -2,8 +2,8 @@
   "weapons" : [
     {
       "name": "Boomerang",
-      "desc": "TODO",
-        "damage": "1d4 ",
+      "desc": "The boomerang is a ranged weapon, and any creature proficient with the javelin is also proficient with this weapon.\n\nOn a miss, a boomerang returns to the thrower's hand.",
+      "damage": "1d4 ",
       "range": "60/120",
       "damage_type": "bludgeoning",
       "item_rarity": "Standard",
@@ -23,7 +23,7 @@
     },
     {
       "name": "Club",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d4  ",
       "range": "5ft",
       "damage_type": "bludgeoning",
@@ -48,7 +48,7 @@
     },
     {
       "name": "Crossbow, Light",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d8",
       "range": "80/320ft",
       "damage_type": "piercing",
@@ -81,7 +81,7 @@
     },
     {
       "name": "Dagger",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d4",
       "range": "20/60ft",
       "damage_type": "piercing",
@@ -114,7 +114,7 @@
     },
     {
       "name": "Dart",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d4",
       "range": "20/60ft",
       "damage_type": "piercing",
@@ -143,7 +143,7 @@
     },
     {
       "name": "Greatclub",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d8 ",
       "range": "5ft",
       "damage_type": "bludgeoning",
@@ -168,7 +168,7 @@
     },
     {
       "name": "Handaxe",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d6",
       "range": "20/60ft",
       "damage_type": "slashing",
@@ -197,7 +197,7 @@
     },
     {
       "name": "Javelin",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d6",
       "range": "30/120ft",
       "damage_type": "piercing",
@@ -222,7 +222,7 @@
     },
     {
       "name": "Light Hammer",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d4 ",
       "range": "20/60ft",
       "damage_type": "bludgeoning",
@@ -251,7 +251,7 @@
     },
     {
       "name": "Mace",
-      "desc": "TODO",
+      "desc": "",
       "damage": "1d6",
       "range": "5ft",
       "damage_type": "bludgeoning",
@@ -273,7 +273,7 @@
     },
     {
       "name": "Quarterstaff",
-      "desc" : "-",
+      "desc" : "",
       "damage": "1d6",
       "range": "5 ft",
       "damage_type": "bludgeoning",
@@ -297,7 +297,7 @@
     },
     {
       "name": "Shortbow",
-      "desc" : "-",
+      "desc" : "",
       "damage": "1d6",
       "range": "80/320 ft",
       "damage_type": "piercing",
@@ -331,7 +331,7 @@
     },
     {
       "name": "Sickle",
-      "desc" : "-",
+      "desc" : "",
       "damage": "1d4",
       "range": "5 ft",
       "damage_type": "slashing",
@@ -357,7 +357,7 @@
     },
     {
       "name": "Sling",
-      "desc" : "-",
+      "desc" : "",
       "damage": "1d4",
       "range": "5 ft",
       "damage_type": "bludgeoning ",
@@ -387,7 +387,7 @@
     },
     {
       "name": "Spear",
-      "desc" : "-",
+      "desc" : "",
       "damage": "1d6",
       "range": "20/60 ft",
       "damage_type": "Piercing",
@@ -449,21 +449,5 @@
       ]
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ]
 }

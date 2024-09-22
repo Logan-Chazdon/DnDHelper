@@ -71,6 +71,15 @@ class CharacterMainViewModel @Inject constructor(
     fun longRest() {
         character.value!!.longRest()
         repository.insertCharacter(character.value!!)
+        character.value!!.classes.forEach {
+            it.value.pactMagic?.pactSlots?.get(it.value.level)?.let { it1 ->
+                repository.insertPactMagicStateEntity(
+                    characterId = character.value!!.id,
+                    classId = it.value.id,
+                    slotsCurrentAmount = it1.currentAmount
+                )
+            }
+        }
     }
 
     fun shortRest() {

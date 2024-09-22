@@ -4,7 +4,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import gmail.loganchazdon.dndhelper.model.repositories.*
+import gmail.loganchazdon.dndhelper.model.repositories.BackgroundRepository
+import gmail.loganchazdon.dndhelper.model.repositories.ClassRepository
+import gmail.loganchazdon.dndhelper.model.repositories.FeatureRepository
+import gmail.loganchazdon.dndhelper.model.repositories.RaceRepository
+import gmail.loganchazdon.dndhelper.model.repositories.SpellRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -53,9 +57,28 @@ class HomebrewViewModel @Inject constructor(
         return raceRepository.createDefaultSubrace()
     }
 
+    fun deleteSubrace(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            raceRepository.deleteSubrace(id)
+        }
+    }
+
+    fun deleteSubclass(subclassId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            classRepository.deleteSubclass(subclassId)
+        }
+    }
+
+    fun deleteBackground(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            backgroundRepository.deleteBackground(id)
+        }
+    }
+
     val races = raceRepository.getHomebrewRaces()
     val spells = spellRepository.getHomebrewSpells()
     val classes = classRepository.getHomebrewClasses()
     val subraces = raceRepository.getHomebrewSubraces()
     val subclasses = classRepository.getHomebrewSubclasses()
+    val backgrounds = backgroundRepository.getHomebrewBackgrounds()
 }

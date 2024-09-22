@@ -120,8 +120,8 @@ class HomebrewSpellViewModel @Inject constructor(
 
     init {
         val observer = object : Observer<Spell> {
-            override fun onChanged(newValue: Spell?) {
-                newValue?.let {
+            override fun onChanged(value: Spell) {
+                value.let {
                     name.value = it.name
                     materials.value = it.itemComponents.allNames
                     level.value = it.level.toString()

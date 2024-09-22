@@ -2,7 +2,13 @@ package gmail.loganchazdon.dndhelper.model.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import gmail.loganchazdon.dndhelper.model.*
+import gmail.loganchazdon.dndhelper.model.Class
+import gmail.loganchazdon.dndhelper.model.ClassEntity
+import gmail.loganchazdon.dndhelper.model.Feature
+import gmail.loganchazdon.dndhelper.model.Resource
+import gmail.loganchazdon.dndhelper.model.Spell
+import gmail.loganchazdon.dndhelper.model.Subclass
+import gmail.loganchazdon.dndhelper.model.SubclassEntity
 import gmail.loganchazdon.dndhelper.model.database.daos.ClassDao
 import gmail.loganchazdon.dndhelper.model.database.daos.FeatureDao
 import gmail.loganchazdon.dndhelper.model.database.daos.SubclassDao
@@ -30,6 +36,10 @@ class ClassRepository @Inject constructor(
 
     fun getClasses(): LiveData<List<Class>> {
         return _classes
+    }
+
+    fun getSubclassLiveFeaturesById(id: Int) : LiveData<List<Feature>> {
+        return subclassDao.getSubclassLiveFeaturesById(id)
     }
 
     fun getSubclassesByClassId(id: Int): LiveData<List<Subclass>> {
@@ -135,5 +145,43 @@ class ClassRepository @Inject constructor(
 
     fun getSubclassClasses(id: Int): LiveData<List<NameAndIdPojo>> {
         return classDao.getSubclassClasses(id)
+    }
+
+    fun deleteSubclass(subclassId: Int) {
+        subclassDao.deleteSubclass(subclassId)
+    }
+
+    companion object {
+        val getMulticlassSpellSlots = fun(levels: Int): MutableList<Resource> {
+            val result = mutableListOf<Resource>()
+            multiclassSpellSlots[levels - 1].forEachIndexed { index, i ->
+                result.add(
+                    Resource(SpellRepository.allSpellLevels[index].second, i, i.toString(), i.toString())
+                )
+            }
+            return result
+        }
+        private val multiclassSpellSlots = mutableListOf<List<Int>>().apply {
+            add(listOf(2))
+            add(listOf(3))
+            add(listOf(4, 2))
+            add(listOf(4, 3))
+            add(listOf(4, 3, 2))
+            add(listOf(4, 3, 3))
+            add(listOf(4, 3, 3, 1))
+            add(listOf(4, 3, 3, 2))
+            add(listOf(4, 3, 3, 3, 1))
+            add(listOf(4, 3, 3, 3, 2))
+            add(listOf(4, 3, 3, 3, 2, 1))
+            add(listOf(4, 3, 3, 3, 2, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 2, 1, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 3, 1, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 3, 2, 1, 1, 1))
+            add(listOf(4, 3, 3, 3, 3, 2, 2, 1, 1))
+        }
     }
 }

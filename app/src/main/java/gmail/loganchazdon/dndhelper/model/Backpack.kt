@@ -55,27 +55,17 @@ class Backpack {
     //Returns any remainder
     private fun removeCurrencyInCopper(key: String, amount: Int) : Int{
         var amountRemoved = 0
-        if(addedCurrency[key]!!.getValueInCopper >= amount - amountRemoved) {
-            return addedCurrency[key]!!.subtractInCopper(amount - amountRemoved)
-        } else {
-            amountRemoved += addedCurrency[key]!!.amount
-            addedCurrency[key]!!.amount = 0
+        val currencyGroups = listOf(addedCurrency, backgroundCurrency, classCurrency)
+
+        currencyGroups.forEach {
+            if(it[key]!!.getValueInCopper >= amount - amountRemoved) {
+                return it[key]!!.subtractInCopper(amount - amountRemoved)
+            } else {
+                amountRemoved += it[key]!!.amount
+                addedCurrency[key]!!.amount = 0
+            }
         }
 
-        if(backgroundCurrency[key]!!.getValueInCopper >= amount - amountRemoved) {
-            return addedCurrency[key]!!.subtractInCopper(amount - amountRemoved)
-        } else {
-            amountRemoved += backgroundCurrency[key]!!.amount
-            backgroundCurrency[key]!!.amount = 0
-        }
-
-
-        if(addedCurrency[key]!!.getValueInCopper >= amount - amountRemoved) {
-            return addedCurrency[key]!!.subtractInCopper(amount - amountRemoved)
-        } else {
-            amountRemoved += addedCurrency[key]!!.amount
-            addedCurrency[key]!!.amount = 0
-        }
         return 0
     }
 

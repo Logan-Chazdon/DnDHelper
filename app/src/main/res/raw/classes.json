@@ -388,8 +388,8 @@
                         },
                         {
                             "level": 5,
-                            "name": "Melf\u2019s acid arrow",
-                            "index": "Melf\u2019s_acid_arrow"
+                            "name": "Melf's acid arrow",
+                            "index": "Melfs_acid_arrow"
                         },
                         {
                             "level": 9,
@@ -2403,7 +2403,8 @@
                         {
                             "name": "Improved Reaper",
                             "desc": "Starting at 17th level, when you cast a necromancy spell of 1st through 5th level that targets only one creature, the spell can instead target two creatures within range and within 5 feet of each other. If the spell consumes its material components, you must provide them for each target.",
-                            "id": 193
+                            "id": 193,
+                            "level" : 17
                         }
                     ],
                     "id": 22
@@ -2706,6 +2707,7 @@
                         },
                         {
                             "name": "Visions of the Past",
+                            "level" : 17,
                             "desc": "Starting at 17th level, you can call up visions of the past that relate to an object you hold or your immediate surroundings. You spend at least 1 minute in meditation and prayer, then receive dreamlike, shadowy glimpses of recent events. You can meditate in this way for a number of minutes equal to your Wisdom score and must maintain concentration during that time, as if you were casting a spell.\n\nOnce you use this feature, you can't use it again until you finish a short or long rest.\n\nObject Reading. Holding an object as you meditate, you can see visions of the object's previous owner. After meditating for 1 minute, you learn how the owner acquired and lost the object, as well as the most recent significant event involving the object and that owner. If the object was owned by another creature in the recent past (within a number of days equal to your Wisdom score), you can spend 1 additional minute for each owner to learn the same information about that creature.\n\nArea Reading. As you meditate, you see visions of recent events in your immediate vicinity (a room, street, tunnel, clearing, or the like, up to a 50-foot cube), going back a number of days equal to your Wisdom score. For each minute you meditate, you learn about one significant event, beginning with the most recent. Significant events typically involve powerful emotions, such as battles and betrayals, marriages and murders, births and funerals. However, they might also include more mundane events that are nevertheless important in your current situation.",
                             "id": 215
                         }
@@ -4517,7 +4519,7 @@
                                             "index": "blight"
                                         },
                                         {
-                                            "index": "hallucinaotry terrain"
+                                            "index": "hallucinatory terrain"
                                         },
                                         {
                                             "index": "insect plague"
@@ -6413,6 +6415,7 @@
                 },
                 {
                     "name": "Slow Fall",
+                    "level" : 4,
                     "desc": "Beginning at 4th level, you can use your reaction when you fall to reduce any falling damage you take by an amount equal to five times your monk level.",
                     "id": 459
                 },
@@ -8332,6 +8335,7 @@
                 },
                 {
                     "name": "Fighting Style",
+                    "level" : 2,
                     "desc": "At 2nd level, you adopt a particular style of fighting as your specialty. Choose one of the following options. You can't take a Fighting Style option more than once, even if you later get to choose again.",
                     "choose": 1,
                     "from": [
@@ -10416,6 +10420,7 @@
                         },
                         {
                             "name": "Searing Vengeance",
+                            "level" : 14,
                             "desc": "Starting at 14th level, the radiant energy you channel allows you to resist death. When you have to make a death saving throw at the start of your turn, you can instead spring back to your feet with a burst of radiant energy. You regain hit points equal to half your hit point maximum, and then you stand up if you so choose. Each creature of your choice that is within 30 feet of you takes radiant damage equal to 2d8 + your Charisma modifier, and is blinded until the end of the current turn.\n\nOnce you use this feature, you can\u2019t use it again until you finish a long rest.",
                             "id": 807
                         }

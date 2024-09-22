@@ -45,6 +45,58 @@ fun HomebrewFeatureView(
 ) {
     val looper = Looper.getMainLooper()
     val scope = rememberCoroutineScope { Dispatchers.IO }
+    val feature = viewModel.feature.observeAsState()
+    LaunchedEffect(feature.value?.featureId) {
+        viewModel.run {
+            feature.value?.let {
+                //General
+                featureName.value = it.name
+                featureDesc.value = it.description
+                featureLevel.value = it.grantedAtLevel.toString()
+
+                //Toggles and data
+                grantsInfusions.value = it.grantsInfusions
+                if (grantsInfusions.value) {
+                    //Fill out infusions
+                    it.infusion?.let { newInfusion -> infusion.value = newInfusion }
+                }
+
+                grantsExpertise.value = !it.expertises.isNullOrEmpty()
+                if (grantsExpertise.value) {
+                    //Fill out expertises
+                    if (expertises.isEmpty()) {
+                        it.expertises?.let { it1 -> expertises.addAll(it1) }
+                    }
+                }
+
+                grantsProficiencies.value = !it.languages.isNullOrEmpty()
+                if (grantsProficiencies.value) {
+                    //Fill out proficiencies
+                    if (proficiencies.isEmpty()) {
+                        it.proficiencies?.let { it1 -> proficiencies.addAll(it1) }
+                    }
+                }
+
+                grantsLanguages.value = !it.languages.isNullOrEmpty()
+                if (grantsLanguages.value) {
+                    //Fill out languages
+                    if (languages.isEmpty()) {
+                        it.languages?.let { it1 -> languages.addAll(it1) }
+                    }
+                }
+
+                grantsAcBonus.value = it.acBonus != null
+                if (grantsAcBonus.value) {
+                    //Fill out ac bonus
+                    acBonus.value = it.acBonus.toString()
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(viewModel.spells.value == null) {
+        viewModel.grantsSpells.value = !viewModel.spells.value.isNullOrEmpty()
+    }
 
     navController?.let {
         AutoSave(
@@ -68,13 +120,16 @@ fun HomebrewFeatureView(
     }
 
     //Spell selection popup.
+    val spells = viewModel.spells.observeAsState(emptyList())
     GenericSelectionPopupView(
         isExpanded = spellsIsExpanded,
         onItemClick = {
-            if (viewModel.spells.contains(it)) {
-                viewModel.spells.remove(it)
-            } else {
-                viewModel.spells.add(it)
+            scope.launch(Dispatchers.IO) {
+                if (spells.value.contains(it)) {
+                    viewModel.removeSpell(it)
+                } else {
+                    viewModel.addSpell(it)
+                }
             }
         },
         items = viewModel.allSpells.observeAsState(emptyList()).value,
@@ -85,7 +140,7 @@ fun HomebrewFeatureView(
             it.name
         },
         isSelected = {
-            viewModel.spells.contains(it)
+            spells.value.contains(it)
         }
     )
 
@@ -93,11 +148,7 @@ fun HomebrewFeatureView(
     GenericSelectionPopupView(
         isExpanded = infusionIsExpanded,
         onItemClick = {
-            if (viewModel.infusions.contains(it)) {
-                viewModel.infusions.remove(it)
-            } else {
-                viewModel.infusions.add(it)
-            }
+            viewModel.infusion.value = it
         },
         items = viewModel.allInfusions.observeAsState(emptyList()).value,
         detailsView = null,
@@ -105,7 +156,7 @@ fun HomebrewFeatureView(
             it.name
         },
         isSelected = {
-            viewModel.infusions.contains(it)
+            viewModel.infusion.value == it
         }
     )
 
@@ -196,7 +247,7 @@ fun HomebrewFeatureView(
                 ) {
                     AttributeView(title = "Grants spells", active = viewModel.grantsSpells) {
                         GenericSelectionView(
-                            chosen = viewModel.spells.let {
+                            chosen = spells.value.let {
                                 val result = mutableListOf<String>()
                                 it.forEach { spell ->
                                     result.add(spell.name)
@@ -204,26 +255,26 @@ fun HomebrewFeatureView(
                                 result
                             },
                             onDelete = {
-                                viewModel.spells.removeAt(it)
+                                scope.launch {
+                                    viewModel.removeSpell(spells.value[it])
+                                }
                             },
                             onExpanded = { spellsIsExpanded.value = !spellsIsExpanded.value }
                         )
                     }
 
                     AttributeView(
-                        title = "Grants infusions",
+                        title = "Grants infusion",
                         active = viewModel.grantsInfusions
                     ) {
                         GenericSelectionView(
-                            chosen = viewModel.infusions.let {
+                            chosen = viewModel.infusion.let {
                                 val result = mutableListOf<String>()
-                                it.forEach { infusion ->
-                                    result.add(infusion.name)
-                                }
+                                it.value?.name?.let { it1 -> result.add(it1) }
                                 result
                             },
                             onDelete = {
-                                viewModel.infusions.removeAt(it)
+                                viewModel.infusion.value = null
                             },
                             onExpanded = { infusionIsExpanded.value = !infusionIsExpanded.value }
                         )
@@ -516,19 +567,23 @@ private fun FeatureChoiceView(
                             ) {
                                 Text(
                                     text = text.replace("_", " "),
-                                    modifier = Modifier.fillMaxWidth().padding(5.dp).clickable {
-                                        val index = selectedIndexes.indexOfFirst { it.index == text }
-                                        if ( index == -1) {
-                                            selectedIndexes.add(
-                                                FeatureChoiceIndexCrossRef(
-                                                    choiceId = choice.id,
-                                                    index = text
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(5.dp)
+                                        .clickable {
+                                            val index =
+                                                selectedIndexes.indexOfFirst { it.index == text }
+                                            if (index == -1) {
+                                                selectedIndexes.add(
+                                                    FeatureChoiceIndexCrossRef(
+                                                        choiceId = choice.id,
+                                                        index = text
+                                                    )
                                                 )
-                                            )
-                                        } else {
-                                            selectedIndexes.removeAt(index)
+                                            } else {
+                                                selectedIndexes.removeAt(index)
+                                            }
                                         }
-                                    }
                                 )
                             }
                         }

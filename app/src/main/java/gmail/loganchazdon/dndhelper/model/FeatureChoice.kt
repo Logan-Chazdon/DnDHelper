@@ -3,7 +3,7 @@ package gmail.loganchazdon.dndhelper.model
 
 class FeatureChoice(
     choose: Choose = Choose(0),
-    val options: MutableList<Feature>?,
+    var options: MutableList<Feature>?,
 ) : FeatureChoiceEntity(choose){
     var chosen: List<Feature>? = null
 

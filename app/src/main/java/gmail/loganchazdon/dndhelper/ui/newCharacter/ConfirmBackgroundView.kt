@@ -221,39 +221,41 @@ fun ConfirmBackgroundView(
 
 
                     background.value?.spells?.let {
-                        Card(
-                            modifier = Modifier.fillMaxWidth(0.95f),
-                            backgroundColor = MaterialTheme.colors.noActionNeeded,
-                            elevation = 5.dp,
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(5.dp)
+                        if(it.isNotEmpty()) {
+                            Card(
+                                modifier = Modifier.fillMaxWidth(0.95f),
+                                backgroundColor = MaterialTheme.colors.noActionNeeded,
+                                elevation = 5.dp,
+                                shape = RoundedCornerShape(10.dp)
                             ) {
-                                Text(
-                                    text = "Spells",
-                                    style = MaterialTheme.typography.h6
-                                )
-                                it.forEach {
-                                    var expanded by remember { mutableStateOf(false) }
+                                Column(
+                                    modifier = Modifier.padding(5.dp)
+                                ) {
                                     Text(
-                                        text = it.name,
-                                        modifier = Modifier.clickable {
-                                            expanded = true
-                                        }
+                                        text = "Spells",
+                                        style = MaterialTheme.typography.h6
                                     )
-                                    if (expanded) {
-                                        Dialog(
-                                            onDismissRequest = {
-                                                expanded = false
-                                            },
-                                            properties = DialogProperties(
-                                                usePlatformDefaultWidth = false,
-                                                dismissOnClickOutside = true
-                                            )
-                                        ) {
-                                            Card {
-                                                SpellDetailsView(spell = it)
+                                    it.forEach {
+                                        var expanded by remember { mutableStateOf(false) }
+                                        Text(
+                                            text = it.name,
+                                            modifier = Modifier.clickable {
+                                                expanded = true
+                                            }
+                                        )
+                                        if (expanded) {
+                                            Dialog(
+                                                onDismissRequest = {
+                                                    expanded = false
+                                                },
+                                                properties = DialogProperties(
+                                                    usePlatformDefaultWidth = false,
+                                                    dismissOnClickOutside = true
+                                                )
+                                            ) {
+                                                Card {
+                                                    SpellDetailsView(spell = it)
+                                                }
                                             }
                                         }
                                     }

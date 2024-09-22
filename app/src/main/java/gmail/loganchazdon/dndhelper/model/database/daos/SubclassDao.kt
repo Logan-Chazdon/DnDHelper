@@ -20,8 +20,14 @@ abstract class SubclassDao {
     )
     protected abstract fun getUnfilledSubclass(id: Int): LiveData<SubclassEntity>
 
+    @Query(
+        """SELECT * FROM features JOIN SubclassFeatureCrossRef ON features.featureId IS SubclassFeatureCrossRef.featureId WHERE SubclassFeatureCrossRef.subclassId IS :id"""
+    )
+    abstract fun getSubclassLiveFeaturesById(id: Int): LiveData<List<Feature>>
+
     fun getSubclass(id: Int): LiveData<Subclass> {
         val result = MediatorLiveData<Subclass>()
+
         result.addSource(getUnfilledSubclass(id)) { subclassEntity ->
             if (subclassEntity != null) {
                 GlobalScope.launch {
@@ -35,6 +41,7 @@ abstract class SubclassDao {
                 }
             }
         }
+
         return result
     }
 
@@ -119,4 +126,7 @@ JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.fe
 WHERE SubclassFeatureCrossRef.subclassId IS :subclassId AND features.grantedAtLevel <= :maxLevel
     """)
     abstract fun getSubclassFeatures(subclassId: Int, maxLevel: Int): List<Feature>
+
+    @Query("DELETE FROM subclasses WHERE subclassId = :subclassId")
+    abstract fun deleteSubclass(subclassId: Int)
 }

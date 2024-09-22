@@ -2,7 +2,7 @@ package gmail.loganchazdon.dndhelper.model.junctionEntities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
+import androidx.room.ForeignKey.Companion.CASCADE
 import gmail.loganchazdon.dndhelper.model.CharacterEntity
 import gmail.loganchazdon.dndhelper.model.ClassEntity
 import gmail.loganchazdon.dndhelper.model.SubclassEntity

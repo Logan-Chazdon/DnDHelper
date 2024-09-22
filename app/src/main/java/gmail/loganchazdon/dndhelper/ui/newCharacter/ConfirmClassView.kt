@@ -83,7 +83,11 @@ fun ConfirmClassView(
         }
     }
 
-    val assumedSpells : State<List<Spell>> = produceState(initialValue = emptyList(), viewModel.subclassSpells, viewModel.classSpells) {
+    val assumedSpells : State<List<Spell>> = produceState(
+        initialValue = emptyList(),
+        viewModel.subclassSpells.size,
+        viewModel.classSpells.size
+    ) {
         launch(Dispatchers.IO) {
             value = viewModel.calculateAssumedSpells()
         }

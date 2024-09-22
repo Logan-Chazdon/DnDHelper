@@ -7,8 +7,13 @@ import gmail.loganchazdon.dndhelper.model.Choose
 import gmail.loganchazdon.dndhelper.model.Feature
 import gmail.loganchazdon.dndhelper.model.FeatureChoiceEntity
 import gmail.loganchazdon.dndhelper.model.Infusion
+import gmail.loganchazdon.dndhelper.model.Spell
 import gmail.loganchazdon.dndhelper.model.database.daos.FeatureDao
-import gmail.loganchazdon.dndhelper.model.junctionEntities.*
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureChoiceIndexCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureOptionsCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.FeatureSpellCrossRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.IndexRef
+import gmail.loganchazdon.dndhelper.model.junctionEntities.OptionsFeatureCrossRef
 import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
 import javax.inject.Inject
 
@@ -107,5 +112,13 @@ class FeatureRepository @Inject constructor(
 
     fun getFeatureIdOr0FromSpellId(id: Int): Int {
         return featureDao.getFeatureIdOr0FromSpellId(id)
+    }
+
+    fun getFeatureSpells(id: Int): LiveData<List<Spell>?> {
+        return featureDao.getLiveFeatureSpells(id)
+    }
+
+    fun removeFeatureSpellCrossRef(featureSpellCrossRef: FeatureSpellCrossRef) {
+        featureDao.removeFeatureSpellCrossRef(featureSpellCrossRef)
     }
 }

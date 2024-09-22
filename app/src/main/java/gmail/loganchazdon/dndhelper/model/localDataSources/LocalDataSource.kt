@@ -710,17 +710,8 @@ class LocalDataSourceImpl @Inject constructor(
         }
     }
 
-    private fun getSpellsByIndex(index: String): List<Spell>? {
-        when (index) {
-            else -> {
-                /* _spells.value?.forEach {
-                     if (index.lowercase().trim() == it.name.lowercase().trim()) {
-                         return listOf(it)
-                     }
-                 } TODO*/
-                return null
-            }
-        }
+    private fun getSpellIdByName(name: String): Int {
+        return spellDao.getSpellIdByName(name)
     }
 
     private fun extractResource(rootJson: JSONObject): Resource {
@@ -1350,30 +1341,27 @@ class LocalDataSourceImpl @Inject constructor(
             extractEquipmentChoices(itemChoicesJson, equipmentChoices, equipment)
 
 
-            val spells = try {
-                val result = mutableListOf<Spell>()
+            try {
                 val backgroundSpellsJson = backgroundJson.getJSONArray("spells")
                 for (index in 0 until backgroundSpellsJson.length()) {
                     val spellJson = backgroundSpellsJson.getJSONObject(index)
-                    val spell = getSpellsByIndex(spellJson.getString("name"))
-                    //TODO once all the spells are added put an exception here if the sell lists is not exactly one item.
-                    spell?.getOrNull(0)?.let {
-                        result.add(
-                            it
+                    val id = getSpellIdByName(spellJson.getString("name"))
+                    backgroundDao.insertBackgroundSpellCrossRef(
+                        BackgroundSpellCrossRef(
+                            backgroundId = backgroundIndex + 1,
+                            spellId = id
                         )
-                    }
+                    )
                 }
-                result
-            } catch (e: JSONException) {
-                null
+            } catch (_: JSONException) {
             }
 
 
             backgroundDao.insertBackground(
-                Background(
+                BackgroundEntity(
                     name = name,
                     desc = desc,
-                    spells = spells,
+                    spells = emptyList(),
                     proficiencies = proficiencies,
                     proficiencyChoices = proficiencyChoices,
                     languages = languages,
@@ -1385,6 +1373,7 @@ class LocalDataSourceImpl @Inject constructor(
                     this
                 }
             )
+
 
             features.forEach {
                 backgroundDao.insertBackgroundFeatureCrossRef(
@@ -1754,7 +1743,7 @@ class LocalDataSourceImpl @Inject constructor(
                 }
             }
             "skill_proficiencies" -> {
-                /*_abilitiesToSkills.value!!.values.forEach {
+                _abilitiesToSkills.value!!.values.forEach {
                     it.forEach { item ->
                         if (!item.contains("Saving")) {
                             proficiencies.add(
@@ -1764,7 +1753,7 @@ class LocalDataSourceImpl @Inject constructor(
                             )
                         }
                     }
-                }*/ //TODO replace me with an index
+                }
             }
             "musical_instruments" -> {
                 instrumentIndexes.forEach {
@@ -1899,7 +1888,7 @@ class LocalDataSourceImpl @Inject constructor(
                     val amount = pactSlotJson.getInt("amount")
                     pactSlots.add(
                         Resource(
-                            name = pactSlotJson.getInt("level").toString(),
+                            name = allSpellLevels[pactSlotJson.getInt("level") - 1].second,
                             rechargeAmountType = amount.toString(),
                             currentAmount = amount,
                             maxAmountType = amount.toString()
@@ -2428,10 +2417,16 @@ class LocalDataSourceImpl @Inject constructor(
                     //Not for choosing what spells you get.
                     //For that create sub features with the spells you
                     //Need the user to choose from.
-                    val spells = try {
-                        extractSpells(featureJson.getJSONArray("spells"))
-                    } catch (e: JSONException) {
-                        null
+                   try {
+                        extractSpells(featureJson.getJSONArray("spells")).forEach {
+                            featureDao.insertFeatureSpellCrossRef(
+                                FeatureSpellCrossRef(
+                                    featureId = featureId,
+                                    spellId = it
+                                )
+                            )
+                        }
+                    } catch (_: JSONException) {
                     }
 
                     val ac = try {
@@ -2522,7 +2517,7 @@ class LocalDataSourceImpl @Inject constructor(
                         }
                     }
 
-                    val feature = Feature(
+                    val feature = FeatureEntity(
                         name = featureJson.getString("name"),
                         activationRequirement = activationRequirement,
                         rangedAttackBonus = rangedAttackBonus,
@@ -2545,7 +2540,6 @@ class LocalDataSourceImpl @Inject constructor(
                         } catch (e: JSONException) {
                             null
                         },
-                        spells = spells,
                         acBonus = try {
                             featureJson.getInt("ac_bonus")
                         } catch (e: JSONException) {
@@ -2583,11 +2577,11 @@ class LocalDataSourceImpl @Inject constructor(
         return ids
     }
 
-    private fun extractSpells(spellsJson: JSONArray): List<Spell> {
-        val spells = mutableListOf<Spell>()
+    private fun extractSpells(spellsJson: JSONArray): List<Int> {
+        val spells = mutableListOf<Int>()
         for (spellIndex in 0 until spellsJson.length()) {
             val spellJson = spellsJson.getJSONObject(spellIndex)
-            getSpellsByIndex(spellJson.getString("index"))?.let { spells.addAll(it) }
+            getSpellIdByName(spellJson.getString("index")).let { spells.add(it) }
         }
         return spells
     }

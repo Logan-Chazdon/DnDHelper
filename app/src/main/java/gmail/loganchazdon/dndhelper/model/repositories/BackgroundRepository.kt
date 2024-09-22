@@ -33,6 +33,7 @@ class BackgroundRepository @Inject constructor(
                         it,
                         backgroundDao.getUnfilledBackgroundFeatures(id)
                     )
+                    background.spells = backgroundDao.getBackgroundSpells(id)
                     featureDao.fillOutFeatureListWithoutChosen(background.features!!)
                     result.postValue(background)
                 }
@@ -61,5 +62,13 @@ class BackgroundRepository @Inject constructor(
                 spells = null
             )
         ).toInt()
+    }
+
+    fun getHomebrewBackgrounds(): LiveData<List<BackgroundEntity>> {
+        return backgroundDao.getHomebrewBackgrounds()
+    }
+
+    fun deleteBackground(id: Int) {
+        backgroundDao.deleteBackground(id)
     }
 }

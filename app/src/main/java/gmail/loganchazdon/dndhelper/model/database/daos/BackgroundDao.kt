@@ -95,4 +95,9 @@ JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.featureId IS feature
 WHERE backgroundId IS :id"""
     )
     abstract fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
+
+    @Query("SELECT * FROM backgrounds WHERE isHomebrew = 1")
+    abstract fun getHomebrewBackgrounds(): LiveData<List<BackgroundEntity>>
+    @Query("DELETE FROM backgrounds WHERE id = :id")
+    abstract fun deleteBackground(id: Int)
 }

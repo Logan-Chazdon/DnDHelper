@@ -1,0 +1,167 @@
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform'
+    id("com.android.library")
+    id "org.jetbrains.compose" version "1.6.11"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    id("androidx.room") version "2.6.1"
+    //id "org.jetbrains.kotlin.kapt" version "2.0.20"
+    //alias(libs.plugins.jetbrainsCompose)
+    //alias(libs.plugins.compose.compiler)
+}
+
+group = 'gmail.loganchazdon.dndhelper'
+version = '1.0.0'
+
+
+
+repositories {
+    google()
+    mavenCentral()
+    jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url = uri("https://jitpack.io") }
+    maven { url "https://maven.pkg.jetbrains.space/public/p/compose/dev"}
+    maven { url "https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental" }
+    maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev" }
+    gradlePluginPortal()
+}
+
+android {
+    compileSdk = 34
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+    defaultConfig {
+        minSdk = 24
+        targetSdk = 34
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    namespace 'gmail.loganchazdon.dndhelper'
+}
+
+/*dependencies {
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}*/
+
+/*test {
+    useJUnitPlatform()
+}*/
+
+kotlin {
+    androidTarget()
+    jvm("desktop")
+
+    js(IR) {
+        browser()
+    }
+
+    wasmJs {
+        browser()
+    }
+
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.components.resources)
+                //implementation project(':shared')
+                implementation projectLibs.kotlinx.coroutines.core
+            }
+        }
+
+
+        def jsWasmMain = creating {
+            //dependsOn(commonMain)
+        }
+        def ktorVersion = '3.0.0-rc-1'
+
+        def jsMain = getting {
+            dependsOn(jsWasmMain)
+            dependencies {
+                implementation "io.ktor:ktor-client-core:$ktorVersion"
+            }
+        }
+
+        def wasmJsMain = getting {
+            dependsOn(jsWasmMain)
+        }
+
+        androidMain {
+            def variantName = name
+            dependsOn(commonMain)
+            resources.srcDirs("res")
+
+
+
+            //java.srcDir(File("build/generated/ksp/$variantName/kotlin")) TODO
+            dependencies {
+                api projectLibs.androidx.activity.compose
+               // api "androidx.appcompat:appcompat:1.7.0"
+               // api "androidx.core:core-ktx:1.13.1"
+               // implementation "io.ktor:ktor-client-okhttp:$ktorVersion"
+                implementation projectLibs.androidx.room.common
+                implementation projectLibs.androidx.room.runtime
+                //implementation 'androidx.activity:activity-compose:1.9.2'
+                //implementation project(':shared')
+
+                //Room
+                implementation "androidx.room:room-runtime:2.6.1"
+
+            }
+        }
+
+        def desktopMain = getting {
+            dependencies {
+                implementation(compose.desktop.common)
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.2"
+                implementation "io.ktor:ktor-client-cio:$ktorVersion"
+            }
+        }
+
+
+    }
+}
+
+dependencies {
+    //implementation 'androidx.room:room-common:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-core-ktx:2.8.6'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.compose.runtime:runtime-android:1.7.2'
+    implementation 'androidx.compose.ui:ui-android:1.7.2'
+    implementation 'androidx.compose.foundation:foundation-layout-android:1.7.2'
+    implementation 'androidx.compose.foundation:foundation-android:1.7.2'
+    implementation 'androidx.compose.material3:material3-android:1.3.0'
+    implementation 'androidx.compose.material:material-android:1.7.2'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.7.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.compose.ui:ui-tooling-preview-android:1.7.2'
+    implementation 'androidx.navigation:navigation-compose:2.8.1'
+
+    //koin
+    implementation "io.insert-koin:koin-androidx-workmanager:3.5.6"
+    implementation "io.insert-koin:koin-annotations-jvm:1.3.1"
+    implementation "io.insert-koin:koin-ksp-compiler:1.3.1"
+    implementation 'io.insert-koin:koin-androidx-compose:3.4.1'
+
+
+    //Preferences
+    implementation "com.github.Sh4dowSoul.ComposePreferences:compose-preferences:0.1.1"
+    implementation "com.github.Sh4dowSoul.ComposePreferences:datastore-manager:0.1.1"
+    implementation "androidx.datastore:datastore-preferences:1.1.1"
+    implementation "com.github.JamalMulla:ComposePrefs:1.0.0"
+    implementation "androidx.datastore:datastore-preferences:1.1.1"
+    //Gson
+    implementation 'com.google.code.gson:gson:2.10'
+    implementation projectLibs.androidx.activity.compose
+    //implementation 'androidx.activity:activity-compose:1.9.2'
+}
+
+

@@ -1,12 +1,17 @@
 package gmail.loganchazdon.dndhelper
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
-import gmail.loganchazdon.dndhelper.model.localDataSources.LocalDataSource
-import javax.inject.Inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
-@HiltAndroidApp
+
 class MyApplication : Application() {
-    @Inject
-    lateinit var localDataSource: LocalDataSource
+    //lateinit var localDataSource: LocalDataSource
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidContext(this@MyApplication)
+            modules(AppModule().module)
+        }
+    }
 }

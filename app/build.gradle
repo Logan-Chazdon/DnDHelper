@@ -1,9 +1,19 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.application' version '8.5.2'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    //id("org.jetbrains.kotlin.multiplatform") version '2.0.20'
+    //alias "libs.plugins.jetbrainsCompose"
+    //alias "libs.plugins.compose.compiler"
 }
+
+/*
+composeCompiler {
+    reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+}*/
+
 
 android {
     compileSdk 34
@@ -43,9 +53,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
-    }
     buildFeatures {
         compose true
     }
@@ -59,66 +66,32 @@ android {
         }
     }
     namespace 'gmail.loganchazdon.dndhelper'
+    kotlinOptions {
+        jvmTarget = '17'
+    }
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
-    implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.2'
-    implementation 'androidx.datastore:datastore-core:1.0.0'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation "androidx.compose.foundation:foundation-layout:$compose_version"
+    //Android
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.11.0'
 
-    //LiveData
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.compose.runtime:runtime-livedata:1.5.0-beta02'
-
-    //Compose Navigation
-    implementation "androidx.navigation:navigation-compose:2.6.0"
+    //Koin
+    implementation "io.insert-koin:koin-androidx-workmanager:3.5.6"
+    implementation "io.insert-koin:koin-annotations-jvm:1.3.1"
+    implementation "io.insert-koin:koin-ksp-compiler:1.3.1"
+    implementation 'io.insert-koin:koin-androidx-compose:3.4.1'
+    implementation projectLibs.androidx.ktx
+    implementation project(':shared')
 
     //Room
-    implementation "androidx.room:room-runtime:2.5.1"
-    implementation "androidx.room:room-ktx:2.5.1"
-    implementation "android.arch.lifecycle:extensions:1.1.1"
-    kapt 'android.arch.persistence.room:compiler:1.1.1'
-    kapt "androidx.room:room-compiler:2.5.1"
-    implementation "androidx.room:room-testing:2.5.1"
-    testImplementation "androidx.room:room-testing:2.5.1"
+    implementation "androidx.room:room-runtime:2.4.3"
+    //kapt "androidx.room:room-compiler:2.6.1"
+}
 
-    //Gson
-    implementation 'com.google.code.gson:gson:2.9.0'
-
-    //Hilt
-    implementation "com.google.dagger:hilt-android:2.44"
-    kapt "com.google.dagger:hilt-compiler:2.44"
-    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
-
-    //ViewModels
-    implementation 'androidx.activity:activity-ktx:1.7.2'
-
-    //AndroidJUnitRunner and JUnit Rules
-    implementation 'androidx.test:runner:1.5.2'
-    implementation 'androidx.test:rules:1.5.0'
-
-    //Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-
-    //Preferences
-    implementation "com.github.Sh4dowSoul.ComposePreferences:compose-preferences:0.1.1"
-    implementation "com.github.Sh4dowSoul.ComposePreferences:datastore-manager:0.1.1"
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
-    implementation "com.github.JamalMulla:ComposePrefs:1.0.0"
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url = uri("https://jitpack.io") }
+    google()
 }

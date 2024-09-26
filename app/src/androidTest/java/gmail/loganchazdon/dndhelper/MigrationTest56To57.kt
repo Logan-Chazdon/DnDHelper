@@ -3,9 +3,9 @@ package gmail.loganchazdon.dndhelper
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.platform.app.InstrumentationRegistry
-import gmail.loganchazdon.dndhelper.model.database.Converters
-import gmail.loganchazdon.dndhelper.model.database.RoomDataBase
-import gmail.loganchazdon.dndhelper.model.database.migrations.MIGRATION_56_57
+import model.converters.Converters
+import model.database.RoomDataBase
+import model.database.migrations.MIGRATION_56_57
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -1,7 +1,9 @@
 package model
 
+import kotlinx.serialization.Serializable
 import model.utils.getValueInCopper
 
+@Serializable
 class Backpack {
     var equippedArmor: Armor = Armor.none
     var equippedShield: Shield? = null

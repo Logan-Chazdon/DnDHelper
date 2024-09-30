@@ -1,8 +1,8 @@
 package gmail.loganchazdon.dndhelper
 
-//import androidx.datastore.core.DataStore
-//import androidx.datastore.preferences.core.Preferences
-//import androidx.datastore.preferences.preferencesDataStore
+//import androidx.datastore.kt.core.DataStore
+//import androidx.datastore.kt.preferences.core.Preferences
+//import androidx.datastore.kt.preferences.preferencesDataStore
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,7 +11,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import ui.RootView
 import ui.theme.DnDHelperTheme
 
-//val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {

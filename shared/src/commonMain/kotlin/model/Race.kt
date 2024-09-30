@@ -1,9 +1,7 @@
 package model
 
-import androidx.room.Embedded
 
-
-class Race(
+open class Race(
     id: Int = 0,
     name : String = "",
     groundSpeed: Int = 30,
@@ -19,8 +17,7 @@ class Race(
     languages: List<Language> = listOf(),
     languageChoices: List<LanguageChoice> = listOf(),
     languageDesc: String = "",
-    @Embedded(prefix = "subrace")
-    var subrace: Subrace? = null
+    open var subrace: Subrace? = null
 ) : RaceEntity(
     raceId = id,
     raceName = name,

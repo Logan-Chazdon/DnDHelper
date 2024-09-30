@@ -1,13 +1,12 @@
 package model
 
-import java.util.*
 
 data class AbilityBonusChoice(
     val choose: Int,
     val from : List<AbilityBonus>,
     val maxOccurrencesOfAbility: Int = 1
 ) {
-    var chosenByString: List<String> = LinkedList()
+    var chosenByString: List<String> = ArrayList()
     val chosen: List<AbilityBonus>
     get() {
         return from.filter {

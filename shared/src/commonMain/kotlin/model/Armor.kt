@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Armor(
     override var name : String? = null,
     override val index: String? = null,

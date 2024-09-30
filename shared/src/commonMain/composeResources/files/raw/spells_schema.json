@@ -1,0 +1,111 @@
+{
+	"type": "object",
+	"properties": {
+		"spells": {
+			"type": "array",
+			"items": [
+				{
+					"type": "object",
+					"properties": {
+						"name": {
+							"type": "string"
+						},
+						"level": {
+							"type": "integer"
+						},
+						"components": {
+							"type": "array",
+							"items": [
+								{
+									"type": "object",
+									"properties": {
+										"name": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"name"
+									]
+								}
+							]
+						},
+						"item_components": {
+							"type": "array",
+							"items": [
+								{
+									"type": "object",
+									"properties": {
+										"name": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"name"
+									]
+								}
+							]
+						},
+						"school": {
+							"type": "string"
+						},
+						"desc": {
+							"type": "string"
+						},
+						"range": {
+							"type": "string"
+						},
+						"area": {
+							"type": "string"
+						},
+						"casting_time": {
+							"type": "string"
+						},
+						"duration": {
+							"type": "string"
+						},
+						"classes": {
+							"type": "array",
+							"items": [
+								{
+									"type": "object",
+									"properties": {
+										"name": {
+											"type": "string"
+										},
+										"index": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"name",
+										"index"
+									]
+								}
+							]
+						},
+						"damage": {
+							"type": "string"
+						}
+					},
+					"required": [
+						"name",
+						"level",
+						"components",
+						"item_components",
+						"school",
+						"desc",
+						"range",
+						"area",
+						"casting_time",
+						"duration",
+						"classes",
+						"damage"
+					]
+				}
+			]
+		}
+	},
+	"required": [
+		"spells"
+	]
+}

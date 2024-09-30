@@ -1,5 +1,9 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class Infusion(
     val maxTimesChosen : Int? = null, //Passed on to whatever feature grants the infusion.
     val name: String,

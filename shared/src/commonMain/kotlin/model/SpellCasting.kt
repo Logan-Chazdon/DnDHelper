@@ -1,5 +1,6 @@
 package model
 
+import kotlin.jvm.Transient
 import kotlin.math.floor
 
 data class SpellCasting (

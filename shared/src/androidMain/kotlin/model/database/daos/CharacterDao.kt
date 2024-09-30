@@ -1,18 +1,16 @@
 package model.database.daos
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
 import model.*
-import model.choiceEntities.*
-import model.junctionEntities.*
-import model.stateEntities.CharacterFeatureState
-import model.stateEntities.PactMagicStateEntity
+import model.choiceEntities.BackgroundChoiceEntity
+import model.choiceEntities.ClassChoiceEntity
+import model.choiceEntities.RaceChoiceEntity
+import model.choiceEntities.SubraceChoiceEntity
 
 @Dao
-abstract class CharacterDao {
+actual abstract class CharacterDao {
     companion object {
         //The query to PactMagicStateEntity is just so that any liveData created by this query will be invalidated and updated when
         //pactMagicStateEntity is changed.
@@ -38,10 +36,16 @@ abstract class CharacterDao {
     }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertCharacter(character: CharacterEntity): Long
+    abstract fun insertCharacter(character: CharacterEntityTable): Long
+    actual suspend fun insertCharacter(character: CharacterEntity): Long {
+        return insertCharacter(character.asTable())
+    }
 
     @Update
-    abstract fun updateCharacter(character: CharacterEntity)
+    abstract fun updateCharacter(character: CharacterEntityTable)
+    actual fun updateCharacter(character: CharacterEntity) {
+        updateCharacter(character.asTable())
+    }
 
     @MapInfo(valueColumn = "isPrepared")
     @Query(
@@ -50,7 +54,7 @@ JOIN SubclassSpellCastingSpellCrossRef ON SubclassSpellCastingSpellCrossRef.spel
 WHERE characterId IS :characterId AND subclassId IS :subclassId
 """
     )
-    abstract fun getSpellCastingSpellsForSubclass(
+    actual abstract fun getSpellCastingSpellsForSubclass(
         characterId: Int,
         subclassId: Int
     ): Map<Spell, Boolean?>
@@ -62,7 +66,7 @@ JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spe
 WHERE characterId IS :characterId AND classId IS :classId
 """
     )
-    abstract fun getSpellCastingSpellsForClass(characterId: Int, classId: Int): Map<Spell, Boolean?>
+    actual abstract fun getSpellCastingSpellsForClass(characterId: Int, classId: Int): Map<Spell, Boolean?>
 
     @Query(
         """SELECT * FROM feats
@@ -70,14 +74,19 @@ JOIN ClassFeatCrossRef ON ClassFeatCrossRef.featId IS feats.id
 WHERE ClassFeatCrossRef.classId IS :classId AND ClassFeatCrossRef.characterId IS :characterId
     """
     )
-    abstract fun getClassFeats(classId: Int, characterId: Int): MutableList<Feat>
+    actual abstract fun getClassFeats(classId: Int, characterId: Int): MutableList<Feat>
 
     @Query(
         """SELECT * FROM ClassChoiceEntity
 WHERE characterId IS :characterId AND classId IS :classId
     """
     )
-    abstract fun getClassChoiceData(characterId: Int, classId: Int): ClassChoiceEntity
+    protected abstract fun getClassChoiceDataTable(characterId: Int, classId: Int): ClassChoiceEntityTable
+
+    actual fun getClassChoiceData(characterId: Int, classId: Int): ClassChoiceEntity {
+        return getClassChoiceDataTable(characterId, classId)
+    }
+
 
     @Query(
         """SELECT * FROM feats
@@ -85,26 +94,32 @@ JOIN FeatChoiceChoiceEntity ON FeatChoiceChoiceEntity.featId IS feats.id
 WHERE choiceId IS :choiceId AND characterId IS :characterId
     """
     )
-    abstract fun getFeatChoiceChosen(characterId: Int, choiceId: Int): List<Feat>
+    actual abstract fun getFeatChoiceChosen(characterId: Int, choiceId: Int): List<Feat>
 
     @RewriteQueriesToDropUnusedColumns
     @Query(fullCharacterSql)
     @Transaction
-    abstract fun findCharacterWithoutListChoices(id: Int): Character
+    actual abstract fun findCharacterWithoutListChoices(id: Int): Character
 
     @Query(fullCharacterSql)
     @RewriteQueriesToDropUnusedColumns
     @Transaction
-    abstract fun findLiveCharacterWithoutListChoices(id: Int): LiveData<Character>
+    actual abstract fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character>
 
     @Query("SELECT * FROM RaceChoiceEntity WHERE raceId = :raceId AND characterId = :charId")
-    abstract fun getRaceChoiceData(raceId: Int, charId: Int): RaceChoiceEntity
+    abstract fun getRaceChoiceDataTable(raceId: Int, charId: Int): RaceChoiceEntityTable
+    actual fun getRaceChoiceData(raceId: Int, charId: Int): RaceChoiceEntity {
+        return getRaceChoiceData(raceId, charId)
+    }
 
     @Query("SELECT * FROM SubraceChoiceEntity WHERE subraceId = :subraceId AND characterId = :charId")
-    abstract fun getSubraceChoiceData(subraceId: Int, charId: Int): SubraceChoiceEntity
+    abstract fun getSubraceChoiceDataTable(subraceId: Int, charId: Int): SubraceChoiceEntityTable
+    actual fun getSubraceChoiceData(subraceId: Int, charId: Int): SubraceChoiceEntity {
+        return getSubraceChoiceDataTable(subraceId, charId)
+    }
 
     @Query("DELETE FROM characters WHERE id = :id")
-    abstract fun deleteCharacter(id: Int)
+    actual abstract fun deleteCharacter(id: Int)
 
     @Query(
         """SELECT * FROM features
@@ -112,13 +127,16 @@ JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureI
 WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLevel
     """
     )
-    abstract fun getClassFeatures(classId: Int, maxLevel: Int = 20): MutableList<Feature>
+    actual abstract fun getClassFeatures(classId: Int, maxLevel: Int): MutableList<Feature>
 
     @Query("SELECT * FROM BackgroundChoiceEntity WHERE characterId IS :charId")
-    abstract fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
+    abstract fun getBackgroundChoiceDataTable(charId: Int): BackgroundChoiceEntityTable
+    actual fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity {
+        return getBackgroundChoiceDataTable(charId)
+    }
 
     @Query("SELECT * FROM characters")
-    protected abstract fun getAllCharactersWithoutClasses(): LiveData<List<Character>>
+    protected abstract fun getAllCharactersWithoutClasses(): Flow<List<Character>>
 
     @Query(
         """SELECT * FROM races 
@@ -137,21 +155,17 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
     )
     protected abstract fun getCharacterBackground(id: Int): Background?
 
-    fun getAllCharacters(): LiveData<List<Character>> {
-        val result = MediatorLiveData<List<Character>>()
-        result.addSource(getAllCharactersWithoutClasses()) { characterList ->
+    actual fun getAllCharacters(): Flow<List<Character>> {
+        return getAllCharactersWithoutClasses().transform { characterList ->
             if (characterList != null) {
-                GlobalScope.launch {
-                    characterList.forEach {
-                        it.classes = getCharactersClasses(it.id)
-                        it.race = getCharacterRace(it.id)
-                        it.background = getCharacterBackground(it.id)
-                    }
-                    result.postValue(characterList)
+                characterList.forEach {
+                    it.classes = getCharactersClasses(it.id)
+                    it.race = getCharacterRace(it.id)
+                    it.background = getCharacterBackground(it.id)
                 }
+                emit(characterList)
             }
         }
-        return result
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -161,13 +175,13 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
     abstract fun removeCharacterRaceCrossRef(ref: CharacterRaceCrossRef)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertRaceChoice(choice: RaceChoiceEntity)
+    abstract fun insertRaceChoice(choice: RaceChoiceEntityTable)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterClassSpellCrossRef(ref: CharacterClassSpellCrossRef)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity)
+    abstract fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntityTable)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterClassCrossRef(ref: CharacterClassCrossRef)
@@ -176,7 +190,10 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
     abstract fun removeCharacterClassCrossRef(ref: CharacterClassCrossRef)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertClassChoiceEntity(entity: ClassChoiceEntity)
+    abstract fun insertClassChoiceEntity(entity: ClassChoiceEntityTable)
+    actual fun insertClassChoiceEntity(classChoiceEntity: ClassChoiceEntity) {
+        insertClassChoiceEntity(classChoiceEntity.asTable())
+    }
 
     @Query("DELETE FROM ClassChoiceEntity WHERE classId IS :classId AND characterId IS :characterId")
     abstract fun removeClassChoiceEntity(classId: Int, characterId: Int)
@@ -191,7 +208,7 @@ LEFT JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subCl
 WHERE CharacterClassCrossRef.characterId IS :characterId
     """
     )
-    abstract fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
+    actual abstract fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterSubclassCrossRef(ref: CharacterSubclassCrossRef)
@@ -202,13 +219,13 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
 JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId
 WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId"""
     )
-    abstract fun getFeatureChoiceChosen(characterId: Int, choiceId: Int): List<Feature>
+    actual abstract fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature>
 
     @Query("SELECT backpack FROM characters WHERE id IS :id")
-    abstract fun getCharacterBackPack(id: Int): Backpack
+    actual abstract fun getCharacterBackPack(id: Int): Backpack
 
     @Query("UPDATE characters SET backpack = :backpack WHERE id IS :id")
-    abstract fun insertCharacterBackPack(backpack: Backpack, id: Int)
+    actual abstract fun insertCharacterBackPack(backpack: Backpack, id: Int)
 
 
     @Insert
@@ -218,11 +235,70 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterSubRaceCrossRef(characterSubraceCrossRef: CharacterSubraceCrossRef)
 
+    actual fun insertCharacterSubRaceCrossRef(characterId: Int, subraceId: Int) {
+        insertCharacterSubRaceCrossRef(
+            CharacterSubraceCrossRef(
+                characterId,
+                subraceId
+            )
+        )
+    }
+
+    actual fun insertCharacterSubclassCrossRef(
+        subClassId: Int,
+        characterId: Int,
+        classId: Int,
+    ) {
+        insertCharacterSubclassCrossRef(
+            CharacterSubclassCrossRef(
+                subClassId, characterId, classId
+            )
+        )
+    }
+
+    actual fun insertCharacterClassSpellCrossRef(classId: Int, spellId: Int, characterId: Int, isPrepared: Boolean?) {
+        insertCharacterClassSpellCrossRef(
+            CharacterClassSpellCrossRef(
+                characterId = characterId,
+                classId = classId,
+                spellId = spellId,
+                isPrepared = isPrepared
+            )
+        )
+    }
+
+    actual fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int) {
+        insertFeatureChoiceEntity(
+            FeatureChoiceChoiceEntityTable(
+                featureId, characterId, choiceId
+            )
+        )
+    }
+
     @Insert
-    abstract fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity)
+    abstract fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntityTable)
+    actual fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
+        insertSubraceChoiceEntity(subraceChoiceEntity as SubraceChoiceEntityTable)
+    }
+
+    actual fun insertSubClassSpellCastingCrossRef(
+        subclassId: Int,
+        spellId: Int,
+        characterId: Int,
+        isPrepared: Boolean?
+    ) {
+        insertSubClassSpellCastingCrossRef(
+            SubclassSpellCastingSpellCrossRef(
+                subclassId = subclassId,
+                spellId = spellId,
+                characterId = characterId,
+                isPrepared = isPrepared
+            )
+        )
+    }
 
     @Delete
-    abstract fun removeSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity)
+    abstract fun removeSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntityTable)
 
     @Insert
     abstract fun insertSubClassSpellCastingCrossRef(subclassSpellCastingSpellCrossRef: SubclassSpellCastingSpellCrossRef)
@@ -231,77 +307,153 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     abstract fun insertCharacterBackgroundCrossRef(ref: CharacterBackgroundCrossRef)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFeatureChoiceEntity(choice: FeatureChoiceChoiceEntity): Long
+    abstract fun insertFeatureChoiceEntity(choice: FeatureChoiceChoiceEntityTable): Long
 
     @Query("UPDATE characters SET tempHp = :temp WHERE id IS :id")
-    abstract fun setTemp(id: Int, temp: Int)
+    actual abstract fun setTemp(id: Int, temp: Int)
 
     @Query("UPDATE characters SET currentHp =MIN(currentHp + :hp, :maxHp) WHERE id = :id")
-    abstract fun heal(id: Int, hp: Int, maxHp: Int)
+    actual abstract fun heal(id: Int, hp: Int, maxHp: Int)
 
     @Query("UPDATE characters SET currentHp =:hp WHERE id = :id")
-    abstract fun setHp(id: Int, hp: Int)
+    actual abstract fun setHp(id: Int, hp: Int)
 
     @Query("UPDATE characters SET currentHp = MAX(currentHp - :damage, 0) WHERE id = :id")
-    abstract fun damage(id: Int, damage: Int)
+    actual abstract fun damage(id: Int, damage: Int)
 
     @Query("UPDATE characters SET positiveDeathSaves = positiveDeathSaves + :it WHERE id = :id")
-    abstract fun updateDeathSaveSuccesses(id: Int, it: Int)
+    actual abstract fun updateDeathSaveSuccesses(id: Int, it: Int)
 
     @Query("UPDATE characters SET negativeDeathSaves = negativeDeathSaves + :it WHERE id = :id")
-    abstract fun updateDeathSaveFailures(id: Int, it: Int)
+    actual abstract fun updateDeathSaveFailures(id: Int, it: Int)
 
     @MapInfo(valueColumn = "isPrepared")
     @Query(
         """
         SELECT * FROM spells
-        JOIN ClassSpellCrossRef ON  INSTR(:list, ClassSpellCrossRef.classId) > 0 AND ClassSpellCrossRef.spellId IS spells.id
+        JOIN ClassSpellCrossRef ON  INSTR(:classIdsByName, ClassSpellCrossRef.classId) > 0 AND ClassSpellCrossRef.spellId IS spells.id
         LEFT JOIN CharacterClassSpellCrossRef ON CharacterClassSpellCrossRef.characterId = :id AND CharacterClassSpellCrossRef.spellId = spells.id
     """
     )
-    abstract fun getAllSpellsByList(id: Int, list: List<Int>): Map<Spell, Boolean?>
+    actual abstract fun getAllSpellsByList(id: Int, classIdsByName: List<Int>): Map<Spell, Boolean?>
 
     @Query("UPDATE characters SET spellSlots = :spellSlots WHERE id = :id")
-    abstract fun insertSpellSlots(spellSlots: List<Resource>, id: Int)
+    actual abstract fun insertSpellSlots(spellSlots: List<Resource>, id: Int)
 
     @Query("DELETE FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND characterId IS :characterId")
-    abstract fun removeCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
+    actual abstract fun removeCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
 
     @Query("SELECT COUNT(*) FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND characterId IS :characterId AND isPrepared IS '1'")
-    abstract fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int
+    actual abstract fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int
 
     @Query("UPDATE characters SET name = :it WHERE id IS :id")
-    abstract fun changeName(it: String, id: Int)
+    actual abstract fun changeName(it: String, id: Int)
 
     @Query("UPDATE characters SET personalityTraits = :it WHERE id IS :id")
-    abstract fun setPersonalityTraits(it: String, id: Int)
+    actual abstract fun setPersonalityTraits(it: String, id: Int)
 
     @Query("UPDATE characters SET ideals = :it WHERE id IS :id")
-    abstract fun setIdeals(it: String, id: Int)
+    actual abstract fun setIdeals(it: String, id: Int)
 
     @Query("UPDATE characters SET bonds = :it WHERE id IS :id")
-    abstract fun setBonds(it: String, id: Int)
+    actual abstract fun setBonds(it: String, id: Int)
 
     @Query("UPDATE characters SET flaws = :it WHERE id IS :id")
-    abstract fun setFlaws(it: String, id: Int)
+    actual abstract fun setFlaws(it: String, id: Int)
 
     @Query("UPDATE characters SET notes = :it WHERE id IS :id")
-    abstract fun setNotes(it: String, id: Int)
+    actual abstract fun setNotes(it: String, id: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterFeatureState(characterFeatureState: CharacterFeatureState)
+    actual fun insertCharacterFeatureState(
+        featureId: Int,
+        characterId: Int,
+        isActive: Boolean
+    ) {
+        insertCharacterFeatureState(
+            CharacterFeatureState(
+                characterId = characterId,
+                featureId = featureId,
+                isActive = isActive
+            )
+        )
+    }
 
     @Query("SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId")
-    abstract fun isFeatureActive(featureId: Int, characterId: Int): Boolean
+    actual abstract fun isFeatureActive(featureId: Int, characterId: Int): Boolean
 
     @Query("SELECT slotsCurrentAmount FROM PactMagicStateEntity WHERE classId = :classId AND characterId = :characterId")
-    abstract fun getCharacterPactSlots(classId: Int, characterId : Int) : Int
+    actual abstract fun getCharacterPactSlots(classId: Int, characterId: Int): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertPactMagicStateEntity(entity: PactMagicStateEntity)
 
-    @Query("""SELECT * FROM spells
+    actual fun insertPactMagicStateEntity(
+        characterId: Int,
+        classId: Int,
+        slotsCurrentAmount: Int
+    ) {
+        insertPactMagicStateEntity(
+            PactMagicStateEntity(
+                characterId = characterId,
+                classId = classId,
+                slotsCurrentAmount = slotsCurrentAmount
+            )
+        )
+    }
+
+    @Query(
+        """SELECT * FROM spells
 JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spellId
-WHERE characterId IS :characterId AND classId IS :classId    """)
-    abstract fun getPactMagicSpells(characterId: Int, classId: Int): MutableList<Spell>
+WHERE characterId IS :characterId AND classId IS :classId    """
+    )
+    actual abstract fun getPactMagicSpells(characterId: Int, classId: Int): MutableList<Spell>
+
+    actual fun removeCharacterClassCrossRef(characterId: Int, classId: Int) {
+        removeCharacterClassCrossRef(
+            CharacterClassCrossRef(
+                characterId = characterId,
+                classId = classId
+            )
+        )
+    }
+
+    actual fun insertCharacterClassCrossRef(characterId: Int, classId: Int) {
+        insertCharacterClassCrossRef(
+            CharacterClassCrossRef(
+                characterId, classId
+            )
+        )
+    }
+
+    actual fun insertCharacterClassFeatCrossRef(characterId: Int, featId: Int, classId: Int) {
+        insertCharacterClassFeatCrossRef(
+            ClassFeatCrossRef(
+                characterId = characterId,
+                classId = classId,
+                featId = featId
+            )
+        )
+    }
+
+    actual fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity) {
+        insertBackgroundChoiceEntity(backgroundChoiceEntity.asTable())
+    }
+
+    actual fun insertRaceChoice(raceChoiceEntity: RaceChoiceEntity) {
+        insertRaceChoice(raceChoiceEntity.asTable())
+    }
+
+    @Query("INSERT INTO CharacterRaceCrossRef (id, raceId) VALUES (:id, :raceId)")
+    actual abstract fun insertCharacterRaceCrossRef(id: Int, raceId: Int)
+
+    actual fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int) {
+        insertCharacterBackgroundCrossRef(
+            CharacterBackgroundCrossRef(
+                characterId = characterId,
+                backgroundId = backgroundId
+            )
+        )
+    }
 }

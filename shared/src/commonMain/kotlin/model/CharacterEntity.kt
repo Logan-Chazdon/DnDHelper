@@ -1,13 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import model.converters.Converters
-
-@Entity(tableName="characters")
-@TypeConverters(Converters::class)
+@Serializable
 open class CharacterEntity (
     open var name: String = "",
     open var personalityTraits: String = "",
@@ -19,7 +14,6 @@ open class CharacterEntity (
     open var tempHp: Int = 0,
     open var conditions: MutableList<String> = mutableListOf<String>(),
     open var resistances: MutableList<String> = mutableListOf<String>(),
-    @PrimaryKey(autoGenerate = true)
     open var id: Int = 0,
     open var statGenerationMethodIndex: Int = 0,
     open var baseStats: MutableMap<String, Int> = mutableMapOf<String, Int>(),

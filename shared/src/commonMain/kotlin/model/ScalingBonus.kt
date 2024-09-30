@@ -1,6 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 class ScalingBonus(
     //Maps the num required to the output
     private val bonuses : Map<Int, Int>

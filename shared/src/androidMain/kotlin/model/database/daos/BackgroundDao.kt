@@ -1,52 +1,53 @@
 package model.database.daos
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import model.Background
-import model.BackgroundEntity
-import model.Feature
-import model.Spell
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
+import model.*
 import model.choiceEntities.BackgroundChoiceEntity
-import model.junctionEntities.BackgroundFeatureCrossRef
-import model.junctionEntities.BackgroundSpellCrossRef
 
 
 @Dao
-abstract class BackgroundDao {
+actual abstract class BackgroundDao {
     @Query(
         """SELECT * FROM spells 
 JOIN BackgroundSpellCrossRef ON BackgroundSpellCrossRef.spellId IS spells.id
 WHERE backgroundId IS :backgroundId
-    """)
-    abstract fun getBackgroundSpells(backgroundId: Int): List<Spell>?
+    """
+    )
+    actual abstract fun getBackgroundSpells(backgroundId: Int): List<Spell>?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    protected abstract fun insertBackgroundOrIgnore(backgroundEntity: BackgroundEntity): Long
+    protected abstract fun insertBackgroundOrIgnore(backgroundEntity: BackgroundEntityTable): Long
 
     @Update
-    protected abstract fun updateBackground(backgroundEntity: BackgroundEntity)
+    protected abstract fun updateBackground(backgroundEntity: BackgroundEntityTable)
 
-    fun insertBackground(backgroundEntity: BackgroundEntity): Int {
-        val id = insertBackgroundOrIgnore(backgroundEntity).toInt()
+    actual fun insertBackground(backgroundEntity: BackgroundEntity): Int {
+        val id = insertBackgroundOrIgnore(backgroundEntity.asTable()).toInt()
         if (id == -1) {
-            updateBackground(backgroundEntity)
+            updateBackground(backgroundEntity.asTable())
             return backgroundEntity.id
         }
         return id
     }
 
     @Query("DELETE FROM backgrounds WHERE id = :id")
-    abstract fun removeBackgroundById(id: Int)
+    actual abstract fun removeBackgroundById(id: Int)
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBackgroundFeatureCrossRef(ref: BackgroundFeatureCrossRef)
 
+    actual fun insertBackgroundFeatureCrossRef(
+        backgroundId: Int,
+        featureId: Int
+    ) {
+        insertBackgroundFeatureCrossRef(BackgroundFeatureCrossRef(backgroundId, featureId))
+    }
+
     @Query("SELECT * FROM BackgroundChoiceEntity WHERE characterId IS :charId")
-    abstract fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
+    actual abstract fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
 
     @Query(
         """SELECT * FROM features 
@@ -54,7 +55,7 @@ JOIN BackgroundFeatureCrossRef ON features.featureId IS BackgroundFeatureCrossRe
 WHERE backgroundId IS :id
     """
     )
-    abstract fun getBackgroundFeatures(id: Int): List<Feature>
+    actual abstract fun getBackgroundFeatures(id: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBackgroundSpellCrossRef(ref: BackgroundSpellCrossRef)
@@ -62,31 +63,36 @@ WHERE backgroundId IS :id
     @Delete
     abstract fun removeBackgroundSpellCrossRef(ref: BackgroundSpellCrossRef)
 
+    actual fun insertBackgroundSpellCrossRef(backgroundId: Int, spellId: Int) {
+        insertBackgroundSpellCrossRef(
+            BackgroundSpellCrossRef(
+                backgroundId = backgroundId,
+                spellId = spellId
+            )
+        )
+    }
+
 
     @Query("SELECT * FROM backgrounds")
-    protected abstract fun getUnfilledBackgrounds(): LiveData<List<BackgroundEntity>>
+    protected abstract fun getUnfilledBackgrounds(): Flow<List<BackgroundEntity>>
 
-    fun getAllBackgrounds(): LiveData<List<Background>> {
-        val result = MediatorLiveData<List<Background>>()
-        result.addSource(getUnfilledBackgrounds()) { backgroundEntities ->
-            GlobalScope.launch {
-                val backgrounds = mutableListOf<Background>()
-                backgroundEntities.forEach {
-                    backgrounds.add(
-                        Background(
-                            it,
-                            getBackgroundFeatures(it.id)
-                        )
+    actual fun getAllBackgrounds(): Flow<List<Background>> {
+        return getUnfilledBackgrounds().transform { backgroundEntities ->
+            val backgrounds = mutableListOf<Background>()
+            backgroundEntities.forEach {
+                backgrounds.add(
+                    Background(
+                        it,
+                        getBackgroundFeatures(it.id)
                     )
-                }
-                result.postValue(backgrounds)
+                )
             }
+            emit(backgrounds)
         }
-        return result
     }
 
     @Query("SELECT * FROM backgrounds WHERE id IS :id")
-    abstract fun getUnfilledBackground(id: Int): LiveData<BackgroundEntity>
+    actual abstract fun getUnfilledBackground(id: Int): Flow<BackgroundEntity>
 
 
     @Query(
@@ -94,11 +100,11 @@ WHERE backgroundId IS :id
 JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.featureId IS features.featureId 
 WHERE backgroundId IS :id"""
     )
-    abstract fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
+    actual abstract fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
 
     @Query("SELECT * FROM backgrounds WHERE isHomebrew = 1")
-    abstract fun getHomebrewBackgrounds(): LiveData<List<BackgroundEntity>>
+    actual abstract fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>>
 
     @Query("DELETE FROM backgrounds WHERE id = :id")
-    abstract fun deleteBackground(id: Int)
+    actual abstract fun deleteBackground(id: Int)
 }

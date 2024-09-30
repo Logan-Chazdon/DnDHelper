@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application' version '8.5.2'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.20"
     //id("org.jetbrains.kotlin.multiplatform") version '2.0.20'
     //alias "libs.plugins.jetbrainsCompose"
     //alias "libs.plugins.compose.compiler"
@@ -16,7 +16,7 @@ composeCompiler {
 
 
 android {
-    compileSdk 34
+    compileSdk 35
     sourceSets {
         // Adds exported schema location as test app assets.
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
@@ -25,7 +25,7 @@ android {
     defaultConfig {
         applicationId "gmail.loganchazdon.dndhelper"
         minSdk 24
-        targetSdk 34
+        targetSdk 35
         versionCode 16
         versionName "2.0.8"
 
@@ -85,8 +85,10 @@ dependencies {
     implementation project(':shared')
 
     //Room
-    implementation "androidx.room:room-runtime:2.4.3"
-    //kapt "androidx.room:room-compiler:2.6.1"
+    def room_version = "2.6.1"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }
 
 repositories {

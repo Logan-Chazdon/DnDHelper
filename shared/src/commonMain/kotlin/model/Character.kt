@@ -1,15 +1,12 @@
 package model
 
 
-import androidx.room.Embedded
-import androidx.room.Ignore
 import model.repositories.ClassRepository
 import model.repositories.SpellRepository
-import model.repositories.SpellRepository.Companion.allSpellLevels
+import kotlin.jvm.Transient
 import kotlin.math.floor
 
-
-class Character (
+open class Character (
     name: String = "",
     personalityTraits: String = "",
     ideals: String = "",
@@ -52,14 +49,10 @@ class Character (
     addedLanguages,
     addedProficiencies
 ){
-    @Embedded(prefix = "background")
-    var background: Background? = null
-
-    @Embedded
-    var race: Race? = null
-
-    @Ignore
-    var classes: MutableMap<String, Class> = mutableMapOf()
+    open var background: Background? = null
+    open var race: Race? = null
+    @Transient
+    open var classes: MutableMap<String, Class> = mutableMapOf()
 
     val hasSpells: Boolean
     get() {
@@ -712,7 +705,7 @@ class Character (
         slots.addAll(spellSlots)
         classes.forEach { (_, clazz) ->
             clazz.pactMagic?.pactSlots?.let {
-                val level = allSpellLevels.first { pair -> pair.second == it[clazz.level - 1].name }.first
+                val level = SpellRepository.Companion.allSpellLevels.first { pair -> pair.second == it[clazz.level - 1].name }.first
                 val maxAmount = it[clazz.level - 1].maxAmountType.toInt()
                 val amount = it[clazz.level - 1].currentAmount
                 if(slots.size  >= level) {
@@ -723,7 +716,7 @@ class Character (
                 } else {
                     slots.add(
                         Resource(
-                            name = SpellRepository.allSpellLevels[level - 1].second,
+                            name = SpellRepository.Companion.allSpellLevels[level - 1].second,
                             currentAmount = amount,
                             maxAmountType = maxAmount.toString(),
                             rechargeAmountType = maxAmount.toString()
@@ -748,8 +741,8 @@ class Character (
     val maxHitDice: String
     get() {
         var result = ""
-        classes.forEach { _, clazz ->
-            result += "${clazz.level}d${clazz.hitDie}"
+        classes.forEach { entry: Map.Entry<String, Class> ->
+            result += "${entry.value.level}d${entry.value.hitDie}"
         }
         return result
     }

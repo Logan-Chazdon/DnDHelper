@@ -1,22 +1,74 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
+    id "app.cash.sqldelight" version "2.0.2"
+    id 'io.ktor.plugin' version '3.0.0-rc-2'
 }
+
 
 group = 'gmail.loganchazdon.dndhelper'
 version = '1.0.0'
+mainClassName = "io.ktor.server.netty.EngineMain"
+def isDevelopment = project.ext.has("development")
+applicationDefaultJvmArgs = ["-Dio.ktor.development=$isDevelopment"]
+
 
 repositories {
+    google()
     mavenCentral()
+    jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://maven.pkg.jetbrains.space/public/p/compose/dev"}
+    maven { url "https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental" }
+    maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev" }
+    gradlePluginPortal()
+    //maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
+
 dependencies {
-    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    //implementation project(":shared")
+    //Gson
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+
+    implementation "io.ktor:ktor-server-core-jvm"
+    implementation "io.ktor:ktor-serialization-kotlinx-json-jvm"
+    implementation "io.ktor:ktor-server-websockets-jvm"
+    //implementation "io.ktor:ktor-server-content-negotiation-jvm"
+    //implementation "org.jetbrains.exposed:exposed-core:$exposed_version"
+    //implementation "org.jetbrains.exposed:exposed-jdbc:$exposed_version"
+    //implementation "com.h2database:h2:$h2_version"
+    implementation "io.ktor:ktor-server-netty-jvm"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "io.ktor:ktor-server-config-yaml"
+    testImplementation "io.ktor:ktor-server-test-host-jvm"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+    implementation "app.cash.sqldelight:sqlite-driver:2.0.2"
+    implementation("app.cash.sqldelight:coroutines-extensions:2.0.2")
+    implementation 'app.cash.sqldelight:primitive-adapters:2.0.2'
+}
+
+
+sqldelight {
+    databases.create("Database") {
+        packageName = "gmail.loganchazdon.database"
+    }
 }
 
 test {
     useJUnitPlatform()
 }
 kotlin {
-    //jvmToolchain(17)
+    jvmToolchain(17)
 }
+
+tasks.register("prepareKotlinIdeaImport") {
+    def thisTask = this
+    gradle.includedBuilds.forEach { build ->
+        thisTask.dependsOn(build.task(":producerA:prepareKotlinIdeaImport"))
+        thisTask.dependsOn(build.task(":producerB:prepareKotlinIdeaImport"))
+        thisTask.dependsOn(build.task(":producerC:prepareKotlinIdeaImport"))
+    }
+}
+tasks.register("prepareKotlinBuildScriptModel")

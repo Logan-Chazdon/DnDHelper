@@ -1,9 +1,6 @@
 package model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "backgrounds")
 open class BackgroundEntity(
     val name: String,
     val desc: String,
@@ -16,6 +13,5 @@ open class BackgroundEntity(
     val equipmentChoices: List<ItemChoice>,
     var isHomebrew : Boolean = false
 ) {
-    @PrimaryKey(autoGenerate = true)
-    var id : Int = 0
+    open var id : Int = 0
 }

@@ -1,30 +1,25 @@
 package model.database.daos
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import model.*
-import model.junctionEntities.RaceSubraceCrossRef
-import model.junctionEntities.SubraceFeatChoiceCrossRef
-import model.junctionEntities.SubraceFeatureCrossRef
 
 @Dao
-abstract class SubraceDao {
+actual abstract class SubraceDao {
     @Query("SELECT * FROM subraces WHERE id = :id")
-    protected abstract fun getUnfilledSubrace(id: Int): LiveData<SubraceEntity>
+    protected abstract fun getUnfilledSubrace(id: Int): Flow<SubraceEntity>
 
-    fun getSubrace(id: Int): LiveData<Subrace> {
-        val result = MediatorLiveData<Subrace>()
-        result.addSource(getUnfilledSubrace(id)) { entity ->
+    actual fun getSubrace(id: Int): Flow<Subrace> {
+        return getUnfilledSubrace(id).transform { entity ->
             if (entity != null) {
                 GlobalScope.launch {
-                    result.postValue(Subrace(entity, getSubraceTraits(id), null))
+                    emit(Subrace(entity, getSubraceTraits(id), null))
                 }
             }
         }
-        return result
     }
 
 
@@ -38,7 +33,7 @@ WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun insertSubclassOrIgnore(subClass: SubclassEntity): Long
+    abstract fun insertSubclassOrIgnore(subClass: SubclassEntityTable): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubraceFeatChoiceCrossRef(subraceFeatChoiceCrossRef: SubraceFeatChoiceCrossRef)
@@ -54,19 +49,19 @@ WHERE subraceId IS :subraceId"""
     protected abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    protected abstract fun insertSubraceOrIgnore(subrace: SubraceEntity): Long
+    protected abstract fun insertSubraceOrIgnore(subrace: SubraceEntityTable): Long
 
-    fun insertSubrace(subrace: SubraceEntity): Int {
-        val id = insertSubraceOrIgnore(subrace).toInt()
+    actual fun insertSubrace(subrace: SubraceEntity): Int {
+        val id = insertSubraceOrIgnore(subrace.asTable()).toInt()
         if(id == -1) {
-            updateSubrace(subrace)
+            updateSubrace(subrace.asTable())
             return subrace.id
         }
         return id
     }
 
     @Update
-    abstract fun updateSubrace(subrace: SubraceEntity)
+    abstract fun updateSubrace(subrace: SubraceEntityTable)
 
     @Query(
         """SELECT * FROM subraces
@@ -75,7 +70,7 @@ WHERE raceId IS :raceId
     """
     )
     @Transaction
-    protected abstract fun getSubraceOptionsWithoutFeatures(raceId: Int): LiveData<List<SubraceEntity>>
+    protected abstract fun getSubraceOptionsWithoutFeatures(raceId: Int): Flow<List<SubraceEntity>>
 
     @Query(
         """SELECT * FROM features
@@ -85,8 +80,8 @@ WHERE subraceId IS :subraceId
     )
     protected abstract fun getSubraceTraits(subraceId: Int): List<Feature>
 
-    fun bindSubraceOptions(raceId: Int, subraces: MediatorLiveData<List<Subrace>>) {
-        subraces.addSource(getSubraceOptionsWithoutFeatures(raceId)) { entityList ->
+    actual fun bindSubraceOptions(raceId: Int): Flow<MutableList<Subrace>> {
+        return getSubraceOptionsWithoutFeatures(raceId).transform { entityList ->
             if (entityList != null) {
                 GlobalScope.launch {
                     val temp: MutableList<Subrace> = mutableListOf()
@@ -103,7 +98,7 @@ WHERE subraceId IS :subraceId
                             )
                         )
                     }
-                    subraces.postValue(temp)
+                    emit(temp)
                 }
             }
         }
@@ -123,6 +118,18 @@ WHERE featChoiceId IS :id OR featIds.amt IS 0""")
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef)
+    actual fun insertSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
+        insertSubraceFeatureCrossRef(
+            SubraceFeatureCrossRef(subraceId, featureId)
+        )
+    }
+
+    @Query(
+        """SELECT * FROM features 
+JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId 
+WHERE subraceId IS :id"""
+    )
+    actual abstract fun getSubraceLiveFeaturesById(id: Int): Flow<List<Feature>>
 
     @Delete
     abstract fun removeSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef)
@@ -130,17 +137,24 @@ WHERE featChoiceId IS :id OR featIds.amt IS 0""")
     @Delete
     abstract fun removeRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
 
-    @Query("SELECT * FROM subraces WHERE isHomebrew IS 1")
-    abstract fun getHomebrewSubraces(): LiveData<List<SubraceEntity>>
-
-
-    @Query(
-        """SELECT * FROM features 
-JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId 
-WHERE subraceId IS :id"""
-    )
-    abstract fun getSubraceLiveFeaturesById(id: Int): LiveData<List<Feature>>
 
     @Query("DELETE FROM subraces WHERE id = :id")
-    abstract fun deleteSubrace(id: Int)
+    actual abstract fun deleteSubrace(id: Int)
+    actual fun removeSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
+        removeSubraceFeatureCrossRef(
+            SubraceFeatureCrossRef(subraceId, featureId)
+        )
+    }
+
+    actual fun removeRaceSubraceCrossRef(raceId: Int, subraceId: Int) {
+        removeRaceSubraceCrossRef(
+            RaceSubraceCrossRef(
+                subraceId = subraceId,
+                raceId = raceId
+            )
+        )
+    }
+
+    @Query("SELECT * FROM subraces WHERE isHomebrew IS 1")
+    actual abstract fun getHomebrewSubraces(): Flow<List<SubraceEntity>>
 }

@@ -44,5 +44,6 @@ include('plugin')
 rootProject.name = "DnDHelper"
 include (':app')
 include(':shared')
-//include 'server'
+include(':server')
+
 

@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Resource(
     val name: String,
     var currentAmount: Int = 0,

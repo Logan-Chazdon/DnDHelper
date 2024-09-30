@@ -1,9 +1,6 @@
 package model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "subraces")
 open class SubraceEntity(
     var name : String,
     var abilityBonuses: List<AbilityBonus>? = null,
@@ -15,6 +12,5 @@ open class SubraceEntity(
     var groundSpeed: Int? = null,
     var isHomebrew : Boolean = false,
 )  {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
+    open var id: Int = 0
 }

@@ -2,43 +2,39 @@ package model.database.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import model.FeatChoiceEntity
-import model.Feature
-import model.Race
-import model.RaceEntity
-import model.junctionEntities.RaceFeatureCrossRef
-import model.junctionEntities.RaceSubraceCrossRef
+import kotlinx.coroutines.flow.Flow
+import model.*
 import model.pojos.NameAndIdPojo
 
 @Dao
-abstract class RaceDao {
+actual abstract class RaceDao {
     @Query("SELECT * FROM races")
-    abstract fun getAllRaces(): LiveData<List<Race>>
+    actual abstract fun getAllRaces(): Flow<List<Race>>
 
     @Query("SELECT * FROM races WHERE isHomebrew IS 1")
-    abstract fun getHomebrewRaces(): LiveData<List<Race>>
+    actual abstract fun getHomebrewRaces(): Flow<List<Race>>
 
 
-    fun insertRace(newRace: RaceEntity): Int {
-        val id = insertRaceOrIgnore(newRace).toInt()
-        if(id == -1) {
-            updateRace(newRace)
+    actual fun insertRace(newRace: RaceEntity): Int {
+        val id = insertRaceOrIgnore(newRace.asTable()).toInt()
+        if (id == -1) {
+            updateRace(newRace.asTable())
             return newRace.raceId
         }
         return id
     }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    protected abstract fun insertRaceOrIgnore(newRace: RaceEntity): Long
+    protected abstract fun insertRaceOrIgnore(newRace: RaceEntityTable): Long
 
     @Update
-    protected abstract fun updateRace(newRace: RaceEntity)
+    protected abstract fun updateRace(newRace: RaceEntityTable)
 
     @Query("DELETE FROM races WHERE raceId = :id")
-    abstract fun deleteRace(id: Int)
+    actual abstract fun deleteRace(id: Int)
 
     @Query("SELECT * FROM races WHERE raceId = :id")
-    abstract fun findUnfilledLiveRaceById(id: Int): LiveData<Race>
+    actual abstract fun findUnfilledLiveRaceById(id: Int): Flow<Race>
 
 
     @Query(
@@ -47,7 +43,7 @@ JOIN SubraceFeatChoiceCrossRef ON SubraceFeatChoiceCrossRef.featChoiceId IS feat
 WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
     """
     )
-    abstract fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
+    actual abstract fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
 
     @Transaction
     @RewriteQueriesToDropUnusedColumns
@@ -56,16 +52,31 @@ WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
 JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId 
 WHERE subraceId IS :subraceId"""
     )
-    abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
+    actual abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
 
     @Query("SELECT * FROM features JOIN RaceFeatureCrossRef ON RaceFeatureCrossRef.featureId IS features.featureId WHERE raceId IS :id")
-    abstract fun getRaceTraits(id: Int) : List<Feature>
+    actual abstract fun getRaceTraits(id: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
+    actual fun insertRaceFeatureCrossRef(featureId: Int, raceId: Int) {
+        insertRaceFeatureCrossRef(
+            RaceFeatureCrossRef(
+                featureId = featureId,
+                raceId = raceId
+            )
+        )
+    }
 
     @Delete
     abstract fun removeRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
+    actual fun removeRaceFeatureCrossRef(featureId: Int, raceId: Int) {
+        removeRaceFeatureCrossRef(
+            RaceFeatureCrossRef(
+                featureId, raceId
+            )
+        )
+    }
 
     @RewriteQueriesToDropUnusedColumns
     @Query(
@@ -73,14 +84,22 @@ WHERE subraceId IS :subraceId"""
 JOIN RaceFeatureCrossRef ON features.featureId IS RaceFeatureCrossRef.featureId 
 WHERE raceId is :raceId"""
     )
-    abstract fun getRaceFeatures(raceId: Int): List<Feature>
+    actual abstract fun getRaceFeatures(raceId: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
+    actual fun insertRaceSubraceCrossRef(subraceId: Int, raceId: Int) {
+        insertRaceSubraceCrossRef(
+            RaceSubraceCrossRef(
+                subraceId = subraceId,
+                raceId = raceId
+            )
+        )
+    }
 
     @Query("SELECT id, name FROM subraces JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.subraceId IS subraces.id WHERE raceId IS :id")
-    abstract fun getRaceSubraces(id: Int): LiveData<List<NameAndIdPojo>>
+    actual abstract fun getRaceSubraces(id: Int): Flow<List<NameAndIdPojo>>
 
     @Query("SELECT raceId AS id, raceName AS name FROM races")
-    abstract fun getAllRaceIdsAndNames(): LiveData<List<NameAndIdPojo>>
+    actual abstract fun getAllRaceIdsAndNames(): Flow<List<NameAndIdPojo>>
 }

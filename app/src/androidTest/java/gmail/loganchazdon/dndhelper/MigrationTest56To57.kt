@@ -3,8 +3,8 @@ package gmail.loganchazdon.dndhelper
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.platform.app.InstrumentationRegistry
-import model.converters.Converters
 import model.database.RoomDataBase
+import model.database.converters.Converters
 import model.database.migrations.MIGRATION_56_57
 import org.junit.Rule
 import org.junit.Test

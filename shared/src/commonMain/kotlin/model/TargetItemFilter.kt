@@ -1,8 +1,9 @@
 package model
 
+import kotlinx.serialization.Serializable
 import model.utils.getValueInCopper
 
-
+@Serializable
 data class TargetItemFilter(
     val itemTypes: List<String>?,
     val minimumCost: Map<String, Currency>?,

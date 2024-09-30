@@ -1,21 +1,15 @@
 package model.database.daos
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.room.*
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
-import model.Class
-import model.ClassEntity
-import model.Feature
-import model.Spell
-import model.junctionEntities.ClassFeatureCrossRef
-import model.junctionEntities.ClassSpellCrossRef
-import model.junctionEntities.ClassSubclassCrossRef
+import model.*
 import model.pojos.NameAndIdPojo
 
 @Dao
-abstract class ClassDao {
+actual abstract class ClassDao {
     @Query(
         """SELECT * FROM features
 JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
@@ -29,29 +23,45 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
 JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
 WHERE ClassFeatureCrossRef.id IS :id"""
     )
-    abstract fun getUnfilledLevelPath(id: Int): MutableList<Feature>
+    actual abstract fun getUnfilledLevelPath(id: Int): MutableList<Feature>
 
 
-    fun insertClass(classEntity: ClassEntity): Int {
-        val id = insertClassOrIgnore(classEntity).toInt()
+    actual fun insertClass(classEntity: ClassEntity): Int {
+        val id = insertClassOrIgnore(classEntity.asTable()).toInt()
         if(id == -1) {
-            updateClass(classEntity)
+            updateClass(classEntity.asTable())
             return classEntity.id
         }
         return id
     }
 
     @Update
-    protected abstract fun updateClass(classEntity: ClassEntity)
+    protected abstract fun updateClass(classEntity: ClassEntityTable)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    protected abstract fun insertClassOrIgnore(classEntity: ClassEntity) : Long
+    protected abstract fun insertClassOrIgnore(classEntity: ClassEntityTable) : Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassFeatureCrossRef(ref: ClassFeatureCrossRef)
+    actual fun insertClassFeatureCrossRef(featureId: Int, id: Int) {
+        insertClassFeatureCrossRef(
+            ClassFeatureCrossRef(
+                featureId = featureId,
+                id = id
+            )
+        )
+    }
 
     @Delete
     abstract fun removeClassFeatureCrossRef(ref: ClassFeatureCrossRef)
+    actual fun removeClassFeatureCrossRef(featureId: Int, id: Int) {
+        removeClassFeatureCrossRef(
+            ClassFeatureCrossRef(
+                featureId = featureId,
+                id = id
+            )
+        )
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassSpellCrossRef(ref: ClassSpellCrossRef)
@@ -59,9 +69,8 @@ WHERE ClassFeatureCrossRef.id IS :id"""
     @Delete
     abstract fun removeClassSpellCrossRef(ref: ClassSpellCrossRef)
 
-    fun getAllClasses(): LiveData<List<Class>> {
-        val classes = MediatorLiveData<List<Class>>()
-        classes.addSource(getAllClassEntities()) {
+    actual fun getAllClasses(): Flow<List<Class>> {
+        return getAllClassEntities().transform {
             GlobalScope.launch {
                 val temp = mutableListOf<Class>()
                 it.forEachIndexed { index, classEntity ->
@@ -69,45 +78,61 @@ WHERE ClassFeatureCrossRef.id IS :id"""
                         index, Class(classEntity, mutableListOf())
                     )
                 }
-                classes.postValue(temp)
+                emit(temp)
             }
         }
-        return classes
     }
 
     @Query("SELECT * FROM classes")
-    protected abstract fun getAllClassEntities(): LiveData<List<ClassEntity>>
+    protected abstract fun getAllClassEntities(): Flow<List<ClassEntity>>
 
     @Query("SELECT * FROM classes WHERE isHomebrew IS 1")
-    abstract fun getHomebrewClasses(): LiveData<List<ClassEntity>>
+    actual abstract fun getHomebrewClasses(): Flow<List<ClassEntity>>
 
     @Query("DELETE FROM classes WHERE id IS :id")
-    abstract fun deleteClass(id: Int)
+    actual abstract fun deleteClass(id: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassSubclassId(classSubclassCrossRef: ClassSubclassCrossRef)
 
     @Query("SELECT * FROM classes WHERE id IS :id")
-    abstract fun getUnfilledClass(id: Int): LiveData<ClassEntity>
+    actual abstract fun getUnfilledClass(id: Int): Flow<ClassEntity>
 
     @Query(
         """SELECT * FROM spells
 JOIN ClassSpellCrossRef ON spells.id IS ClassSpellCrossRef.spellId
 WHERE classId IS :classId"""
     )
-    abstract fun getSpellsByClassId(classId: Int): MutableList<Spell>
+    actual abstract fun getSpellsByClassId(classId: Int): MutableList<Spell>
 
     @Delete
     abstract fun removeClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef)
+    actual fun removeClassSubclassCrossRef(classId: Int, subclassId: Int) {
+        removeClassSubclassCrossRef(
+            ClassSubclassCrossRef(
+                classId = classId,
+                subclassId = subclassId
+            )
+        )
+    }
 
     //Note this function can return multiple classes by intention.
     //This is in case a user creates a new class with the same name as a different class.
     @Query("SELECT id FROM classes WHERE name IS :name")
-    abstract fun getClassIdsByName(name: String) : List<Int>
+    actual abstract fun getClassIdsByName(name: String) : List<Int>
 
     @Query("SELECT id, name FROM classes")
-    abstract fun allClassesNamesAndIds(): LiveData<List<NameAndIdPojo>>
+    actual abstract fun allClassesNamesAndIds(): Flow<List<NameAndIdPojo>>
 
     @Query("SELECT classes.name, classes.id FROM classes JOIN ClassSubclassCrossRef ON classId IS classes.id WHERE subclassId IS :id")
-    abstract fun getSubclassClasses(id: Int): LiveData<List<NameAndIdPojo>>
+    actual abstract fun getSubclassClasses(id: Int): Flow<List<NameAndIdPojo>>
+
+    actual fun insertClassSubclassId(classId: Int, subclassId: Int) {
+        insertClassSubclassId(
+            ClassSubclassCrossRef(
+                classId = classId,
+                subclassId = subclassId
+            )
+        )
+    }
 }

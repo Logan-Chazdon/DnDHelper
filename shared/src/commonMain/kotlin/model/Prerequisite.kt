@@ -70,7 +70,7 @@ data class Prerequisite(
             it.forEach { (statName, stat) ->
                 if(
                     (character?.getStat(statName) ?: 0) +
-                    (assumedStatBonuses?.getOrDefault(statName, 0) ?: 0)
+                    (assumedStatBonuses?.getOrElse(statName, {0}) ?: 0)
                     < stat
                 ) {
                     return false

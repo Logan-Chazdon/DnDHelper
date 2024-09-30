@@ -1,0 +1,244 @@
+{
+    "languages": [
+        {
+            "name": "Common",
+            "index": "common",
+            "id": 1986
+        },
+        {
+            "name": "Dwarvish",
+            "index": "Dwarvish",
+            "id": 1987
+        },
+        {
+            "name": "Elvish",
+            "index": "Elvish",
+            "id": 1988
+        },
+        {
+            "name": "Giant",
+            "index": "Giant",
+            "id": 1989
+        },
+        {
+            "name": "Gnomish",
+            "index": "Gnomish",
+            "id": 1990
+        },
+        {
+            "name": "Goblin",
+            "index": "Goblin",
+            "id": 1991
+        },
+        {
+            "name": "Halfling",
+            "index": "Halfling",
+            "id": 1992
+        },
+        {
+            "name": "Orc",
+            "index": "Orc",
+            "id": 1993
+        },
+        {
+            "name": "Abyssal",
+            "index": "Abyssal",
+            "id": 1994
+        },
+        {
+            "name": "Celestial",
+            "index": "Celestial",
+            "id": 1995
+        },
+        {
+            "name": "Deep Speech",
+            "index": "Deep Speech",
+            "id": 1996
+        },
+        {
+            "name": "Draconic",
+            "index": "Draconic",
+            "id": 1997
+        },
+        {
+            "name": "Infernal",
+            "index": "Infernal",
+            "id": 1998
+        },
+        {
+            "name": "Primordial",
+            "index": "Primordial",
+            "id": 1999
+        },
+        {
+            "name": "Sylvan",
+            "index": "Sylvan",
+            "id": 2000
+        },
+        {
+            "name": "Undercommon",
+            "index": "Undercommon",
+            "id": 2001
+        },
+        {
+            "name": "Ignan",
+            "index": "Ignan",
+            "id": 2002
+        },
+        {
+            "name": "Terran",
+            "index": "Terran",
+            "id": 2003
+        },
+        {
+            "name": "Aquan",
+            "index": "Aquan",
+            "id": 2004
+        },
+        {
+            "name": "Gnoll",
+            "index": "Gnoll",
+            "id": 2005
+        },
+        {
+            "name": "Grung",
+            "index": "Grung",
+            "id": 2006
+        },
+        {
+            "name": "riedran",
+            "index": "riedran",
+            "id": 2007
+        },
+        {
+            "name": "quori ",
+            "index": "quori",
+            "id": 2008
+        },
+        {
+            "name": "arakocra",
+            "index": "arakocra",
+            "id": 2009
+        },
+        {
+            "name": "gith",
+            "index": "gith",
+            "id": 2010
+        },
+        {
+            "name": "krual",
+            "index": "krual",
+            "id": 2011
+        },
+        {
+            "name": "minotaur",
+            "index": "minotaur",
+            "id": 2012
+        },
+        {
+            "name": "vedalken",
+            "index": "vedalken",
+            "id": 2013
+        },
+        {
+            "name": "Dambrathan",
+            "index": "Dambrathan",
+            "id": 2014
+        },
+        {
+            "name": "Bedine",
+            "index": "Bedine",
+            "id": 2015
+        },
+        {
+            "name": "Alzhedo",
+            "index": "Alzhedo",
+            "id": 2016
+        },
+        {
+            "name": "Chondathan",
+            "index": "Chondathan",
+            "id": 2017
+        },
+        {
+            "name": "Damaran",
+            "index": "Damaran",
+            "id": 2018
+        },
+        {
+            "name": "Waelan",
+            "index": "Waelan",
+            "id": 2019
+        },
+        {
+            "name": "Guran",
+            "index": "Guran",
+            "id": 2020
+        },
+        {
+            "name": "Halruaan",
+            "index": "Halruaan",
+            "id": 2021
+        },
+        {
+            "name": "Illuskan",
+            "index": "Illuskan",
+            "id": 2022
+        },
+        {
+            "name": "Roushoum",
+            "index": "Roushoum",
+            "id": 2023
+        },
+        {
+            "name": "Chessentan",
+            "index": "Chessentan",
+            "id": 2024
+        },
+        {
+            "name": "Mulhorandi",
+            "index": "Mulhorandi",
+            "id": 2025
+        },
+        {
+            "name": "Untheric",
+            "index": "Untheric",
+            "id": 2026
+        },
+        {
+            "name": "Thayan",
+            "index": "Thayan",
+            "id": 2027
+        },
+        {
+            "name": "Rashemi",
+            "index": "Rashemi",
+            "id": 2028
+        },
+        {
+            "name": "Shaaran",
+            "index": "Shaaran",
+            "id": 2029
+        },
+        {
+            "name": "Shou",
+            "index": "Shou",
+            "id": 2030
+        },
+        {
+            "name": "Tuigan",
+            "index": "Tuigan",
+            "id": 2031
+        },
+        {
+            "name": "Turmic",
+            "index": "Turmic",
+            "id": 2032
+        },
+        {
+            "name": "Uluik",
+            "index": "Uluik",
+            "id": 2033
+        }
+    ]
+}

@@ -1,14 +1,11 @@
 package model
 
-import androidx.room.Embedded
 
-
-class Class(
+open class Class(
     id: Int = 0,
     var isBaseClass: Boolean = false,
     var level: Int = 1,
-    @Embedded
-    var subclass: Subclass? = null,
+    open var subclass: Subclass? = null,
     var tookGold: Boolean? = null,
     var totalNumOnGoldDie: Int? = null,
     var featsGranted: MutableList<Feat>? = mutableListOf(),

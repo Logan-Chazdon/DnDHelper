@@ -1,12 +1,7 @@
 package model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import model.converters.Converters
 
-@Entity(tableName = "classes")
-@TypeConverters(Converters::class)
+
 open class ClassEntity(
     open var name: String,
     open var hitDie: Int = 8,
@@ -19,7 +14,6 @@ open class ClassEntity(
     open val pactMagic: PactMagic? = null,
     open val startingGoldD4s: Int,
     open val startingGoldMultiplier : Int = 10,
-    @PrimaryKey(autoGenerate = true)
     open var id: Int = 0,
     var isHomebrew : Boolean = false
 )

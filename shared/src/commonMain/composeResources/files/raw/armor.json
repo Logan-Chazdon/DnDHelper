@@ -1,0 +1,309 @@
+{
+  "armor" : [
+    {
+      "name" : "Breastplate",
+      "desc" : "This armor consists of a fitted metal chest piece worn with supple leather. Although it leaves the legs and arms relatively unprotected, this armor provides good protection for the wearer's vital organs while leaving the wearer relatively unencumbered.",
+      "cost": {
+        "pp": 0,
+        "gp": 400,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 20,
+      "item_rarity": "Standard",
+      "stealth" : "-",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 14,
+        "dex_cap" : 2
+      }
+
+    },
+    {
+      "name" : "Chain Mail",
+      "desc" : "Made of interlocking metal rings, chain mail includes a layer of quilted fabric worn underneath the mail to prevent chafing and to cushion the impact of blows. The suit includes gauntlets.",
+      "cost": {
+        "pp": 0,
+        "gp": 75,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 20,
+      "item_rarity": "Standard",
+      "stealth" : "Disadvantage",
+      "strength_prerequisite" : 13,
+
+      "ac" : {
+        "base" : 16	,
+        "dex_cap" : 0
+      }
+    },
+    {
+      "name" : "Chain Shirt",
+      "desc" : "Made of interlocking metal rings, a chain shirt is worn between layers of clothing or leather. This armor offers modest protection to the wearer's upper body and allows the sound of the rings rubbing against one another to be muffled by outer layers.",
+      "cost": {
+        "pp": 0,
+        "gp": 50 ,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 20,
+      "item_rarity": "Standard",
+      "stealth" : "-",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 13,
+        "dex_cap" : 2
+      }
+    },
+    {
+      "name" : "Half Plate",
+      "desc" : "Half plate consists of shaped metal plates that cover most of the wearer's body. It does not include leg protection beyond simple greaves that are attached with leather straps.",
+      "cost": {
+        "pp": 0,
+        "gp": 750,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 20,
+      "item_rarity": "Standard",
+      "stealth" : "Disadvantage",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 15,
+        "dex_cap" : 2
+      }
+    },
+    {
+      "name" : "Hide",
+      "desc" : "This crude armor consists of thick furs and pelts. It is commonly worn by barbarian tribes, evil humanoids, and other folk who lack access to the tools and materials needed to create better armor.",
+      "cost": {
+        "pp": 0,
+        "gp": 0,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 12,
+      "item_rarity": "Standard",
+      "stealth" : "-",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 12,
+        "dex_cap" : 2
+      }
+    },
+    {
+      "name" : "Leather",
+      "desc" : "The breastplate and shoulder protectors of this armor are made of leather that has been stiffened by being boiled in oil. The rest of the armor is made of softer and more flexible materials.",
+      "cost": {
+        "pp": 0,
+        "gp": 10,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 10,
+      "item_rarity": "Standard",
+      "stealth" : "-",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 11,
+        "dex_cap" : 5,
+        "Comment": "TODO, this armor has not cap on the dex mod."
+      }
+    },
+    {
+      "name" : "Padded",
+      "desc" : "Padded armor consists of quilted layers of cloth and batting.",
+      "cost": {
+        "pp": 0,
+        "gp": 5,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 20,
+      "item_rarity": "Standard",
+      "stealth" : "Disadvantage",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 11,
+        "dex_cap" : 5,
+        "Comment": "TODO, this armor has not cap on the dex mod."
+      }
+    },
+    {
+      "name" : "Plate",
+      "desc" : "Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the armor. Buckles and straps distribute the weight over the body.",
+      "cost": {
+        "pp": 0,
+        "gp": 1500,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 65,
+      "item_rarity": "Standard",
+      "stealth" : "Disadvantage",
+      "strength_prerequisite" : 15,
+
+      "ac" : {
+        "base" : 18,
+        "dex_cap" : 0
+      }
+    },
+    {
+      "name" : "Pride Silk Outfit",
+      "desc" : "An outfit made of pride silk weighs 4 pounds and costs 500 gp. If you aren’t wearing armor, your base Armor Class is 11 + your Dexterity modifier while wearing it.",
+      "cost": {
+        "pp": 0,
+        "gp": 500,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 4,
+      "item_rarity": "Standard",
+      "stealth" : "-",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 11,
+        "dex_cap" : 5,
+        "Comment": "TODO, this armor has not cap on the dex mod."
+      }
+    },
+    {
+      "name" : "Ring Mail",
+      "desc" : "This armor is leather armor with heavy rings sewn into it. The rings help reinforce the armor against blows from swords and axes. Ring mail is inferior to chain mail, and it's usually worn only by those who can't afford better armor.",
+      "cost": {
+        "pp": 0,
+        "gp": 30,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 40,
+      "item_rarity": "Standard",
+      "stealth" : "Disadvantage",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 14,
+        "dex_cap" : 0
+      }
+    },
+    {
+      "name" : "Scale Mail",
+      "desc" : "This armor consists of a coat and leggings (and perhaps a separate skirt) of leather covered with overlapping pieces of metal, much like the scales of a fish. The suit includes gauntlets.",
+      "cost": {
+        "pp": 0,
+        "gp": 50,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 45,
+      "item_rarity": "Standard",
+      "stealth" : "Disadvantage",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 14,
+        "dex_cap" : 2
+      }
+    },
+    {
+      "name" : "Spiked Armor",
+      "desc" : "Spiked armor is a rare type of medium armor made by dwarves. It consists of a leather coat and leggings covered with spikes that are usually made of metal.",
+      "cost": {
+        "pp": 0,
+        "gp": 75,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 45,
+      "item_rarity": "Standard",
+      "stealth" : "Disadvantage",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 14,
+        "dex_cap" : 2
+      }
+    },
+    {
+      "name" : "Splint",
+      "desc" : "This armor is made of narrow vertical strips of metal riveted to a backing of leather that is worn over cloth padding. Flexible chain mail protects the joints.",
+      "cost": {
+        "pp": 0,
+        "gp": 200,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 60,
+      "item_rarity": "Standard",
+      "stealth" : "Disadvantage",
+      "strength_prerequisite" : 15,
+
+      "ac" : {
+        "base" : 17,
+        "dex_cap" : 0
+      }
+    },
+    {
+      "name" : "Studded Leather",
+      "desc" : "",
+      "cost": {
+        "pp": 0,
+        "gp": 45,
+        "ep": 0,
+        "sp": 0,
+        "cp": 0
+      },
+
+      "weight" : 13,
+      "item_rarity": "Standard",
+      "stealth" : "-",
+      "strength_prerequisite" : 0,
+
+      "ac" : {
+        "base" : 12,
+        "dex_cap" : 5,
+        "Comment": "TODO, this armor has not cap on the dex mod."
+      }
+    }
+
+
+
+
+
+
+  ]
+}

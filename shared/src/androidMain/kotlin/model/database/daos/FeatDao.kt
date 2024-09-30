@@ -1,43 +1,37 @@
 package model.database.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import model.Feat
-import model.FeatChoiceEntity
-import model.FeatEntity
-import model.Feature
-import model.choiceEntities.FeatChoiceChoiceEntity
-import model.junctionEntities.FeatChoiceFeatCrossRef
-import model.junctionEntities.FeatFeatureCrossRef
+import kotlinx.coroutines.flow.Flow
+import model.*
 
 @Dao
-abstract class FeatDao {
+actual abstract class FeatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFeat(feat: FeatEntity): Long
+    abstract fun insertFeat(feat: FeatEntityTable): Long
 
     fun insertFeatChoice(featChoiceEntity: FeatChoiceEntity): Int {
-        val id = insertFeatChoiceOrIgnore(featChoiceEntity).toInt()
+        val id = insertFeatChoiceOrIgnore(featChoiceEntity.asTable()).toInt()
         if(id == -1) {
-            updateFeatChoice(featChoiceEntity)
+            updateFeatChoice(featChoiceEntity.asTable())
             return featChoiceEntity.id
         }
         return id
     }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    protected abstract fun insertFeatChoiceOrIgnore(featChoiceEntity: FeatChoiceEntity): Long
+    protected abstract fun insertFeatChoiceOrIgnore(featChoiceEntity: FeatChoiceEntityTable): Long
 
     @Update
-    protected abstract fun updateFeatChoice(featChoiceEntity: FeatChoiceEntity)
+    protected abstract fun updateFeatChoice(featChoiceEntity: FeatChoiceEntityTable)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatChoiceFeatCrossRef(featChoiceFeatCrossRef: FeatChoiceFeatCrossRef)
 
     @Insert
-    abstract fun insertFeatChoiceChoiceEntity(featChoiceChoiceEntity: FeatChoiceChoiceEntity)
+    abstract fun insertFeatChoiceChoiceEntity(featChoiceChoiceEntity: FeatChoiceChoiceEntityTable)
 
     @Query("SELECT * FROM feats")
-    abstract fun getUnfilledFeats(): LiveData<List<Feat>>
+    actual abstract fun getUnfilledFeats(): Flow<List<Feat>>
 
     @Insert
     abstract fun insertFeatFeatureCrossRef(featFeatureCrossRef: FeatFeatureCrossRef)
@@ -46,5 +40,5 @@ abstract class FeatDao {
 JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
 WHERE featId IS :featId
     """)
-    abstract fun getFeatFeatures(featId: Int) : List<Feature>
+    actual abstract fun getFeatFeatures(featId: Int) : List<Feature>
 }

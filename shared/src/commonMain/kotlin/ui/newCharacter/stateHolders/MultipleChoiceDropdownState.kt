@@ -1,0 +1,21 @@
+package ui.newCharacter.stateHolders
+
+import kotlinx.coroutines.flow.MutableStateFlow
+
+
+interface MultipleChoiceDropdownState {
+    val getDescription: ((Int) -> String)?
+        get() = null
+    val choiceName : String
+    val selectedList : List<Int>
+    val selectedNames: MutableStateFlow<String>
+    val names: List<String>
+    val maxSelections: Int
+    val subChoiceKeys: List<String>?
+    var costs : List<Int>
+
+    fun getSubChoiceAt(key : String) : MultipleChoiceDropdownState?
+    fun incrementSelection(index:Int)
+    fun decrementSelection(index: Int)
+    fun getMaxSameSelectionsAt(index : Int): Int
+}

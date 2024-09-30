@@ -1,8 +1,9 @@
 package model
 
+import kotlinx.serialization.Serializable
 import kotlin.math.ceil
 
-
+@Serializable
 data class Currency(
     private val backingDisplayName: String? = null,
     var amount: Int,

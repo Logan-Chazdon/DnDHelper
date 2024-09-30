@@ -1,0 +1,39 @@
+import kotlin.Boolean;
+import kotlin.String;
+import kotlin.collections.List;
+
+CREATE TABLE IF NOT EXISTS `characters` (
+`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+`name` TEXT NOT NULL,
+`personalityTraits` TEXT NOT NULL,
+`ideals` TEXT NOT NULL,
+`bonds` TEXT NOT NULL,
+`flaws` TEXT NOT NULL,
+`notes` TEXT NOT NULL,
+`currentHp` INTEGER NOT NULL,
+`tempHp` INTEGER NOT NULL,
+`conditions` TEXT AS List<String> NOT NULL ,
+`resistances` TEXT AS List<String> NOT NULL,
+`statGenerationMethodIndex` INTEGER NOT NULL,
+`baseStats` TEXT NOT NULL,
+`backpack` TEXT NOT NULL,
+`inspiration` INTEGER AS Boolean NOT NULL,
+`positiveDeathSaves` INTEGER NOT NULL,
+`negativeDeathSaves` INTEGER NOT NULL,
+`spellSlots` TEXT NOT NULL,
+`addedLanguages` TEXT NOT NULL,
+`addedProficiencies` TEXT NOT NULL);
+
+selectAll:
+SELECT * FROM characters;
+
+insertOrReplace:
+INSERT OR REPLACE INTO characters(
+id, name, personalityTraits, ideals, bonds, flaws, notes, currentHp, tempHp, conditions, resistances, statGenerationMethodIndex, baseStats, backpack, inspiration, positiveDeathSaves, negativeDeathSaves,  spellSlots, addedLanguages, addedProficiencies)
+VALUES ?;
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+delete:
+DELETE FROM characters WHERE id IS :id;

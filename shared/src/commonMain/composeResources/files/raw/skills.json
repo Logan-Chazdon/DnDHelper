@@ -1,0 +1,106 @@
+{
+  "baseStats" : [
+    {
+      "baseStat" : "Strength",
+      "skills" : [
+          {
+            "name" : "Saving throw (Strength)"
+          },
+          {
+            "name" : "Athletics"
+          }
+      ]
+    },
+    {
+      "baseStat" : "Dexterity",
+      "skills" : [
+        {
+          "name" : "Saving throw (Dexterity)"
+        },
+        {
+          "name" : "Acrobatics"
+        },
+        {
+          "name" : "Sleight of Hand"
+        },
+        {
+          "name" : "Stealth"
+        }
+      ]
+    },
+    {
+      "baseStat" : "Constitution",
+      "skills" : [
+        {
+          "name" : "Saving throw (Constitution)"
+        }
+      ]
+    },
+    {
+      "baseStat" : "Intelligence",
+      "skills" : [
+        {
+          "name" : "Saving throw (Intelligence)"
+        },
+        {
+          "name" : "Arcana"
+        },
+        {
+          "name" : "History"
+        },
+        {
+          "name" : "Investigation"
+        },
+        {
+          "name" : "Nature"
+        },
+        {
+          "name" : "Religion"
+        }
+      ]
+    },
+    {
+      "baseStat" : "Wisdom",
+      "skills" : [
+        {
+          "name" : "Saving throw (Wisdom)"
+        },
+        {
+          "name" : "Animal Handling"
+        },
+        {
+          "name" : "Insight"
+        },
+        {
+          "name" : "Medicine"
+        },
+        {
+          "name" : "Perception"
+        },
+        {
+          "name" : "Survival"
+        }
+      ]
+    },
+    {
+      "baseStat" : "Charisma",
+      "skills" : [
+        {
+          "name" : "Saving throw (Charisma)"
+        },
+        {
+          "name" : "Deception"
+        },
+        {
+          "name" : "Intimidation"
+        },
+        {
+          "name" : "Performance"
+        },
+        {
+          "name" : "Persuasion"
+        }
+      ]
+    }
+  ]
+}

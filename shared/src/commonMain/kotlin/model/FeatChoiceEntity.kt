@@ -1,15 +1,13 @@
 package model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "featChoices")
+
+
 open class FeatChoiceEntity(
     val name: String,
     val choose : Int,
 ) {
-    @PrimaryKey(autoGenerate = true)
-    var id = 0
+    open var id = 0
 
     fun toFeatChoice(chosen: List<Feat>, from : List<Feat>) : FeatChoice {
         return FeatChoice(

@@ -1,18 +1,8 @@
 package model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import model.converters.Converters
 
-
-@Entity(tableName="features")
-@TypeConverters(Converters::class)
 open class FeatureEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(index = true)
-    var featureId: Int = 0,
+    open var featureId: Int = 0,
     var name: String,
     var description: String,
     var index : String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.

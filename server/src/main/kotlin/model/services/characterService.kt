@@ -15,7 +15,9 @@ import io.ktor.websocket.*
 
 fun Routing.characterService(db: Database) {
     post("character/postCharacter") {
-        val character = call.receive<Characters>()
+        val response = call.receiveText()
+        println(response)
+        val character = gson.fromJson(response, Characters::class.java)
         db.characterQueries.insertOrReplace(character)
         call.respondText(
             db.characterQueries.lastInsertRowId().executeAsOne().toString()
@@ -24,7 +26,7 @@ fun Routing.characterService(db: Database) {
     get("character/{id}") {
 
     }
-    delete("character/deleteCharacter") {
+    delete("character/deleteCharacter/{id}") {
         call.parameters["id"]?.let { db.characterQueries.delete(it.toLong()) }
          call.respond(HttpStatusCode.OK, "Item deleted")
     }

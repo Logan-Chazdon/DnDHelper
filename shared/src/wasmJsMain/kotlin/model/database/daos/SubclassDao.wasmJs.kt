@@ -1,6 +1,7 @@
 package model.database.daos
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import model.Feature
 import model.Subclass
 import model.SubclassEntity
@@ -13,7 +14,17 @@ actual abstract class SubclassDao {
 
     actual abstract fun getSubclassLiveFeaturesById(id: Int): Flow<List<Feature>>
     actual fun getSubclassesByClassId(id: Int): Flow<List<Subclass>> {
-        TODO("Not yet implemented")
+        //TODO IMPL
+        val testSubclass = Subclass(
+            name = "",
+            spells = emptyList(),
+            spellAreFree = true,
+            features = emptyList(),
+            spellCasting = null
+        )
+        return channelFlow {
+            send(listOf(testSubclass))
+        }
     }
 
     actual fun insertSubclass(subClass: SubclassEntity): Int {

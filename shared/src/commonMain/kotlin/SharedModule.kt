@@ -5,6 +5,7 @@ import org.koin.core.annotation.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import services.CharacterService
+import services.ClassService
 import ui.character.*
 import ui.homebrew.*
 import ui.newCharacter.*
@@ -66,5 +67,6 @@ class SharedModule {
         }
 
         single { CharacterService(get()) }
+        single { ClassService(get()) }
     }
 }

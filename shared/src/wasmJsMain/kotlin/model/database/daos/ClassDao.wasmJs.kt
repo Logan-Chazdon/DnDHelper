@@ -6,11 +6,16 @@ import model.ClassEntity
 import model.Feature
 import model.Spell
 import model.pojos.NameAndIdPojo
+import services.ClassService
 
 actual abstract class ClassDao {
     actual abstract fun getClassIdsByName(name: String): List<Int>
+    protected val classService: ClassService
+    constructor(classService: ClassService) {
+        this.classService = classService
+    }
     actual fun getAllClasses(): Flow<List<Class>> {
-        TODO("Not yet implemented")
+        return classService.getAllClasses()
     }
 
     actual abstract fun getHomebrewClasses(): Flow<List<ClassEntity>>
@@ -38,7 +43,7 @@ actual abstract class ClassDao {
     actual abstract fun getSubclassClasses(id: Int): Flow<List<NameAndIdPojo>>
 }
 
-class ClassDaoImpl : ClassDao() {
+class ClassDaoImpl(classService: ClassService) : ClassDao(classService) {
     override fun getClassIdsByName(name: String): List<Int> {
         TODO("Not yet implemented")
     }
@@ -52,15 +57,17 @@ class ClassDaoImpl : ClassDao() {
     }
 
     override fun getSpellsByClassId(classId: Int): MutableList<Spell> {
-        TODO("Not yet implemented")
+        //TODO IMPL
+        return mutableListOf()
     }
 
     override fun getUnfilledLevelPath(id: Int): MutableList<Feature> {
-        TODO("Not yet implemented")
+        //TODO IMPL
+        return mutableListOf()
     }
 
     override fun getUnfilledClass(id: Int): Flow<ClassEntity> {
-        TODO("Not yet implemented")
+        return classService.getUnfilledClass(id)
     }
 
     override fun allClassesNamesAndIds(): Flow<List<NameAndIdPojo>> {

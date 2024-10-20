@@ -24,7 +24,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.launch
 import model.Feature
@@ -48,7 +47,7 @@ fun ConfirmClassView(
 ) {
     val clazz = viewModel.clazz.collectAsState(null)
     val subclasses = viewModel.subclasses.collectAsState(emptyList())
-
+    val scope = rememberCoroutineScope()
     LaunchedEffect(viewModel.hasBaseClass) {
         viewModel.isBaseClass.value = !viewModel.hasBaseClass.value
     }
@@ -117,7 +116,6 @@ fun ConfirmClassView(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             //Text
             Text(
                 text = clazz.value?.name ?: "",
@@ -138,7 +136,7 @@ fun ConfirmClassView(
             Button(
                 enabled = canAfford.value,
                 onClick = {
-                    GlobalScope.launch {
+                    scope.launch {
                         viewModel.addClassLevels()
                     }
                     //Navigate to the next step

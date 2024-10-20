@@ -1,0 +1,35 @@
+CREATE TABLE IF NOT EXISTS classes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name TEXT NOT NULL,
+    hitDie INTEGER NOT NULL,
+    subclassLevel INTEGER NOT NULL,
+    proficiencyChoices TEXT NOT NULL,
+    proficiencies TEXT NOT NULL,
+    equipmentChoices TEXT NOT NULL,
+    equipment TEXT NOT NULL,
+    spellCasting TEXT,
+    pactMagic TEXT,
+    startingGoldD4s INTEGER NOT NULL,
+    startingGoldMultiplier INTEGER NOT NULL,
+    isHomebrew INTEGER NOT NULL
+);
+
+insertClass:
+INSERT INTO classes(name, hitDie, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, isHomebrew)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateClass:
+UPDATE classes
+SET name = ?, hitDie = ?, subclassLevel = ?, proficiencyChoices = ?, proficiencies = ?, equipmentChoices = ?, equipment = ?, spellCasting = ?, pactMagic = ?, startingGoldD4s = ?, startingGoldMultiplier = ?, isHomebrew = ?
+WHERE id = ?;
+
+deleteClass:
+DELETE FROM classes
+WHERE id = ?;
+
+getAllClasses:
+SELECT * FROM classes;
+
+getClassById:
+SELECT * FROM classes
+WHERE id = ?;

@@ -8,7 +8,7 @@ class WebModule {
     val module = module {
         single <CharacterDao> { CharacterDaoImpl(get()) }
         single <BackgroundDao> { BackgroundDaoImpl() }
-        single <ClassDao> { ClassDaoImpl() }
+        single <ClassDao> { ClassDaoImpl(get()) }
         single <FeatDao> { FeatDaoImpl() }
         single <FeatureDao> { FeatureDaoImpl() }
         single <RaceDao> { RaceDaoImpl() }

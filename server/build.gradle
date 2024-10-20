@@ -30,7 +30,7 @@ dependencies {
     //Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
-
+    implementation("io.ktor:ktor-server-cors")
     implementation "io.ktor:ktor-server-core-jvm"
     implementation "io.ktor:ktor-serialization-kotlinx-json-jvm"
     implementation "io.ktor:ktor-server-websockets-jvm"

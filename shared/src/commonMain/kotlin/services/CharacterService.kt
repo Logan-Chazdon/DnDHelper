@@ -8,6 +8,7 @@ import io.ktor.http.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import model.Character
 import model.CharacterEntity
@@ -45,7 +46,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
                 path(Paths.PostCharacter.path)
             }
             contentType(ContentType.Application.Json)
-            setBody(character)
+            setBody(format.encodeToString(character))
         }.bodyAsText().toLong()
     }
 
@@ -56,6 +57,13 @@ class CharacterService(client: HttpClient) : Service(client = client) {
                 port = targetPort
                 path("${Paths.DeleteCharacter.path}/$id")
             }
+        }
+    }
+
+    fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character> {
+        return flow {
+            //TODO
+            emit(Character())
         }
     }
 

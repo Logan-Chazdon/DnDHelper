@@ -1,15 +1,20 @@
 package model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlin.math.ceil
 
 @Serializable
+@SerialName("Currency")
 data class Currency(
     private val backingDisplayName: String? = null,
     var amount: Int,
     override var name: String?,
     override val weight: Int? = 0
 ) : ItemInterface {
+    //It's not transient for GSON on android only for kotlinx.
+    @Transient
     override val type = "Currency"
     override val charges: Resource? = null
     override val index: String? = null

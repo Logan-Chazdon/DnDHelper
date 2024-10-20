@@ -3,6 +3,8 @@ package model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
+import model.converters.BooleanAsIntSerializer
 
 @Entity(tableName = "subclasses")
 class SubclassEntityTable(
@@ -12,6 +14,7 @@ class SubclassEntityTable(
     @ColumnInfo(name = "subclass_spell_casting")
     override var spellCasting: SpellCasting?,
     @ColumnInfo(name = "subclass_isHomebrew")
+    @Serializable(with = BooleanAsIntSerializer::class)
     override var isHomebrew : Boolean = false
 ) : SubclassEntity(
     name,

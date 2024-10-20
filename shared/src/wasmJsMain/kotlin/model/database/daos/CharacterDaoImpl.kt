@@ -6,19 +6,23 @@ import services.CharacterService
 
 class CharacterDaoImpl(characterService: CharacterService) : CharacterDao(characterService) {
     override fun getSpellCastingSpellsForSubclass(characterId: Int, subclassId: Int): Map<Spell, Boolean?> {
-        TODO("Not yet implemented")
+        //TODO IMPL
+        return emptyMap()
     }
 
     override fun getSpellCastingSpellsForClass(characterId: Int, classId: Int): Map<Spell, Boolean?> {
-        TODO("Not yet implemented")
+        //TODO IMPL
+        return emptyMap()
     }
 
     override fun getClassFeats(classId: Int, characterId: Int): MutableList<Feat> {
-        TODO("Not yet implemented")
+        //TODO IMPL
+        return mutableListOf()
     }
 
     override fun getFeatChoiceChosen(characterId: Int, choiceId: Int): List<Feat> {
-        TODO("Not yet implemented")
+        //TODO IMPL
+        return emptyList()
     }
 
     override suspend fun deleteCharacter(id: Int) {
@@ -54,7 +58,7 @@ class CharacterDaoImpl(characterService: CharacterService) : CharacterDao(charac
     }
 
     override fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character> {
-        TODO("Not yet implemented")
+        return characterService.findLiveCharacterWithoutListChoices(id)
     }
 
     override fun getCharactersClasses(characterId: Int): MutableMap<String, Class> {

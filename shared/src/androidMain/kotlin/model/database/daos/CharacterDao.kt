@@ -119,7 +119,7 @@ WHERE choiceId IS :choiceId AND characterId IS :characterId
     }
 
     @Query("DELETE FROM characters WHERE id = :id")
-    actual abstract fun deleteCharacter(id: Int)
+    actual abstract suspend fun deleteCharacter(id: Int)
 
     @Query(
         """SELECT * FROM features

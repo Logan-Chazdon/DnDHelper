@@ -1,5 +1,7 @@
 package model
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ProficiencyChoice(
     val name: String,
     val choose: Int,

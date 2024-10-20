@@ -74,13 +74,12 @@ class NewCharacterConfirmClassViewModel constructor(
 
         viewModelScope.launch {
             goldRolled.value = (clazz.firstOrNull()?.startingGoldD4s?.times(2) ?: 4).toString()
-            maxGoldRolled.value = clazz.last()?.startingGoldD4s?.times(4) ?: 0
-            minGoldRolled.value = clazz.last()?.startingGoldD4s?.times(1) ?: 0
+            maxGoldRolled.value = clazz.lastOrNull()?.startingGoldD4s?.times(4) ?: 0
+            minGoldRolled.value = clazz.lastOrNull()?.startingGoldD4s?.times(1) ?: 0
 
             hasBaseClass.value = if (character.value?.hasBaseClass == true) {
                 //If the baseclass is the current class return false.
-                character.value!!
-                    .classes[clazz.last()?.name]
+                character.value.classes?.get(clazz.lastOrNull()?.name)
                     ?.isBaseClass != true
 
             } else {
@@ -159,7 +158,7 @@ class NewCharacterConfirmClassViewModel constructor(
                             toNumber(levels),
                             featDropDownStates,
                             featChoiceDropDownStates,
-                            feats.firstOrNull()!!
+                            feats.firstOrNull() ?: emptyList()
                         )
                     )
                 } else {
@@ -201,16 +200,16 @@ class NewCharacterConfirmClassViewModel constructor(
             //Insert a classChoiceEntity.
             characterRepository.insertClassChoiceEntity(
 
-                    classId = value.id,
-                    characterId = id,
-                    level = toNumber(levels),
-                    isBaseClass = isBaseClass.value,
-                    totalNumOnGoldDie = goldRolled.value.toInt(),
-                    tookGold = takeGold.value,
-                    abilityImprovementsGranted = value.abilityImprovementsGranted,
-                    proficiencyChoicesByString = value.proficiencyChoices.map { it.chosenByString },
+                classId = value.id,
+                characterId = id,
+                level = toNumber(levels),
+                isBaseClass = isBaseClass.value,
+                totalNumOnGoldDie = goldRolled.value.toInt(),
+                tookGold = takeGold.value,
+                abilityImprovementsGranted = value.abilityImprovementsGranted,
+                proficiencyChoicesByString = value.proficiencyChoices.map { it.chosenByString },
 
-            )
+                )
 
             value.pactMagic?.let {
                 characterRepository.insertPactMagicStateEntity(
@@ -333,7 +332,7 @@ class NewCharacterConfirmClassViewModel constructor(
 
     val learnableSpells = MutableStateFlow<List<Spell>>(emptyList())
     suspend fun calcLearnableSpells(level: Int, subclass: Subclass?) {
-        learnableSpells.emit(clazz.last().id?.let {
+        learnableSpells.emit(clazz.lastOrNull()?.id?.let {
             classRepository.getSpellsByClassId(it).run {
                 subclass?.let {
                     //If the spells for the subclass arnt free add them to the selection.
@@ -346,16 +345,16 @@ class NewCharacterConfirmClassViewModel constructor(
                     }
                 }
 
-                if (clazz.last()?.spellCasting?.prepareFrom == "all") {
+                if (clazz.lastOrNull()?.spellCasting?.prepareFrom == "all") {
                     this.removeAll {
                         it.level != 0
                     }
                 }
                 try {
                     val maxLevel =
-                        clazz.last()?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
+                        clazz.lastOrNull()?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
                             ?: SpellRepository.allSpellLevels.firstOrNull { pair ->
-                                pair.second == clazz.last()!!.pactMagic?.pactSlots?.get(
+                                pair.second == clazz.lastOrNull()?.pactMagic?.pactSlots?.get(
                                     level - 1
                                 )?.name
                             }?.first ?: 0
@@ -390,14 +389,14 @@ class NewCharacterConfirmClassViewModel constructor(
     }
 
     suspend fun calculateAssumedFeatures(): List<Feature> {
-        val value = clazz.last()
+        val value = clazz.lastOrNull()
         val result = mutableListOf<Feature>()
         value?.levelPath?.let { getFeatures(it, toNumber(levels)) }?.let {
             result.addAll(it)
         }
 
-        if (toNumber(levels) >= value?.subclassLevel!!) {
-            value.subclass?.features?.let { getFeatures(it, toNumber(levels)) }?.let {
+        if (toNumber(levels) >= (value?.subclassLevel ?: 0)) {
+            value?.subclass?.features?.let { getFeatures(it, toNumber(levels)) }?.let {
                 result.addAll(it)
             }
         }
@@ -406,7 +405,7 @@ class NewCharacterConfirmClassViewModel constructor(
     }
 
     suspend fun calculateAssumedSpells(): List<Spell> {
-        val featValue = feats.last()
+        val featValue = feats.lastOrNull() ?: emptyList()
         val result = mutableListOf<Spell>()
         character.value?.let { characterRepository.getSpellsForCharacter(it) }?.let {
             it.forEach { (_, spells) ->
@@ -422,7 +421,7 @@ class NewCharacterConfirmClassViewModel constructor(
                     toNumber(levels),
                     featDropDownStates,
                     featChoiceDropDownStates,
-                    featValue!!
+                    featValue
                 ).forEach { feat ->
                     feat.features?.forEach {
                         result.addAll(it.getSpellsGiven())
@@ -437,7 +436,7 @@ class NewCharacterConfirmClassViewModel constructor(
 
     suspend fun calculateAssumedStatBonuses(): MutableMap<String, Int> {
         val result = mutableMapOf<String, Int>()
-        val featValue = feats.last()
+        val featValue = feats.lastOrNull() ?: emptyList()
         val applyBonus = fun(name: String, amount: Int) {
             result[name.substring(0, 3)] =
                 (result[name.substring(0, 3)] ?: 0) + amount
@@ -471,7 +470,7 @@ class NewCharacterConfirmClassViewModel constructor(
     }
 
     suspend fun calculateAssumedProficiencies(): MutableList<Proficiency> {
-        val value =  clazz.last()
+        val value = clazz.lastOrNull()
         val profs: MutableList<Proficiency> = mutableListOf()
         value?.proficiencies?.let { profs.addAll(it) }
         value?.proficiencyChoices?.forEach {
@@ -485,186 +484,188 @@ class NewCharacterConfirmClassViewModel constructor(
     }
 
     suspend fun applyAlreadySelectedChoices() {
-        val value = clazz.last()
-        val featNamesValue = featNames.last()
-        character.value?.classes
-            ?.get(value.name)?.let { clazzWithChoices ->
-                //Apply level choice.
-                levels.value = TextFieldValue(clazzWithChoices.level.toString())
+        val value = clazz.lastOrNull()
+        val featNamesValue = featNames.lastOrNull()
+        if (value != null) {
+            character.value?.classes
+                ?.get(value?.name)?.let { clazzWithChoices ->
+                    //Apply level choice.
+                    levels.value = TextFieldValue(clazzWithChoices.level.toString())
 
-                //Apply feature choices.
-                clazzWithChoices.levelPath?.filter { it.grantedAtLevel <= clazzWithChoices.level }
-                    ?.forEachIndexed { index, feature ->
-                        feature.choices?.forEachIndexed { choiceIndex, _ ->
-                            val featureToPass =
-                                clazzWithChoices.levelPath?.filter { it.grantedAtLevel <= clazzWithChoices.level }
-                                    ?.get(index)
-                                    ?.copy()?.run {
-                                        val featureWithOptions =
-                                            value!!.levelPath!!.first { it.featureId == this.featureId }
-                                        this.choices?.forEachIndexed { choiceIndex, it ->
-                                            it.chosen = feature.choices!![choiceIndex].chosen
-                                            it.options = featureWithOptions.choices?.get(choiceIndex)?.options
+                    //Apply feature choices.
+                    clazzWithChoices.levelPath?.filter { it.grantedAtLevel <= clazzWithChoices.level }
+                        ?.forEachIndexed { index, feature ->
+                            feature.choices?.forEachIndexed { choiceIndex, _ ->
+                                val featureToPass =
+                                    clazzWithChoices.levelPath?.filter { it.grantedAtLevel <= clazzWithChoices.level }
+                                        ?.get(index)
+                                        ?.copy()?.run {
+                                            val featureWithOptions =
+                                                value!!.levelPath!!.first { it.featureId == this.featureId }
+                                            this.choices?.forEachIndexed { choiceIndex, it ->
+                                                it.chosen = feature.choices!![choiceIndex].chosen
+                                                it.options = featureWithOptions.choices?.get(choiceIndex)?.options
+                                            }
+                                            this
                                         }
-                                        this
-                                    }
 
-                            featureToPass?.let {
-                                featureDropdownStates.getDropDownState(
-                                    choiceIndex = choiceIndex,
-                                    feature = it,
-                                    character = character.value,
-                                    level = clazzWithChoices.level,
-                                    assumedClass = null,
-                                    assumedSpells = listOf(),
-                                    assumedFeatures = listOf(),
-                                    assumedProficiencies = listOf(),
-                                    assumedStatBonuses = null
-                                )
+                                featureToPass?.let {
+                                    featureDropdownStates.getDropDownState(
+                                        choiceIndex = choiceIndex,
+                                        feature = it,
+                                        character = character.value,
+                                        level = clazzWithChoices.level,
+                                        assumedClass = null,
+                                        assumedSpells = listOf(),
+                                        assumedFeatures = listOf(),
+                                        assumedProficiencies = listOf(),
+                                        assumedStatBonuses = null
+                                    )
+                                }
                             }
                         }
-                    }
 
 
-                //Apply base class choice
-                isBaseClass.value = clazzWithChoices.isBaseClass
-                if (isBaseClass.value) {
-                    //Apply proficiency choices
-                    clazzWithChoices.proficiencyChoices.forEach { choice ->
-                        //Get or create the drop down state for the choice.
-                        val names = mutableListOf<String>()
-                        for (item in choice.from) {
-                            names.add(item.name.toString())
-                        }
-                        val state = dropDownStates.getDropDownState(
-                            key = choice.name,
-                            maxSelections = choice.choose,
-                            names = names,
-                            choiceName = choice.name
-                        )
-
-                        //Apply data from the choice.
-                        val selectedNames = mutableListOf<String>()
-                        choice.chosen.forEach {
-                            selectedNames.add(it.name.toString())
-                        }
-                        state.setSelected(selectedNames)
-                    }
-
-                    if (clazzWithChoices.tookGold == true) {
-                        //Apply gold choices.
-                        takeGold.value = true
-                        goldRolled.value = clazzWithChoices.totalNumOnGoldDie.toString()
-                    } else {
-                        //Apply equipment choices.
-                        clazzWithChoices.equipmentChoices.forEach { choice ->
+                    //Apply base class choice
+                    isBaseClass.value = clazzWithChoices.isBaseClass
+                    if (isBaseClass.value) {
+                        //Apply proficiency choices
+                        clazzWithChoices.proficiencyChoices.forEach { choice ->
                             //Get or create the drop down state for the choice.
                             val names = mutableListOf<String>()
                             for (item in choice.from) {
-                                item.allNames.let { names.add(it) }
+                                names.add(item.name.toString())
                             }
-
                             val state = dropDownStates.getDropDownState(
                                 key = choice.name,
                                 maxSelections = choice.choose,
                                 names = names,
                                 choiceName = choice.name
                             )
+
                             //Apply data from the choice.
-                            val selectedIndexes = mutableListOf<Int>()
-                            choice.chosen?.forEach {
-                                selectedIndexes.add(choice.from.indexOf(it))
+                            val selectedNames = mutableListOf<String>()
+                            choice.chosen.forEach {
+                                selectedNames.add(it.name.toString())
                             }
-                            state.setSelected(selectedIndexes)
+                            state.setSelected(selectedNames)
+                        }
+
+                        if (clazzWithChoices.tookGold == true) {
+                            //Apply gold choices.
+                            takeGold.value = true
+                            goldRolled.value = clazzWithChoices.totalNumOnGoldDie.toString()
+                        } else {
+                            //Apply equipment choices.
+                            clazzWithChoices.equipmentChoices.forEach { choice ->
+                                //Get or create the drop down state for the choice.
+                                val names = mutableListOf<String>()
+                                for (item in choice.from) {
+                                    item.allNames.let { names.add(it) }
+                                }
+
+                                val state = dropDownStates.getDropDownState(
+                                    key = choice.name,
+                                    maxSelections = choice.choose,
+                                    names = names,
+                                    choiceName = choice.name
+                                )
+                                //Apply data from the choice.
+                                val selectedIndexes = mutableListOf<Int>()
+                                choice.chosen?.forEach {
+                                    selectedIndexes.add(choice.from.indexOf(it))
+                                }
+                                state.setSelected(selectedIndexes)
+                            }
                         }
                     }
-                }
 
-                //Apply spell class choices.
-                if (clazzWithChoices.spellCasting?.type != 0.0) {
-                    clazzWithChoices.spellCasting?.known?.let { pairs -> classSpells.addAll(pairs.map { it.first }) }
-                }
-                clazzWithChoices.pactMagic?.let {
-                    classSpells.addAll(it.known)
-                }
+                    //Apply spell class choices.
+                    if (clazzWithChoices.spellCasting?.type != 0.0) {
+                        clazzWithChoices.spellCasting?.known?.let { pairs -> classSpells.addAll(pairs.map { it.first }) }
+                    }
+                    clazzWithChoices.pactMagic?.let {
+                        classSpells.addAll(it.known)
+                    }
 
-                //Apply feat and asi choices.
-                clazzWithChoices.featsGranted?.forEachIndexed { i, it ->
-                    isFeat.add(i, true)
-                    featNamesValue?.let { featNames ->
-                        featDropDownStates
-                            .getDropDownState(
-                                key = i,
-                                maxSelections = 1,
-                                names = featNames as MutableList<String>,
-                                choiceName = "Feat"
-                            )
-                    }?.setSelected(mutableListOf(it.name))
+                    //Apply feat and asi choices.
+                    clazzWithChoices.featsGranted?.forEachIndexed { i, it ->
+                        isFeat.add(i, true)
+                        featNamesValue?.let { featNames ->
+                            featDropDownStates
+                                .getDropDownState(
+                                    key = i,
+                                    maxSelections = 1,
+                                    names = featNames as MutableList<String>,
+                                    choiceName = "Feat"
+                                )
+                        }?.setSelected(mutableListOf(it.name))
 
-                    it.features?.forEach { feature ->
-                        feature.choices?.forEach { choice ->
-                            val selected = choice.chosen.run {
-                                val result = mutableListOf<String>()
-                                this?.forEach {
-                                    result.add(it.name)
-                                }
-                                result
-                            }
-
-                            featChoiceDropDownStates.getDropDownState(
-                                key = "${feature.name}$i",
-                                maxSelections = choice.choose.num(clazzWithChoices.level),
-                                names = choice.options.let { featureList ->
+                        it.features?.forEach { feature ->
+                            feature.choices?.forEach { choice ->
+                                val selected = choice.chosen.run {
                                     val result = mutableListOf<String>()
-                                    featureList?.forEach {
+                                    this?.forEach {
                                         result.add(it.name)
                                     }
                                     result
-                                },
-                                choiceName = feature.name,
-                                maxOfSameSelection = 1
-                            ).setSelected(selected)
+                                }
+
+                                featChoiceDropDownStates.getDropDownState(
+                                    key = "${feature.name}$i",
+                                    maxSelections = choice.choose.num(clazzWithChoices.level),
+                                    names = choice.options.let { featureList ->
+                                        val result = mutableListOf<String>()
+                                        featureList?.forEach {
+                                            result.add(it.name)
+                                        }
+                                        result
+                                    },
+                                    choiceName = feature.name,
+                                    maxOfSameSelection = 1
+                                ).setSelected(selected)
+                            }
+                        }
+                    }
+                    val offset = isFeat.size
+                    clazzWithChoices.abilityImprovementsGranted.forEachIndexed { i, it ->
+                        isFeat.add(i + offset, false)
+                        val state = absDropDownStates
+                            .getDropDownState(
+                                key = i,
+                                maxSelections = 2,
+                                names = CharacterRepository.statNames as MutableList<String>,
+                                choiceName = "Ability Score Improvement",
+                                maxOfSameSelection = 2
+                            )
+                        val selectedList = mutableListOf<Pair<String, Int>>()
+                        it.forEach { entry ->
+                            val key = CharacterRepository.statNames.first {
+                                it.substring(0..2) == entry.key
+                            }
+                            selectedList.add(
+                                Pair(key, entry.value)
+                            )
+                        }
+                        state.setSelected(selectedList)
+                    }
+
+                    //Apply subclass choices.
+                    clazzWithChoices.subclass?.let { subclass ->
+                        //Set the subclass
+                        val state = getSubclassDropdownState()
+                        state.setSelected(listOf(subclass.name))
+
+                        //Apply subclass spell choices.
+                        if (clazzWithChoices.spellCasting?.type != 0.0) {
+                            clazzWithChoices.spellCasting?.known?.let { pairs -> subclassSpells.addAll(pairs.map { it.first }) }
+                        }
+                        clazzWithChoices.pactMagic?.let {
+                            subclassSpells.addAll(it.known)
                         }
                     }
                 }
-                val offset = isFeat.size
-                clazzWithChoices.abilityImprovementsGranted.forEachIndexed { i, it ->
-                    isFeat.add(i + offset, false)
-                    val state = absDropDownStates
-                        .getDropDownState(
-                            key = i,
-                            maxSelections = 2,
-                            names = CharacterRepository.statNames as MutableList<String>,
-                            choiceName = "Ability Score Improvement",
-                            maxOfSameSelection = 2
-                        )
-                    val selectedList = mutableListOf<Pair<String, Int>>()
-                    it.forEach { entry ->
-                        val key = CharacterRepository.statNames.first {
-                            it.substring(0..2) == entry.key
-                        }
-                        selectedList.add(
-                            Pair(key, entry.value)
-                        )
-                    }
-                    state.setSelected(selectedList)
-                }
-
-                //Apply subclass choices.
-                clazzWithChoices.subclass?.let { subclass ->
-                    //Set the subclass
-                    val state = getSubclassDropdownState()
-                    state.setSelected(listOf(subclass.name))
-
-                    //Apply subclass spell choices.
-                    if (clazzWithChoices.spellCasting?.type != 0.0) {
-                        clazzWithChoices.spellCasting?.known?.let { pairs -> subclassSpells.addAll(pairs.map { it.first }) }
-                    }
-                    clazzWithChoices.pactMagic?.let {
-                        subclassSpells.addAll(it.known)
-                    }
-                }
-            }
+        }
     }
 
     fun toNumber(textFieldValue: MutableState<TextFieldValue>): Int {

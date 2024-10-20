@@ -1,6 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class SchoolRestriction(
     val amount : Int,
     val schools: List<String>

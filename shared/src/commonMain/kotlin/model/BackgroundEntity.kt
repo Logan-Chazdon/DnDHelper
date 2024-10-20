@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+import model.converters.BooleanAsIntSerializer
+
 
 open class BackgroundEntity(
     val name: String,
@@ -11,6 +14,7 @@ open class BackgroundEntity(
     val languageChoices : List<LanguageChoice>? = null,
     val equipment : List<ItemInterface>,
     val equipmentChoices: List<ItemChoice>,
+    @Serializable(with = BooleanAsIntSerializer::class)
     var isHomebrew : Boolean = false
 ) {
     open var id : Int = 0

@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+import model.converters.BooleanAsIntSerializer
+
 
 open class RaceEntity (
     open var raceId: Int = 0,
@@ -16,5 +19,6 @@ open class RaceEntity (
     open var languages: List<Language> = listOf(),
     open var languageChoices: List<LanguageChoice> = listOf(),
     open var languageDesc: String = "",
+    @Serializable(with = BooleanAsIntSerializer::class)
     var isHomebrew : Boolean = false
 )

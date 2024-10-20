@@ -1,5 +1,7 @@
 package model
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PactMagic(
     val castingAbility: String,
     val spellsKnown: List<Int>,

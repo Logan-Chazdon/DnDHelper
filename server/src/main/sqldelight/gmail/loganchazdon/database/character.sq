@@ -1,3 +1,5 @@
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import kotlin.Boolean;
 import kotlin.String;
 import kotlin.collections.List;
@@ -12,17 +14,17 @@ CREATE TABLE IF NOT EXISTS `characters` (
 `notes` TEXT NOT NULL,
 `currentHp` INTEGER NOT NULL,
 `tempHp` INTEGER NOT NULL,
-`conditions` TEXT AS List<String> NOT NULL ,
-`resistances` TEXT AS List<String> NOT NULL,
+`conditions` TEXT AS JsonArray NOT NULL,
+`resistances` TEXT AS JsonArray NOT NULL,
 `statGenerationMethodIndex` INTEGER NOT NULL,
-`baseStats` TEXT NOT NULL,
-`backpack` TEXT NOT NULL,
+`baseStats` TEXT AS JsonObject NOT NULL,
+`backpack` TEXT AS JsonObject NOT NULL,
 `inspiration` INTEGER AS Boolean NOT NULL,
 `positiveDeathSaves` INTEGER NOT NULL,
 `negativeDeathSaves` INTEGER NOT NULL,
-`spellSlots` TEXT NOT NULL,
-`addedLanguages` TEXT NOT NULL,
-`addedProficiencies` TEXT NOT NULL);
+`spellSlots` TEXT AS JsonArray NOT NULL,
+`addedLanguages` TEXT AS JsonArray NOT NULL,
+`addedProficiencies` TEXT AS JsonArray NOT NULL);
 
 selectAll:
 SELECT * FROM characters;

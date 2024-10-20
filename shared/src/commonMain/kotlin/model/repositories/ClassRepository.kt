@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.launch
 import model.*
 import model.database.daos.ClassDao
 import model.database.daos.FeatureDao
@@ -136,14 +135,12 @@ class ClassRepository {
 
     fun getClass(id: Int): Flow<Class> {
         return classDao.getUnfilledClass(id).transform { entity ->
-            scope.launch {
-                emit(
-                    Class(
-                        entity,
-                        getLevelPath(id)
-                    )
+            emit(
+                Class(
+                    entity,
+                    getLevelPath(id)
                 )
-            }
+            )
         }
     }
 

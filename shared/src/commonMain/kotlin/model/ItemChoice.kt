@@ -1,5 +1,7 @@
 package model
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ItemChoice (
     val name : String,
     val choose : Int,

@@ -1,7 +1,10 @@
 package model
 
 
+import kotlinx.serialization.Serializable
+import model.converters.BooleanAsIntSerializer
 
+@Serializable
 open class Spell(
     val name: String,
     val level: Int,
@@ -16,6 +19,7 @@ open class Spell(
     val classes: List<String>,
     val damage: String,
     var isRitual: Boolean = false,
+    @Serializable(with = BooleanAsIntSerializer::class)
     var isHomebrew : Boolean = false,
 ) {
 

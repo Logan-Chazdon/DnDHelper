@@ -1,14 +1,16 @@
+import com.google.gson.JsonArray;
+
 CREATE TABLE IF NOT EXISTS backgrounds (
     `id` INTEGER NOT NULL,
     `name` TEXT NOT NULL,
     `desc` TEXT NOT NULL,
     `spells` TEXT,
-    `proficiencies` TEXT NOT NULL,
-    `proficiencyChoices` TEXT,
-    `languages` TEXT NOT NULL,
-    `languageChoices` TEXT,
-    `equipment` TEXT NOT NULL,
-    `equipmentChoices` TEXT NOT NULL,
+    `proficiencies` TEXT AS JsonArray NOT NULL,
+    `proficiencyChoices` TEXT AS JsonArray,
+    `languages` TEXT AS JsonArray NOT NULL,
+    `languageChoices` TEXT AS JsonArray,
+    `equipment` TEXT AS JsonArray NOT NULL,
+    `equipmentChoices` TEXT AS JsonArray NOT NULL,
     `isHomebrew` INTEGER NOT NULL,
     `owner` TEXT,
 
@@ -17,7 +19,18 @@ CREATE TABLE IF NOT EXISTS backgrounds (
  );
 
 insert:
-INSERT INTO backgrounds (id, name, desc, spells, proficiencies, proficiencyChoices, languages, languageChoices, equipment, equipmentChoices, isHomebrew, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO backgrounds (id, name, desc, spells, proficiencies, proficiencyChoices, languages, languageChoices, equipment, equipmentChoices, isHomebrew, owner) VALUES ?;
 
 delete:
 DELETE FROM backgrounds WHERE id = :id AND owner = :owner;
+
+selectBackgroundsFor:
+SELECT * FROM backgrounds WHERE owner = :owner OR owner IS NULL;
+
+selectHomebrewBackgounds:
+SELECT * FROM backgrounds WHERE owner = :owner;
+
+selectBackground:
+SELECT * FROM backgrounds WHERE
+(owner = :owner OR owner IS NULL)
+AND id =:id;

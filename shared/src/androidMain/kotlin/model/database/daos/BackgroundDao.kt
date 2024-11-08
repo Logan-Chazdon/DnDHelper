@@ -15,7 +15,7 @@ JOIN BackgroundSpellCrossRef ON BackgroundSpellCrossRef.spellId IS spells.id
 WHERE backgroundId IS :backgroundId
     """
     )
-    actual abstract fun getBackgroundSpells(backgroundId: Int): List<Spell>?
+    actual abstract suspend fun getBackgroundSpells(backgroundId: Int): List<Spell>?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertBackgroundOrIgnore(backgroundEntity: BackgroundEntityTable): Long
@@ -23,7 +23,7 @@ WHERE backgroundId IS :backgroundId
     @Update
     protected abstract fun updateBackground(backgroundEntity: BackgroundEntityTable)
 
-    actual fun insertBackground(backgroundEntity: BackgroundEntity): Int {
+    actual suspend fun insertBackground(backgroundEntity: BackgroundEntity): Int {
         val id = insertBackgroundOrIgnore(backgroundEntity.asTable()).toInt()
         if (id == -1) {
             updateBackground(backgroundEntity.asTable())
@@ -32,14 +32,10 @@ WHERE backgroundId IS :backgroundId
         return id
     }
 
-    @Query("DELETE FROM backgrounds WHERE id = :id")
-    actual abstract fun removeBackgroundById(id: Int)
-
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBackgroundFeatureCrossRef(ref: BackgroundFeatureCrossRef)
 
-    actual fun insertBackgroundFeatureCrossRef(
+    actual suspend fun insertBackgroundFeatureCrossRef(
         backgroundId: Int,
         featureId: Int
     ) {
@@ -47,7 +43,7 @@ WHERE backgroundId IS :backgroundId
     }
 
     @Query("SELECT * FROM BackgroundChoiceEntity WHERE characterId IS :charId")
-    actual abstract fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
+    actual abstract suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
 
     @Query(
         """SELECT * FROM features 
@@ -55,7 +51,7 @@ JOIN BackgroundFeatureCrossRef ON features.featureId IS BackgroundFeatureCrossRe
 WHERE backgroundId IS :id
     """
     )
-    actual abstract fun getBackgroundFeatures(id: Int): List<Feature>
+    actual abstract suspend fun getBackgroundFeatures(id: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertBackgroundSpellCrossRef(ref: BackgroundSpellCrossRef)
@@ -63,7 +59,7 @@ WHERE backgroundId IS :id
     @Delete
     abstract fun removeBackgroundSpellCrossRef(ref: BackgroundSpellCrossRef)
 
-    actual fun insertBackgroundSpellCrossRef(backgroundId: Int, spellId: Int) {
+    actual suspend fun insertBackgroundSpellCrossRef(backgroundId: Int, spellId: Int) {
         insertBackgroundSpellCrossRef(
             BackgroundSpellCrossRef(
                 backgroundId = backgroundId,
@@ -100,11 +96,11 @@ WHERE backgroundId IS :id
 JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.featureId IS features.featureId 
 WHERE backgroundId IS :id"""
     )
-    actual abstract fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
+    actual abstract suspend fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
 
     @Query("SELECT * FROM backgrounds WHERE isHomebrew = 1")
     actual abstract fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>>
 
     @Query("DELETE FROM backgrounds WHERE id = :id")
-    actual abstract fun deleteBackground(id: Int)
+    actual abstract suspend fun deleteBackground(id: Int)
 }

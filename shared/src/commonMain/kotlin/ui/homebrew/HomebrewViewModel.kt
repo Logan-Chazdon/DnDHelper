@@ -38,7 +38,7 @@ class HomebrewViewModel constructor(
         return spellRepository.createDefaultSpell()
     }
 
-    fun createDefaultBackground(): Int {
+    suspend fun createDefaultBackground(): Int {
         return backgroundRepository.createDefaultBackground()
     }
 

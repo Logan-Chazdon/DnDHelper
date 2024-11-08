@@ -5,6 +5,7 @@ import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.auth0.jwt.JWT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import gmail.loganchazdon.database.Backgrounds
 import gmail.loganchazdon.database.Characters
 import gmail.loganchazdon.database.Classes
 import gmail.loganchazdon.database.Database
@@ -98,6 +99,14 @@ fun Application.configureDatabases() {
             //spellCastingAdapter = jsonObjectAdapter,
             //pactMagicAdapter = jsonObjectAdapter
         ),
+        backgroundsAdapter = Backgrounds.Adapter(
+            proficienciesAdapter = jsonListAdapter,
+            proficiencyChoicesAdapter = jsonListAdapter,
+            languagesAdapter = jsonListAdapter,
+            languageChoicesAdapter = jsonListAdapter,
+            equipmentAdapter = jsonListAdapter,
+            equipmentChoicesAdapter = jsonListAdapter
+        )
     )
 
     routing {

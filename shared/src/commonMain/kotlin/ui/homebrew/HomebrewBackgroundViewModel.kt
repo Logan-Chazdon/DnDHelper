@@ -19,7 +19,7 @@ class HomebrewBackgroundViewModel constructor(
     private val backgroundRepository: BackgroundRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    fun saveBackground() {
+    suspend fun saveBackground() {
         val background = BackgroundEntity(
             name = name.value,
             desc = desc.value,
@@ -36,7 +36,7 @@ class HomebrewBackgroundViewModel constructor(
         )
     }
 
-    fun createDefaultFeature(): Int {
+    suspend fun createDefaultFeature(): Int {
         val featureId = featureRepository.createDefaultFeature()
         backgroundRepository.insertBackgroundFeatureCrossRef(
             backgroundId = id,

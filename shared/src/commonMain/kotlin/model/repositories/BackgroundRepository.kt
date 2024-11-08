@@ -46,15 +46,15 @@ class BackgroundRepository {
         }
     }
 
-    fun insertBackground(backgroundEntity: BackgroundEntity) {
+    suspend fun insertBackground(backgroundEntity: BackgroundEntity) {
         backgroundDao.insertBackground(backgroundEntity)
     }
 
-    fun insertBackgroundFeatureCrossRef(backgroundId: Int, featureId: Int) {
+    suspend fun insertBackgroundFeatureCrossRef(backgroundId: Int, featureId: Int) {
         backgroundDao.insertBackgroundFeatureCrossRef(backgroundId, featureId)
     }
 
-    fun createDefaultBackground(): Int {
+    suspend fun createDefaultBackground(): Int {
         return backgroundDao.insertBackground(
             BackgroundEntity(
                 name = "",
@@ -72,7 +72,7 @@ class BackgroundRepository {
         return backgroundDao.getHomebrewBackgrounds()
     }
 
-    fun deleteBackground(id: Int) {
+    suspend fun deleteBackground(id: Int) {
         backgroundDao.deleteBackground(id)
     }
 }

@@ -13,3 +13,9 @@ INSERT OR REPLACE INTO BackgroundFeatureCrossRef (backgroundId, featureId, owner
 
 delete:
 DELETE FROM BackgroundFeatureCrossRef WHERE backgroundId = :backgroundId AND featureId = :featureId AND owner = :owner;
+
+selectFeaturesForBackground:
+SELECT features.* FROM features
+LEFT JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.owner IS :owner
+AND BackgroundFeatureCrossRef.featureId IS features.featureId
+WHERE BackgroundFeatureCrossRef.backgroundId IS :backgroundId;

@@ -15,25 +15,25 @@ actual abstract class BackgroundDao {
         this.backgroundService = backgroundService
     }
 
-    actual abstract fun getBackgroundSpells(backgroundId: Int): List<Spell>?
-    actual abstract fun removeBackgroundById(id: Int)
-    actual abstract fun getBackgroundFeatures(id: Int): List<Feature>
+    actual abstract suspend fun getBackgroundSpells(backgroundId: Int): List<Spell>?
+    actual abstract suspend fun getBackgroundFeatures(id: Int): List<Feature>
     actual fun getAllBackgrounds(): Flow<List<Background>> {
         return backgroundService.getAllBackgrounds()
     }
 
-    actual abstract fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
+    actual abstract suspend fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
     actual abstract fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>>
-    actual abstract fun deleteBackground(id: Int)
-    actual abstract fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
-    actual fun insertBackgroundFeatureCrossRef(backgroundId: Int, featureId: Int) {
+    actual abstract suspend fun deleteBackground(id: Int)
+    actual abstract suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
+    actual suspend fun insertBackgroundFeatureCrossRef(backgroundId: Int, featureId: Int) {
+        backgroundService.insertBackgroundFeatureCrossRef(backgroundId, featureId)
     }
 
-    actual fun insertBackground(backgroundEntity: BackgroundEntity): Int {
+    actual suspend fun insertBackground(backgroundEntity: BackgroundEntity): Int {
         return backgroundService.insertBackground(backgroundEntity)
     }
 
-    actual fun insertBackgroundSpellCrossRef(backgroundId: Int, spellId: Int) {
+    actual suspend fun insertBackgroundSpellCrossRef(backgroundId: Int, spellId: Int) {
         backgroundService.insertBackgroundSpellCrossRef(backgroundId, spellId)
     }
 
@@ -42,19 +42,15 @@ actual abstract class BackgroundDao {
 
 
 class BackgroundDaoImpl(backgroundService: BackgroundService) : BackgroundDao(backgroundService) {
-    override fun getBackgroundSpells(backgroundId: Int): List<Spell>? {
+    override suspend fun getBackgroundSpells(backgroundId: Int): List<Spell>? {
         return backgroundService.getBackgroundSpells(backgroundId)
     }
 
-    override fun removeBackgroundById(id: Int) {
-        backgroundService.removeBackgroundById(id)
-    }
-
-    override fun getBackgroundFeatures(id: Int): List<Feature> {
+    override suspend fun getBackgroundFeatures(id: Int): List<Feature> {
         return backgroundService.getBackgroundFeatures(id)
     }
 
-    override fun getUnfilledBackgroundFeatures(id: Int): List<Feature> {
+    override suspend fun getUnfilledBackgroundFeatures(id: Int): List<Feature> {
         return backgroundService.getUnfilledBackgroundFeatures(id)
     }
 
@@ -62,11 +58,11 @@ class BackgroundDaoImpl(backgroundService: BackgroundService) : BackgroundDao(ba
         return backgroundService.getHomebrewBackgrounds()
     }
 
-    override fun deleteBackground(id: Int) {
+    override suspend fun deleteBackground(id: Int) {
         backgroundService.deleteBackground(id)
     }
 
-    override fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity {
+    override suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity {
         return backgroundService.getBackgroundChoiceData(charId)
     }
 

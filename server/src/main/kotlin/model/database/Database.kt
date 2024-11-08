@@ -8,9 +8,7 @@ import com.google.gson.GsonBuilder
 import gmail.loganchazdon.database.Characters
 import gmail.loganchazdon.database.Classes
 import gmail.loganchazdon.database.Database
-import gmail.loganchazdon.dndhelper.model.services.characterService
-import gmail.loganchazdon.dndhelper.model.services.classService
-import gmail.loganchazdon.dndhelper.model.services.raceService
+import gmail.loganchazdon.dndhelper.model.services.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.http.*
@@ -26,9 +24,10 @@ val gsonInstance = GsonBuilder()
     .create()
 val Routing.gson: Gson
     get() = gsonInstance
+
 //Used to unquote json stored as strings.
 private val regex = "\"(\\{.*?\\}|\\[.*?\\])\"".toRegex()
-fun String.clean() : String {
+fun String.clean(): String {
     return replace(regex, "$1").replace("\\", "").replace("\"null\"", "null")
 }
 
@@ -36,7 +35,7 @@ val applicationHttpClient = HttpClient {
 
 }
 
-suspend fun RoutingContext.withUserInfo(block: suspend  RoutingContext.(userInfo: UserInfo) -> Unit) {
+suspend fun RoutingContext.withUserInfo(block: suspend RoutingContext.(userInfo: UserInfo) -> Unit) {
     getSession(call)?.let { session ->
         val userInfo = getUserInfo(applicationHttpClient, session, call)
         block(userInfo)
@@ -48,7 +47,7 @@ fun Application.configureDatabases() {
     install(Sessions) {
         //TODO Prod change sessionStorage
         //TODO Prod look at encryption
-        cookie<UserSession>("USER_SESSION", /*,directorySessionStorage(File("build/.sessions"))*/) {
+        cookie<UserSession>("USER_SESSION" /*,directorySessionStorage(File("build/.sessions"))*/) {
 
         }
     }
@@ -125,9 +124,14 @@ fun Application.configureDatabases() {
 
         }
 
+        backgroundService(db, applicationHttpClient)
         characterService(db, applicationHttpClient)
         classService(db, applicationHttpClient)
+        featService(db, applicationHttpClient)
+        featureService(db, applicationHttpClient)
         raceService(db, applicationHttpClient)
+        subraceService(db, applicationHttpClient)
+        subclassService(db, applicationHttpClient)
 
         get("/") {
             val userSession: UserSession? = call.sessions.get()

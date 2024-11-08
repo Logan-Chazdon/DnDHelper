@@ -7,7 +7,7 @@ import model.FeatureEntity
 import model.Spell
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-expect abstract class FeatureDao() {
+expect abstract class FeatureDao {
     abstract fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int)
     abstract fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
     abstract fun getFeatureSpells(featureId: Int): List<Spell>?

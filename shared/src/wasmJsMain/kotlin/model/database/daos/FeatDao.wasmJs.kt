@@ -1,27 +1,27 @@
 package model.database.daos
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
 import model.Feat
 import model.Feature
-import model.Prerequisite
+import services.FeatService
 
 actual abstract class FeatDao {
+    protected val featService: FeatService
+    constructor(featService: FeatService) {
+        this.featService = featService
+    }
+
     actual abstract fun getUnfilledFeats(): Flow<List<Feat>>
     actual abstract fun getFeatFeatures(featId: Int): List<Feature>
 }
 
-class FeatDaoImpl() : FeatDao() {
+class FeatDaoImpl(featService: FeatService) : FeatDao(featService) {
     override fun getUnfilledFeats(): Flow<List<Feat>> {
-        //TODO update me
-        val testFeat = Feat("Test Feat", "Test", Prerequisite())
-        return channelFlow {
-            send(listOf(testFeat))
-        }
+        return featService.getUnfilledFeats()
     }
 
     override fun getFeatFeatures(featId: Int): List<Feature> {
-        TODO("Not yet implemented")
+        return featService.getFeatFeatures(featId)
     }
 
 }

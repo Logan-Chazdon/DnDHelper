@@ -4,9 +4,7 @@ import model.repositories.*
 import org.koin.core.annotation.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
-import services.CharacterService
-import services.ClassService
-import services.RaceService
+import services.*
 import ui.character.*
 import ui.homebrew.*
 import ui.newCharacter.*
@@ -67,8 +65,17 @@ class SharedModule {
             }
         }
 
+        single { BackgroundService(get()) }
         single { CharacterService(get()) }
         single { ClassService(get()) }
+        single { FeatService(get()) }
+        single { FeatureService(get()) }
         single { RaceService(get()) }
+        single { SpellService(get()) }
+        single { SubclassService(get()) }
+        single { SubraceService(get()) }
+
+
+
     }
 }

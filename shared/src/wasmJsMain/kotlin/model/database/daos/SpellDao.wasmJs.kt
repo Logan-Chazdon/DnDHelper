@@ -3,45 +3,53 @@ package model.database.daos
 import kotlinx.coroutines.flow.Flow
 import model.Spell
 import model.pojos.NameAndIdPojo
+import services.SpellService
 
 actual abstract class SpellDao {
+    protected val spellService: SpellService
+    constructor(spellService: SpellService) {
+        this.spellService = spellService
+    }
+
     actual abstract fun getAllSpells(): Flow<List<Spell>>
     actual abstract fun getHomebrewSpells(): Flow<List<Spell>>
     actual abstract fun getLiveSpell(id: Int): Flow<Spell>
     actual fun insertSpell(spell: Spell): Int {
-        TODO("Not yet implemented")
+        return spellService.insertSpell(spell)
     }
 
     actual abstract fun getSpellClasses(id: Int): Flow<List<NameAndIdPojo>>
     actual fun removeClassSpellCrossRef(classId: Int, spellId: Int) {
+        spellService.removeClassSpellCrossRef(classId, spellId)
     }
 
     actual fun addClassSpellCrossRef(classId: Int, spellId: Int) {
+        spellService.addClassSpellCrossRef(classId, spellId)
     }
 
     actual abstract fun removeSpellById(id: Int)
 }
 
 
-class SpellDaoImpl() : SpellDao() {
+class SpellDaoImpl(service: SpellService) : SpellDao(service) {
     override fun getAllSpells(): Flow<List<Spell>> {
-        TODO("Not yet implemented")
+        return spellService.getAllSpells()
     }
 
     override fun getHomebrewSpells(): Flow<List<Spell>> {
-        TODO("Not yet implemented")
+        return spellService.getHomebrewSpells()
     }
 
     override fun getLiveSpell(id: Int): Flow<Spell> {
-        TODO("Not yet implemented")
+        return spellService.getLiveSpell(id)
     }
 
     override fun getSpellClasses(id: Int): Flow<List<NameAndIdPojo>> {
-        TODO("Not yet implemented")
+        return spellService.getSpellClasses(id)
     }
 
     override fun removeSpellById(id: Int) {
-        TODO("Not yet implemented")
+        spellService.removeSpellById(id)
     }
 
 }

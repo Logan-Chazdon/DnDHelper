@@ -7,13 +7,13 @@ import org.koin.dsl.module
 class WebModule {
     val module = module {
         single <CharacterDao> { CharacterDaoImpl(get()) }
-        single <BackgroundDao> { BackgroundDaoImpl() }
+        single <BackgroundDao> { BackgroundDaoImpl(get()) }
         single <ClassDao> { ClassDaoImpl(get()) }
-        single <FeatDao> { FeatDaoImpl() }
-        single <FeatureDao> { FeatureDaoImpl() }
+        single <FeatDao> { FeatDaoImpl(get()) }
+        single <FeatureDao> { FeatureDaoImpl(get()) }
         single <RaceDao> { RaceDaoImpl(get()) }
-        single <SpellDao> { SpellDaoImpl() }
-        single <SubclassDao> { SubclassDaoImpl() }
-        single <SubraceDao> { SubraceDaoImpl() }
+        single <SpellDao> { SpellDaoImpl(get()) }
+        single <SubclassDao> { SubclassDaoImpl(get()) }
+        single <SubraceDao> { SubraceDaoImpl(get()) }
     }
 }

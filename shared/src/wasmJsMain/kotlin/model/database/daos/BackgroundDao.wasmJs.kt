@@ -6,13 +6,20 @@ import model.BackgroundEntity
 import model.Feature
 import model.Spell
 import model.choiceEntities.BackgroundChoiceEntity
+import services.BackgroundService
 
 actual abstract class BackgroundDao {
+    protected val backgroundService: BackgroundService
+
+    constructor(backgroundService: BackgroundService) {
+        this.backgroundService = backgroundService
+    }
+
     actual abstract fun getBackgroundSpells(backgroundId: Int): List<Spell>?
     actual abstract fun removeBackgroundById(id: Int)
     actual abstract fun getBackgroundFeatures(id: Int): List<Feature>
     actual fun getAllBackgrounds(): Flow<List<Background>> {
-        TODO("Not yet implemented")
+        return backgroundService.getAllBackgrounds()
     }
 
     actual abstract fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
@@ -23,48 +30,48 @@ actual abstract class BackgroundDao {
     }
 
     actual fun insertBackground(backgroundEntity: BackgroundEntity): Int {
-        TODO("Not yet implemented")
+        return backgroundService.insertBackground(backgroundEntity)
     }
 
     actual fun insertBackgroundSpellCrossRef(backgroundId: Int, spellId: Int) {
+        backgroundService.insertBackgroundSpellCrossRef(backgroundId, spellId)
     }
 
     actual abstract fun getUnfilledBackground(id: Int): Flow<BackgroundEntity>
 }
 
 
-
-class BackgroundDaoImpl() : BackgroundDao() {
+class BackgroundDaoImpl(backgroundService: BackgroundService) : BackgroundDao(backgroundService) {
     override fun getBackgroundSpells(backgroundId: Int): List<Spell>? {
-        TODO("Not yet implemented")
+        return backgroundService.getBackgroundSpells(backgroundId)
     }
 
     override fun removeBackgroundById(id: Int) {
-        TODO("Not yet implemented")
+        backgroundService.removeBackgroundById(id)
     }
 
     override fun getBackgroundFeatures(id: Int): List<Feature> {
-        TODO("Not yet implemented")
+        return backgroundService.getBackgroundFeatures(id)
     }
 
     override fun getUnfilledBackgroundFeatures(id: Int): List<Feature> {
-        TODO("Not yet implemented")
+        return backgroundService.getUnfilledBackgroundFeatures(id)
     }
 
     override fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>> {
-        TODO("Not yet implemented")
+        return backgroundService.getHomebrewBackgrounds()
     }
 
     override fun deleteBackground(id: Int) {
-        TODO("Not yet implemented")
+        backgroundService.deleteBackground(id)
     }
 
     override fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity {
-        TODO("Not yet implemented")
+        return backgroundService.getBackgroundChoiceData(charId)
     }
 
     override fun getUnfilledBackground(id: Int): Flow<BackgroundEntity> {
-        TODO("Not yet implemented")
+        return backgroundService.getUnfilledBackground(id)
     }
 
 }

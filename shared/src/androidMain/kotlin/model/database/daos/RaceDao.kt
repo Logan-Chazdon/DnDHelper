@@ -1,6 +1,5 @@
 package model.database.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import model.*
@@ -15,7 +14,7 @@ actual abstract class RaceDao {
     actual abstract fun getHomebrewRaces(): Flow<List<Race>>
 
 
-    actual fun insertRace(newRace: RaceEntity): Int {
+    actual suspend fun insertRace(newRace: RaceEntity): Int {
         val id = insertRaceOrIgnore(newRace.asTable()).toInt()
         if (id == -1) {
             updateRace(newRace.asTable())
@@ -31,7 +30,7 @@ actual abstract class RaceDao {
     protected abstract fun updateRace(newRace: RaceEntityTable)
 
     @Query("DELETE FROM races WHERE raceId = :id")
-    actual abstract fun deleteRace(id: Int)
+    actual abstract suspend fun deleteRace(id: Int)
 
     @Query("SELECT * FROM races WHERE raceId = :id")
     actual abstract fun findUnfilledLiveRaceById(id: Int): Flow<Race>
@@ -43,7 +42,7 @@ JOIN SubraceFeatChoiceCrossRef ON SubraceFeatChoiceCrossRef.featChoiceId IS feat
 WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
     """
     )
-    actual abstract fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
+    actual abstract suspend fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
 
     @Transaction
     @RewriteQueriesToDropUnusedColumns
@@ -52,14 +51,14 @@ WHERE SubraceFeatChoiceCrossRef.subraceId IS :id
 JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId 
 WHERE subraceId IS :subraceId"""
     )
-    actual abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
+    actual abstract suspend fun getSubraceFeatures(subraceId: Int): List<Feature>
 
     @Query("SELECT * FROM features JOIN RaceFeatureCrossRef ON RaceFeatureCrossRef.featureId IS features.featureId WHERE raceId IS :id")
-    actual abstract fun getRaceTraits(id: Int): List<Feature>
+    actual abstract suspend fun getRaceTraits(id: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
-    actual fun insertRaceFeatureCrossRef(featureId: Int, raceId: Int) {
+    actual suspend fun insertRaceFeatureCrossRef(featureId: Int, raceId: Int) {
         insertRaceFeatureCrossRef(
             RaceFeatureCrossRef(
                 featureId = featureId,
@@ -70,7 +69,7 @@ WHERE subraceId IS :subraceId"""
 
     @Delete
     abstract fun removeRaceFeatureCrossRef(ref: RaceFeatureCrossRef)
-    actual fun removeRaceFeatureCrossRef(featureId: Int, raceId: Int) {
+    actual suspend fun removeRaceFeatureCrossRef(featureId: Int, raceId: Int) {
         removeRaceFeatureCrossRef(
             RaceFeatureCrossRef(
                 featureId, raceId
@@ -84,11 +83,11 @@ WHERE subraceId IS :subraceId"""
 JOIN RaceFeatureCrossRef ON features.featureId IS RaceFeatureCrossRef.featureId 
 WHERE raceId is :raceId"""
     )
-    actual abstract fun getRaceFeatures(raceId: Int): List<Feature>
+    actual abstract suspend fun getRaceFeatures(raceId: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceSubraceCrossRef(raceSubraceCrossRef: RaceSubraceCrossRef)
-    actual fun insertRaceSubraceCrossRef(subraceId: Int, raceId: Int) {
+    actual suspend fun insertRaceSubraceCrossRef(subraceId: Int, raceId: Int) {
         insertRaceSubraceCrossRef(
             RaceSubraceCrossRef(
                 subraceId = subraceId,

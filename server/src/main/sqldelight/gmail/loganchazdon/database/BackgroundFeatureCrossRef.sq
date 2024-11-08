@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS BackgroundFeatureCrossRef (
+    `backgroundId` INTEGER NOT NULL,
+    `featureId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`backgroundId`, `featureId`, owner),
+    FOREIGN KEY(`backgroundId`) REFERENCES `backgrounds`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT OR REPLACE INTO BackgroundFeatureCrossRef (backgroundId, featureId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM BackgroundFeatureCrossRef WHERE backgroundId = :backgroundId AND featureId = :featureId AND owner = :owner;

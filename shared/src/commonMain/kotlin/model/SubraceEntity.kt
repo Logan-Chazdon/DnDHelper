@@ -1,8 +1,10 @@
 package model
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 open class SubraceEntity(
-    var name : String,
+    var name : String = "Subrace",
     var abilityBonuses: List<AbilityBonus>? = null,
     var abilityBonusChoice: AbilityBonusChoice?= null,
     var startingProficiencies: List<Proficiency>?= null,

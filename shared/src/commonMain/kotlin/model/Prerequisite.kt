@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Prerequisite(
     val proficiency: Proficiency? = null,
     val level: Int? = null,

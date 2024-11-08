@@ -1,41 +1,63 @@
 package model
 
+import kotlinx.serialization.Serializable
 
-open class Class(
-    id: Int = 0,
-    var isBaseClass: Boolean = false,
-    var level: Int = 1,
-    open var subclass: Subclass? = null,
-    var tookGold: Boolean? = null,
-    var totalNumOnGoldDie: Int? = null,
-    var featsGranted: MutableList<Feat>? = mutableListOf(),
-    var abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf(),
-    name: String,
-    hitDie: Int = 8,
-    subclassLevel: Int,
-    var levelPath: MutableList<Feature>? = mutableListOf(),
-    proficiencyChoices: List<ProficiencyChoice> = emptyList(),
-    proficiencies: List<Proficiency> = emptyList(),
-    equipmentChoices: List<ItemChoice> = emptyList(),
-    equipment: List<ItemInterface> = emptyList(),
-    spellCasting: SpellCasting? = null,
-    pactMagic: PactMagic? = null,
-    startingGoldD4s: Int,
-    startingGoldMultiplier: Int = 10
-) : ClassEntity(
-    name,
-    hitDie,
-    subclassLevel,
-    proficiencyChoices,
-    proficiencies,
-    equipmentChoices,
-    equipment,
-    spellCasting,
-    pactMagic,
-    startingGoldD4s,
-    startingGoldMultiplier,
-    id
-) {
+
+@Serializable
+open class Class() : ClassEntity() {
+    var isBaseClass: Boolean = false
+    var level : Int = 0
+    open var subclass: Subclass? = null
+    var tookGold: Boolean? = false
+    var totalNumOnGoldDie: Int? = 1
+    var featsGranted: MutableList<Feat>? = null
+    var abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf()
+    var levelPath: MutableList<Feature>? = null
+
+    constructor(
+        id: Int = 0,
+        isBaseClass: Boolean = false,
+        level: Int = 1,
+        subclass: Subclass? = null,
+        tookGold: Boolean? = null,
+        totalNumOnGoldDie: Int? = null,
+        featsGranted: MutableList<Feat>? = mutableListOf(),
+        abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf(),
+        name: String,
+        hitDie: Int = 8,
+        subclassLevel: Int,
+        levelPath: MutableList<Feature>? = mutableListOf(),
+        proficiencyChoices: List<ProficiencyChoice> = emptyList(),
+        proficiencies: List<Proficiency> = emptyList(),
+        equipmentChoices: List<ItemChoice> = emptyList(),
+        equipment: List<ItemInterface> = emptyList(),
+        spellCasting: SpellCasting? = null,
+        pactMagic: PactMagic? = null,
+        startingGoldD4s: Int,
+        startingGoldMultiplier: Int = 10
+    ) : this() {
+        this.name = name
+        this.hitDie = hitDie
+        this.subclassLevel = subclassLevel
+        this.proficiencyChoices = proficiencyChoices
+        this.proficiencies = proficiencies
+        this.equipmentChoices = equipmentChoices
+        this.equipment = equipment
+        this.spellCasting = spellCasting
+        this.pactMagic = pactMagic
+        this.startingGoldD4s = startingGoldD4s
+        this.startingGoldMultiplier = startingGoldMultiplier
+        this.id = id
+
+        this.isBaseClass = isBaseClass
+        this.level = level
+        this.subclass = subclass
+        this.tookGold = tookGold
+        this.totalNumOnGoldDie = totalNumOnGoldDie
+        this.featsGranted = featsGranted
+        this.abilityImprovementsGranted = abilityImprovementsGranted
+        this.levelPath = levelPath
+    }
 
     constructor(classEntity: ClassEntity, features: MutableList<Feature>) :
             this(

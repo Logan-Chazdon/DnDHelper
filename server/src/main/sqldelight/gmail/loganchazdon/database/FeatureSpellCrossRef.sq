@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS FeatureSpellCrossRef (
+    `spellId` INTEGER NOT NULL,
+    `featureId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`spellId`, `featureId`, owner),
+    FOREIGN KEY(`spellId`) REFERENCES `spells`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO FeatureSpellCrossRef (spellId, featureId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM FeatureSpellCrossRef WHERE spellId = :spellId AND featureId = :featureId AND owner = :owner;

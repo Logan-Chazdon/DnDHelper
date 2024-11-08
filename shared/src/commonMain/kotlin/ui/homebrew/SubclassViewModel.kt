@@ -51,14 +51,14 @@ class SubclassViewModel constructor(
         )
     }
 
-    fun removeClass(i: Int) {
+    suspend fun removeClass(i: Int) {
         classRepository.removeClassSubclassCrossRef(
             subclassId = id,
             classId = classes.value!![i].id
         )
     }
 
-    fun toggleClass(it: NameAndIdPojo) {
+    suspend fun toggleClass(it: NameAndIdPojo) {
         if (classes.value?.firstOrNull { item -> item.id == it.id } != null) {
             classRepository.removeClassSubclassCrossRef(
                 classId = it.id,

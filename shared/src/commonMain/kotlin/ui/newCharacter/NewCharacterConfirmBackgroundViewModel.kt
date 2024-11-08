@@ -86,7 +86,7 @@ class NewCharacterConfirmBackgroundViewModel constructor(
         saveFeatures(background.lastOrNull()!!.features!!)
     }
 
-    private fun saveFeatures(features: List<Feature>) {
+    private suspend fun saveFeatures(features: List<Feature>) {
         features.forEach { feature ->
             feature.choices?.forEach { choice ->
                 choice.chosen?.forEach { chosen ->

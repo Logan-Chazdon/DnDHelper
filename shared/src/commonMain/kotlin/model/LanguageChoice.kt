@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class LanguageChoice(
     var name: String,
     var choose: Int,

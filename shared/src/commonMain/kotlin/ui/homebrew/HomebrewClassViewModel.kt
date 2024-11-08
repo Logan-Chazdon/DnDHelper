@@ -27,7 +27,7 @@ class HomebrewClassViewModel constructor(
     private val spellRepository: SpellRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    fun createDefaultFeature(): Int {
+    suspend fun createDefaultFeature(): Int {
         val featureId = featureRepository.createDefaultFeature()
         classRepository.insertClassFeatureCrossRef(
             classId = id,
@@ -36,7 +36,7 @@ class HomebrewClassViewModel constructor(
         return featureId
     }
 
-    fun saveClass() {
+    suspend fun saveClass() {
         var pactMagic: PactMagic? = null
         if (hasPactMagic.value) {
             val pactSlots = mutableListOf<Resource>()
@@ -203,7 +203,7 @@ class HomebrewClassViewModel constructor(
         }
     }
 
-    fun createDefaultSubclass(): Int {
+    suspend fun createDefaultSubclass(): Int {
         val subclassId = classRepository.createDefaultSubclass()
         classRepository.insertClassSubclassCrossRef(
             classId = id,

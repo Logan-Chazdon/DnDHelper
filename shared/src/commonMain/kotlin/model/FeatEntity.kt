@@ -1,12 +1,15 @@
 package model
 
+import kotlinx.serialization.Serializable
 
+
+@Serializable
 open class FeatEntity(
-    val name: String,
-    val desc: String,
-    val prerequisite: Prerequisite? = null,
-    val abilityBonuses: List<AbilityBonus>? = null,
-    val abilityBonusChoice: AbilityBonusChoice? = null
+    var name: String,
+    var desc: String,
+    var prerequisite: Prerequisite? = null,
+    var abilityBonuses: List<AbilityBonus>? = null,
+    var abilityBonusChoice: AbilityBonusChoice? = null
 ) {
     open var id = 0
 }

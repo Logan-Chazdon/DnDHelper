@@ -1,22 +1,40 @@
 package model
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-class Background (
-    name: String,
-    desc: String,
-    spells: List<Spell>?,
-    proficiencies : List<Proficiency>,
-    proficiencyChoices : List<ProficiencyChoice>? = null,
-    var features : List<Feature>? = null,
-    languages : List<Language>,
-    languageChoices : List<LanguageChoice>? = null,
-    equipment : List<ItemInterface>,
-    equipmentChoices: List<ItemChoice>
-) : BackgroundEntity(name, desc, spells, proficiencies, proficiencyChoices, languages, languageChoices, equipment, equipmentChoices) {
+@Serializable
+class Background() : BackgroundEntity() {
+    @Transient
+    var features: List<Feature>? = null
+
+    constructor(
+        name: String,
+        desc: String,
+        spells: List<Spell>?,
+        proficiencies: List<Proficiency>,
+        proficiencyChoices: List<ProficiencyChoice>? = null,
+        features: List<Feature>? = null,
+        languages: List<Language>,
+        languageChoices: List<LanguageChoice>? = null,
+        equipment: List<ItemInterface>,
+        equipmentChoices: List<ItemChoice>
+    ) : this() {
+        this.name = name
+        this.desc = desc
+        this.spells = spells
+        this.proficiencies = proficiencies
+        this.proficiencyChoices = proficiencyChoices
+        this.languages = languages
+        this.languageChoices = languageChoices
+        this.equipment = equipment
+        this.equipmentChoices = equipmentChoices
+        this.features = features
+    }
 
     constructor(
         entity: BackgroundEntity,
-        features : List<Feature>?,
+        features: List<Feature>?,
     ) : this(
         name = entity.name,
         desc = entity.desc,

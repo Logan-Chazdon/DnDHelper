@@ -1,52 +1,62 @@
 package model
 
+import kotlinx.serialization.Serializable
 
-class Feature(
-    featureId: Int = 0,
-    name: String,
-    description: String,
-    index: String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.
-    grantedAtLevel: Int = 1,
-    maxTimesChosen: Int? = null, //If the feature is in another features options. This is the max amount of times the user can select it.
-    prerequisite: Prerequisite? = null,
-    activationRequirement: ActivationRequirement = ActivationRequirement(),
-    speedBoost: ScalingBonus? = null,
-    spells: List<Spell>? = null, //Spells granted by this feature
-    infusion: Infusion? = null,
-    maxActive: Choose = Choose(0),
-    hpBonusPerLevel: Int? = null,
-    armorContingentAcBonus: Int? = null, //Extra ac only granted when wearing armor.
-    acBonus: Int? = null,
-    ac: ArmorClass? = null, //This will only be applied when not wearing armor.
-    proficiencies: List<Proficiency>? = null,
-    expertises: List<Proficiency>? = null,
-    languages: List<Language>? = null,
-    extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
-    rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.
+
+@Serializable
+class Feature() : FeatureEntity(name = "", description = ""){
     var choices: List<FeatureChoice>? = null
-) : FeatureEntity(
-    featureId,
-    name,
-    description,
-    index,
-    grantedAtLevel,
-    maxTimesChosen,
-    prerequisite,
-    activationRequirement,
-    speedBoost,
-    spells,
-    infusion,
-    maxActive,
-    hpBonusPerLevel,
-    armorContingentAcBonus,
-    acBonus,
-    ac,
-    proficiencies,
-    expertises,
-    languages,
-    extraAttackAndDamageRollStat,
-    rangedAttackBonus,
-) {
+
+    constructor(
+        featureId: Int = 0,
+        name: String,
+        description: String,
+        index: String? = null, //This is used when we need to check for a specific feature. For example when a subrace overrides a race.
+        grantedAtLevel: Int = 1,
+        maxTimesChosen: Int? = null, //If the feature is in another features options. This is the max amount of times the user can select it.
+        prerequisite: Prerequisite? = null,
+        activationRequirement: ActivationRequirement = ActivationRequirement(),
+        speedBoost: ScalingBonus? = null,
+        spells: List<Spell>? = null, //Spells granted by this feature
+        infusion: Infusion? = null,
+        maxActive: Choose = Choose(0),
+        hpBonusPerLevel: Int? = null,
+        armorContingentAcBonus: Int? = null, //Extra ac only granted when wearing armor.
+        acBonus: Int? = null,
+        ac: ArmorClass? = null, //This will only be applied when not wearing armor.
+        proficiencies: List<Proficiency>? = null,
+        expertises: List<Proficiency>? = null,
+        languages: List<Language>? = null,
+        extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
+        rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.
+        choices: List<FeatureChoice>? = null
+    ) : this() {
+        this.featureId = featureId
+        this.name = name
+        this.description =description
+        this.index= index
+        this.grantedAtLevel = grantedAtLevel
+        this.maxTimesChosen = maxTimesChosen
+        this.prerequisite =prerequisite
+        this.activationRequirement = activationRequirement
+        this.speedBoost = speedBoost
+        this.spells = spells
+        this.infusion = infusion
+        this.maxActive = maxActive
+        this.hpBonusPerLevel = hpBonusPerLevel
+        this.armorContingentAcBonus = armorContingentAcBonus
+        this.acBonus = acBonus
+        this.ac = ac
+        this.proficiencies = proficiencies
+        this.expertises = expertises
+        this.languages = languages
+        this.extraAttackAndDamageRollStat = extraAttackAndDamageRollStat
+        this.rangedAttackBonus = rangedAttackBonus
+        this.choices = choices
+    }
+
+
+
     var resource: Resource? = null
     val allChosen: List<Feature>
         get() {

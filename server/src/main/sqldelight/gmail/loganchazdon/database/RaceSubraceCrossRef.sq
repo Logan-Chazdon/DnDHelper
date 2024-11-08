@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS RaceSubraceCrossRef (
+    `subraceId` INTEGER NOT NULL,
+    `raceId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`subraceId`, `raceId`, owner),
+    FOREIGN KEY(`subraceId`) REFERENCES `subraces`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`raceId`) REFERENCES `races`(`raceId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO RaceSubraceCrossRef (subraceId, raceId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM RaceSubraceCrossRef WHERE owner = :owner AND subraceId =:subraceId AND raceId =:raceId;
+
+selectSubraceNameIdForRace:
+SELECT id, name FROM subraces
+JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.raceId = :raceId
+AND RaceSubraceCrossRef.subraceId = subraces.id
+AND RaceSubraceCrossRef.owner IS :owner
+WHERE (subraces.owner IS NULL OR subraces.owner IS :owner);

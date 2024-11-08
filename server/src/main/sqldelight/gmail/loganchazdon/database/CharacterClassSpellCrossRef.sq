@@ -1,0 +1,31 @@
+CREATE TABLE IF NOT EXISTS CharacterClassSpellCrossRef (
+    `characterId` INTEGER NOT NULL,
+    `classId` INTEGER NOT NULL,
+    `spellId` INTEGER NOT NULL,
+    `isPrepared` INTEGER,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(
+        `characterId`,
+        `classId`,
+        `spellId`,
+        owner
+    ),
+    FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`classId`) REFERENCES `classes`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`spellId`) REFERENCES `spells`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+insert:
+INSERT INTO CharacterClassSpellCrossRef (characterId, classId, spellId, isPrepared, owner) VALUES (?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM CharacterClassSpellCrossRef WHERE characterId = :characterId AND classId = :classId AND owner = :owner AND spellId = :spellId;
+
+
+getNumPreped:
+SELECT COUNT(*) FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND owner = :owner AND characterId IS :characterId AND isPrepared IS '1';
+
+deleteByCharacterId:
+DELETE FROM CharacterClassCrossRef WHERE characterId = :characterId AND classId = :classId AND owner =:owner;

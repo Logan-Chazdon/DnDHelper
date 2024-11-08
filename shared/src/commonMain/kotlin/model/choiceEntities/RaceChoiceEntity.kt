@@ -1,5 +1,8 @@
 package model.choiceEntities
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 open class RaceChoiceEntity(
     val raceId: Int = 0,
     val characterId: Int = 0,

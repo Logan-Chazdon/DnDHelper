@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS `BackgroundChoiceEntity` (
+    `characterId` INTEGER NOT NULL,
+    `backgroundId` INTEGER NOT NULL,
+    `languageChoices` TEXT NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+
+    PRIMARY KEY(
+        `characterId`,
+        `backgroundId`
+    )
+);
+
+insert:
+INSERT OR REPLACE INTO BackgroundChoiceEntity VALUES ?;
+
+delete:
+DELETE FROM  BackgroundChoiceEntity WHERE characterId IS :characterId AND backgroundId IS :backgroundId AND owner IS :owner;

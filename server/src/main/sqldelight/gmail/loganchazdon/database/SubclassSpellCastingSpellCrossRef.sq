@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS SubclassSpellCastingSpellCrossRef (
+    `subclassId` INTEGER NOT NULL,
+    `spellId` INTEGER NOT NULL,
+    `characterId` INTEGER NOT NULL,
+    `isPrepared` INTEGER,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(
+        `subclassId`,
+        `spellId`,
+        `characterId`,
+        owner
+    ),
+    FOREIGN KEY(`subclassId`) REFERENCES `subclasses`(`subclassId`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`spellId`) REFERENCES `spells`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO SubclassSpellCastingSpellCrossRef (subclassId, spellId, characterId, isPrepared, owner) VALUES (?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM SubclassSpellCastingSpellCrossRef WHERE subclassId = :subclassId AND spellId =:spellId AND owner =:owner;

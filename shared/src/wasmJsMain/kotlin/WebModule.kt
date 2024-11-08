@@ -11,7 +11,7 @@ class WebModule {
         single <ClassDao> { ClassDaoImpl(get()) }
         single <FeatDao> { FeatDaoImpl() }
         single <FeatureDao> { FeatureDaoImpl() }
-        single <RaceDao> { RaceDaoImpl() }
+        single <RaceDao> { RaceDaoImpl(get()) }
         single <SpellDao> { SpellDaoImpl() }
         single <SubclassDao> { SubclassDaoImpl() }
         single <SubraceDao> { SubraceDaoImpl() }

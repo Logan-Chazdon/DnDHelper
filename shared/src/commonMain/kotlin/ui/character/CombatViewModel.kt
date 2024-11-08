@@ -17,27 +17,27 @@ class CombatViewModel(
     private val repository: CharacterRepository
 ) : ViewModel() {
     private val characterKey = MutableStateFlow<Int>(0)
-    fun setTemp(temp: String) {
+    suspend fun setTemp(temp: String) {
         repository.setTemp(character.value?.id, temp)
     }
 
-    fun heal(hp: String) {
+    suspend fun heal(hp: String) {
         repository.heal(character.value?.id, hp, character.value!!.maxHp)
     }
 
-    fun setHp(hp: String) {
+    suspend fun setHp(hp: String) {
         repository.setHp(character.value?.id, hp)
     }
 
-    fun damage(damage: String) {
+    suspend fun damage(damage: String) {
         repository.damage(character.value?.id, damage)
     }
 
-    fun updateDeathSaveSuccesses(it: Boolean) {
+    suspend fun updateDeathSaveSuccesses(it: Boolean) {
         repository.updateDeathSaveSuccesses(character.value?.id, it)
     }
 
-    fun updateDeathSaveFailures(it: Boolean) {
+    suspend fun updateDeathSaveFailures(it: Boolean) {
         repository.updateDeathSaveFailures(character.value?.id, it)
     }
 
@@ -55,11 +55,11 @@ class CombatViewModel(
         }
     }
 
-    fun cast(spell: Spell, level: Int) {
+    suspend fun cast(spell: Spell, level: Int) {
         useSlot(level)
     }
 
-    fun refundSlot(slot: Int) {
+    suspend fun refundSlot(slot: Int) {
         if (
             !updatePactSlots(slot,+1) &&
             (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0)
@@ -70,14 +70,14 @@ class CombatViewModel(
         }
     }
 
-    fun useSlot(slot: Int) {
+    suspend fun useSlot(slot: Int) {
         if (!updatePactSlots(slot,-1) && (character.value!!.spellSlots.getOrNull(slot - 1)?.currentAmount ?: 0) != 0) {
             character.value!!.spellSlots[slot - 1].currentAmount -= 1
             repository.insertSpellSlots(character.value!!.spellSlots, character.value!!.id)
         }
     }
 
-    private fun updatePactSlots(level: Int, amount: Int) : Boolean{
+    private suspend fun updatePactSlots(level: Int, amount: Int) : Boolean{
         character.value!!.classes.forEach { entry ->
             val slots=  entry.value.pactMagic?.pactSlots?.get(entry.value.level - 1)
             if(slots?.name == allSpellLevels[level - 1].second) {
@@ -115,7 +115,7 @@ class CombatViewModel(
     }
 
 
-    fun togglePreparation(spell: Spell, prepared: Boolean?) {
+    suspend fun togglePreparation(spell: Spell, prepared: Boolean?) {
         for (item in character.value.classes.values) {
             if (
             //This class prepares spells.

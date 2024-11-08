@@ -57,9 +57,12 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
-/*dependencies {
+dependencies {
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
-}*/
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test'
+    testImplementation projectLibs.junit
+    testImplementation projectLibs.junit.jupiter
+}
 
 /*test {
     useJUnitPlatform()
@@ -79,9 +82,10 @@ kotlin {
         browser {
             def projectDirPath = project.projectDir.path
             commonWebpackConfig {
+                setConfigDirectory(file("webpack.config.d"))
                 outputFileName = "composeApp.js"
                 devServer = (devServer ?: new KotlinWebpackConfig.DevServer()).with {
-                    //port = 1080
+                    setPort(8081)
                     it.static = (it.static ?: []).with {
                         // Serve sources to debug inside browser
                         add(projectDirPath)
@@ -98,6 +102,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
+
 
             implementation(compose.runtime)
             implementation(compose.foundation)

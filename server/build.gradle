@@ -2,6 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id "app.cash.sqldelight" version "2.0.2"
     id 'io.ktor.plugin' version '3.0.0-rc-2'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.6.21'
 }
 
 
@@ -26,7 +27,6 @@ repositories {
 
 
 dependencies {
-    //implementation project(":shared")
     //Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
@@ -47,6 +47,24 @@ dependencies {
     implementation "app.cash.sqldelight:sqlite-driver:2.0.2"
     implementation("app.cash.sqldelight:coroutines-extensions:2.0.2")
     implementation 'app.cash.sqldelight:primitive-adapters:2.0.2'
+
+    implementation "io.ktor:ktor-server-auth-jvm"
+    implementation "io.ktor:ktor-server-core-jvm"
+    implementation "io.ktor:ktor-client-core-jvm"
+    implementation "io.ktor:ktor-client-apache-jvm"
+    implementation "io.ktor:ktor-server-content-negotiation"
+    implementation "io.ktor:ktor-server-auth-jwt"
+
+    implementation("io.ktor:ktor-server-netty")
+    implementation("io.ktor:ktor-server-sessions")
+    implementation("ch.qos.logback:logback-classic")
+    implementation "io.ktor:ktor-server-content-negotiation"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
+
+    implementation('org.json:json:20231013')
+
+
+    //testImplementation project(':shared')
 }
 
 

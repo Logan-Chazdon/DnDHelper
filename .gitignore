@@ -21,3 +21,4 @@ deploymentTargetDropDown.xml
 render.experimental.xml
 /.kotlin/
 test.db
+shared/src/test/kotlin/services/Clients.kt

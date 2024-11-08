@@ -146,7 +146,7 @@ public class NewCharacterConfirmRaceViewModel constructor(
          characterRepository.setHp(id, temp.maxHp.toString())
     }
 
-    private fun storeFeatureChoices(features: List<Feature>, dropdownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>) {
+    private suspend fun storeFeatureChoices(features: List<Feature>, dropdownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>) {
         features.forEach { feature ->
             feature.choices?.forEachIndexed { index, it ->
                 if (it.choose.num(
@@ -169,7 +169,7 @@ public class NewCharacterConfirmRaceViewModel constructor(
         }
     }
 
-    fun calculateAssumedSpells(): MutableList<Spell> {
+    suspend fun calculateAssumedSpells(): MutableList<Spell> {
         val result = mutableListOf<Spell>()
         character.value?.let { characterRepository.getSpellsForCharacter(it) }?.let {
             it.forEach { (_, spells) ->

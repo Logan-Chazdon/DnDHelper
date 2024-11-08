@@ -1,19 +1,39 @@
 package model
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-
-class Subrace(
-    name : String,
-    abilityBonuses: List<AbilityBonus>?,
-    abilityBonusChoice: AbilityBonusChoice?,
-    startingProficiencies: List<Proficiency>?,
-    languages : List<Language>,
-    languageChoices: List<LanguageChoice>,
-    var traits: List<Feature>? = emptyList(),
-    size: String?,
-    groundSpeed: Int?,
+@Serializable
+class Subrace() : SubraceEntity() {
+    @Transient
+    var traits: List<Feature>? = emptyList()
+    @Transient
     var featChoices: List<FeatChoice>? = null
-) : SubraceEntity(name, abilityBonuses, abilityBonusChoice, startingProficiencies, languages, languageChoices, size, groundSpeed){
+
+    constructor(
+        name: String,
+        abilityBonuses: List<AbilityBonus>?,
+        abilityBonusChoice: AbilityBonusChoice?,
+        startingProficiencies: List<Proficiency>?,
+        languages: List<Language>,
+        languageChoices: List<LanguageChoice>,
+        traits: List<Feature>? = emptyList(),
+        size: String?,
+        groundSpeed: Int?,
+        featChoices: List<FeatChoice>? = null
+    ) : this() {
+        this.name = name
+        this.abilityBonuses = abilityBonuses
+        this.abilityBonusChoice = abilityBonusChoice
+        this.startingProficiencies = startingProficiencies
+        this.languages = languages
+        this.languageChoices = languageChoices
+        this.size = size
+        this.groundSpeed = groundSpeed
+        this.traits = traits
+        this.featChoices = featChoices
+    }
+
     constructor(entity: SubraceEntity, traits: List<Feature>?, featChoices: List<FeatChoice>?) : this(
         name = entity.name,
         abilityBonuses = entity.abilityBonuses,
@@ -28,6 +48,8 @@ class Subrace(
     ) {
         this.id = entity.id
     }
+
+
 
     val totalAbilityBonuses: List<AbilityBonus>
     get() {

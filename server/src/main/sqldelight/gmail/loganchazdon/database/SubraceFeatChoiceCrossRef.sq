@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS SubraceFeatChoiceCrossRef (
+    `subraceId` INTEGER NOT NULL,
+    `featChoiceId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`subraceId`,`featChoiceId`,owner),
+    FOREIGN KEY(`subraceId`) REFERENCES `subraces`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`featChoiceId`) REFERENCES `featChoices`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO SubraceFeatChoiceCrossRef (subraceId, featChoiceId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM SubraceFeatChoiceCrossRef WHERE subraceId = :subraceId AND featChoiceId =:featChoiceId AND owner =:owner;
+
+selectFeatChoicesForSubrace:
+SELECT * FROM featChoices
+JOIN SubraceFeatChoiceCrossRef ON SubraceFeatChoiceCrossRef.featChoiceId IS featChoices.id
+AND SubraceFeatChoiceCrossRef.owner = :owner
+WHERE SubraceFeatChoiceCrossRef.subraceId IS :id AND featChoices.owner IS :owner;

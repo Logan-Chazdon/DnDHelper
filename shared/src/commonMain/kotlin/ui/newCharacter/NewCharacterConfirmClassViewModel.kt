@@ -103,7 +103,7 @@ class NewCharacterConfirmClassViewModel constructor(
         return features
     }
 
-    private fun saveFeatures(features: List<Feature>) {
+    private suspend fun saveFeatures(features: List<Feature>) {
         getFeatures(features, toNumber(levels)).forEach { feature ->
             feature.choices?.forEach { choice ->
                 choice.chosen?.forEach { chosen ->

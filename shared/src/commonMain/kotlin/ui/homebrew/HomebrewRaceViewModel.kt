@@ -22,7 +22,7 @@ class HomebrewRaceViewModel constructor(
     private val featureRepository: FeatureRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    fun createDefaultFeature(): Int {
+    suspend fun createDefaultFeature(): Int {
         val featureId = featureRepository.createDefaultFeature()
         raceRepository.insertRaceFeatureCrossRef(
             raceId = id,
@@ -31,7 +31,7 @@ class HomebrewRaceViewModel constructor(
         return featureId
     }
 
-    fun createDefaultSubrace(): Int {
+    suspend fun createDefaultSubrace(): Int {
         val subraceId = raceRepository.createDefaultSubrace()
         raceRepository.insertRaceSubraceCrossRef(
             raceId = id,
@@ -40,14 +40,14 @@ class HomebrewRaceViewModel constructor(
         return subraceId
     }
 
-    fun removeFeature(featureId: Int) {
+    suspend fun removeFeature(featureId: Int) {
         raceRepository.removeRaceFeatureCrossRef(
             raceId = id,
             featureId = featureId
         )
     }
 
-    fun saveRace() {
+    suspend fun saveRace() {
         val newRace = RaceEntity(
             raceName = name.value,
             raceId = id,

@@ -1,6 +1,9 @@
 package model
 
+import kotlinx.serialization.Serializable
+
 //A class used to determine if a features benefits should be applied.
+@Serializable
 data class ActivationRequirement(
     val armorReqIndex: String? = null,
     val shieldReq: Boolean? = null

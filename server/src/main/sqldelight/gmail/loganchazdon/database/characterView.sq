@@ -1,0 +1,54 @@
+CREATE VIEW  IF NOT EXISTS subrace AS SELECT
+        id AS subraceid,
+        name AS subracename,
+        abilityBonuses AS subraceabilityBonuses,
+        abilityBonusChoice AS subraceabilityBonusChoice,
+        startingProficiencies AS subracestartingProficiencies,
+        languages AS subracelanguages,
+        languageChoices AS subracelanguageChoices,
+        size AS subracesize,
+        groundSpeed AS subracegroundSpeed,
+        owner AS subraceOwner
+    FROM subraces;
+
+CREATE VIEW  IF NOT EXISTS background AS SELECT
+        id AS backgroundid,
+        name AS backgroundname,
+        [desc] AS backgrounddesc,
+        spells AS backgroundspells,
+        proficiencies AS backgroundproficiencies,
+        languages AS backgroundlanguages,
+        equipment AS backgroundequipment,
+        equipmentChoices AS backgroundequipmentChoices,
+        owner AS backgroundOwner
+    FROM backgrounds;
+
+
+
+CREATE VIEW  IF NOT EXISTS characterView AS SELECT
+    background.*,
+    races.*,
+    subrace.*,
+    characters.*
+FROM characters  
+LEFT JOIN CharacterRaceCrossRef 
+    ON characters.id = CharacterRaceCrossRef.id 
+    AND characters.characterOwner = CharacterRaceCrossRef.owner  
+LEFT JOIN races 
+    ON CharacterRaceCrossRef.raceId = races.raceId 
+    AND races.owner = CharacterRaceCrossRef.owner  
+LEFT JOIN CharacterSubraceCrossRef 
+    ON CharacterSubraceCrossRef.characterId = characters.id 
+    AND CharacterSubraceCrossRef.owner = CharacterRaceCrossRef.owner  
+LEFT JOIN subrace
+    ON subrace.subraceid = CharacterSubraceCrossRef.subraceId
+    AND subrace.subraceOwner = CharacterSubraceCrossRef.owner
+LEFT JOIN CharacterBackgroundCrossRef 
+    ON CharacterBackgroundCrossRef.characterId = characters.id 
+    AND CharacterBackgroundCrossRef.owner = characters.characterOwner  
+LEFT JOIN background 
+    ON background.backgroundid = CharacterBackgroundCrossRef.backgroundId 
+    AND background.backgroundOwner = CharacterBackgroundCrossRef.owner;
+
+getById:
+SELECT * FROM characterView WHERE id = :id AND characterOwner = :owner;

@@ -6,17 +6,17 @@ import model.converters.BooleanAsIntSerializer
 
 @Serializable
 open class ClassEntity(
-    open var name: String,
-    open var hitDie: Int = 8,
-    open var subclassLevel: Int,
-    open var proficiencyChoices: List<ProficiencyChoice> = emptyList(),
-    open var proficiencies: List<Proficiency> = emptyList(),
-    open var equipmentChoices: List<ItemChoice> = emptyList(),
-    open var equipment: List<ItemInterface> = emptyList(),
-    open val spellCasting : SpellCasting? = null,
-    open val pactMagic: PactMagic? = null,
-    open val startingGoldD4s: Int,
-    open val startingGoldMultiplier : Int = 10,
+    var name: String = "",
+    var hitDie: Int = 8,
+    var subclassLevel: Int = 1,
+    var proficiencyChoices: List<ProficiencyChoice> = emptyList(),
+    var proficiencies: List<Proficiency> = emptyList(),
+    var equipmentChoices: List<ItemChoice> = emptyList(),
+    var equipment: List<ItemInterface> = emptyList(),
+    var spellCasting : SpellCasting? = null,
+    var pactMagic: PactMagic? = null,
+    var startingGoldD4s: Int = 1,
+    var startingGoldMultiplier : Int = 10,
     open var id: Int = 0,
     @Serializable(with = BooleanAsIntSerializer::class)
     var isHomebrew : Boolean = false

@@ -239,14 +239,14 @@ open class Character (
         //Feats
         for(item in feats) {
             if(item.abilityBonuses != null) {
-                item.abilityBonuses.forEach {
+                item.abilityBonuses!!.forEach {
                     stats[it.ability.substring(0, 3)] =
                         stats[it.ability.substring(0, 3)]?.plus(it.bonus) ?: it.bonus
                 }
             }
 
             if(item.abilityBonusChoice != null) {
-                item.abilityBonusChoice.chosen.forEach {
+                item.abilityBonusChoice!!.chosen.forEach {
                     stats[it.ability.substring(0, 3)] =
                         stats[it.ability.substring(0, 3)]?.plus(it.bonus)  ?: it.bonus
                 }

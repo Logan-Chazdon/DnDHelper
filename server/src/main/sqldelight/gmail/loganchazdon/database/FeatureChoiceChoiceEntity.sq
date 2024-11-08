@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS FeatureChoiceChoiceEntity (
+    `featureId` INTEGER NOT NULL,
+    `characterId` INTEGER NOT NULL,
+    `choiceId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(
+        `featureId`,
+        `characterId`,
+        `choiceId`,
+        owner
+    ),
+    FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`choiceId`) REFERENCES `FeatureChoiceEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+insert:
+INSERT INTO FeatureChoiceChoiceEntity (featureId, characterId, choiceId, owner) VALUES (?, ?, ?, ?);
+
+delete:
+DELETE FROM FeatureChoiceChoiceEntity WHERE featureId = :featureId AND characterId = :characterId AND choiceId = :choiceId AND owner = :owner;

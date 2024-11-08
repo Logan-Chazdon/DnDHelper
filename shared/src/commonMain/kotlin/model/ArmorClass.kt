@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ArmorClass(
     private val base : Int,
     private val dexMax: Int,

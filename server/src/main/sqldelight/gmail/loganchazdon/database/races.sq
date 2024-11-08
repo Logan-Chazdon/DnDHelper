@@ -1,0 +1,49 @@
+CREATE TABLE IF NOT EXISTS races (
+    `raceId` INTEGER NOT NULL,
+    `raceName` TEXT NOT NULL,
+    `groundSpeed` INTEGER NOT NULL,
+    `abilityBonuses` TEXT,
+    `alignment` TEXT,
+    `age` TEXT NOT NULL,
+    `size` TEXT NOT NULL,
+    `sizeDesc` TEXT NOT NULL,
+    `startingProficiencies` TEXT NOT NULL,
+    `proficiencyChoices` TEXT NOT NULL,
+    `languages` TEXT NOT NULL,
+    `languageChoices` TEXT NOT NULL,
+    `languageDesc` TEXT NOT NULL,
+    `isHomebrew` INTEGER NOT NULL,
+    `abcchoose` INTEGER,
+    `abcfrom` TEXT,
+    `abcmaxOccurrencesOfAbility` INTEGER,
+    `abcchosenByString` TEXT,
+    `owner` TEXT,
+
+    PRIMARY KEY (raceId, owner),
+    FOREIGN KEY (owner) REFERENCES users(id)
+);
+
+getRacesFor:
+SELECT * FROM races WHERE owner IS :owner OR owner IS NULL;
+
+selectNameIdFor:
+SELECT raceName AS name, raceId AS id FROM races WHERE owner IS :owner OR owner IS NULL;
+
+selectHomebrewRaces:
+SELECT * FROM races WHERE owner IS :owner;
+
+delete:
+DELETE FROM races WHERE owner = :owner AND raceId =: raceId;
+
+getRace:
+SELECT * FROM races WHERE owner IS :owner AND raceId IS :id;
+
+insertRace:
+INSERT INTO races (raceId, raceName, groundSpeed, abilityBonuses, alignment, age, size, sizeDesc, startingProficiencies, proficiencyChoices, languages, languageChoices, languageDesc, isHomebrew, abcchoose, abcfrom, abcmaxOccurrencesOfAbility, abcchosenByString, owner)
+VALUES ?;
+
+selectRaceFeatures:
+SELECT * FROM features
+JOIN RaceFeatureCrossRef ON features.featureId IS RaceFeatureCrossRef.featureId
+AND RaceFeatureCrossRef.owner =:owner
+WHERE raceId = :raceId AND (features.owner IS NULL OR features.owner IS :owner);

@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS SubclassFeatureCrossRef (
+    `subclassId` INTEGER NOT NULL,
+    `featureId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(
+        `subclassId`,
+        `featureId`,
+        owner
+    ),
+    FOREIGN KEY(`subclassId`) REFERENCES `subclasses`(`subclassId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO SubclassFeatureCrossRef (subclassId, featureId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM SubclassFeatureCrossRef WHERE subclassId = :subclassId AND featureId =:featureId AND owner =:owner;

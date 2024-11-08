@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS BackgroundSpellCrossRef (
+    `backgroundId` INTEGER NOT NULL,
+    `spellId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`backgroundId`, `spellId`, owner),
+    FOREIGN KEY(`backgroundId`) REFERENCES `backgrounds`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`spellId`) REFERENCES `spells`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO BackgroundSpellCrossRef (backgroundId, spellId, owner) VALUES (?, ?, ?);
+
+deleteByBackgroundSpellCrossRef:
+DELETE FROM BackgroundSpellCrossRef WHERE backgroundId = :backgroundId AND spellId = :spellId AND owner = :owner;

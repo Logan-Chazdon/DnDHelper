@@ -1,6 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 open class FeatureEntity(
     open var featureId: Int = 0,
     var name: String,

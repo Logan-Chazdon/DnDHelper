@@ -1,0 +1,31 @@
+CREATE TABLE IF NOT EXISTS subraces (
+    `id` INTEGER NOT NULL,
+    `name` TEXT NOT NULL,
+    `abilityBonuses` TEXT,
+    `abilityBonusChoice` TEXT,
+    `startingProficiencies` TEXT,
+    `languages` TEXT NOT NULL,
+    `languageChoices` TEXT NOT NULL,
+    `size` TEXT,
+    `groundSpeed` INTEGER,
+    `isHomebrew` INTEGER NOT NULL,
+    `owner` TEXT,
+
+    PRIMARY KEY (id, owner),
+    FOREIGN KEY (owner) REFERENCES users(id)
+);
+
+insert:
+INSERT INTO subraces (id, name, abilityBonuses, abilityBonusChoice, startingProficiencies, languages, languageChoices, size, groundSpeed, isHomebrew, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM subraces WHERE owner = :owner AND id =:id;
+
+selectFor:
+SELECT * FROM subraces WHERE owner = ? OR owner IS NULL;
+
+selectSubraceFeatures:
+SELECT * FROM features
+JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId
+AND SubraceFeatureCrossRef.owner =:owner
+WHERE subraceId = :subraceId AND (features.owner IS NULL OR features.owner IS :owner);

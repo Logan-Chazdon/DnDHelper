@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class AbilityBonus(
     val ability: String,
     val bonus: Int,

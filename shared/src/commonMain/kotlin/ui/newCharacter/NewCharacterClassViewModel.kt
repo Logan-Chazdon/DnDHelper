@@ -35,7 +35,7 @@ class NewCharacterClassViewModel constructor(
         }
     }
 
-    fun removeClass(classId: Int) {
+    suspend fun removeClass(classId: Int) {
         characterRepository.removeClassFromCharacter(classId = classId, characterId = id)
     }
 }

@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS backgrounds (
+    `id` INTEGER NOT NULL,
+    `name` TEXT NOT NULL,
+    `desc` TEXT NOT NULL,
+    `spells` TEXT,
+    `proficiencies` TEXT NOT NULL,
+    `proficiencyChoices` TEXT,
+    `languages` TEXT NOT NULL,
+    `languageChoices` TEXT,
+    `equipment` TEXT NOT NULL,
+    `equipmentChoices` TEXT NOT NULL,
+    `isHomebrew` INTEGER NOT NULL,
+    `owner` TEXT,
+
+     PRIMARY KEY (id, owner),
+     FOREIGN KEY (owner) REFERENCES users(id)
+ );
+
+insert:
+INSERT INTO backgrounds (id, name, desc, spells, proficiencies, proficiencyChoices, languages, languageChoices, equipment, equipmentChoices, isHomebrew, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM backgrounds WHERE id = :id AND owner = :owner;

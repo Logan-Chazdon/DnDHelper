@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS `features` (
+    `featureId` INTEGER NOT NULL,
+    `name` TEXT NOT NULL,
+    `description` TEXT NOT NULL,
+    `index` TEXT,
+    `grantedAtLevel` INTEGER NOT NULL,
+    `maxTimesChosen` INTEGER,
+    `prerequisite` TEXT,
+    `activationRequirement` TEXT NOT NULL,
+    `speedBoost` TEXT,
+    `spells` TEXT,
+    `infusion` TEXT,
+    `maxActive` TEXT NOT NULL,
+    `hpBonusPerLevel` INTEGER,
+    `armorContingentAcBonus` INTEGER,
+    `acBonus` INTEGER,
+    `ac` TEXT,
+    `proficiencies` TEXT,
+    `expertises` TEXT,
+    `languages` TEXT,
+    `extraAttackAndDamageRollStat` TEXT,
+    `rangedAttackBonus` INTEGER,
+    `owner` TEXT,
+
+    PRIMARY KEY (`featureId`, owner),
+    FOREIGN KEY (owner) REFERENCES users(id)
+);
+

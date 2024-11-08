@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS CharacterSubraceCrossRef (
+    `subraceId` INTEGER NOT NULL,
+    `characterId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`subraceId`, `characterId`, owner),
+    FOREIGN KEY(`subraceId`) REFERENCES `subraces`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+insert:
+INSERT INTO CharacterSubraceCrossRef (subraceId, characterId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM CharacterSubraceCrossRef WHERE characterId = :characterId AND subraceId = :subraceId AND owner =:owner;

@@ -19,41 +19,42 @@ actual abstract class CharacterDao {
         return characterService.postCharacter(character)
     }
 
-    actual fun updateCharacter(character: CharacterEntity) {
+    actual suspend fun updateCharacter(character: CharacterEntity) {
     }
 
-    actual abstract fun getSpellCastingSpellsForSubclass(
+    actual abstract suspend fun getSpellCastingSpellsForSubclass(
         characterId: Int,
         subclassId: Int
     ): Map<Spell, Boolean?>
 
-    actual abstract fun getSpellCastingSpellsForClass(
+    actual abstract suspend fun getSpellCastingSpellsForClass(
         characterId: Int,
         classId: Int
     ): Map<Spell, Boolean?>
 
-    actual abstract fun getClassFeats(
+    actual abstract suspend fun getClassFeats(
         classId: Int,
         characterId: Int
     ): MutableList<Feat>
 
-    actual abstract fun getFeatChoiceChosen(
+    actual abstract suspend fun getFeatChoiceChosen(
         characterId: Int,
         choiceId: Int
     ): List<Feat>
 
-    actual fun getClassChoiceData(
+    actual suspend fun getClassChoiceData(
         characterId: Int,
         classId: Int
     ): ClassChoiceEntity {
-        TODO("Not yet implemented")
+        return characterService.getClassChoiceData(characterId, classId)
     }
 
-    actual fun insertPactMagicStateEntity(
+    actual suspend fun insertPactMagicStateEntity(
         characterId: Int,
         classId: Int,
         slotsCurrentAmount: Int
     ) {
+        characterService.insertPactMagicStateEntity(characterId, classId, slotsCurrentAmount)
     }
 
     actual fun getAllCharacters(): Flow<List<Character>> {
@@ -61,113 +62,126 @@ actual abstract class CharacterDao {
     }
 
     actual abstract suspend fun deleteCharacter(id: Int)
-    actual fun insertCharacterSubRaceCrossRef(characterId: Int, subraceId: Int) {
+    actual suspend fun insertCharacterSubRaceCrossRef(characterId: Int, subraceId: Int) {
+        characterService.insertCharacterSubraceCrossRef(characterId, subraceId)
     }
 
-    actual fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
+    actual suspend fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
+        characterService.insertSubraceChoiceEntity(subraceChoiceEntity)
     }
 
-    actual fun insertCharacterSubclassCrossRef(subClassId: Int, characterId: Int, classId: Int) {
+    actual suspend fun insertCharacterSubclassCrossRef(subClassId: Int, characterId: Int, classId: Int) {
+        characterService.insertCharacterSubclassCrossRef(subClassId, characterId, classId)
     }
 
-    actual fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int) {
+    actual suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int) {
+        characterService.insertFeatureChoiceEntity(featureId, characterId, choiceId)
     }
 
-    actual fun insertCharacterClassSpellCrossRef(
+    actual suspend fun insertCharacterClassSpellCrossRef(
         classId: Int,
         spellId: Int,
         characterId: Int,
         isPrepared: Boolean?
     ) {
+        characterService.insertCharacterClassSpellCrossRef(classId, spellId, characterId, isPrepared)
     }
 
-    actual fun insertSubClassSpellCastingCrossRef(
+    actual suspend fun insertSubClassSpellCastingCrossRef(
         subclassId: Int,
         spellId: Int,
         characterId: Int,
         isPrepared: Boolean?
     ) {
+        characterService.insertSubClassSpellCastingCrossRef(subclassId, spellId, characterId, isPrepared)
     }
 
-    actual abstract fun getCharacterBackPack(id: Int): Backpack
-    actual abstract fun insertCharacterBackPack(backpack: Backpack, id: Int)
-    actual fun removeCharacterClassCrossRef(characterId: Int, classId: Int) {
+    actual abstract suspend fun getCharacterBackPack(id: Int): Backpack
+    actual abstract suspend fun insertCharacterBackPack(backpack: Backpack, id: Int)
+    actual suspend fun removeCharacterClassCrossRef(characterId: Int, classId: Int) {
+        characterService.removeCharacterClassCrossRef(characterId, classId)
     }
 
-    actual fun insertCharacterClassCrossRef(characterId: Int, classId: Int) {
+    actual suspend fun insertCharacterClassCrossRef(characterId: Int, classId: Int) {
+        characterService.insertCharacterClassCrossRef(characterId, classId)
     }
 
-    actual fun insertClassChoiceEntity(classChoiceEntity: ClassChoiceEntity) {
+    actual suspend fun insertClassChoiceEntity(classChoiceEntity: ClassChoiceEntity) {
+        characterService.insertClassChoiceEntity(classChoiceEntity)
     }
 
-    actual fun insertCharacterClassFeatCrossRef(characterId: Int, featId: Int, classId: Int) {
+    actual suspend fun insertCharacterClassFeatCrossRef(characterId: Int, featId: Int, classId: Int) {
+        characterService.insertCharacterClassFeatCrossRef(characterId, featId, classId)
     }
 
-    actual fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity) {
+    actual suspend fun insertBackgroundChoiceEntity(backgroundChoiceEntity: BackgroundChoiceEntity) {
+        characterService.insertBackgroundChoiceEntity(backgroundChoiceEntity)
     }
 
-    actual fun insertRaceChoice(raceChoiceEntity: RaceChoiceEntity) {
+    actual suspend fun insertRaceChoice(raceChoiceEntity: RaceChoiceEntity) {
+        characterService.insertRaceChoice(raceChoiceEntity)
     }
 
-    actual abstract fun insertCharacterRaceCrossRef(id: Int, raceId: Int)
-    actual fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int) {
+    actual abstract suspend fun insertCharacterRaceCrossRef(id: Int, raceId: Int)
+    actual suspend fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int) {
+        characterService.insertCharacterBackgroundCrossRef(backgroundId, characterId)
     }
 
-    actual abstract fun getAllSpellsByList(
+    actual abstract suspend fun getAllSpellsByList(
         id: Int,
         classIdsByName: List<Int>
     ): Map<Spell, Boolean?>
 
-    actual abstract fun isFeatureActive(featureId: Int, characterId: Int): Boolean
-    actual abstract fun getFeatureChoiceChosen(
+    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean
+    actual abstract suspend fun getFeatureChoiceChosen(
         choiceId: Int,
         characterId: Int
     ): List<Feature>
 
-    actual abstract fun findCharacterWithoutListChoices(id: Int): Character
+    actual abstract suspend fun findCharacterWithoutListChoices(id: Int): Character
     actual abstract fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character>
-    actual fun getRaceChoiceData(raceId: Int, charId: Int): RaceChoiceEntity {
-        TODO("Not yet implemented")
+    actual suspend fun getRaceChoiceData(raceId: Int, charId: Int): RaceChoiceEntity {
+        return characterService.getRaceChoiceData(raceId, charId)
     }
 
-    actual fun getSubraceChoiceData(
+    actual suspend fun getSubraceChoiceData(
         subraceId: Int,
         charId: Int
     ): SubraceChoiceEntity {
-        TODO("Not yet implemented")
+        return characterService.getSubraceChoiceData(subraceId, charId)
     }
 
-    actual fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity {
-        TODO("Not yet implemented")
+    actual suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity {
+        return characterService.getBackgroundChoiceData(charId)
     }
 
-    actual abstract fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
-    actual abstract fun getCharacterPactSlots(classId: Int, characterId: Int): Int
-    actual abstract fun getPactMagicSpells(
+    actual abstract suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
+    actual abstract suspend fun getCharacterPactSlots(classId: Int, characterId: Int): Int
+    actual abstract suspend fun getPactMagicSpells(
         characterId: Int,
         classId: Int
     ): MutableList<Spell>
 
-    actual abstract fun getClassFeatures(
+    actual abstract suspend fun getClassFeatures(
         classId: Int,
         maxLevel: Int
     ): MutableList<Feature>
 
-    actual abstract fun setTemp(id: Int, temp: Int)
-    actual abstract fun heal(id: Int, hp: Int, maxHp: Int)
-    actual abstract fun damage(id: Int, damage: Int)
-    actual abstract fun setHp(id: Int, hp: Int)
-    actual abstract fun updateDeathSaveSuccesses(id: Int, it: Int)
-    actual abstract fun updateDeathSaveFailures(id: Int, it: Int)
-    actual abstract fun insertSpellSlots(spellSlots: List<Resource>, id: Int)
-    actual abstract fun removeCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
-    actual abstract fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int
-    actual abstract fun changeName(it: String, id: Int)
-    actual abstract fun setPersonalityTraits(it: String, id: Int)
-    actual abstract fun setIdeals(it: String, id: Int)
-    actual abstract fun setNotes(it: String, id: Int)
-    actual abstract fun setFlaws(it: String, id: Int)
-    actual abstract fun setBonds(it: String, id: Int)
-    actual fun insertCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean) {
+    actual abstract suspend fun setTemp(id: Int, temp: Int)
+    actual abstract suspend fun heal(id: Int, hp: Int, maxHp: Int)
+    actual abstract suspend fun damage(id: Int, damage: Int)
+    actual abstract suspend fun setHp(id: Int, hp: Int)
+    actual abstract suspend fun updateDeathSaveSuccesses(id: Int, it: Int)
+    actual abstract suspend fun updateDeathSaveFailures(id: Int, it: Int)
+    actual abstract suspend fun insertSpellSlots(spellSlots: List<Resource>, id: Int)
+    actual abstract suspend fun removeCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
+    actual abstract suspend fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int
+    actual abstract suspend fun changeName(it: String, id: Int)
+    actual abstract suspend fun setPersonalityTraits(it: String, id: Int)
+    actual abstract suspend fun setIdeals(it: String, id: Int)
+    actual abstract suspend fun setNotes(it: String, id: Int)
+    actual abstract suspend fun setFlaws(it: String, id: Int)
+    actual abstract suspend fun setBonds(it: String, id: Int)
+    actual suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean) {
     }
 }

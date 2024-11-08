@@ -1,41 +1,201 @@
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import kotlin.Boolean;
-import kotlin.String;
-import kotlin.collections.List;
 
 CREATE TABLE IF NOT EXISTS `characters` (
-`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-`name` TEXT NOT NULL,
-`personalityTraits` TEXT NOT NULL,
-`ideals` TEXT NOT NULL,
-`bonds` TEXT NOT NULL,
-`flaws` TEXT NOT NULL,
-`notes` TEXT NOT NULL,
-`currentHp` INTEGER NOT NULL,
-`tempHp` INTEGER NOT NULL,
-`conditions` TEXT AS JsonArray NOT NULL,
-`resistances` TEXT AS JsonArray NOT NULL,
-`statGenerationMethodIndex` INTEGER NOT NULL,
-`baseStats` TEXT AS JsonObject NOT NULL,
-`backpack` TEXT AS JsonObject NOT NULL,
-`inspiration` INTEGER AS Boolean NOT NULL,
-`positiveDeathSaves` INTEGER NOT NULL,
-`negativeDeathSaves` INTEGER NOT NULL,
-`spellSlots` TEXT AS JsonArray NOT NULL,
-`addedLanguages` TEXT AS JsonArray NOT NULL,
-`addedProficiencies` TEXT AS JsonArray NOT NULL);
+    `id` INTEGER  NOT NULL,
+    `name` TEXT NOT NULL,
+    `personalityTraits` TEXT NOT NULL,
+    `ideals` TEXT NOT NULL,
+    `bonds` TEXT NOT NULL,
+    `flaws` TEXT NOT NULL,
+    `notes` TEXT NOT NULL,
+    `currentHp` INTEGER NOT NULL,
+    `tempHp` INTEGER NOT NULL,
+    `conditions` TEXT AS JsonArray NOT NULL,
+    `resistances` TEXT AS JsonArray NOT NULL,
+    `statGenerationMethodIndex` INTEGER NOT NULL,
+    `baseStats` TEXT AS JsonObject NOT NULL,
+    `backpack` TEXT AS JsonObject NOT NULL,
+    `inspiration` INTEGER AS Boolean NOT NULL,
+    `positiveDeathSaves` INTEGER NOT NULL,
+    `negativeDeathSaves` INTEGER NOT NULL,
+    `spellSlots` TEXT AS JsonArray NOT NULL,
+    `addedLanguages` TEXT AS JsonArray NOT NULL,
+    `addedProficiencies` TEXT AS JsonArray NOT NULL,
+    `characterOwner` TEXT,
+
+
+    PRIMARY KEY (id, characterOwner),
+    FOREIGN KEY (characterOwner) REFERENCES users(id)
+);
 
 selectAll:
 SELECT * FROM characters;
 
+selectAllFor:
+SELECT
+    id,
+    name,
+    personalityTraits,
+    ideals,
+    bonds,
+    flaws,
+    notes,
+    currentHp,
+    tempHp,
+    conditions,
+    resistances,
+    statGenerationMethodIndex,
+    baseStats,
+    backpack,
+    inspiration,
+    positiveDeathSaves,
+    negativeDeathSaves,
+    spellSlots,
+    addedLanguages,
+    addedProficiencies
+FROM
+    characters
+WHERE
+    characterOwner = :ownerId;
+
+
+selectById:
+SELECT
+    id,
+    name,
+    personalityTraits,
+    ideals,
+    bonds,
+    flaws,
+    notes,
+    currentHp,
+    tempHp,
+    conditions,
+    resistances,
+    statGenerationMethodIndex,
+    baseStats,
+    backpack,
+    inspiration,
+    positiveDeathSaves,
+    negativeDeathSaves,
+    spellSlots,
+    addedLanguages,
+    addedProficiencies
+FROM
+    characters
+WHERE
+    characterOwner = :ownerId AND id = :id;
+
 insertOrReplace:
 INSERT OR REPLACE INTO characters(
-id, name, personalityTraits, ideals, bonds, flaws, notes, currentHp, tempHp, conditions, resistances, statGenerationMethodIndex, baseStats, backpack, inspiration, positiveDeathSaves, negativeDeathSaves,  spellSlots, addedLanguages, addedProficiencies)
+id, name, personalityTraits, ideals, bonds, flaws, notes, currentHp, tempHp, conditions, resistances, statGenerationMethodIndex, baseStats, backpack, inspiration, positiveDeathSaves, negativeDeathSaves,  spellSlots, addedLanguages, addedProficiencies, characterOwner)
 VALUES ?;
 
 lastInsertRowId:
 SELECT last_insert_rowid();
 
 delete:
-DELETE FROM characters WHERE id IS :id;
+DELETE FROM characters WHERE id IS :id AND characterOwner IS :owner;
+
+setHp:
+UPDATE characters SET currentHp = :hp WHERE id IS :id AND characterOwner IS :owner;
+
+updateDeathSaveSuccesses:
+UPDATE characters SET positiveDeathSaves = :successes WHERE id IS :id AND characterOwner IS :owner;
+
+updateDeathSaveFailures:
+UPDATE characters SET negativeDeathSaves = :failures WHERE id IS :id AND characterOwner IS :owner;
+
+updateSpellSlots:
+UPDATE characters SET spellSlots = :spellSlots WHERE id IS:id AND characterOwner IS :owner;
+
+updateName:
+UPDATE characters SET name = :name WHERE id IS :id AND characterOwner IS :owner;
+
+updatePersonalityTraits:
+UPDATE characters SET personalityTraits = :personalityTraits WHERE id IS :id AND characterOwner IS :owner;
+
+updateIdeals:
+UPDATE characters SET ideals = :ideals WHERE id IS :id AND characterOwner IS :owner;
+
+updateNotes:
+UPDATE characters SET notes = :notes WHERE id IS :id AND characterOwner IS :owner;
+
+updateFlaws:
+UPDATE characters SET flaws = :flaws WHERE id IS :id AND characterOwner IS :owner;
+
+updateBonds:
+UPDATE characters SET bonds = :bonds WHERE id IS :id AND characterOwner IS :owner;
+
+updateHp:
+UPDATE characters SET currentHp = :hp WHERE id IS :id AND characterOwner IS :owner;
+
+updateTempHp:
+UPDATE characters SET tempHp = :hp WHERE id IS :id AND characterOwner IS :owner;
+
+heal:
+UPDATE characters SET currentHp = MIN(currentHp + :hp, :maxHp) WHERE id IS :id AND characterOwner IS :owner;
+
+damage:
+UPDATE characters SET currentHp = MAX(0, currentHp - :hp) WHERE id IS :id AND characterOwner IS :owner;
+
+selectPactMagicSpells:
+SELECT * FROM spells
+JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spellId AND (spells.owner IS CharacterClassSpellCrossRef.owner OR spells.owner IS NULL)
+WHERE characterId IS :characterId AND classId IS :classId AND (spells.owner IS :owner OR spells.owner IS NULL);
+
+selectPactSlots:
+SELECT slotsCurrentAmount FROM PactMagicStateEntity WHERE classId = :classId AND characterId = :characterId AND owner = :owner;
+
+selectFeatureChoiceChosen:
+SELECT * FROM features
+JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId
+WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId AND FeatureChoiceChoiceEntity.owner =:owner;
+
+isFeatureActive:
+SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId AND owner = :owner;
+
+selectAllSpellsByList:
+SELECT * FROM spells
+JOIN ClassSpellCrossRef ON classId IS (:list) AND ClassSpellCrossRef.spellId IS spells.id AND ClassSpellCrossRef.owner IS :owner
+LEFT JOIN CharacterClassSpellCrossRef ON CharacterClassSpellCrossRef.characterId = :id AND CharacterClassSpellCrossRef.spellId = spells.id
+AND (spells.owner = :owner OR spells.owner IS NULL);
+
+updateBackPack:
+UPDATE characters SET backpack = :backpack WHERE id =:id AND characterOwner =:owner;
+
+selectBackpack:
+SELECT backpack FROM characters WHERE id = :id AND characterOwner =:owner;
+
+selectChosenFeats:
+SELECT * FROM feats
+JOIN FeatChoiceChoiceEntity ON FeatChoiceChoiceEntity.featId IS feats.id AND FeatChoiceChoiceEntity.owner = :owner
+WHERE choiceId IS :choiceId AND characterId IS :characterId;
+
+selectClassFeats:
+SELECT * FROM feats
+JOIN ClassFeatCrossRef ON ClassFeatCrossRef.featId IS feats.id AND ClassFeatCrossRef.owner IS :owner
+WHERE ClassFeatCrossRef.classId IS :classId AND ClassFeatCrossRef.characterId IS :characterId;
+
+selectSpellCastingForClass:
+SELECT * FROM spells
+JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spellId AND CharacterClassSpellCrossRef.owner IS owner
+WHERE characterId IS :characterId AND classId IS :classId AND (spells.owner IS :owner OR spells.owner IS NULL);
+
+selectSpellCastingForSubclass:
+SELECT * FROM spells
+JOIN SubclassSpellCastingSpellCrossRef ON SubclassSpellCastingSpellCrossRef.spellId IS spells.id AND SubclassSpellCastingSpellCrossRef.owner = :owner
+WHERE characterId IS :characterId AND subclassId IS :subclassId AND (spells.owner = :owner OR spells.owner IS NULL);
+
+selectClasses:
+SELECT * FROM classes
+JOIN CharacterClassCrossRef ON CharacterClassCrossRef.classId IS classes.id AND CharacterClassCrossRef.owner IS :owner
+JOIN ClassChoiceEntity ON ClassChoiceEntity.classId IS CharacterClassCrossRef.classId AND ClassChoiceEntity.characterId IS CharacterClassCrossRef.characterId
+AND ClassChoiceEntity.owner IS :owner
+LEFT JOIN CharacterSubclassCrossRef ON CharacterSubclassCrossRef.characterId IS CharacterClassCrossRef.characterId
+AND CharacterSubclassCrossRef.classId IS classes.id AND CharacterSubclassCrossRef.owner IS :owner
+LEFT JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subClassId
+AND subclasses.owner IS :owner
+WHERE CharacterClassCrossRef.characterId IS :characterId AND (classes.owner IS :owner OR classes.owner IS NULL );

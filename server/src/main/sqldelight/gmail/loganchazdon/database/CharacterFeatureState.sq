@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS CharacterFeatureState (
+    `characterId` INTEGER NOT NULL,
+    `featureId` INTEGER NOT NULL,
+    `isActive` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`characterId`, `featureId`, owner),
+    FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+insert:
+INSERT OR REPLACE INTO CharacterFeatureState (characterId, featureId, isActive, owner) VALUES (?, ?, ?, ?);
+
+delete:
+DELETE FROM CharacterFeatureState WHERE characterId = :characterId AND featureId = :featureId AND owner = :owner;

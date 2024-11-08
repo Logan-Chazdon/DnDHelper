@@ -6,72 +6,81 @@ import model.Feature
 import model.Race
 import model.RaceEntity
 import model.pojos.NameAndIdPojo
+import services.RaceService
 
 actual abstract class RaceDao {
-    actual abstract fun getRaceFeatures(raceId: Int): List<Feature>
-    actual abstract fun getSubraceFeatures(subraceId: Int): List<Feature>
-    actual abstract fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
-    actual abstract fun getAllRaces(): Flow<List<Race>>
-    actual fun insertRace(newRace: RaceEntity): Int {
-        TODO("Not yet implemented")
+    protected val raceService: RaceService
+    constructor(raceService: RaceService) {
+        this.raceService = raceService
     }
 
-    actual abstract fun deleteRace(id: Int)
+    actual abstract suspend fun getRaceFeatures(raceId: Int): List<Feature>
+    actual abstract suspend fun getSubraceFeatures(subraceId: Int): List<Feature>
+    actual abstract suspend fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity>
+    actual abstract fun getAllRaces(): Flow<List<Race>>
+    actual suspend fun insertRace(newRace: RaceEntity): Int {
+        return raceService.insertRace(newRace)
+    }
+
+    actual abstract suspend fun deleteRace(id: Int)
     actual abstract fun getHomebrewRaces(): Flow<List<Race>>
     actual abstract fun findUnfilledLiveRaceById(id: Int): Flow<Race>
-    actual abstract fun getRaceTraits(id: Int): List<Feature>
-    actual fun insertRaceFeatureCrossRef(featureId: Int, raceId: Int) {
+    actual abstract suspend fun getRaceTraits(id: Int): List<Feature>
+    actual suspend fun insertRaceFeatureCrossRef(featureId: Int, raceId: Int) {
+        raceService.insertRaceFeatureCrossRef(featureId, raceId)
     }
 
-    actual fun removeRaceFeatureCrossRef(featureId: Int, raceId: Int) {
+    actual suspend fun removeRaceFeatureCrossRef(featureId: Int, raceId: Int) {
+        raceService.removeRaceFeatureCrossRef(featureId, raceId)
     }
 
-    actual fun insertRaceSubraceCrossRef(subraceId: Int, raceId: Int) {
+    actual suspend fun insertRaceSubraceCrossRef(subraceId: Int, raceId: Int) {
+        raceService.insertRaceSubraceCrossRef(subraceId, raceId)
     }
 
     actual abstract fun getRaceSubraces(id: Int): Flow<List<NameAndIdPojo>>
     actual abstract fun getAllRaceIdsAndNames(): Flow<List<NameAndIdPojo>>
 }
 
-class RaceDaoImpl : RaceDao() {
-    override fun getRaceFeatures(raceId: Int): List<Feature> {
-        TODO("Not yet implemented")
+class RaceDaoImpl(raceService: RaceService) : RaceDao(raceService) {
+    override suspend fun getRaceFeatures(raceId: Int): List<Feature> {
+        return raceService.getRaceFeatures(raceId)
     }
 
-    override fun getSubraceFeatures(subraceId: Int): List<Feature> {
-        TODO("Not yet implemented")
+    override suspend fun getSubraceFeatures(subraceId: Int): List<Feature> {
+        return raceService.getSubraceFeatures(subraceId)
     }
 
-    override fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity> {
-        TODO("Not yet implemented")
+    override suspend fun getSubraceFeatChoices(id: Int): List<FeatChoiceEntity> {
+        return raceService.getSubraceFeatChoices(id)
     }
 
     override fun getAllRaces(): Flow<List<Race>> {
-        TODO("Not yet implemented")
+        return raceService.getAlRaces()
     }
 
-    override fun deleteRace(id: Int) {
-        TODO("Not yet implemented")
+    override suspend fun deleteRace(id: Int) {
+       raceService.deleteRace(id)
     }
 
     override fun getHomebrewRaces(): Flow<List<Race>> {
-        TODO("Not yet implemented")
+        return raceService.getHomebrewRaces()
     }
 
     override fun findUnfilledLiveRaceById(id: Int): Flow<Race> {
-        TODO("Not yet implemented")
+        return raceService.findUnfilledLiveRaceById(id)
     }
 
-    override fun getRaceTraits(id: Int): List<Feature> {
-        TODO("Not yet implemented")
+    override suspend fun getRaceTraits(id: Int): List<Feature> {
+        return raceService.getRaceFeatures(id)
     }
 
     override fun getRaceSubraces(id: Int): Flow<List<NameAndIdPojo>> {
-        TODO("Not yet implemented")
+        return raceService.getRaceSubraces(id)
     }
 
     override fun getAllRaceIdsAndNames(): Flow<List<NameAndIdPojo>> {
-        TODO("Not yet implemented")
+        return raceService.getAllRaceIdsAndNames()
     }
 
 }

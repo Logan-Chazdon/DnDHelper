@@ -50,10 +50,8 @@ fun ConfirmRaceView(
         viewModel.calculateAssumedStatBonuses()
     }
 
-    val assumedSpells = remember {
-        derivedStateOf {
-            viewModel.calculateAssumedSpells()
-        }
+    val assumedSpells = produceState(emptyList<Spell>()) {
+        viewModel.calculateAssumedSpells()
     }
 
     Column(

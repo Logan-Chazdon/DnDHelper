@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS SubraceFeatureCrossRef (
+    `subraceId` INTEGER NOT NULL,
+    `featureId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`subraceId`, `featureId`, owner),
+    FOREIGN KEY(`subraceId`) REFERENCES `subraces`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO SubraceFeatureCrossRef (subraceId, featureId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM SubraceFeatureCrossRef WHERE subraceId = :subraceId AND featureId =:featureId AND owner =:owner;

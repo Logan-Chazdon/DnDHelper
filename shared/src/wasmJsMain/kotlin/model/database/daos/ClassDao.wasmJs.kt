@@ -9,7 +9,7 @@ import model.pojos.NameAndIdPojo
 import services.ClassService
 
 actual abstract class ClassDao {
-    actual abstract fun getClassIdsByName(name: String): List<Int>
+    actual abstract suspend fun getClassIdsByName(name: String): List<Int>
     protected val classService: ClassService
     constructor(classService: ClassService) {
         this.classService = classService
@@ -19,51 +19,53 @@ actual abstract class ClassDao {
     }
 
     actual abstract fun getHomebrewClasses(): Flow<List<ClassEntity>>
-    actual fun insertClass(classEntity: ClassEntity): Int {
-        TODO("Not yet implemented")
+    actual suspend fun insertClass(classEntity: ClassEntity): Int {
+        return classService.insertClass(classEntity)
     }
 
-    actual abstract fun deleteClass(id: Int)
-    actual fun insertClassFeatureCrossRef(featureId: Int, id: Int) {
+    actual abstract suspend fun deleteClass(id: Int)
+    actual suspend fun insertClassFeatureCrossRef(featureId: Int, id: Int) {
+        classService.insertClassFeatureCrossRef(featureId, id)
     }
 
-    actual abstract fun getSpellsByClassId(classId: Int): MutableList<Spell>
-    actual fun insertClassSubclassId(classId: Int, subclassId: Int) {
+    actual abstract suspend fun getSpellsByClassId(classId: Int): MutableList<Spell>
+    actual suspend fun insertClassSubclassId(classId: Int, subclassId: Int) {
+        classService.insertClassSubclassId(classId, subclassId)
     }
 
-    actual fun removeClassFeatureCrossRef(featureId: Int, id: Int) {
+    actual suspend fun removeClassFeatureCrossRef(featureId: Int, id: Int) {
+        classService.removeClassFeatureCrossRef(featureId, id)
     }
 
-    actual fun removeClassSubclassCrossRef(classId: Int, subclassId: Int) {
+    actual suspend fun removeClassSubclassCrossRef(classId: Int, subclassId: Int) {
+        classService.removeClassSubclassCrossRef(classId, subclassId)
     }
 
-    actual abstract fun getUnfilledLevelPath(id: Int): MutableList<Feature>
+    actual abstract suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature>
     actual abstract fun getUnfilledClass(id: Int): Flow<ClassEntity>
     actual abstract fun allClassesNamesAndIds(): Flow<List<NameAndIdPojo>>
     actual abstract fun getSubclassClasses(id: Int): Flow<List<NameAndIdPojo>>
 }
 
 class ClassDaoImpl(classService: ClassService) : ClassDao(classService) {
-    override fun getClassIdsByName(name: String): List<Int> {
-        TODO("Not yet implemented")
+    override suspend fun getClassIdsByName(name: String): List<Int> {
+        return classService.getClassIdsByName(name)
     }
 
     override fun getHomebrewClasses(): Flow<List<ClassEntity>> {
-        TODO("Not yet implemented")
+        return classService.getHomebrewClasses()
     }
 
-    override fun deleteClass(id: Int) {
-        TODO("Not yet implemented")
+    override suspend fun deleteClass(id: Int) {
+        return classService.deleteClass(id)
     }
 
-    override fun getSpellsByClassId(classId: Int): MutableList<Spell> {
-        //TODO IMPL
-        return mutableListOf()
+    override suspend fun getSpellsByClassId(classId: Int): MutableList<Spell> {
+        return classService.getSpellsByClassId(classId)
     }
 
-    override fun getUnfilledLevelPath(id: Int): MutableList<Feature> {
-        //TODO IMPL
-        return mutableListOf()
+    override suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature> {
+        return classService.getUnfilledLevelPath(id)
     }
 
     override fun getUnfilledClass(id: Int): Flow<ClassEntity> {
@@ -71,11 +73,10 @@ class ClassDaoImpl(classService: ClassService) : ClassDao(classService) {
     }
 
     override fun allClassesNamesAndIds(): Flow<List<NameAndIdPojo>> {
-        TODO("Not yet implemented")
+        return classService.allClassesNamesAndIds()
     }
 
     override fun getSubclassClasses(id: Int): Flow<List<NameAndIdPojo>> {
-        TODO("Not yet implemented")
+        return classService.getSubclassClasses(id)
     }
-
 }

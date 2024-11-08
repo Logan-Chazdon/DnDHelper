@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS CharacterRaceCrossRef (
+    `raceId` INTEGER NOT NULL,
+    `id` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`raceId`,   `id`, owner),
+    FOREIGN KEY(`raceId`) REFERENCES `races`(`raceId`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`id`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+insert:
+INSERT INTO CharacterRaceCrossRef (raceId, id, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM CharacterRaceCrossRef WHERE owner = :owner AND id = :id;

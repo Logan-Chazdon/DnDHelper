@@ -1,35 +1,65 @@
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 CREATE TABLE IF NOT EXISTS classes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    id INTEGER NOT NULL,
     name TEXT NOT NULL,
     hitDie INTEGER NOT NULL,
     subclassLevel INTEGER NOT NULL,
-    proficiencyChoices TEXT NOT NULL,
-    proficiencies TEXT NOT NULL,
-    equipmentChoices TEXT NOT NULL,
-    equipment TEXT NOT NULL,
+    proficiencyChoices TEXT AS JsonArray NOT NULL,
+    proficiencies TEXT AS JsonArray NOT NULL,
+    equipmentChoices TEXT AS JsonArray NOT NULL,
+    equipment TEXT AS JsonArray NOT NULL,
     spellCasting TEXT,
     pactMagic TEXT,
     startingGoldD4s INTEGER NOT NULL,
     startingGoldMultiplier INTEGER NOT NULL,
-    isHomebrew INTEGER NOT NULL
+    isHomebrew INTEGER NOT NULL,
+    owner TEXT,
+
+    PRIMARY KEY(id, owner),
+    FOREIGN KEY (owner) REFERENCES users(id)
 );
 
 insertClass:
-INSERT INTO classes(name, hitDie, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, isHomebrew)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO classes(name, hitDie, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, isHomebrew, owner, id)
+VALUES ?;
 
 updateClass:
 UPDATE classes
 SET name = ?, hitDie = ?, subclassLevel = ?, proficiencyChoices = ?, proficiencies = ?, equipmentChoices = ?, equipment = ?, spellCasting = ?, pactMagic = ?, startingGoldD4s = ?, startingGoldMultiplier = ?, isHomebrew = ?
-WHERE id = ?;
+WHERE id = :id AND owner = :owner;
 
 deleteClass:
 DELETE FROM classes
-WHERE id = ?;
+WHERE id = :id AND owner = :owner;
 
 getAllClasses:
 SELECT * FROM classes;
 
+getAllClassesFor:
+SELECT * FROM classes WHERE owner = :owner OR owner IS NULL;
+
+selectIdNameFor:
+SELECT id, name FROM classes WHERE owner = :owner OR owner IS NULL;
+
 getClassById:
 SELECT * FROM classes
-WHERE id = ?;
+WHERE id = :id AND (owner = :owner OR owner IS NULL);
+
+getFeatures:
+SELECT * FROM features
+JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId AND features.owner IS NULL OR features.owner IS :owner
+WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLevel;
+
+getClassIdsByName:
+SELECT id FROM classes WHERE name IS :name AND (owner = :owner OR owner IS NULL);
+
+getHomebrewClasses:
+SELECT * FROM classes WHERE owner = :owner;
+
+selectLevelPath:
+SELECT * FROM features
+JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
+AND (features.owner = ClassFeatureCrossRef.owner OR features.owner IS NULL)
+WHERE ClassFeatureCrossRef.id IS :id AND (features.owner IS NULL OR features.owner IS :owner);

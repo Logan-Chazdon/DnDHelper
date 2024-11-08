@@ -3,17 +3,17 @@ package model
 import kotlinx.serialization.Serializable
 import model.converters.BooleanAsIntSerializer
 
-
+@Serializable
 open class BackgroundEntity(
-    val name: String,
-    val desc: String,
-    var spells: List<Spell>?,
-    val proficiencies : List<Proficiency>,
-    val proficiencyChoices : List<ProficiencyChoice>? = null,
-    val languages : List<Language>,
-    val languageChoices : List<LanguageChoice>? = null,
-    val equipment : List<ItemInterface>,
-    val equipmentChoices: List<ItemChoice>,
+    var name: String = "",
+    var desc: String = "",
+    var spells: List<Spell>? = null,
+    var proficiencies : List<Proficiency> = emptyList(),
+    var proficiencyChoices : List<ProficiencyChoice>? = null,
+    var languages : List<Language> = emptyList(),
+    var languageChoices : List<LanguageChoice>? = null,
+    var equipment : List<ItemInterface> = emptyList(),
+    var equipmentChoices: List<ItemChoice> = emptyList(),
     @Serializable(with = BooleanAsIntSerializer::class)
     var isHomebrew : Boolean = false
 ) {

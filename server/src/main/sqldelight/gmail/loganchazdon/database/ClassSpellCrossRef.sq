@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS ClassSpellCrossRef (
+    `classId` INTEGER NOT NULL,
+    `spellId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`classId`, `spellId`, owner),
+    FOREIGN KEY(`classId`) REFERENCES `classes`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`spellId`) REFERENCES `spells`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO ClassSpellCrossRef (classId, spellId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM ClassSpellCrossRef WHERE owner = :owner AND spellId = :spellId AND classId = :classId;
+
+selectSpellsByClass:
+SELECT * FROM spells
+LEFT JOIN ClassSpellCrossRef ON ClassSpellCrossRef.classId IS :classId
+AND spells.id IS ClassSpellCrossRef.spellId
+AND ClassSpellCrossRef.owner = :owner
+WHERE classId = :classId
+AND (spells.owner IS NULL OR spells.owner IS NULL);

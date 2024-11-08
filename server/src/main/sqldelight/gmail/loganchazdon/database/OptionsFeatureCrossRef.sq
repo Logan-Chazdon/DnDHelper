@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS OptionsFeatureCrossRef (
+    `featureId` INTEGER NOT NULL,
+    `choiceId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`featureId`, `choiceId`, owner),
+    FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`choiceId`) REFERENCES `FeatureChoiceEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);

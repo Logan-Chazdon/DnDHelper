@@ -23,16 +23,16 @@ class RaceRepository {
 
     private val _races: Flow<List<Race>>
 
-     fun createDefaultRace(): Int {
+     suspend fun createDefaultRace(): Int {
         val newRace = RaceEntity()
         return raceDao.insertRace(newRace)
     }
 
-     fun insertRace(race: RaceEntity) {
+     suspend fun insertRace(race: RaceEntity) {
         raceDao.insertRace(race)
     }
 
-     fun deleteRace(id: Int) {
+     suspend fun deleteRace(id: Int) {
         raceDao.deleteRace(id)
     }
 
@@ -52,7 +52,7 @@ class RaceRepository {
         }
     }
 
-     fun insertRaceFeatureCrossRef(
+     suspend fun insertRaceFeatureCrossRef(
         featureId: Int,
         raceId: Int
     ) {
@@ -62,7 +62,7 @@ class RaceRepository {
         )
     }
 
-     fun removeRaceFeatureCrossRef(
+     suspend fun removeRaceFeatureCrossRef(
         featureId: Int,
         raceId: Int
     ) {
@@ -97,7 +97,7 @@ class RaceRepository {
         )
     }
 
-     fun insertRaceSubraceCrossRef(
+     suspend fun insertRaceSubraceCrossRef(
         subraceId: Int,
         raceId: Int
     ) {

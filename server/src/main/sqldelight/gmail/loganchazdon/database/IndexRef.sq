@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS IndexRef (
+    `index` TEXT NOT NULL,
+    `ids` TEXT NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`index`, owner)
+);

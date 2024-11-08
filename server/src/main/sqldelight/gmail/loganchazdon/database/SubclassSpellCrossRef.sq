@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS SubclassSpellCrossRef (
+    `subclassId` INTEGER NOT NULL,
+    `spellId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`subclassId`, `spellId`, owner),
+    FOREIGN KEY(`subclassId`) REFERENCES `subclasses`(`subclassId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`spellId`) REFERENCES `spells`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO SubclassSpellCrossRef (subclassId, spellId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM SubclassSpellCrossRef WHERE subclassId = :subclassId AND spellId = :spellId AND owner =:owner;

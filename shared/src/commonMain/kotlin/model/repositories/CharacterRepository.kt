@@ -42,7 +42,7 @@ class CharacterRepository {
 
     val scope: CoroutineScope
 
-    fun insertPactMagicStateEntity(characterId: Int, classId: Int, slotsCurrentAmount: Int) {
+    suspend fun insertPactMagicStateEntity(characterId: Int, classId: Int, slotsCurrentAmount: Int) {
         characterDao.insertPactMagicStateEntity(
             characterId = characterId,
             classId = classId,
@@ -78,17 +78,17 @@ class CharacterRepository {
         return characterDao.insertCharacter(newCharacter).toInt()
     }
 
-    fun insertCharacterSubraceCrossRef(characterId: Int, subraceId: Int) {
+    suspend fun insertCharacterSubraceCrossRef(characterId: Int, subraceId: Int) {
         characterDao.insertCharacterSubRaceCrossRef(
             characterId, subraceId
         )
     }
 
-    fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
+    suspend fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
         characterDao.insertSubraceChoiceEntity(subraceChoiceEntity)
     }
 
-    fun insertCharacterSubclassCrossRef(characterId: Int, subclassId: Int, classId: Int) {
+    suspend fun insertCharacterSubclassCrossRef(characterId: Int, subclassId: Int, classId: Int) {
         characterDao.insertCharacterSubclassCrossRef(
             subclassId,
             characterId,
@@ -96,7 +96,7 @@ class CharacterRepository {
         )
     }
 
-    fun insertFeatureChoiceChoiceEntity(
+    suspend fun insertFeatureChoiceChoiceEntity(
         featureId: Int,
         characterId: Int,
         choiceId: Int
@@ -108,7 +108,7 @@ class CharacterRepository {
         )
     }
 
-    fun insertCharacterClassSpellCrossRef(
+    suspend fun insertCharacterClassSpellCrossRef(
         classId: Int,
         spellId: Int,
         characterId: Int,
@@ -122,7 +122,7 @@ class CharacterRepository {
         )
     }
 
-    fun insertSubclassSpellCastingSpellCrossRef(
+    suspend fun insertSubclassSpellCastingSpellCrossRef(
         subclassId: Int,
         spellId: Int,
         characterId: Int,
@@ -136,7 +136,7 @@ class CharacterRepository {
         )
     }
 
-    fun insertCharacterClassEquipment(
+    suspend fun insertCharacterClassEquipment(
         equipmentChoices: List<ItemChoice>,
         equipment: List<ItemInterface>,
         characterId: Int
@@ -152,33 +152,33 @@ class CharacterRepository {
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 
-    fun setClassGold(gold: Int, characterId: Int) {
+    suspend fun setClassGold(gold: Int, characterId: Int) {
         val backpack = characterDao.getCharacterBackPack(characterId)
         backpack.classCurrency["gp"]!!.amount = gold
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 
-    fun setBackgroundCurrency(backgroundCurrencyMap: Map<String, Currency>, characterId: Int) {
+    suspend fun setBackgroundCurrency(backgroundCurrencyMap: Map<String, Currency>, characterId: Int) {
         val backpack = characterDao.getCharacterBackPack(characterId)
         backpack.backgroundCurrency = backgroundCurrencyMap
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 
-    fun removeClassFromCharacter(classId: Int, characterId: Int) {
+    suspend fun removeClassFromCharacter(classId: Int, characterId: Int) {
         characterDao.removeCharacterClassCrossRef(
             characterId = characterId,
             classId = classId
         )
     }
 
-    fun insertCharacterClassCrossRef(characterId: Int, classId: Int) {
+    suspend fun insertCharacterClassCrossRef(characterId: Int, classId: Int) {
         characterDao.insertCharacterClassCrossRef(
             characterId = characterId,
             classId = classId
         )
     }
 
-    fun insertClassChoiceEntity(
+    suspend fun insertClassChoiceEntity(
         characterId: Int,
         classId: Int,
         level: Int,
@@ -202,7 +202,7 @@ class CharacterRepository {
         )
     }
 
-    fun addFeatsToCharacterClass(characterId: Int, classId: Int, feats: List<Feat>) {
+    suspend fun addFeatsToCharacterClass(characterId: Int, classId: Int, feats: List<Feat>) {
         feats.forEach {
             characterDao.insertCharacterClassFeatCrossRef(
                 characterId = characterId,
@@ -212,7 +212,7 @@ class CharacterRepository {
         }
     }
 
-    fun insertBackgroundChoiceEntity(
+    suspend fun insertBackgroundChoiceEntity(
         characterId: Int,
         backgroundId: Int,
         languageChoices: List<List<String>>
@@ -226,7 +226,7 @@ class CharacterRepository {
         )
     }
 
-    fun insertRaceChoiceEntity(
+    suspend fun insertRaceChoiceEntity(
         raceId: Int,
         characterId: Int,
         abilityBonusChoice: List<String>,
@@ -246,14 +246,14 @@ class CharacterRepository {
         )
     }
 
-    fun insertCharacterRaceCrossRef(characterId: Int, raceId: Int) {
+    suspend fun insertCharacterRaceCrossRef(characterId: Int, raceId: Int) {
         characterDao.insertCharacterRaceCrossRef(
             id = characterId,
             raceId = raceId
         )
     }
 
-    fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int) {
+    suspend fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int) {
         characterDao.insertCharacterBackgroundCrossRef(
             backgroundId = backgroundId,
             characterId = characterId
@@ -263,7 +263,7 @@ class CharacterRepository {
     /**Returns a list of booleans to spells
     If the boolean is null the spell does not require preparation.
     Else the boolean represents whether or not the spell is prepared.*/
-    fun getSpellsForCharacter(character: Character): MutableMap<Int, MutableList<Pair<Boolean?, Spell>>> {
+    suspend fun getSpellsForCharacter(character: Character): MutableMap<Int, MutableList<Pair<Boolean?, Spell>>> {
         val spells: MutableMap<Int, MutableList<Pair<Boolean?, Spell>>> = mutableMapOf()
         character.classes.forEach {
             addSpellsFromSpellCasting(
@@ -301,7 +301,7 @@ class CharacterRepository {
         return spells
     }
 
-    private fun addSpellsFromSpellCasting(
+    private suspend fun addSpellsFromSpellCasting(
         id: Int,
         spellCasting: SpellCasting?,
         lists: List<String>?,
@@ -369,11 +369,11 @@ class CharacterRepository {
         }
     }
 
-    private fun getClassIdsByName(name: String): List<Int> {
+    private suspend fun getClassIdsByName(name: String): List<Int> {
         return classDao.getClassIdsByName(name)
     }
 
-    private fun fillOutFeatureList(features: List<Feature>, characterId: Int) {
+    private suspend fun fillOutFeatureList(features: List<Feature>, characterId: Int) {
         features.forEach { feature ->
             feature.choices =
                 fillOutChoices(
@@ -392,7 +392,7 @@ class CharacterRepository {
     This only fills out chosen not options.
     We don't want options as it is not used inside of the character object.
      */
-    private fun fillOutChoices(
+    private suspend fun fillOutChoices(
         choiceEntities: List<FeatureChoiceEntity>,
         characterId: Int
     ): List<FeatureChoice> {
@@ -415,7 +415,7 @@ class CharacterRepository {
         return choices
     }
 
-    fun getCharacterById(id: Int): Character {
+    suspend fun getCharacterById(id: Int): Character {
         val character = characterDao.findCharacterWithoutListChoices(id)
         fillOutCharacterChoiceLists(character)
         return character
@@ -429,9 +429,9 @@ class CharacterRepository {
         characterKey: Flow<Int>? = null
     ) {
         val characterLiveData = characterDao.findLiveCharacterWithoutListChoices(id)
-        val calculate = fun(it: Character?) {
+        val calculate : suspend (it: Character?) -> Unit= {
             if (it != null) {
-                fillOutCharacterChoiceLists(it)
+                this.fillOutCharacterChoiceLists(it)
                 character.value = it
             }
         }
@@ -458,7 +458,7 @@ class CharacterRepository {
      */
     @Suppress("SAFE_CALL_WILL_CHANGE_NULLABILITY", "UNNECESSARY_SAFE_CALL")
     //The safe call is ly necessary here because of how room handles null values
-    private fun fillOutCharacterChoiceLists(character: Character) {
+    private suspend fun fillOutCharacterChoiceLists(character: Character) {
         //Fill out race choices
         character.race?.let { race ->
             characterDao.getRaceChoiceData(raceId = race.raceId, charId = character.id)
@@ -585,35 +585,35 @@ class CharacterRepository {
         character.classes = classes
     }
 
-    fun setTemp(id: Int?, temp: String) {
+    suspend fun setTemp(id: Int?, temp: String) {
         try {
             characterDao.setTemp(id!!, temp.toInt())
         } catch (_: Exception) {
         }
     }
 
-    fun heal(id: Int?, hp: String, maxHp: Int) {
+    suspend fun heal(id: Int?, hp: String, maxHp: Int) {
         try {
             characterDao.heal(id!!, hp.toInt(), maxHp)
         } catch (_: Exception) {
         }
     }
 
-    fun setHp(id: Int?, hp: String) {
+    suspend fun setHp(id: Int?, hp: String) {
         try {
             characterDao.setHp(id!!, hp.toInt())
         } catch (_: Exception) {
         }
     }
 
-    fun damage(id: Int?, damage: String) {
+    suspend fun damage(id: Int?, damage: String) {
         try {
             characterDao.damage(id!!, damage.toInt())
         } catch (_: Exception) {
         }
     }
 
-    fun updateDeathSaveSuccesses(id: Int?, it: Boolean) {
+    suspend fun updateDeathSaveSuccesses(id: Int?, it: Boolean) {
         if (it) {
             characterDao.updateDeathSaveSuccesses(id!!, 1)
         } else {
@@ -621,7 +621,7 @@ class CharacterRepository {
         }
     }
 
-    fun updateDeathSaveFailures(id: Int?, it: Boolean) {
+    suspend fun updateDeathSaveFailures(id: Int?, it: Boolean) {
         if (it) {
             characterDao.updateDeathSaveFailures(id!!, 1)
         } else {
@@ -629,43 +629,43 @@ class CharacterRepository {
         }
     }
 
-    fun insertSpellSlots(spellSlots: List<Resource>, id: Int) {
+    suspend fun insertSpellSlots(spellSlots: List<Resource>, id: Int) {
         characterDao.insertSpellSlots(spellSlots, id)
     }
 
-    fun removeClassSpellCrossRefs(classId: Int, characterId: Int) {
+    suspend fun removeClassSpellCrossRefs(classId: Int, characterId: Int) {
         characterDao.removeCharacterClassSpellCrossRefs(classId, characterId)
     }
 
-    fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int {
+    suspend fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int {
         return characterDao.getNumOfPreparedSpells(classId = classId, characterId = characterId)
     }
 
-    fun changeName(it: String, id: Int) {
+    suspend fun changeName(it: String, id: Int) {
         characterDao.changeName(it, id)
     }
 
-    fun setPersonalityTraits(it: String, id: Int) {
+    suspend fun setPersonalityTraits(it: String, id: Int) {
         characterDao.setPersonalityTraits(it, id)
     }
 
-    fun setIdeals(it: String, id: Int) {
+    suspend fun setIdeals(it: String, id: Int) {
         characterDao.setIdeals(it, id)
     }
 
-    fun setBonds(it: String, id: Int) {
+    suspend fun setBonds(it: String, id: Int) {
         characterDao.setBonds(it, id)
     }
 
-    fun setFlaws(it: String, id: Int) {
+    suspend fun setFlaws(it: String, id: Int) {
         characterDao.setFlaws(it, id)
     }
 
-    fun setNotes(it: String, id: Int) {
+    suspend fun setNotes(it: String, id: Int) {
         characterDao.setNotes(it, id)
     }
 
-    fun activateInfusion(infusionId: Int, characterId: Int) {
+    suspend fun activateInfusion(infusionId: Int, characterId: Int) {
         characterDao.insertCharacterFeatureState(
             featureId = infusionId,
             characterId = characterId,
@@ -673,7 +673,7 @@ class CharacterRepository {
         )
     }
 
-    fun deactivateInfusion(infusionId: Int, characterId: Int) {
+    suspend fun deactivateInfusion(infusionId: Int, characterId: Int) {
         characterDao.insertCharacterFeatureState(
             featureId = infusionId,
             characterId = characterId,
@@ -681,7 +681,7 @@ class CharacterRepository {
         )
     }
 
-    fun removeFeatureChoiceCrossRefs(clazz: Class, characterId: Int) {
+    suspend fun removeFeatureChoiceCrossRefs(clazz: Class, characterId: Int) {
         clazz.levelPath?.forEach { feature ->
             feature.choices?.forEach {
                 featureDao.removeFeatureFeatureChoice(

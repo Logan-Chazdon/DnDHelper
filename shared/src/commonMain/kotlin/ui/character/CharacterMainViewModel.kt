@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import model.Character
 import model.Feature
@@ -19,7 +21,7 @@ import org.koin.android.annotation.KoinViewModel
 
 @OptIn(FlowPreview::class)
 @KoinViewModel
-class CharacterMainViewModel constructor(
+class CharacterMainViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: CharacterRepository,
 ): ViewModel() {
@@ -50,13 +52,30 @@ class CharacterMainViewModel constructor(
             character
         )
 
+        viewModelScope.launch {
+            character.drop(1).first().let {
+                personalityTraits.value =
+                    it.personalityTraits
+                name.value =
+                    it.name
+                bonds.value =
+                    it.bonds
+                flaws.value =
+                    it.flaws
+                notes.value =
+                    it.notes
+                ideals.value =
+                    it.ideals
+            }
+        }
+
 
         //Call the persistence function of state flow after the user types
         //and then doesn't type for debounce time.
         for (it in dataToPersistenceFunction) {
             viewModelScope.launch(/*Dispatchers.IO*/) {
                 it.key.debounce(debounceTime)
-                    .collect(it.value)
+                    .drop(1).collect(it.value)
             }
         }
     }
@@ -81,27 +100,27 @@ class CharacterMainViewModel constructor(
         //TODO
     }
 
-    private fun setName(it: String) {
+    private suspend fun setName(it: String) {
         repository.changeName(it, character.value.id)
     }
 
-    private fun setPersonalityTraits(it: String) {
+    private suspend fun setPersonalityTraits(it: String) {
         repository.setPersonalityTraits(it, character.value!!.id)
     }
 
-    private fun setIdeals(it: String) {
+    private suspend fun setIdeals(it: String) {
         repository.setIdeals(it, character.value!!.id)
     }
 
-    private fun setBonds(it: String) {
+    private suspend fun setBonds(it: String) {
         repository.setBonds(it, character.value!!.id)
     }
 
-    private fun setFlaws(it: String) {
+    private suspend fun setFlaws(it: String) {
         repository.setFlaws(it, character.value!!.id)
     }
 
-    private fun setNotes(it: String) {
+    private suspend fun setNotes(it: String) {
         repository.setNotes(it, character.value!!.id)
     }
 
@@ -125,7 +144,7 @@ class CharacterMainViewModel constructor(
         }
     }
 
-    private fun activateInfusion(infusion: Infusion, character: Character) : Boolean {
+    private suspend fun activateInfusion(infusion: Infusion, character: Character) : Boolean {
         character.classes.values.forEachIndexed { classIndex, clazz  ->
             clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
@@ -139,7 +158,7 @@ class CharacterMainViewModel constructor(
         return false
     }
 
-    private fun deactivateInfusion(infusion: Infusion, character: Character) : Boolean {
+    private suspend fun deactivateInfusion(infusion: Infusion, character: Character) : Boolean {
         character.classes.values.forEachIndexed { classIndex, clazz  ->
             clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {

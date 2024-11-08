@@ -1,6 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AbilityBonusChoice(
     val choose: Int,
     val from : List<AbilityBonus>,

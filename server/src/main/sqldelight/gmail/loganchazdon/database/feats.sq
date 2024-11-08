@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS feats (
+    `id` INTEGER NOT NULL,
+    `name` TEXT NOT NULL,
+    `desc` TEXT NOT NULL,
+    `prerequisite` TEXT,
+    `abilityBonuses` TEXT,
+    `abilityBonusChoice` TEXT,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+
+    PRIMARY KEY(id, owner)
+);
+
+insert:
+INSERT OR REPLACE INTO feats (id, name, desc, prerequisite, abilityBonuses, abilityBonusChoice, owner) VALUES (?, ?, ?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM feats WHERE owner = :owner AND id =:id;

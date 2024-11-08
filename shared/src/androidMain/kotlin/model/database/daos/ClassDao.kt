@@ -23,10 +23,10 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
 JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
 WHERE ClassFeatureCrossRef.id IS :id"""
     )
-    actual abstract fun getUnfilledLevelPath(id: Int): MutableList<Feature>
+    actual abstract suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature>
 
 
-    actual fun insertClass(classEntity: ClassEntity): Int {
+    actual suspend fun insertClass(classEntity: ClassEntity): Int {
         val id = insertClassOrIgnore(classEntity.asTable()).toInt()
         if(id == -1) {
             updateClass(classEntity.asTable())
@@ -43,7 +43,7 @@ WHERE ClassFeatureCrossRef.id IS :id"""
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassFeatureCrossRef(ref: ClassFeatureCrossRef)
-    actual fun insertClassFeatureCrossRef(featureId: Int, id: Int) {
+    actual suspend fun insertClassFeatureCrossRef(featureId: Int, id: Int) {
         insertClassFeatureCrossRef(
             ClassFeatureCrossRef(
                 featureId = featureId,
@@ -54,7 +54,7 @@ WHERE ClassFeatureCrossRef.id IS :id"""
 
     @Delete
     abstract fun removeClassFeatureCrossRef(ref: ClassFeatureCrossRef)
-    actual fun removeClassFeatureCrossRef(featureId: Int, id: Int) {
+    actual suspend fun removeClassFeatureCrossRef(featureId: Int, id: Int) {
         removeClassFeatureCrossRef(
             ClassFeatureCrossRef(
                 featureId = featureId,
@@ -90,7 +90,7 @@ WHERE ClassFeatureCrossRef.id IS :id"""
     actual abstract fun getHomebrewClasses(): Flow<List<ClassEntity>>
 
     @Query("DELETE FROM classes WHERE id IS :id")
-    actual abstract fun deleteClass(id: Int)
+    actual abstract suspend fun deleteClass(id: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertClassSubclassId(classSubclassCrossRef: ClassSubclassCrossRef)
@@ -103,11 +103,11 @@ WHERE ClassFeatureCrossRef.id IS :id"""
 JOIN ClassSpellCrossRef ON spells.id IS ClassSpellCrossRef.spellId
 WHERE classId IS :classId"""
     )
-    actual abstract fun getSpellsByClassId(classId: Int): MutableList<Spell>
+    actual abstract suspend fun getSpellsByClassId(classId: Int): MutableList<Spell>
 
     @Delete
     abstract fun removeClassSubclassCrossRef(classSubclassCrossRef: ClassSubclassCrossRef)
-    actual fun removeClassSubclassCrossRef(classId: Int, subclassId: Int) {
+    actual suspend fun removeClassSubclassCrossRef(classId: Int, subclassId: Int) {
         removeClassSubclassCrossRef(
             ClassSubclassCrossRef(
                 classId = classId,
@@ -119,7 +119,7 @@ WHERE classId IS :classId"""
     //Note this function can return multiple classes by intention.
     //This is in case a user creates a new class with the same name as a different class.
     @Query("SELECT id FROM classes WHERE name IS :name")
-    actual abstract fun getClassIdsByName(name: String) : List<Int>
+    actual abstract suspend fun getClassIdsByName(name: String) : List<Int>
 
     @Query("SELECT id, name FROM classes")
     actual abstract fun allClassesNamesAndIds(): Flow<List<NameAndIdPojo>>
@@ -127,7 +127,7 @@ WHERE classId IS :classId"""
     @Query("SELECT classes.name, classes.id FROM classes JOIN ClassSubclassCrossRef ON classId IS classes.id WHERE subclassId IS :id")
     actual abstract fun getSubclassClasses(id: Int): Flow<List<NameAndIdPojo>>
 
-    actual fun insertClassSubclassId(classId: Int, subclassId: Int) {
+    actual suspend fun insertClassSubclassId(classId: Int, subclassId: Int) {
         insertClassSubclassId(
             ClassSubclassCrossRef(
                 classId = classId,

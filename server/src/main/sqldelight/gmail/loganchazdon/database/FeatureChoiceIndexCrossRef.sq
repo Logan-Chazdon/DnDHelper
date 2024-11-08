@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS FeatureChoiceIndexCrossRef (
+    `choiceId` INTEGER NOT NULL,
+    `index` TEXT NOT NULL,
+    `levels` TEXT,
+    `classes` TEXT,
+    `schools` TEXT,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`choiceId`, `index`, owner),
+    FOREIGN KEY(`choiceId`) REFERENCES `FeatureChoiceEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+

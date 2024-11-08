@@ -24,36 +24,9 @@ import ui.preferences.DataStore
 fun CharacterMainView( viewModel: CharacterMainViewModel) {
     val scope = rememberCoroutineScope()
     val isVertical = isVertical()
-    //Update all data whenever it is emitted from the database.
-    //TODO find a more dry way to do this.
-
-    LaunchedEffect(viewModel.character.value.personalityTraits) {
-        viewModel.personalityTraits.value =
-            viewModel.character.value.personalityTraits
-    }
-    LaunchedEffect(viewModel.character.value.name) {
-        viewModel.name.value =
-            viewModel.character.value.name
-    }
-    LaunchedEffect(viewModel.character.value.bonds) {
-        viewModel.bonds.value =
-            viewModel.character.value.bonds
-    }
-    LaunchedEffect(viewModel.character.value.flaws) {
-        viewModel.flaws.value =
-            viewModel.character.value.flaws
-    }
-    LaunchedEffect(viewModel.character.value.notes) {
-        viewModel.notes.value =
-            viewModel.character.value.notes
-    }
-    LaunchedEffect(viewModel.character.value.ideals) {
-        viewModel.ideals.value =
-            viewModel.character.value.ideals
-    }
 
     scope.launch {
-        viewModel.character.collect { it ->
+        viewModel.character.collect {
             viewModel.characterFeatures.value = it.displayFeatures
         }
     }

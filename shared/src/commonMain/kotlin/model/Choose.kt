@@ -1,5 +1,8 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class Choose{
     private var dynamicByLevel: List<Int>? = null
     private var static: Int? = null

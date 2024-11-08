@@ -1,40 +1,53 @@
 package model
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-open class Race(
-    id: Int = 0,
-    name : String = "",
-    groundSpeed: Int = 30,
-    abilityBonuses: List<AbilityBonus>? = null,
-    abilityBonusChoice: AbilityBonusChoice? = null,
-    alignment: String? = null,
-    age : String = "",
-    size: String = "Medium",
-    sizeDesc: String = "",
-    var traits: List<Feature>? = listOf(),
-    startingProficiencies: List<Proficiency> = listOf(),
-    proficiencyChoices : List<ProficiencyChoice> = listOf(),
-    languages: List<Language> = listOf(),
-    languageChoices: List<LanguageChoice> = listOf(),
-    languageDesc: String = "",
+@Serializable
+open class Race() : RaceEntity() {
+    @Transient
+    var traits: List<Feature>? = listOf()
     open var subrace: Subrace? = null
-) : RaceEntity(
-    raceId = id,
-    raceName = name,
-    groundSpeed = groundSpeed,
-    abilityBonuses = abilityBonuses,
-    abilityBonusChoice = abilityBonusChoice,
-    alignment = alignment,
-    age = age,
-    size = size,
-    sizeDesc = sizeDesc,
-    startingProficiencies = startingProficiencies,
-    proficiencyChoices = proficiencyChoices,
-    languages = languages,
-    languageChoices = languageChoices,
-    languageDesc = languageDesc,
-) {
-    val totalGroundSpeed: Int
+
+    /**In order to make this class serializable with kotlinx serialization we needed to move the constructor into a secondary constructor.
+     * This forces us to leak all open variables in order to set them. Treat with care.*/
+    @Suppress("LeakingThis")
+    constructor(
+        id: Int = 0,
+        name : String = "",
+        groundSpeed: Int = 30,
+        abilityBonuses: List<AbilityBonus>? = null,
+        abilityBonusChoice: AbilityBonusChoice? = null,
+        alignment: String? = null,
+        age : String = "",
+        size: String = "Medium",
+        sizeDesc: String = "",
+        traits: List<Feature>? = listOf(),
+        startingProficiencies: List<Proficiency> = listOf(),
+        proficiencyChoices : List<ProficiencyChoice> = listOf(),
+        languages: List<Language> = listOf(),
+        languageChoices: List<LanguageChoice> = listOf(),
+        languageDesc: String = "",
+        subrace: Subrace? = null
+    ) : this() {
+        this.subrace = subrace
+        this.traits = traits
+        this.raceId = id
+        this.raceName = name
+        this.groundSpeed = groundSpeed
+        this.abilityBonuses = abilityBonuses
+        this.abilityBonusChoice = abilityBonusChoice
+        this.alignment = alignment
+        this.age = age
+        this.size = size
+        this.sizeDesc = sizeDesc
+        this.startingProficiencies = startingProficiencies
+        this.proficiencyChoices = proficiencyChoices
+        this.languages = languages
+        this.languageChoices = languageChoices
+        this.languageDesc = languageDesc
+    }
+        val totalGroundSpeed: Int
     get() {
         return maxOf(groundSpeed, subrace?.groundSpeed ?: 0)
     }

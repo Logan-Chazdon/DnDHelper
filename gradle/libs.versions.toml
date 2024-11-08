@@ -22,6 +22,9 @@ composeprefs = "1.0.0"
 navigationCompose = "2.8.2"
 playServicesBase = "18.0.0"
 playServicesBaseVersion = "18.5.0"
+playServicesAuth = "21.2.0"
+junitJupiter = "5.11.1"
+junit = "4.13.2"
 
 
 [libraries]
@@ -51,6 +54,9 @@ koin-composeVM = { module = "io.insert-koin:koin-compose-viewmodel", version.ref
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 androidx-datastore-preferences-core-jvm = { group = "androidx.datastore", name = "datastore-preferences-core-jvm", version.ref = "datastorePreferencesCoreJvm" }
 composeprefs = { group = "com.github.JamalMulla", name = "ComposePrefs", version.ref = "composeprefs" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 
 [plugins]

@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS FeatFeatureCrossRef (
+    `featId` INTEGER NOT NULL,
+    `featureId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(`featureId`, `featId`, owner),
+    FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+    FOREIGN KEY(`featId`) REFERENCES `feats`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+);
+
+insert:
+INSERT INTO FeatFeatureCrossRef (featId, featureId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM FeatFeatureCrossRef WHERE owner = :owner AND featId = :featId AND featureId = :featureId;

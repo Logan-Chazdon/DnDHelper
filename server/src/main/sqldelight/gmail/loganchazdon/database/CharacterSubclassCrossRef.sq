@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS CharacterSubclassCrossRef (
+    `subClassId` INTEGER NOT NULL,
+    `characterId` INTEGER NOT NULL,
+    `classId` INTEGER NOT NULL,
+    owner TEXT,
+    FOREIGN KEY (owner) REFERENCES users(id),
+    PRIMARY KEY(
+        `subClassId`,
+        `characterId`,
+        `classId`,
+        owner
+    ),
+    FOREIGN KEY(`subClassId`) REFERENCES `subclasses`(`subclassId`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`classId`) REFERENCES `classes`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+insert:
+INSERT INTO CharacterSubclassCrossRef (subClassId, characterId, classId, owner) VALUES (?, ?, ?, ?);
+
+delete:
+DELETE FROM CharacterSubclassCrossRef WHERE subClassId = :subclassId AND characterId = :characterId AND owner = :owner;

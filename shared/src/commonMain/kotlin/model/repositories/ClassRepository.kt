@@ -43,7 +43,7 @@ class ClassRepository {
         return subclassDao.getSubclassesByClassId(id)
     }
 
-    fun createDefaultClass(): Int {
+    suspend fun createDefaultClass(): Int {
         return classDao.insertClass(
             ClassEntity(
                 name = "Homebrew class",
@@ -54,22 +54,22 @@ class ClassRepository {
         ).toInt()
     }
 
-    fun insertClass(classEntity: ClassEntity) {
+    suspend fun insertClass(classEntity: ClassEntity) {
         classDao.insertClass(classEntity)
     }
 
-    fun deleteClass(id: Int) {
+    suspend fun deleteClass(id: Int) {
         classDao.deleteClass(id)
     }
 
-    fun insertClassFeatureCrossRef(classId: Int, featureId: Int) {
+    suspend fun insertClassFeatureCrossRef(classId: Int, featureId: Int) {
         classDao.insertClassFeatureCrossRef(
             featureId = featureId,
             id = classId
         )
     }
 
-    fun getSpellsByClassId(classId: Int): MutableList<Spell> {
+    suspend fun getSpellsByClassId(classId: Int): MutableList<Spell> {
         return classDao.getSpellsByClassId(classId)
     }
 
@@ -106,28 +106,28 @@ class ClassRepository {
         subclassDao.insertSubclass(subclassEntity)
     }
 
-    fun insertClassSubclassCrossRef(classId: Int, subclassId: Int) {
+    suspend fun insertClassSubclassCrossRef(classId: Int, subclassId: Int) {
         classDao.insertClassSubclassId(
             classId = classId,
             subclassId = subclassId
         )
     }
 
-    fun removeClassFeatureCrossRef(classId: Int, featureId: Int) {
+    suspend fun removeClassFeatureCrossRef(classId: Int, featureId: Int) {
         classDao.removeClassFeatureCrossRef(
             featureId = featureId,
             id = classId
         )
     }
 
-    fun removeClassSubclassCrossRef(classId: Int, subclassId: Int) {
+    suspend fun removeClassSubclassCrossRef(classId: Int, subclassId: Int) {
         classDao.removeClassSubclassCrossRef(
             classId = classId,
             subclassId = subclassId
         )
     }
 
-    fun getLevelPath(id: Int): MutableList<Feature> {
+    suspend fun getLevelPath(id: Int): MutableList<Feature> {
         val features = classDao.getUnfilledLevelPath(id)
         featureDao.fillOutFeatureListWithoutChosen(features)
         return features

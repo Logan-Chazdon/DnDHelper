@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS ClassChoiceEntity (
+    `characterId` INTEGER NOT NULL,
+    `classId` INTEGER NOT NULL,
+    `level` INTEGER NOT NULL,
+    `isBaseClass` INTEGER NOT NULL,
+    `totalNumOnGoldDie` INTEGER,
+    `abilityImprovementsGranted` TEXT NOT NULL,
+    `tookGold` INTEGER NOT NULL,
+    `proficiencyChoicesByString` TEXT NOT NULL,
+    owner TEXT,
+
+    PRIMARY KEY(`characterId`, `classId`, owner),
+
+    FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`classId`) REFERENCES `classes`(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (owner) REFERENCES users(id)
+);
+
+insertClassChoiceEntity:
+INSERT OR REPLACE INTO ClassChoiceEntity (characterId, classId, level, isBaseClass, totalNumOnGoldDie, abilityImprovementsGranted, tookGold, proficiencyChoicesByString, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM ClassChoiceEntity WHERE characterId = :characterId AND classId = :classId AND owner = :owner;
+
+select:
+SELECT * FROM ClassChoiceEntity
+WHERE characterId IS :characterId AND classId IS :classId AND owner = :owner;

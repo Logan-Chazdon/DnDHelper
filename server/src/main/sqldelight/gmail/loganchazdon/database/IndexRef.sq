@@ -5,3 +5,12 @@ CREATE TABLE IF NOT EXISTS IndexRef (
     FOREIGN KEY (owner) REFERENCES users(id),
     PRIMARY KEY(`index`, owner)
 );
+
+insert:
+INSERT INTO IndexRef (`index`, ids, owner) VALUES (?, ?, ?);
+
+select:
+SELECT * FROM IndexRef WHERE `index`= :index AND owner = :owner;
+
+selectAll:
+SELECT IndexRef.'index' FROM IndexRef WHERE owner IS :owner OR owner IS NULL;

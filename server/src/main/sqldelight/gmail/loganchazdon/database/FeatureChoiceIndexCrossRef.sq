@@ -10,3 +10,12 @@ CREATE TABLE IF NOT EXISTS FeatureChoiceIndexCrossRef (
     FOREIGN KEY(`choiceId`) REFERENCES `FeatureChoiceEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+delete:
+DELETE FROM FeatureChoiceIndexCrossRef WHERE choiceId = :choiceId
+AND owner = :owner AND `index` = :index;
+
+clearForId:
+DELETE FROM FeatureChoiceIndexCrossRef WHERE choiceId = :id AND owner =:owner;
+
+insert:
+INSERT OR REPLACE INTO FeatureChoiceIndexCrossRef (choiceId, `index`, levels, classes, schools, owner) VALUES (?, ?, ?, ?, ?, ?);

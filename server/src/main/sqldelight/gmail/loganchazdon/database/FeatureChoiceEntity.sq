@@ -11,3 +11,11 @@ INSERT OR REPLACE INTO FeatureChoiceEntity (id, choose, owner) VALUES (?, ?, ?);
 
 delete:
 DELETE FROM FeatureChoiceEntity WHERE owner = :owner AND id=:id;
+
+selectAllFor:
+SELECT * FROM FeatureChoiceEntity
+JOIN FeatureOptionsCrossRef ON FeatureOptionsCrossRef.id IS FeatureChoiceEntity.id
+AND FeatureOptionsCrossRef.owner IS :owner
+WHERE FeatureOptionsCrossRef.featureId IS :featureId AND FeatureChoiceEntity.owner IS :owner;
+
+

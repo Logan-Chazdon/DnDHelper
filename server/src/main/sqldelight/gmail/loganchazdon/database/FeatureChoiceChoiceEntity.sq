@@ -19,4 +19,4 @@ insert:
 INSERT INTO FeatureChoiceChoiceEntity (featureId, characterId, choiceId, owner) VALUES (?, ?, ?, ?);
 
 delete:
-DELETE FROM FeatureChoiceChoiceEntity WHERE featureId = :featureId AND characterId = :characterId AND choiceId = :choiceId AND owner = :owner;
+DELETE FROM FeatureChoiceChoiceEntity WHERE  characterId = :characterId AND choiceId = :choiceId AND owner = :owner;

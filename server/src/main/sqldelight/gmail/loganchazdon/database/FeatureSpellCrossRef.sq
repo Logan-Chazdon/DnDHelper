@@ -13,3 +13,13 @@ INSERT INTO FeatureSpellCrossRef (spellId, featureId, owner) VALUES (?, ?, ?);
 
 delete:
 DELETE FROM FeatureSpellCrossRef WHERE spellId = :spellId AND featureId = :featureId AND owner = :owner;
+
+selectSpellsForFeature:
+SELECT spells.* FROM spells
+LEFT JOIN FeatureSpellCrossRef ON spells.id IS FeatureSpellCrossRef.spellId
+AND  FeatureSpellCrossRef.owner IS :owner
+WHERE (spells.owner = :owner OR spells.owner IS NULL)
+AND featureId IS :featureId;
+
+selectFeatureForSpell:
+SELECT featureId FROM FeatureSpellCrossRef WHERE spellId IS :id AND (owner = :owner OR owner IS NULL);

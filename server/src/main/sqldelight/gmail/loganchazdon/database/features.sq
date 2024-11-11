@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `features` (
+CREATE TABLE IF NOT EXISTS features (
     `featureId` INTEGER NOT NULL,
     `name` TEXT NOT NULL,
     `description` TEXT NOT NULL,
@@ -26,3 +26,43 @@ CREATE TABLE IF NOT EXISTS `features` (
     FOREIGN KEY (owner) REFERENCES users(id)
 );
 
+selectAll:
+SELECT * FROM features WHERE featureId IS :id AND owner IS :owner;
+
+insert:
+INSERT OR REPLACE INTO features (
+featureId, name, description, `index`, grantedAtLevel, maxTimesChosen, prerequisite, activationRequirement, speedBoost, spells, infusion, maxActive, hpBonusPerLevel, armorContingentAcBonus, acBonus, ac, proficiencies, expertises, languages, extraAttackAndDamageRollStat, rangedAttackBonus, owner
+) VALUES ?;
+
+
+selectAllFor:
+SELECT * FROM features WHERE owner IS NULL OR owner IS :owner;
+
+selectFeatureOptions:
+WITH spellDetails AS (SELECT classes, school, level, id FROM spells WHERE (owner IS NULL OR owner IS :owner))
+SELECT DISTINCT features.* FROM features
+LEFT JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
+AND OptionsFeatureCrossRef.owner IS :owner
+LEFT JOIN FeatureChoiceIndexCrossRef ON FeatureChoiceIndexCrossRef.choiceId IS :featureChoiceId
+AND FeatureChoiceIndexCrossRef.owner IS :owner
+LEFT JOIN IndexRef ON LOWER(IndexRef.`index`) IS LOWER(FeatureChoiceIndexCrossRef.`index`)
+AND (IndexRef.owner IS NULL OR IndexRef.owner = :owner)
+LEFT JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.featureId IS features.featureId
+AND FeatureChoiceIndexCrossRef.owner IS :owner
+LEFT JOIN spellDetails ON spellDetails.id IS FeatureSpellCrossRef.spellId
+WHERE (features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
+AND (FeatureChoiceIndexCrossRef.levels = 'null'
+OR  FeatureChoiceIndexCrossRef.levels IS NULL
+OR FeatureChoiceIndexCrossRef.levels LIKE '%' || spellDetails.level || '%')
+AND(FeatureChoiceIndexCrossRef.schools = 'null'
+OR  FeatureChoiceIndexCrossRef.schools IS NULL
+OR FeatureChoiceIndexCrossRef.schools  LIKE '%' || spellDetails.school || '%' )
+AND (
+   FeatureChoiceIndexCrossRef.classes LIKE 'null' OR FeatureChoiceIndexCrossRef.classes IS NULL
+   OR 0 NOT LIKE (
+SELECT COUNT(*)
+FROM
+  (SELECT replace(FeatureChoiceIndexCrossRef.classes, ',', '') AS fcic_class
+   FROM FeatureChoiceIndexCrossRef) AS vt
+WHERE spellDetails.classes LIKE '%' ||  vt.fcic_class || '%'
+	));

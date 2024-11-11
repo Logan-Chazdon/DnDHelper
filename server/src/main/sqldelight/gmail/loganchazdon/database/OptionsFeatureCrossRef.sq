@@ -7,3 +7,9 @@ CREATE TABLE IF NOT EXISTS OptionsFeatureCrossRef (
     FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
     FOREIGN KEY(`choiceId`) REFERENCES `FeatureChoiceEntity`(`id`) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 );
+
+insertOptionsFeatureCrossRef:
+INSERT INTO OptionsFeatureCrossRef (featureId, choiceId, owner) VALUES (?, ?, ?);
+
+delete:
+DELETE FROM OptionsFeatureCrossRef WHERE featureId = :featureId AND owner IS :owner AND choiceId IS :choiceId;

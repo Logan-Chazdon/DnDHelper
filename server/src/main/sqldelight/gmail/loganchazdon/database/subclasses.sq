@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS subclasses (
 
 
 insert:
-INSERT INTO subclasses (subclass_name, subclass_spell_casting, subclass_isHomebrew, subclassId, spellAreFree, owner) VALUES (?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO subclasses (subclass_name, subclass_spell_casting, subclass_isHomebrew, subclassId, spellAreFree, owner) VALUES ?;
 
 delete:
 DELETE FROM subclasses WHERE owner = :owner AND subclassId =:subclassId;
@@ -23,4 +23,19 @@ LEFT JOIN ClassSubclassCrossRef ON subclassId IS ClassSubclassCrossRef.subclassI
 AND (ClassSubclassCrossRef.owner IS NULL OR ClassSubclassCrossRef.owner IS :owner)
 WHERE (subclasses.owner = :owner OR subclasses.owner IS NULL)
 AND classId IS :classId;
+
+selectByClass:
+SELECT subclasses.* FROM subclasses
+LEFT JOIN ClassSubclassCrossRef ON subclassId IS ClassSubclassCrossRef.subclassId
+AND (ClassSubclassCrossRef.owner IS NULL OR ClassSubclassCrossRef.owner IS :owner)
+WHERE (subclasses.owner = :owner OR subclasses.owner IS NULL)
+AND classId IS :classId;
+
+selectSubclass:
+SELECT subclasses.* FROM subclasses
+WHERE subclassId IS :id AND (owner IS NULL  OR owner = :owner);
+
+selectHomebrewSubclasses:
+SELECT subclasses.* FROM subclasses
+WHERE owner = :owner;
 

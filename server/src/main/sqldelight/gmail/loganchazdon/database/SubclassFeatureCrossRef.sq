@@ -17,3 +17,10 @@ INSERT INTO SubclassFeatureCrossRef (subclassId, featureId, owner) VALUES (?, ?,
 
 delete:
 DELETE FROM SubclassFeatureCrossRef WHERE subclassId = :subclassId AND featureId =:featureId AND owner =:owner;
+
+selectFeaturesBySubclass:
+SELECT features.* FROM features
+LEFT JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.featureId
+AND SubclassFeatureCrossRef.owner IS :owner
+WHERE subclassId IS :subclassId AND
+(features.owner IS NULL OR features.owner = :owner);

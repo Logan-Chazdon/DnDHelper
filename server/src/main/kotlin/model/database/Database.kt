@@ -141,6 +141,7 @@ fun Application.configureDatabases() {
         raceService(db, applicationHttpClient)
         subraceService(db, applicationHttpClient)
         subclassService(db, applicationHttpClient)
+        spellService(db, applicationHttpClient)
 
         get("/") {
             val userSession: UserSession? = call.sessions.get()

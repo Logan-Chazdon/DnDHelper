@@ -21,3 +21,10 @@ AND spells.id IS ClassSpellCrossRef.spellId
 AND ClassSpellCrossRef.owner = :owner
 WHERE classId = :classId
 AND (spells.owner IS NULL OR spells.owner IS NULL);
+
+selectClassesForSpell:
+SELECT classes.name, classes.id FROM classes
+LEFT JOIN ClassSpellCrossRef ON ClassSpellCrossRef.classId IS classes.id
+AND ClassSpellCrossRef.owner = :owner
+WHERE (classes.owner IS NULL OR classes.owner =:owner)
+AND spellId IS :spellId;

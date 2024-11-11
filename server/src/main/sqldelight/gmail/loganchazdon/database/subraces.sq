@@ -16,13 +16,20 @@ CREATE TABLE IF NOT EXISTS subraces (
 );
 
 insert:
-INSERT INTO subraces (id, name, abilityBonuses, abilityBonusChoice, startingProficiencies, languages, languageChoices, size, groundSpeed, isHomebrew, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO subraces (id, name, abilityBonuses, abilityBonusChoice, startingProficiencies, languages, languageChoices, size, groundSpeed, isHomebrew, owner) VALUES ?;
 
 delete:
 DELETE FROM subraces WHERE owner = :owner AND id =:id;
 
 selectFor:
 SELECT * FROM subraces WHERE owner = ? OR owner IS NULL;
+
+selectHomebrewByOwner:
+SELECT * FROM subclasses WHERE owner = :owner;
+
+selectById:
+SELECT * FROM subraces
+WHERE id = :id AND (owner = :owner OR owner IS NULL);
 
 selectSubraceFeatures:
 SELECT * FROM features

@@ -13,3 +13,10 @@ INSERT INTO SubraceFeatureCrossRef (subraceId, featureId, owner) VALUES (?, ?, ?
 
 delete:
 DELETE FROM SubraceFeatureCrossRef WHERE subraceId = :subraceId AND featureId =:featureId AND owner =:owner;
+
+selectFeaturesBySubrace:
+SELECT features.* FROM features
+LEFT JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.featureId IS features.featureId
+AND SubraceFeatureCrossRef.owner IS :owner
+WHERE subraceId IS :subraceId AND
+(features.owner IS NULL OR features.owner = :owner);

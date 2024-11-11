@@ -16,3 +16,7 @@ INSERT OR REPLACE INTO feats (id, name, desc, prerequisite, abilityBonuses, abil
 
 delete:
 DELETE FROM feats WHERE owner = :owner AND id =:id;
+
+selectAllFor:
+SELECT * FROM feats
+WHERE (owner IS NULL OR owner = :owner);

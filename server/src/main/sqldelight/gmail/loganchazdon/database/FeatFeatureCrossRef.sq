@@ -13,3 +13,10 @@ INSERT INTO FeatFeatureCrossRef (featId, featureId, owner) VALUES (?, ?, ?);
 
 delete:
 DELETE FROM FeatFeatureCrossRef WHERE owner = :owner AND featId = :featId AND featureId = :featureId;
+
+selectFeaturesForFeat:
+SELECT features.* FROM features
+JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
+AND FeatFeatureCrossRef.owner = :owner
+WHERE (features.owner IS NULL OR features.owner IS NULL)
+AND featId = :featId;

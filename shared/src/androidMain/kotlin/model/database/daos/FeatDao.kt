@@ -40,5 +40,5 @@ actual abstract class FeatDao {
 JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
 WHERE featId IS :featId
     """)
-    actual abstract fun getFeatFeatures(featId: Int) : List<Feature>
+    actual abstract suspend fun getFeatFeatures(featId: Int) : List<Feature>
 }

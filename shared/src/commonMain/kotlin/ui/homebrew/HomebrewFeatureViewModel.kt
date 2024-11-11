@@ -55,7 +55,7 @@ class HomebrewFeatureViewModel(
         }
     }
 
-    fun createDefaultFeature(choiceId: Int): Int {
+    suspend fun createDefaultFeature(choiceId: Int): Int {
         val featureId = featureRepository.createDefaultFeature()
         featureRepository.insertOptionsFeature(
             choiceId = choiceId,
@@ -64,7 +64,7 @@ class HomebrewFeatureViewModel(
         return featureId
     }
 
-    fun createDefaultFeatureChoice() {
+    suspend fun createDefaultFeatureChoice() {
         val choiceId = featureRepository.createDefaultFeatureChoice()
         featureRepository.insertFeatureOptionsCrossRef(
             id = choiceId,
@@ -72,25 +72,25 @@ class HomebrewFeatureViewModel(
         )
     }
 
-    fun removeFeatureChoice(choiceId: Int) {
+    suspend fun removeFeatureChoice(choiceId: Int) {
         featureRepository.removeFeatureOptionsCrossRef(
             id = choiceId,
             featureId = id
         )
     }
 
-    fun removeFeatureFromChoice(featureId: Int, choiceId: Int) {
+    suspend fun removeFeatureFromChoice(featureId: Int, choiceId: Int) {
         featureRepository.removeOptionsFeatureCrossRef(
             featureId = featureId,
             choiceId = choiceId
         )
     }
 
-    fun getOptions(id: Int): List<Feature> {
+    suspend fun getOptions(id: Int): List<Feature> {
         return featureRepository.getFeatureChoiceOptions(id)
     }
 
-    fun updateChoice(id: Int, choose: Choose) {
+    suspend fun updateChoice(id: Int, choose: Choose) {
         val choice = FeatureChoiceEntity(
             choose = choose,
         )
@@ -100,14 +100,14 @@ class HomebrewFeatureViewModel(
         )
     }
 
-    fun addSpell(it: Spell) {
+    suspend fun addSpell(it: Spell) {
         featureRepository.insertFeatureSpellCrossRef(
             featureId = id,
             spellId = it.id
         )
     }
 
-    fun removeSpell(it: Spell) {
+    suspend fun removeSpell(it: Spell) {
         featureRepository.removeFeatureSpellCrossRef(
             featureId = id,
             spellId = it.id

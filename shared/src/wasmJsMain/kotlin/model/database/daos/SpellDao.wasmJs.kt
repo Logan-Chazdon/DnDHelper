@@ -14,20 +14,20 @@ actual abstract class SpellDao {
     actual abstract fun getAllSpells(): Flow<List<Spell>>
     actual abstract fun getHomebrewSpells(): Flow<List<Spell>>
     actual abstract fun getLiveSpell(id: Int): Flow<Spell>
-    actual fun insertSpell(spell: Spell): Int {
+    actual suspend fun insertSpell(spell: Spell): Int {
         return spellService.insertSpell(spell)
     }
 
     actual abstract fun getSpellClasses(id: Int): Flow<List<NameAndIdPojo>>
-    actual fun removeClassSpellCrossRef(classId: Int, spellId: Int) {
+    actual suspend fun removeClassSpellCrossRef(classId: Int, spellId: Int) {
         spellService.removeClassSpellCrossRef(classId, spellId)
     }
 
-    actual fun addClassSpellCrossRef(classId: Int, spellId: Int) {
+    actual suspend fun addClassSpellCrossRef(classId: Int, spellId: Int) {
         spellService.addClassSpellCrossRef(classId, spellId)
     }
 
-    actual abstract fun removeSpellById(id: Int)
+    actual abstract suspend fun removeSpellById(id: Int)
 }
 
 
@@ -48,7 +48,7 @@ class SpellDaoImpl(service: SpellService) : SpellDao(service) {
         return spellService.getSpellClasses(id)
     }
 
-    override fun removeSpellById(id: Int) {
+    override suspend fun removeSpellById(id: Int) {
         spellService.removeSpellById(id)
     }
 

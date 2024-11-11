@@ -14,7 +14,7 @@ actual abstract class SubraceDao {
         this.subraceSubrace = subraceSubrace
     }
 
-    actual fun insertSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
+    actual suspend fun insertSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
         subraceSubrace.insertSubraceFeatureCrossRef(subraceId, featureId)
     }
 
@@ -22,11 +22,11 @@ actual abstract class SubraceDao {
         return subraceSubrace.getSubrace(id)
     }
 
-    actual fun removeSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
+    actual suspend fun removeSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
         subraceSubrace.removeSubraceFeatureCrossRef(subraceId, featureId)
     }
 
-    actual fun insertSubrace(subrace: SubraceEntity): Int {
+    actual suspend fun insertSubrace(subrace: SubraceEntity): Int {
         return subraceSubrace.insertSubrace(subrace)
     }
 
@@ -34,13 +34,13 @@ actual abstract class SubraceDao {
         return subraceSubrace.bindSubraceOptions(raceId)
     }
 
-    actual fun removeRaceSubraceCrossRef(raceId: Int, subraceId: Int) {
+    actual suspend fun removeRaceSubraceCrossRef(raceId: Int, subraceId: Int) {
         subraceSubrace.removeRaceSubraceCrossRef(raceId, subraceId)
     }
 
     actual abstract fun getHomebrewSubraces(): Flow<List<SubraceEntity>>
     actual abstract fun getSubraceLiveFeaturesById(id: Int): Flow<List<Feature>>
-    actual abstract fun deleteSubrace(id: Int)
+    actual abstract suspend fun deleteSubrace(id: Int)
 }
 
 
@@ -53,7 +53,7 @@ class SubraceDaoImpl(service: SubraceService) : SubraceDao(service) {
         return subraceSubrace.getSubraceLiveFeaturesById(id)
     }
 
-    override fun deleteSubrace(id: Int) {
+    override suspend fun deleteSubrace(id: Int) {
         subraceSubrace.deleteSubrace(id)
     }
 }

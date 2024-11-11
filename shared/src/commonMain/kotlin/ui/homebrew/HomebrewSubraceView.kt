@@ -94,7 +94,9 @@ fun HomebrewSubraceView(
                             FeaturesView(
                                 features = it,
                                 onDelete = { id ->
-                                    viewModel.removeFeature(id)
+                                    scope.launch {
+                                        viewModel.removeFeature(id)
+                                    }
                                 },
                                 onClick = { id ->
                                     navController.navigate("homebrewView/homebrewFeature/$id")

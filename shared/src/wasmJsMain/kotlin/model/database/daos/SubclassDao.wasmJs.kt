@@ -13,7 +13,7 @@ actual abstract class SubclassDao {
         this.subclassService = subclassService
     }
 
-    actual abstract fun getSubclassFeatures(
+    actual abstract suspend fun getSubclassFeatures(
         subclassId: Int,
         maxLevel: Int
     ): List<Feature>
@@ -23,7 +23,7 @@ actual abstract class SubclassDao {
         return subclassService.getSubclassesByClassId(id)
     }
 
-    actual fun insertSubclass(subClass: SubclassEntity): Int {
+    actual suspend fun insertSubclass(subClass: SubclassEntity): Int {
         return subclassService.insertSubclass(subClass)
     }
 
@@ -31,11 +31,11 @@ actual abstract class SubclassDao {
         return subclassService.getSubclass(id)
     }
 
-    actual fun removeSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
+    actual suspend fun removeSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
         subclassService.removeSubclassFeatureCrossRef(subclassId, featureId)
     }
 
-    actual fun insertSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
+    actual suspend fun insertSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
         subclassService.insertSubclassFeatureCrossRef(subclassId, featureId)
     }
 
@@ -43,12 +43,12 @@ actual abstract class SubclassDao {
         return subclassService.getHomebrewSubclasses()
     }
 
-    actual abstract fun deleteSubclass(subclassId: Int)
+    actual abstract suspend fun deleteSubclass(subclassId: Int)
 }
 
 
 class SubclassDaoImpl(service: SubclassService) : SubclassDao(service) {
-    override fun getSubclassFeatures(subclassId: Int, maxLevel: Int): List<Feature> {
+    override suspend fun getSubclassFeatures(subclassId: Int, maxLevel: Int): List<Feature> {
         return subclassService.getSubclassFeatures(subclassId, maxLevel)
     }
 
@@ -56,7 +56,7 @@ class SubclassDaoImpl(service: SubclassService) : SubclassDao(service) {
         return subclassService.getSubclassLiveFeaturesById(id)
     }
 
-    override fun deleteSubclass(subclassId: Int) {
+    override suspend fun deleteSubclass(subclassId: Int) {
         subclassService.deleteSubclass(subclassId)
     }
 

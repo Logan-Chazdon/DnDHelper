@@ -73,7 +73,7 @@ class ClassRepository {
         return classDao.getSpellsByClassId(classId)
     }
 
-    fun createDefaultSubclass(): Int {
+    suspend fun createDefaultSubclass(): Int {
         return subclassDao.insertSubclass(
             SubclassEntity(
                 "",
@@ -88,21 +88,21 @@ class ClassRepository {
         return subclassDao.getSubclass(it)
     }
 
-    fun removeSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
+    suspend fun removeSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
         subclassDao.removeSubclassFeatureCrossRef(
             subclassId = subclassId,
             featureId = featureId
         )
     }
 
-    fun insertSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
+    suspend fun insertSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
         subclassDao.insertSubclassFeatureCrossRef(
             subclassId = subclassId,
             featureId = featureId
         )
     }
 
-    fun insertSubclass(subclassEntity: SubclassEntity) {
+    suspend fun insertSubclass(subclassEntity: SubclassEntity) {
         subclassDao.insertSubclass(subclassEntity)
     }
 
@@ -156,7 +156,7 @@ class ClassRepository {
         return classDao.getSubclassClasses(id)
     }
 
-    fun deleteSubclass(subclassId: Int) {
+    suspend fun deleteSubclass(subclassId: Int) {
         subclassDao.deleteSubclass(subclassId)
     }
 

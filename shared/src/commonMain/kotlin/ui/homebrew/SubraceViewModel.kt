@@ -20,7 +20,7 @@ class SubraceViewModel constructor(
     private val featureRepository: FeatureRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    fun createDefaultFeature(): Int {
+    suspend fun createDefaultFeature(): Int {
         val featureId = featureRepository.createDefaultFeature()
         raceRepository.insertSubraceFeatureCrossRef(
             subraceId = id,
@@ -29,14 +29,14 @@ class SubraceViewModel constructor(
         return featureId
     }
 
-    fun removeFeature(featureId: Int) {
+    suspend fun removeFeature(featureId: Int) {
         raceRepository.removeSubraceFeatureCrossRef(
             subraceId = id,
             featureId = featureId
         )
     }
 
-    fun saveSubrace() {
+    suspend fun saveSubrace() {
         val entity = SubraceEntity(
             name = name.value,
             size = sizeClass.value,

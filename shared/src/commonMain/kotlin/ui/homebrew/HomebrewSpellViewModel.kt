@@ -44,7 +44,7 @@ class HomebrewSpellViewModel(
     val materials = mutableStateOf("")
     val castingTime = mutableStateOf("")
     val classes = spellRepository.getSpellClasses(id)
-    fun saveSpell() {
+    suspend fun saveSpell() {
         val components = mutableListOf<String>()
         val itemComponents = mutableListOf<Item>()
 

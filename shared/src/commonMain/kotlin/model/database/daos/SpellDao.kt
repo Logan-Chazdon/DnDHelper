@@ -9,9 +9,9 @@ expect abstract class SpellDao {
     abstract fun getAllSpells(): Flow<List<Spell>>
     abstract fun getHomebrewSpells(): Flow<List<Spell>>
     abstract fun getLiveSpell(id: Int): Flow<Spell>
-    fun insertSpell(spell: Spell) : Int
+    suspend fun insertSpell(spell: Spell) : Int
     abstract fun getSpellClasses(id: Int): Flow<List<NameAndIdPojo>>
-    fun removeClassSpellCrossRef(classId: Int, spellId: Int)
-    fun addClassSpellCrossRef(classId: Int, spellId: Int)
-    abstract fun removeSpellById(id: Int)
+    suspend fun removeClassSpellCrossRef(classId: Int, spellId: Int)
+    suspend fun addClassSpellCrossRef(classId: Int, spellId: Int)
+    abstract suspend fun removeSpellById(id: Int)
 }

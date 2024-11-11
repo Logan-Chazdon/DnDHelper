@@ -54,7 +54,7 @@ class CharacterRepository {
         return characterDao.getAllCharacters()
     }
 
-    fun removeFeatureChoiceChoiceEntity(
+    suspend fun removeFeatureChoiceChoiceEntity(
         choiceId: Int,
         characterId: Int
     ) {

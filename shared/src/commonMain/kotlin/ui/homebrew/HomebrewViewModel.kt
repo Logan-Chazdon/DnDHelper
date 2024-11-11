@@ -34,7 +34,7 @@ class HomebrewViewModel constructor(
         }
     }
 
-    fun createDefaultSpell(): Int {
+    suspend fun createDefaultSpell(): Int {
         return spellRepository.createDefaultSpell()
     }
 
@@ -42,11 +42,11 @@ class HomebrewViewModel constructor(
         return backgroundRepository.createDefaultBackground()
     }
 
-    fun createDefaultSubclass(): Int {
+    suspend fun createDefaultSubclass(): Int {
         return classRepository.createDefaultSubclass()
     }
 
-    fun createDefaultSubrace(): Int {
+    suspend fun createDefaultSubrace(): Int {
         return raceRepository.createDefaultSubrace()
     }
 

@@ -22,7 +22,7 @@ class SubclassViewModel constructor(
     private val featureRepository: FeatureRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    fun createDefaultFeature(): Int {
+    suspend fun createDefaultFeature(): Int {
         val featureId = featureRepository.createDefaultFeature()
         classRepository.insertSubclassFeatureCrossRef(
             subclassId = id,
@@ -31,7 +31,7 @@ class SubclassViewModel constructor(
         return featureId
     }
 
-    fun saveSubclass() {
+    suspend fun saveSubclass() {
         val subclass = SubclassEntity(
             name = name.value,
             spellCasting = null, //TODO
@@ -44,7 +44,7 @@ class SubclassViewModel constructor(
         )
     }
 
-    fun removeFeature(featureId: Int) {
+    suspend fun removeFeature(featureId: Int) {
         classRepository.removeSubclassFeatureCrossRef(
             featureId = featureId,
             subclassId = id

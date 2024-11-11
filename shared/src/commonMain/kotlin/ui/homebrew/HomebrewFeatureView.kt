@@ -449,7 +449,7 @@ private fun FeatureChoiceView(
     onNavigate : (Int) -> Unit,
     onNew: () -> Unit,
     onRemove: (Int) -> Unit,
-    getOptions: (Int) -> List<Feature>,
+    getOptions: suspend (Int) -> List<Feature>,
     indexes: List<String>,
     selectedIndexes: SnapshotStateList<FeatureChoiceIndexCrossRef>,
     updateChoice: (Int, Choose) -> Unit

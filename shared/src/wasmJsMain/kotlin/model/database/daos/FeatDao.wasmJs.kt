@@ -12,7 +12,7 @@ actual abstract class FeatDao {
     }
 
     actual abstract fun getUnfilledFeats(): Flow<List<Feat>>
-    actual abstract fun getFeatFeatures(featId: Int): List<Feature>
+    actual abstract suspend fun getFeatFeatures(featId: Int): List<Feature>
 }
 
 class FeatDaoImpl(featService: FeatService) : FeatDao(featService) {
@@ -20,7 +20,7 @@ class FeatDaoImpl(featService: FeatService) : FeatDao(featService) {
         return featService.getUnfilledFeats()
     }
 
-    override fun getFeatFeatures(featId: Int): List<Feature> {
+    override suspend fun getFeatFeatures(featId: Int): List<Feature> {
         return featService.getFeatFeatures(featId)
     }
 

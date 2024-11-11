@@ -21,7 +21,7 @@ class FeatureRepository {
         return _infusions
     }
 
-    fun insertFeature(newFeature: Feature): Int {
+    suspend fun insertFeature(newFeature: Feature): Int {
         return featureDao.insertFeature(newFeature)
     }
 
@@ -29,7 +29,7 @@ class FeatureRepository {
         return featureDao.getLiveFeatureById(id)
     }
 
-    fun createDefaultFeature(): Int {
+    suspend fun createDefaultFeature(): Int {
         val newFeature = Feature(name = "", description = "")
         return featureDao.insertFeature(newFeature).toInt()
     }
@@ -38,7 +38,7 @@ class FeatureRepository {
         return featureDao.returnGetAllIndexes()
     }
 
-    fun insertFeatureOptionsCrossRef(
+    suspend fun insertFeatureOptionsCrossRef(
         featureId: Int,
         id: Int
     ) {
@@ -48,7 +48,7 @@ class FeatureRepository {
         )
     }
 
-    fun insertOptionsFeature(
+    suspend fun insertOptionsFeature(
         featureId: Int,
         choiceId: Int,
     ) {
@@ -58,7 +58,7 @@ class FeatureRepository {
         )
     }
 
-    fun createDefaultFeatureChoice(): Int {
+    suspend fun createDefaultFeatureChoice(): Int {
         return featureDao.insertFeatureChoice(
             FeatureChoiceEntity(
                 choose = Choose(static = 1)
@@ -66,11 +66,11 @@ class FeatureRepository {
         ).toInt()
     }
 
-    fun getFeatureChoices(id: Int): List<FeatureChoiceEntity> {
+    suspend fun getFeatureChoices(id: Int): List<FeatureChoiceEntity> {
         return featureDao.getFeatureChoices(id)
     }
 
-    fun removeFeatureOptionsCrossRef(
+    suspend fun removeFeatureOptionsCrossRef(
         featureId: Int,
         id: Int
     ) {
@@ -80,7 +80,7 @@ class FeatureRepository {
         )
     }
 
-    fun removeOptionsFeatureCrossRef(
+    suspend fun removeOptionsFeatureCrossRef(
         featureId: Int,
         choiceId: Int,
     ) {
@@ -94,15 +94,15 @@ class FeatureRepository {
         return featureDao.getLiveFeatureChoices(id)
     }
 
-    fun getFeatureChoiceOptions(id: Int): List<Feature> {
+    suspend fun getFeatureChoiceOptions(id: Int): List<Feature> {
         return featureDao.getFeatureChoiceOptions(id)
     }
 
-    fun clearFeatureChoiceIndexRefs(id: Int) {
+    suspend fun clearFeatureChoiceIndexRefs(id: Int) {
         featureDao.clearFeatureChoiceIndexRefs(id)
     }
 
-    fun insertFeatureChoiceIndexCrossRef(
+    suspend fun insertFeatureChoiceIndexCrossRef(
         choiceId: Int,
         index: String,
         levels: List<Int>?,
@@ -118,11 +118,11 @@ class FeatureRepository {
         )
     }
 
-    fun insertFeatureChoice(choice: FeatureChoiceEntity) {
+    suspend fun insertFeatureChoice(choice: FeatureChoiceEntity) {
         featureDao.insertFeatureChoice(choice)
     }
 
-    fun updateIndexRef(
+    suspend fun updateIndexRef(
         index: String,
         ids: List<Int>
     ) {
@@ -132,11 +132,11 @@ class FeatureRepository {
         )
     }
 
-    fun removeIdFromRef(id: Int, ref: String) {
+    suspend fun removeIdFromRef(id: Int, ref: String) {
         featureDao.removeIdFromRef(id, ref)
     }
 
-    fun insertFeatureSpellCrossRef(
+    suspend fun insertFeatureSpellCrossRef(
         spellId: Int,
         featureId: Int
     ) {
@@ -146,7 +146,7 @@ class FeatureRepository {
         )
     }
 
-    fun getFeatureIdOr0FromSpellId(id: Int): Int {
+    suspend fun getFeatureIdOr0FromSpellId(id: Int): Int {
         return featureDao.getFeatureIdOr0FromSpellId(id)
     }
 
@@ -154,7 +154,7 @@ class FeatureRepository {
         return featureDao.getLiveFeatureSpells(id)
     }
 
-    fun removeFeatureSpellCrossRef(
+    suspend fun removeFeatureSpellCrossRef(
         spellId: Int,
         featureId: Int
     ) {

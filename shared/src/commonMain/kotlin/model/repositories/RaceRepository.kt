@@ -73,7 +73,7 @@ class RaceRepository {
     }
 
 
-     fun insertSubraceFeatureCrossRef(
+     suspend fun insertSubraceFeatureCrossRef(
         subraceId: Int,
         featureId: Int
     ) {
@@ -87,7 +87,7 @@ class RaceRepository {
         return subraceDao.getSubrace(id)
     }
 
-     fun removeSubraceFeatureCrossRef(
+     suspend fun removeSubraceFeatureCrossRef(
         subraceId: Int,
         featureId: Int
     ) {
@@ -107,7 +107,7 @@ class RaceRepository {
         )
     }
 
-     fun createDefaultSubrace(): Int {
+     suspend fun createDefaultSubrace(): Int {
         return subraceDao.insertSubrace(
             SubraceEntity(
                 name = "Homebrew Subrace",
@@ -116,7 +116,7 @@ class RaceRepository {
         )
     }
 
-     fun insertSubrace(subraceEntity: SubraceEntity) {
+     suspend fun insertSubrace(subraceEntity: SubraceEntity) {
         subraceDao.insertSubrace(subraceEntity)
     }
 
@@ -124,7 +124,7 @@ class RaceRepository {
         return subraceDao.bindSubraceOptions(id)
     }
 
-     fun removeRaceSubraceCrossRef(raceId: Int, subraceId: Int) {
+     suspend fun removeRaceSubraceCrossRef(raceId: Int, subraceId: Int) {
         subraceDao.removeRaceSubraceCrossRef(
             raceId = raceId,
             subraceId = subraceId
@@ -147,7 +147,7 @@ class RaceRepository {
         return subraceDao.getSubraceLiveFeaturesById(id)
     }
 
-     fun deleteSubrace(id: Int) {
+     suspend fun deleteSubrace(id: Int) {
         subraceDao.deleteSubrace(id)
     }
 

@@ -31,11 +31,11 @@ import model.pojos.NameAndIdPojo
         return spellDao.getLiveSpell(id)
     }
 
-     fun insertSpell(spell: Spell) {
+     suspend fun insertSpell(spell: Spell) {
         spellDao.insertSpell(spell)
     }
 
-     fun createDefaultSpell(): Int {
+     suspend fun createDefaultSpell(): Int {
         return spellDao.insertSpell(
             Spell(
                 name = "",
@@ -59,7 +59,7 @@ import model.pojos.NameAndIdPojo
         return spellDao.getSpellClasses(id)
     }
 
-     fun removeClassSpellCrossRef(
+     suspend fun removeClassSpellCrossRef(
         classId: Int,
         spellId: Int
     ) {
@@ -69,7 +69,7 @@ import model.pojos.NameAndIdPojo
         )
     }
 
-     fun addClassSpellCrossRef(
+     suspend fun addClassSpellCrossRef(
         classId: Int,
         spellId: Int
     ) {
@@ -79,7 +79,7 @@ import model.pojos.NameAndIdPojo
         )
     }
 
-     fun deleteSpell(id: Int) {
+     suspend fun deleteSpell(id: Int) {
         spellDao.removeSpellById(id)
     }
 

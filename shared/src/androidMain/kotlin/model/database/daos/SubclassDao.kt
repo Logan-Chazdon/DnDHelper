@@ -47,7 +47,7 @@ actual abstract class SubclassDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef)
-    actual fun insertSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
+    actual suspend fun insertSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
         insertSubclassFeatureCrossRef(
             SubclassFeatureCrossRef(
                 subclassId = subclassId,
@@ -58,7 +58,7 @@ actual abstract class SubclassDao {
 
     @Delete
     abstract fun removeSubclassFeatureCrossRef(subclassFeatureCrossRef: SubclassFeatureCrossRef)
-    actual fun removeSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
+    actual suspend fun removeSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
         removeSubclassFeatureCrossRef(
             SubclassFeatureCrossRef(
                 subclassId = subclassId,
@@ -108,7 +108,7 @@ WHERE subclassId IS :id"""
     abstract fun removeSubclassSpellCrossRef(ref: SubclassSpellCrossRef)
 
 
-    actual fun insertSubclass(subClass: SubclassEntity): Int {
+    actual suspend fun insertSubclass(subClass: SubclassEntity): Int {
         val id = insertSubclassOrIgnore(subClass.asTable()).toInt()
         if (id == -1) {
             updateSubclass(subClass.asTable())
@@ -142,8 +142,8 @@ JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.fe
 WHERE SubclassFeatureCrossRef.subclassId IS :subclassId AND features.grantedAtLevel <= :maxLevel
     """
     )
-    actual abstract fun getSubclassFeatures(subclassId: Int, maxLevel: Int): List<Feature>
+    actual abstract suspend fun getSubclassFeatures(subclassId: Int, maxLevel: Int): List<Feature>
 
     @Query("DELETE FROM subclasses WHERE subclassId = :subclassId")
-    actual abstract fun deleteSubclass(subclassId: Int)
+    actual abstract suspend fun deleteSubclass(subclassId: Int)
 }

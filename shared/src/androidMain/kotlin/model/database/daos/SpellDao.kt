@@ -11,7 +11,7 @@ import model.pojos.NameAndIdPojo
 @Dao
 actual abstract class SpellDao {
 
-    actual fun insertSpell(spell: Spell): Int {
+    actual suspend fun insertSpell(spell: Spell): Int {
         val id = insertSpellOrIgnore(spell.asTable()).toInt()
         if (id == -1) {
             updateSpell(spell.asTable())
@@ -27,7 +27,7 @@ actual abstract class SpellDao {
     protected abstract fun updateSpell(spell: SpellTable)
 
     @Query("DELETE FROM spells WHERE id IS :id")
-    actual abstract fun removeSpellById(id: Int)
+    actual abstract suspend fun removeSpellById(id: Int)
 
     @Query("SELECT * FROM spells")
     actual abstract fun getAllSpells(): Flow<List<Spell>>
@@ -48,7 +48,7 @@ WHERE ClassSpellCrossRef.spellId = :id"""
 
     @Delete
     abstract fun removeClassSpellCrossRef(ref: ClassSpellCrossRef)
-    actual fun removeClassSpellCrossRef(classId: Int, spellId: Int) {
+    actual suspend fun removeClassSpellCrossRef(classId: Int, spellId: Int) {
         removeClassSpellCrossRef(
             ClassSpellCrossRef(
                 classId = classId,
@@ -59,7 +59,7 @@ WHERE ClassSpellCrossRef.spellId = :id"""
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun addClassSpellCrossRef(ref: ClassSpellCrossRef)
-    actual fun addClassSpellCrossRef(classId: Int, spellId: Int) {
+    actual suspend fun addClassSpellCrossRef(classId: Int, spellId: Int) {
         addClassSpellCrossRef(
             ClassSpellCrossRef(
                 classId = classId,

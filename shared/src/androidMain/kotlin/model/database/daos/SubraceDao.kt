@@ -51,7 +51,7 @@ WHERE subraceId IS :subraceId"""
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     protected abstract fun insertSubraceOrIgnore(subrace: SubraceEntityTable): Long
 
-    actual fun insertSubrace(subrace: SubraceEntity): Int {
+    actual suspend fun insertSubrace(subrace: SubraceEntity): Int {
         val id = insertSubraceOrIgnore(subrace.asTable()).toInt()
         if(id == -1) {
             updateSubrace(subrace.asTable())
@@ -118,7 +118,7 @@ WHERE featChoiceId IS :id OR featIds.amt IS 0""")
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSubraceFeatureCrossRef(subraceFeatureCrossRef: SubraceFeatureCrossRef)
-    actual fun insertSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
+    actual suspend fun insertSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
         insertSubraceFeatureCrossRef(
             SubraceFeatureCrossRef(subraceId, featureId)
         )
@@ -139,14 +139,14 @@ WHERE subraceId IS :id"""
 
 
     @Query("DELETE FROM subraces WHERE id = :id")
-    actual abstract fun deleteSubrace(id: Int)
-    actual fun removeSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
+    actual abstract suspend fun deleteSubrace(id: Int)
+    actual suspend fun removeSubraceFeatureCrossRef(subraceId: Int, featureId: Int) {
         removeSubraceFeatureCrossRef(
             SubraceFeatureCrossRef(subraceId, featureId)
         )
     }
 
-    actual fun removeRaceSubraceCrossRef(raceId: Int, subraceId: Int) {
+    actual suspend fun removeRaceSubraceCrossRef(raceId: Int, subraceId: Int) {
         removeRaceSubraceCrossRef(
             RaceSubraceCrossRef(
                 subraceId = subraceId,

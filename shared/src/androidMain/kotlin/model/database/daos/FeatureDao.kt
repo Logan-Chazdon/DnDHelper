@@ -6,7 +6,7 @@ import model.*
 
 @Dao
 actual abstract class FeatureDao {
-    actual fun insertFeature(feature: FeatureEntity): Int {
+    actual suspend fun insertFeature(feature: FeatureEntity): Int {
         val id = insertFeatureOrIgnore(feature.asTable()).toInt()
         if (id == -1) {
             updateFeature(feature.asTable())
@@ -19,7 +19,7 @@ actual abstract class FeatureDao {
     @Update
     protected abstract fun updateFeature(feature: FeatureEntityTable)
 
-    actual fun insertFeatureOptionsCrossRef(featureId: Int, id: Int) {
+    actual suspend fun insertFeatureOptionsCrossRef(featureId: Int, id: Int) {
         insertFeatureOptionsCrossRef(
             FeatureOptionsCrossRef(
                 featureId = featureId,
@@ -42,7 +42,7 @@ actual abstract class FeatureDao {
 
     @Delete
     abstract fun removeFeatureOptionsCrossRef(ref: FeatureOptionsCrossRef)
-    actual fun removeFeatureOptionsCrossRef(featureId: Int, id: Int) {
+    actual suspend fun removeFeatureOptionsCrossRef(featureId: Int, id: Int) {
         removeFeatureOptionsCrossRef(
             FeatureOptionsCrossRef(
                 featureId = featureId,
@@ -53,7 +53,7 @@ actual abstract class FeatureDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertOptionsFeatureCrossRef(ref: OptionsFeatureCrossRef)
-    actual fun insertOptionsFeatureCrossRef(
+    actual suspend fun insertOptionsFeatureCrossRef(
         featureId: Int,
         choiceId: Int
     ) {
@@ -67,7 +67,7 @@ actual abstract class FeatureDao {
 
     @Delete
     abstract fun removeOptionsFeatureCrossRef(ref: OptionsFeatureCrossRef)
-    actual fun removeOptionsFeatureCrossRef(featureId: Int, choiceId: Int) {
+    actual suspend fun removeOptionsFeatureCrossRef(featureId: Int, choiceId: Int) {
         removeOptionsFeatureCrossRef(
             OptionsFeatureCrossRef(
                 featureId = featureId,
@@ -77,7 +77,7 @@ actual abstract class FeatureDao {
     }
 
 
-    actual fun insertFeatureChoice(option: FeatureChoiceEntity): Int {
+    actual suspend fun insertFeatureChoice(option: FeatureChoiceEntity): Int {
         val id = insertFeatureChoiceOrIgnore(option.asTable()).toInt()
         if (id == -1) {
             updateFeatureChoice(option.asTable())
@@ -101,7 +101,7 @@ actual abstract class FeatureDao {
 JOIN FeatureOptionsCrossRef ON FeatureOptionsCrossRef.id IS FeatureChoiceEntity.id
 WHERE FeatureOptionsCrossRef.featureId IS :featureId"""
     )
-    actual abstract fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
+    actual abstract suspend fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
 
     @Query(
         """SELECT * FROM FeatureChoiceEntity
@@ -138,12 +138,12 @@ WHERE spellDetails.classes LIKE '%' ||  vt.fcic_class || '%'
 	))
 """
     )
-    actual abstract fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>
+    actual abstract suspend fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatureSpellCrossRef(ref: FeatureSpellCrossRef)
-    actual fun insertFeatureSpellCrossRef(spellId: Int, featureId: Int) {
+    actual suspend fun insertFeatureSpellCrossRef(spellId: Int, featureId: Int) {
         insertFeatureSpellCrossRef(
             FeatureSpellCrossRef(
                 spellId, featureId
@@ -153,13 +153,13 @@ WHERE spellDetails.classes LIKE '%' ||  vt.fcic_class || '%'
 
     @Delete
     abstract fun removeFeatureSpellCrossRef(ref: FeatureSpellCrossRef)
-    actual fun removeFeatureSpellCrossRef(spellId: Int, featureId: Int) {
+    actual suspend fun removeFeatureSpellCrossRef(spellId: Int, featureId: Int) {
         removeFeatureSpellCrossRef(
             FeatureSpellCrossRef(spellId, featureId)
         )
     }
 
-    actual fun fillOutFeatureListWithoutChosen(features: List<Feature>) {
+    actual suspend fun fillOutFeatureListWithoutChosen(features: List<Feature>) {
         features.forEach { feature ->
             feature.spells = getFeatureSpells(feature.featureId)
             feature.choices = getFeatureChoices(feature.featureId).let { choiceEntities ->
@@ -186,14 +186,14 @@ JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.spellId IS spells.id
 WHERE featureId IS :featureId
 """
     )
-    actual abstract fun getFeatureSpells(featureId: Int): List<Spell>?
+    actual abstract suspend fun getFeatureSpells(featureId: Int): List<Spell>?
 
     /**This checks if a IndexRef exists in the database.
      * If it does not it inserts the one passed. If it
      * does then it combines the two index refs and updates the database
      * with the result.
      */
-    actual fun insertIndexRef(index: String, ids: List<Int>) {
+    actual suspend fun insertIndexRef(index: String, ids: List<Int>) {
         val ref = IndexRef(index, ids)
         if (insertIndexRefOrIgnore(ref).toInt() == -1) {
             val oldRef = getIndexRef(ref.index)
@@ -209,7 +209,7 @@ WHERE featureId IS :featureId
 
     /**Removes the passed id from the ids list of the IndexRef
      */
-    actual fun removeIdFromRef(id: Int, ref: String) {
+    actual suspend fun removeIdFromRef(id: Int, ref: String) {
         val oldRef = getIndexRef(ref)
         val newIds = oldRef.ids.toMutableList()
         newIds.remove(id)
@@ -234,7 +234,7 @@ WHERE featureId IS :featureId
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatureChoiceIndexCrossRef(ref: FeatureChoiceIndexCrossRef)
-    actual fun insertFeatureChoiceIndexCrossRef(
+    actual suspend fun insertFeatureChoiceIndexCrossRef(
         choiceId: Int,
         index: String,
         levels: List<Int>?,
@@ -268,13 +268,13 @@ WHERE name LIKE :index
     actual abstract fun returnGetAllIndexes(): Flow<List<String>>
 
     @Query("DELETE FROM FeatureChoiceIndexCrossRef WHERE choiceId = :id")
-    actual abstract fun clearFeatureChoiceIndexRefs(id: Int)
+    actual abstract  suspend fun clearFeatureChoiceIndexRefs(id: Int)
 
     @Query("""SELECT featureId FROM FeatureSpellCrossRef WHERE spellId IS :id""")
-    actual abstract fun getFeatureIdOr0FromSpellId(id: Int): Int
+    actual abstract suspend fun getFeatureIdOr0FromSpellId(id: Int): Int
 
     @Query("DELETE FROM FeatureChoiceChoiceEntity WHERE choiceId IS :choiceId AND characterId IS :characterId")
-    actual abstract fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int)
+    actual abstract suspend fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int)
 
     @Transaction
     @Query(

@@ -445,7 +445,7 @@ class LocalDataSourceImpl constructor(
         )
     }
 
-    private fun extractInfusion(infusionJson: JSONObject): Infusion {
+    private suspend fun extractInfusion(infusionJson: JSONObject): Infusion {
         val options = try {
             val fromJson = infusionJson.getJSONArray("from")
             val result = mutableListOf<Feature>()
@@ -1472,7 +1472,7 @@ class LocalDataSourceImpl constructor(
         }
     }
 
-    private fun extractSubraces(jsonArray: JSONArray): List<Int> {
+    private suspend fun extractSubraces(jsonArray: JSONArray): List<Int> {
         val result = mutableListOf<Int>()
         for (index in 0 until jsonArray.length()) {
             val subraceJson = jsonArray.getJSONObject(index)
@@ -2160,7 +2160,7 @@ class LocalDataSourceImpl constructor(
         }
     }
 
-    private fun extractFeatures(featuresJson: JSONArray, parentChoiceId: Int? = null): List<Int> {
+    private suspend fun extractFeatures(featuresJson: JSONArray, parentChoiceId: Int? = null): List<Int> {
         val ids = mutableListOf<Int>()
         try {
             for (featureIndex in 0 until featuresJson.length()) {
@@ -2357,7 +2357,7 @@ class LocalDataSourceImpl constructor(
                         }
                     }
                 } catch (e: JSONException) {
-                    val extractAndAddChoice = fun(choiceJson: JSONObject) {
+                    suspend fun extractAndAddChoice(choiceJson: JSONObject) {
 
                         val choiceId = try {
                             choiceJson.getInt("choice_id")

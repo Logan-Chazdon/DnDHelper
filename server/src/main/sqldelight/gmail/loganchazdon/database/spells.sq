@@ -1,18 +1,21 @@
+import com.google.gson.JsonArray;
+import kotlin.Boolean;
+
 CREATE TABLE IF NOT EXISTS spells (
     `id` INTEGER NOT NULL,
     `name` TEXT NOT NULL,
     `level` INTEGER NOT NULL,
-    `components` TEXT NOT NULL,
-    `itemComponents` TEXT NOT NULL,
+    `components` TEXT AS JsonArray NOT NULL,
+    `itemComponents` TEXT AS JsonArray NOT NULL,
     `school` TEXT NOT NULL,
     `desc` TEXT NOT NULL,
     `range` TEXT NOT NULL,
     `area` TEXT NOT NULL,
     `castingTime` TEXT NOT NULL,
     `duration` TEXT NOT NULL,
-    `classes` TEXT NOT NULL,
+    `classes` TEXT AS JsonArray NOT NULL,
     `damage` TEXT NOT NULL,
-    `isRitual` INTEGER NOT NULL,
+    `isRitual` INTEGER AS Boolean NOT NULL,
     `isHomebrew` INTEGER NOT NULL,
     owner TEXT,
 
@@ -22,7 +25,8 @@ CREATE TABLE IF NOT EXISTS spells (
 );
 
 insertSpell:
-INSERT INTO spells (id, name, level, components, itemComponents, school, desc, range, area, castingTime, duration, classes, damage, isRitual, isHomebrew, owner) VALUES ?;
+INSERT OR REPLACE INTO spells (id, name, level, components, itemComponents, school, desc, range, area, castingTime, duration, classes, damage, isRitual, isHomebrew, owner) VALUES ?;
+
 delete:
 DELETE FROM spells WHERE id = :id AND owner = :owner;
 

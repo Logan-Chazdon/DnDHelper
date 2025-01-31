@@ -5,10 +5,7 @@ import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.auth0.jwt.JWT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import gmail.loganchazdon.database.Backgrounds
-import gmail.loganchazdon.database.Characters
-import gmail.loganchazdon.database.Classes
-import gmail.loganchazdon.database.Database
+import gmail.loganchazdon.database.*
 import gmail.loganchazdon.dndhelper.model.services.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
@@ -106,6 +103,11 @@ fun Application.configureDatabases() {
             languageChoicesAdapter = jsonListAdapter,
             equipmentAdapter = jsonListAdapter,
             equipmentChoicesAdapter = jsonListAdapter
+        ),
+        spellsAdapter = Spells.Adapter(
+            componentsAdapter = jsonListAdapter,
+            itemComponentsAdapter = jsonListAdapter,
+            classesAdapter = jsonListAdapter
         )
     )
 

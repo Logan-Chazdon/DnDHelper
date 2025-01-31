@@ -47,8 +47,19 @@ suspend fun getUserInfo(
             ).formUrlEncode())
         }
         val jsonObject = JSONObject(response.bodyAsText())
-        call.sessions.set(UserSession(accessToken = jsonObject.getString("access_token"), refreshToken = userSession.refreshToken))
-        json.decodeFromString(request(httpClient, jsonObject.getString("access_token")).bodyAsText())
+        try {
+            call.sessions.set(
+                UserSession(
+                    accessToken = jsonObject.getString("access_token"),
+                    refreshToken = userSession.refreshToken
+                )
+            )
+        } catch(e: TooLateSessionSetException) {
+            //TODO consider removing this for prod
+            //Its only here to allow for easier testing of websockets.
+        }
+        val new = request(httpClient, jsonObject.getString("access_token")).bodyAsText()
+        json.decodeFromString(new)
     }
 }
 

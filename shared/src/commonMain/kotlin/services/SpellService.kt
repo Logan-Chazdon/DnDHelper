@@ -9,7 +9,6 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.put
 import model.Spell
 import model.pojos.NameAndIdPojo
@@ -65,7 +64,7 @@ class SpellService(client: HttpClient) : Service(client = client) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "received") {
-                        val listToEmit = Json.decodeFromString<List<Spell>>(othersMessage!!.readText())
+                        val listToEmit = format.decodeFromString<List<Spell>>(othersMessage!!.readText())
                         emit(listToEmit)
                     }
                 }
@@ -79,7 +78,7 @@ class SpellService(client: HttpClient) : Service(client = client) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "received") {
-                        val listToEmit = Json.decodeFromString<List<Spell>>(othersMessage!!.readText())
+                        val listToEmit = format.decodeFromString<List<Spell>>(othersMessage!!.readText())
                         emit(listToEmit)
                     }
                 }
@@ -94,7 +93,7 @@ class SpellService(client: HttpClient) : Service(client = client) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "received") {
-                        val item = Json.decodeFromString<Spell>(othersMessage!!.readText())
+                        val item = format.decodeFromString<Spell>(othersMessage!!.readText())
                         emit(item)
                     }
                 }
@@ -109,7 +108,7 @@ class SpellService(client: HttpClient) : Service(client = client) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "received") {
-                        val item = Json.decodeFromString<List<NameAndIdPojo>>(othersMessage!!.readText())
+                        val item = format.decodeFromString<List<NameAndIdPojo>>(othersMessage!!.readText())
                         emit(item)
                     }
                 }

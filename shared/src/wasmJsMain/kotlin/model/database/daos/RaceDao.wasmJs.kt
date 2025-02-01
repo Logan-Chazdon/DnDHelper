@@ -56,7 +56,7 @@ class RaceDaoImpl(raceService: RaceService) : RaceDao(raceService) {
     }
 
     override fun getAllRaces(): Flow<List<Race>> {
-        return raceService.getAlRaces()
+        return raceService.getAllRaces()
     }
 
     override suspend fun deleteRace(id: Int) {

@@ -1,3 +1,5 @@
+import com.google.gson.JsonArray;
+
 CREATE TABLE IF NOT EXISTS races (
     `raceId` INTEGER NOT NULL,
     `raceName` TEXT NOT NULL,
@@ -7,10 +9,10 @@ CREATE TABLE IF NOT EXISTS races (
     `age` TEXT NOT NULL,
     `size` TEXT NOT NULL,
     `sizeDesc` TEXT NOT NULL,
-    `startingProficiencies` TEXT NOT NULL,
-    `proficiencyChoices` TEXT NOT NULL,
-    `languages` TEXT NOT NULL,
-    `languageChoices` TEXT NOT NULL,
+    `startingProficiencies` TEXT AS JsonArray NOT NULL,
+    `proficiencyChoices` TEXT AS JsonArray NOT NULL,
+    `languages` TEXT AS JsonArray NOT NULL,
+    `languageChoices` TEXT AS JsonArray NOT NULL,
     `languageDesc` TEXT NOT NULL,
     `isHomebrew` INTEGER NOT NULL,
     `abcchoose` INTEGER,
@@ -39,7 +41,7 @@ getRace:
 SELECT * FROM races WHERE owner IS :owner AND raceId IS :id;
 
 insertRace:
-INSERT INTO races (raceId, raceName, groundSpeed, abilityBonuses, alignment, age, size, sizeDesc, startingProficiencies, proficiencyChoices, languages, languageChoices, languageDesc, isHomebrew, abcchoose, abcfrom, abcmaxOccurrencesOfAbility, abcchosenByString, owner)
+INSERT OR REPLACE INTO races (raceId, raceName, groundSpeed, abilityBonuses, alignment, age, size, sizeDesc, startingProficiencies, proficiencyChoices, languages, languageChoices, languageDesc, isHomebrew, abcchoose, abcfrom, abcmaxOccurrencesOfAbility, abcchosenByString, owner)
 VALUES ?;
 
 selectRaceFeatures:

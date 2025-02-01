@@ -122,9 +122,8 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
         withUserInfo {
             call.respondText(
                 gson.toJson(
-                    db.subraceFeatChoiceCrossRefQueries.selectFeatChoicesForSubrace(
+                    db.racesQueries.getRacesFor(
                         it.id,
-                        id = call.parameters["id"]!!.toLong()
                     ).executeAsList()
                 )
             )
@@ -155,7 +154,7 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
                 try {
                     db.racesQueries.getRace(id= receivedText.toLong(), owner = userInfo.id).asFlow().collect {
                         //Send the converted json.
-                        send(Frame.Text(gson.toJson(it).toString().clean()))
+                        send(Frame.Text(gson.toJson(it.executeAsOne()).toString().clean()))
                     }
 
                 } catch (e: NumberFormatException) {
@@ -196,7 +195,7 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
                     owner = userInfo.id
                 ).asFlow().collect {
                     //Send the converted json.
-                    send(Frame.Text(gson.toJson(it).toString().clean()))
+                    send(Frame.Text(gson.toJson(it.executeAsList()).toString().clean()))
                 }
             }
         }

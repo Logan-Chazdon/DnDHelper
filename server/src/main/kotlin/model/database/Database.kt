@@ -117,6 +117,12 @@ fun Application.configureDatabases() {
             activationRequirementAdapter = jsonObjectAdapter,
             maxActiveAdapter = jsonObjectAdapter,
         ),
+        racesAdapter = Races.Adapter(
+            startingProficienciesAdapter = jsonListAdapter,
+            proficiencyChoicesAdapter = jsonListAdapter,
+            languagesAdapter = jsonListAdapter,
+            languageChoicesAdapter = jsonListAdapter,
+        ),
     )
 
     routing {

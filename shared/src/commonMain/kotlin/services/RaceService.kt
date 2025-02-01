@@ -16,7 +16,6 @@ import model.Feature
 import model.Race
 import model.RaceEntity
 import model.pojos.NameAndIdPojo
-import services.CharacterService.Paths
 
 class RaceService (client: HttpClient) : Service(client = client) {
     companion object {
@@ -90,7 +89,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
         }.bodyAsText())
     }
 
-    fun getAlRaces(): Flow<List<Race>> {
+    fun getAllRaces(): Flow<List<Race>> {
         return flow {
             val response = client.get {
                 url {
@@ -135,7 +134,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
                 send(Frame.Text(id.toString()))
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
-                    val listToEmit = Json.decodeFromString<Race>(othersMessage!!.readText())
+                    val listToEmit = format.decodeFromString<Race>(othersMessage!!.readText())
                     emit(listToEmit)
                 }
             }

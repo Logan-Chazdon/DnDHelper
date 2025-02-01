@@ -1,17 +1,58 @@
 package services
 
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
+import model.FeatureEntity
 import org.junit.Test
 
 
-
 class FeatureServiceIntegrationTest {
+
+    private val userOneService = FeatureService(client1)
+    private val userTwoService = FeatureService(client2)
+
+
+    private val users = listOf(
+        userOneService to listOf(
+            FeatureEntity(
+                name = "UserOne Homebrew 1",
+                description = "",
+                featureId = 100
+            ),
+            FeatureEntity(
+                name = "UserOne Homebrew 2",
+                description = "",
+                featureId = 101
+            )
+        ),
+        userTwoService to listOf(
+            FeatureEntity(
+                name = "UserTwo Homebrew 1",
+                description = "",
+                featureId = 100
+            ),
+            FeatureEntity(
+                name = "UserTwo Homebrew 2",
+                description = "",
+                featureId = 101
+            )
+        ),
+    )
 
     @Test
     fun fillOutFeatureListWithoutChosen() {
     }
 
     @Test
-    fun insertFeature() {
+    fun insertAndGetFeature() = runTest {
+        users.forEach { user->
+            user.second.forEach { feature ->
+                user.first.insertFeature(feature)
+
+                val serverFeature = user.first.getLiveFeatureById(feature.featureId)
+                assert(serverFeature.first().name == feature.name)
+            }
+        }
     }
 
     @Test
@@ -64,10 +105,6 @@ class FeatureServiceIntegrationTest {
 
     @Test
     fun getFeatureSpells() {
-    }
-
-    @Test
-    fun getLiveFeatureById() {
     }
 
     @Test

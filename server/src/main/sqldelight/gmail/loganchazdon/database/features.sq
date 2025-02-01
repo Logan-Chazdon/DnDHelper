@@ -1,3 +1,5 @@
+import com.google.gson.JsonObject;
+
 CREATE TABLE IF NOT EXISTS features (
     `featureId` INTEGER NOT NULL,
     `name` TEXT NOT NULL,
@@ -6,11 +8,11 @@ CREATE TABLE IF NOT EXISTS features (
     `grantedAtLevel` INTEGER NOT NULL,
     `maxTimesChosen` INTEGER,
     `prerequisite` TEXT,
-    `activationRequirement` TEXT NOT NULL,
+    `activationRequirement` TEXT AS JsonObject NOT NULL,
     `speedBoost` TEXT,
     `spells` TEXT,
     `infusion` TEXT,
-    `maxActive` TEXT NOT NULL,
+    `maxActive` TEXT AS JsonObject NOT NULL,
     `hpBonusPerLevel` INTEGER,
     `armorContingentAcBonus` INTEGER,
     `acBonus` INTEGER,

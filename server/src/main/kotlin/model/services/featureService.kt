@@ -23,7 +23,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
                 val receivedText = frame.readText()
                 try {
                     db.featuresQueries.selectAll(receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val feature = gson.toJson(it)
+                        val feature = gson.toJson(it.executeAsOne())
 
                         //Send the converted json.
                         send(Frame.Text(feature.toString().clean()))
@@ -47,7 +47,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
                         featureId = receivedText.toLong(),
                         owner = userInfo.id
                     ).asFlow().collect {
-                        val feature = gson.toJson(it)
+                        val feature = gson.toJson(it.executeAsList())
 
                         //Send the converted json.
                         send(Frame.Text(feature.toString().clean()))
@@ -71,7 +71,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
                         featureId = receivedText.toLong(),
                         owner = userInfo.id
                     ).asFlow().collect {
-                        val feature = gson.toJson(it)
+                        val feature = gson.toJson(it.executeAsList())
 
                         //Send the converted json.
                         send(Frame.Text(feature.toString().clean()))
@@ -90,8 +90,8 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
             db.indexRefQueries.selectAll(
                 owner = userInfo.id
             ).asFlow().collect {
+                val spells = gson.toJson(it.executeAsList())
 
-                val spells = gson.toJson(it)
                 //Send the converted json.
                 send(Frame.Text(spells.toString().clean()))
             }

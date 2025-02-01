@@ -112,7 +112,11 @@ fun Application.configureDatabases() {
         subracesAdapter = Subraces.Adapter(
             languagesAdapter = jsonListAdapter,
             languageChoicesAdapter = jsonListAdapter
-        )
+        ),
+        featuresAdapter = Features.Adapter(
+            activationRequirementAdapter = jsonObjectAdapter,
+            maxActiveAdapter = jsonObjectAdapter,
+        ),
     )
 
     routing {

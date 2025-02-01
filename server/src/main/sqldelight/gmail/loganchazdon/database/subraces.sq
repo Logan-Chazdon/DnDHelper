@@ -1,14 +1,17 @@
+import com.google.gson.JsonArray;
+import kotlin.Boolean;
+
 CREATE TABLE IF NOT EXISTS subraces (
     `id` INTEGER NOT NULL,
     `name` TEXT NOT NULL,
     `abilityBonuses` TEXT,
     `abilityBonusChoice` TEXT,
     `startingProficiencies` TEXT,
-    `languages` TEXT NOT NULL,
-    `languageChoices` TEXT NOT NULL,
+    `languages` TEXT AS JsonArray NOT NULL,
+    `languageChoices` TEXT AS JsonArray NOT NULL,
     `size` TEXT,
     `groundSpeed` INTEGER,
-    `isHomebrew` INTEGER NOT NULL,
+    `isHomebrew` INTEGER AS Boolean NOT NULL,
     `owner` TEXT,
 
     PRIMARY KEY (id, owner),
@@ -25,7 +28,7 @@ selectFor:
 SELECT * FROM subraces WHERE owner = ? OR owner IS NULL;
 
 selectHomebrewByOwner:
-SELECT * FROM subclasses WHERE owner = :owner;
+SELECT * FROM subraces WHERE owner = :owner;
 
 selectById:
 SELECT * FROM subraces

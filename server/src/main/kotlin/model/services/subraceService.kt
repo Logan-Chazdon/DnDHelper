@@ -82,7 +82,7 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
                 val receivedText = frame.readText()
                 try {
                     db.subracesQueries.selectById(receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val item = gson.toJson(it)
+                        val item = gson.toJson(it.executeAsOne())
 
                         //Send the converted json.
                         send(Frame.Text(item))
@@ -100,7 +100,7 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
         getSession(call)?.let { session ->
             val userInfo = getUserInfo(httpClient, session, call)
             db.subracesQueries.selectHomebrewByOwner(owner = userInfo.id).asFlow().collect {
-                val item = gson.toJson(it)
+                val item = gson.toJson(it.executeAsList())
 
                 //Send the converted json.
                 send(Frame.Text(item))
@@ -119,7 +119,7 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
                         subraceId = receivedText.toLong(),
                         owner = userInfo.id
                     ).asFlow().collect {
-                        val item = gson.toJson(it)
+                        val item = gson.toJson(it.executeAsList())
 
                         //Send the converted json.
                         send(Frame.Text(item))

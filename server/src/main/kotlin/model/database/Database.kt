@@ -108,6 +108,10 @@ fun Application.configureDatabases() {
             componentsAdapter = jsonListAdapter,
             itemComponentsAdapter = jsonListAdapter,
             classesAdapter = jsonListAdapter
+        ),
+        subracesAdapter = Subraces.Adapter(
+            languagesAdapter = jsonListAdapter,
+            languageChoicesAdapter = jsonListAdapter
         )
     )
 

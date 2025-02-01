@@ -11,14 +11,46 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import org.json.JSONArray
 import org.json.JSONObject
+
+private fun deserializeSubclass(text: String, owner: String) :  Subclasses{
+    val json = JSONObject(text)
+    return Subclasses(
+        subclass_name = json.getString("name"),
+        subclass_spell_casting = if(json.has("spell_casting"))json.optString("spell_casting") else null,
+        subclass_isHomebrew = json.getLong("isHomebrew"),
+        subclassId = json.getLong("subclassId"),
+        spellAreFree = json.getBoolean("spellAreFree"),
+        owner = owner
+    )
+}
+
+private fun serializeSubclass(subclass: Subclasses) : JSONObject {
+    val json = JSONObject()
+    json.put("name", subclass.subclass_name)
+    json.put("spellCasting", subclass.subclass_spell_casting)
+    json.put("isHomebrew", subclass.subclass_isHomebrew)
+    json.put("spellAreFree", subclass.spellAreFree)
+
+    return json
+}
+
+private fun serializeSubclassList(list: List<Subclasses>) : String {
+    val json = JSONArray()
+    list.forEach {
+        json.put(serializeSubclass(it))
+    }
+    return json.toString()
+}
+
 
 fun Routing.subclassService(db: Database, httpClient: HttpClient) {
 
     post("subclass/insertSubclass") {
         withUserInfo { userInfo ->
             val response = call.receiveText()
-            val subclass = gson.fromJson(response, Subclasses::class.java)
+            val subclass = deserializeSubclass(response, userInfo.id)
             db.subclassesQueries.insert(subclass.copy(owner = userInfo.id))
             call.respondText(subclass.subclassId.toString())
         }
@@ -86,7 +118,7 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
                 val receivedText = frame.readText()
                 try {
                     db.subclassesQueries.selectByClass(classId = receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val subclasses = gson.toJson(it)
+                        val subclasses = serializeSubclassList(it.executeAsList())
 
                         //Send the converted json.
                         send(Frame.Text(subclasses))
@@ -106,7 +138,7 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
                 val receivedText = frame.readText()
                 try {
                     db.subclassesQueries.selectByClass(classId = receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val subclasses = gson.toJson(it)
+                        val subclasses = serializeSubclassList(it.executeAsList())
 
                         //Send the converted json.
                         send(Frame.Text(subclasses))
@@ -129,7 +161,7 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
                         owner = userInfo.id,
                         subclassId = receivedText.toLong()
                     ).asFlow().collect {
-                        val features = gson.toJson(it)
+                        val features = gson.toJson(it.executeAsList())
 
                         //Send the converted json.
                         send(Frame.Text(features))
@@ -141,11 +173,11 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
         }
     }
 
-    webSocket("subclass/subclassesById") {
+    webSocket("subclass/homebrewSubclasses") {
         getSession(call)?.let { session ->
             val userInfo = getUserInfo(httpClient, session, call)
             db.subclassesQueries.selectHomebrewSubclasses(owner = userInfo.id).asFlow().collect {
-                val subclasses = gson.toJson(it)
+                val subclasses = serializeSubclassList(it.executeAsList())
                 //Send the converted json.
                 send(Frame.Text(subclasses))
             }
@@ -160,7 +192,7 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
                 val receivedText = frame.readText()
                 try {
                     db.subclassesQueries.selectSubclass(id = receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val subclass = gson.toJson(it)
+                        val subclass = serializeSubclass(it.executeAsOne()).toString()
 
                         //Send the converted json.
                         send(Frame.Text(subclass))

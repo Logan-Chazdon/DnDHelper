@@ -1,9 +1,11 @@
+import kotlin.Boolean;
+
 CREATE TABLE IF NOT EXISTS subclasses (
     `subclass_name` TEXT NOT NULL,
     `subclass_spell_casting` TEXT,
     `subclass_isHomebrew` INTEGER NOT NULL,
     `subclassId` INTEGER  NOT NULL,
-    `spellAreFree` INTEGER NOT NULL,
+    `spellAreFree` INTEGER AS Boolean NOT NULL,
     `owner` TEXT,
 
     PRIMARY KEY (subclassId, owner),

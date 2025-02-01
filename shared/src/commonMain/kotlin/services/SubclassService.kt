@@ -14,7 +14,6 @@ import kotlinx.serialization.json.put
 import model.Feature
 import model.Subclass
 import model.SubclassEntity
-import services.CharacterService.Paths
 
 class SubclassService(client: HttpClient) : Service(client = client) {
     enum class Paths(val path: String) {
@@ -68,7 +67,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "Invalid Id") {
-                        val item = Json.decodeFromString<Subclass>(othersMessage!!.readText())
+                        val item = format.decodeFromString<Subclass>(othersMessage!!.readText())
                         emit(item)
                     }
                 }
@@ -95,7 +94,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
             client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.HomebrewSubclasses.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
-                    val listToEmit = Json.decodeFromString<List<Subclass>>(othersMessage!!.readText())
+                    val listToEmit = format.decodeFromString<List<Subclass>>(othersMessage!!.readText())
                     emit(listToEmit)
                 }
             }

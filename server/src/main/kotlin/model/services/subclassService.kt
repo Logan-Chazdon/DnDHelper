@@ -32,6 +32,7 @@ private fun serializeSubclass(subclass: Subclasses) : JSONObject {
     json.put("spellCasting", subclass.subclass_spell_casting)
     json.put("isHomebrew", subclass.subclass_isHomebrew)
     json.put("spellAreFree", subclass.spellAreFree)
+    json.put("subclassId", subclass.subclassId)
 
     return json
 }

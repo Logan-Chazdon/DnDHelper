@@ -28,7 +28,7 @@ AND classId IS :classId;
 
 selectByClass:
 SELECT subclasses.* FROM subclasses
-LEFT JOIN ClassSubclassCrossRef ON subclassId IS ClassSubclassCrossRef.subclassId
+LEFT JOIN ClassSubclassCrossRef ON subclasses.subclassId IS ClassSubclassCrossRef.subclassId
 AND (ClassSubclassCrossRef.owner IS NULL OR ClassSubclassCrossRef.owner IS :owner)
 WHERE (subclasses.owner = :owner OR subclasses.owner IS NULL)
 AND classId IS :classId;

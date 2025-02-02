@@ -3,6 +3,7 @@ package services
 import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import model.ClassEntity
 import model.FeatureEntity
 import model.SubclassEntity
 import org.junit.Test
@@ -15,11 +16,13 @@ class SubclassServiceIntegrationTest {
     ) {
         val subclassService = SubclassService(client)
         val featureService = FeatureService(client)
+        val classService = ClassService(client)
     }
 
     private data class SubclassData(
         val entity: SubclassEntity,
-        val features: List<FeatureEntity> = emptyList()
+        val features: List<FeatureEntity> = emptyList(),
+        val classes: List<ClassEntity> = emptyList()
     )
 
     private val users = listOf(
@@ -72,7 +75,24 @@ class SubclassServiceIntegrationTest {
     )
 
     @Test
-    fun getSubclassesByClassId() {
+    fun getSubclassesByClassId() = runTest {
+        users.forEach { user ->
+            user.subclasses.forEach { subclass ->
+                user.subclassService.insertSubclass(subclass.entity)
+                subclass.classes.forEach { clazz ->
+                    user.classService.insertClass(clazz)
+
+                    user.classService.insertClassSubclassId(
+                        classId = clazz.id,
+                        subclassId = subclass.entity.subclassId
+                    )
+
+                    val serverClasses = user.subclassService.getSubclassesByClassId(clazz.id).first()
+
+                    assert(serverClasses.firstOrNull { it.subclassId == subclass.entity.subclassId} != null)
+                }
+            }
+        }
     }
 
     @Test

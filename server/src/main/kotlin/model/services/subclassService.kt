@@ -98,10 +98,10 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
 
     get("subclass/subclassFeatures") {
         withUserInfo { userInfo: UserInfo ->
-            val body = JSONObject(call.receiveText())
             val query = db.subclassFeatureCrossRefQueries.selectFeaturesBySubclass(
                 owner = userInfo.id,
-                subclassId = body.getLong("subclassId")
+                subclassId = call.parameters["subclassId"]!!.toLong(),
+                level = call.parameters["maxLevel"]!!.toLong()
             )
             call.respond(HttpStatusCode.OK, gson.toJson(query.executeAsList()))
         }
@@ -159,7 +159,8 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
                 try {
                     db.subclassFeatureCrossRefQueries.selectFeaturesBySubclass(
                         owner = userInfo.id,
-                        subclassId = receivedText.toLong()
+                        subclassId = receivedText.toLong(),
+                        20
                     ).asFlow().collect {
                         val features = gson.toJson(it.executeAsList())
 

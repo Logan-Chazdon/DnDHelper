@@ -9,7 +9,6 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.put
 import model.Feature
 import model.Subclass
@@ -39,7 +38,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "Invalid Id") {
-                        val listToEmit = Json.decodeFromString<List<Subclass>>(othersMessage!!.readText())
+                        val listToEmit = format.decodeFromString<List<Subclass>>(othersMessage!!.readText())
                         emit(listToEmit)
                     }
                 }
@@ -115,7 +114,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "Invalid Id") {
-                        val listToEmit = Json.decodeFromString<List<Feature>>(othersMessage!!.readText())
+                        val listToEmit = format.decodeFromString<List<Feature>>(othersMessage!!.readText())
                         emit(listToEmit)
                     }
                 }

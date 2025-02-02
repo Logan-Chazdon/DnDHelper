@@ -13,11 +13,7 @@ class SubclassServiceIntegrationTest {
     private data class User(
         val subclasses: List<SubclassData>,
         val client: HttpClient
-    ) {
-        val subclassService = SubclassService(client)
-        val featureService = FeatureService(client)
-        val classService = ClassService(client)
-    }
+    ) : ServiceProvider(client)
 
     private data class SubclassData(
         val entity: SubclassEntity,

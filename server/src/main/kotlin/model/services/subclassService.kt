@@ -130,26 +130,6 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
         }
     }
 
-    webSocket("subclass/subclassesById") {
-        getSession(call)?.let { session ->
-            val userInfo = getUserInfo(httpClient, session, call)
-            for (frame in incoming) {
-                frame as? Frame.Text ?: continue
-                val receivedText = frame.readText()
-                try {
-                    db.subclassesQueries.selectByClass(classId = receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val subclasses = serializeSubclassList(it.executeAsList())
-
-                        //Send the converted json.
-                        send(Frame.Text(subclasses))
-                    }
-                } catch (e: NumberFormatException) {
-                    send(Frame.Text("Invalid Id"))
-                }
-            }
-        }
-    }
-
     webSocket("subclass/subclassLiveFeatures") {
         getSession(call)?.let { session ->
             val userInfo = getUserInfo(httpClient, session, call)

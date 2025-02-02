@@ -1,25 +1,44 @@
 package services
 
+import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import model.RaceEntity
 import org.junit.Test
 
 class RaceServiceIntegrationTest {
-    private val userOneService = RaceService(client1)
-    private val userTwoService = RaceService(client2)
+
+    private data class User(
+        val races: List<RaceData>,
+        val client: HttpClient
+    ) : ServiceProvider(client)
+
+    private data class RaceData(
+        val entity: RaceEntity,
+        val races: List<RaceEntity> = emptyList()
+    )
 
     private val users = listOf(
-        userOneService to listOf(
-            RaceEntity(
-                raceName = "userOneHomebrew",
-                raceId = 200
+        User(
+            client = client1,
+            races= listOf(
+                RaceData(
+                    RaceEntity(
+                        raceName = "userOneHomebrew",
+                        raceId = 200
+                    )
+                )
             )
         ),
-        userTwoService to listOf(
-            RaceEntity(
-                raceName = "userTwoHomebrew",
-                raceId = 200
+        User(
+            client = client2,
+            races= listOf(
+                RaceData(
+                    RaceEntity(
+                        raceName = "userTwoHomebrew",
+                        raceId = 200
+                    )
+                )
             )
         )
     )
@@ -28,8 +47,8 @@ class RaceServiceIntegrationTest {
     @Test
     fun insertRace() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertRace(it)
+            user.races.forEach {
+                user.raceService.insertRace(it.entity)
             }
         }
     }
@@ -61,11 +80,11 @@ class RaceServiceIntegrationTest {
     @Test
     fun getAllRaces() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertRace(it)
+            user.races.forEach {
+                user.raceService.insertRace(it.entity)
             }
 
-            val races = user.first.getAllRaces().first()
+            val races = user.raceService.getAllRaces().first()
             assert(races.isNotEmpty())
         }
     }
@@ -73,14 +92,14 @@ class RaceServiceIntegrationTest {
     @Test
     fun deleteRace() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertRace(it)
+            user.races.forEach {
+                user.raceService.insertRace(it.entity)
             }
 
-            user.second.forEach {
-                user.first.deleteRace(it.raceId)
+            user.races.forEach {
+                user.raceService.deleteRace(it.entity.raceId)
             }
-            val races = user.first.getHomebrewRaces().first()
+            val races = user.raceService.getHomebrewRaces().first()
             assert(races.isEmpty())
         }
     }
@@ -88,25 +107,25 @@ class RaceServiceIntegrationTest {
     @Test
     fun getHomebrewRaces() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertRace(it)
+            user.races.forEach {
+                user.raceService.insertRace(it.entity)
             }
 
-            val races = user.first.getHomebrewRaces().first()
-            assert(races.size == user.second.size)
+            val races = user.raceService.getHomebrewRaces().first()
+            assert(races.size == user.races.size)
         }
     }
 
     @Test
     fun findUnfilledLiveRaceById() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertRace(it)
+            user.races.forEach {
+                user.raceService.insertRace(it.entity)
             }
 
-            user.second.forEach {
-                val serverRace = user.first.findUnfilledLiveRaceById(it.raceId)
-                assert(serverRace.first().raceName == it.raceName)
+            user.races.forEach {
+                val serverRace = user.raceService.findUnfilledLiveRaceById(it.entity.raceId)
+                assert(serverRace.first().raceName == it.entity.raceName)
             }
         }
     }
@@ -118,12 +137,12 @@ class RaceServiceIntegrationTest {
     @Test
     fun getAllRaceIdsAndNames() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertRace(it)
+            user.races.forEach {
+                user.raceService.insertRace(it.entity)
             }
 
-            val races = user.first.getAllRaceIdsAndNames().first()
-            assert(races.size == user.second.size)
+            val races = user.raceService.getAllRaceIdsAndNames().first()
+            assert(races.size == user.races.size)
         }
     }
 }

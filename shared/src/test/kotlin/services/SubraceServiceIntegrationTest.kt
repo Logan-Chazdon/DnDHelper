@@ -1,44 +1,61 @@
 package services
 
+import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import model.FeatureEntity
 import model.SubraceEntity
 import org.junit.Test
 
 class SubraceServiceIntegrationTest {
-    private val userOneService = SubraceService(client1)
-    private val userTwoService = SubraceService(client2)
 
+    private data class User(
+        val subraces: List<SubraceData>,
+        val client: HttpClient
+    ) : ServiceProvider(client)
+
+    private data class SubraceData(
+        val entity: SubraceEntity,
+        val features: List<FeatureEntity> = emptyList(),
+    )
 
     private val users = listOf(
-        userOneService to listOf(
-            SubraceEntity(
-                name = "UserOne Homebrew",
-                isHomebrew = true,
-            ).apply {
-                id = 100
-            },
-            SubraceEntity(
-                name = "UserOne Homebrew 2",
-                isHomebrew = true,
-            ).apply {
-                id = 101
-            }
-        ),
-        userTwoService to listOf(
-            SubraceEntity(
-                name = "UserTwo Homebrew",
-                isHomebrew = true,
-            ).apply {
-                id = 100
-            },
-            SubraceEntity(
-                name = "UserTwo Homebrew 2",
-                isHomebrew = true,
-            ).apply {
-                id = 101
-            }
-        ),
+        User(
+            client = client1,
+            subraces = listOf(
+                SubraceData(
+                    SubraceEntity(
+                        name = "UserOne Homebrew",
+                        isHomebrew = true,
+                    ).apply {
+                        id = 100
+                    }),
+                SubraceData(
+                    SubraceEntity(
+                        name = "UserOne Homebrew 2",
+                        isHomebrew = true,
+                    ).apply {
+                        id = 101
+                    }
+                ))),
+        User(
+            client = client2,
+            subraces = listOf(
+                SubraceData(
+                    SubraceEntity(
+                        name = "UserTwo Homebrew",
+                        isHomebrew = true,
+                    ).apply {
+                        id = 100
+                    }),
+                SubraceData(
+                    SubraceEntity(
+                        name = "UserTwo Homebrew 2",
+                        isHomebrew = true,
+                    ).apply {
+                        id = 101
+                    }
+                )))
     )
 
 
@@ -49,10 +66,10 @@ class SubraceServiceIntegrationTest {
     @Test
     fun insertAndGetSubrace() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertSubrace(it)
-                val serverSubrace = user.first.getSubrace(it.id)
-                assert(serverSubrace.first().name == it.name)
+            user.subraces.forEach {
+                user.subraceService.insertSubrace(it.entity)
+                val serverSubrace = user.subraceService.getSubrace(it.entity.id)
+                assert(serverSubrace.first().name == it.entity.name)
             }
         }
     }
@@ -60,7 +77,6 @@ class SubraceServiceIntegrationTest {
     @Test
     fun removeSubraceFeatureCrossRef() {
     }
-
 
 
     @Test
@@ -74,11 +90,12 @@ class SubraceServiceIntegrationTest {
     @Test
     fun getHomebrewSubraces() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertSubrace(it)
+            user.subraces.forEach {
+                user.subraceService.insertSubrace(it.entity)
             }
 
-            val subraces = user.first.getHomebrewSubraces()
+            val subraces = user.subraceService
+                .getHomebrewSubraces()
             assert(subraces.first().isNotEmpty())
         }
     }
@@ -90,15 +107,15 @@ class SubraceServiceIntegrationTest {
     @Test
     fun deleteSubrace() = runTest {
         users.forEach { user ->
-            user.second.forEach {
-                user.first.insertSubrace(it)
+            user.subraces.forEach {
+                user.subraceService.insertSubrace(it.entity)
             }
 
-            user.second.forEach {
-                user.first.deleteSubrace(it.id)
+            user.subraces.forEach {
+                user.subraceService.deleteSubrace(it.entity.id)
             }
 
-            val subraces = user.first.getHomebrewSubraces()
+            val subraces = user.subraceService.getHomebrewSubraces()
             assert(subraces.first().isEmpty())
         }
     }

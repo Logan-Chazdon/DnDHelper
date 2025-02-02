@@ -1,5 +1,6 @@
 package services
 
+import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import model.ClassEntity
@@ -7,20 +8,37 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
 class ClassServiceIntegrationTest {
-    private val userOneService = ClassService(client1)
-    private val userTwoService = ClassService(client2)
+
+    private data class User(
+        val classes: List<ClassData>,
+        val client: HttpClient
+    ) : ServiceProvider(client)
+
+    private data class ClassData(
+        val entity: ClassEntity,
+    )
 
     private val users = listOf(
-        userOneService to listOf(
-            ClassEntity(
-                name = "userOneClass",
-                id = 14
+        User(
+            client = client1,
+            classes =listOf(
+                ClassData(
+                    ClassEntity(
+                        name = "userOneClass",
+                        id = 14
+                    )
+                )
             )
         ),
-        userTwoService to listOf(
-            ClassEntity(
-                name = "userTwoClass",
-                id = 14
+        User(
+            client = client1,
+            classes =listOf(
+                ClassData(
+                    ClassEntity(
+                        name = "userTwoClass",
+                        id = 14
+                    )
+                )
             )
         )
     )
@@ -29,7 +47,7 @@ class ClassServiceIntegrationTest {
     @Test
     fun getAllClasses() = runTest {
         users.forEach { user ->
-            val classes = user.first.getAllClasses().first()
+            val classes = user.classService.getAllClasses().first()
 
             assert(classes.size >= 13)
         }
@@ -39,7 +57,7 @@ class ClassServiceIntegrationTest {
     fun getUnfilledClass() = runTest {
         users.forEach { user ->
             (1..13).forEach { id ->
-                val clazz = user.first.getUnfilledClass(id).first()
+                val clazz = user.classService.getUnfilledClass(id).first()
                 assert(clazz.id == id)
             }
         }
@@ -48,11 +66,11 @@ class ClassServiceIntegrationTest {
     @Test
     fun insertClass() = runTest {
         users.forEach { user ->
-            user.second.forEach { clazz ->
-                val id = user.first.insertClass(clazz)
-                val real = user.first.getUnfilledClass(id).first()
+            user.classes.forEach { clazz ->
+                val id = user.classService.insertClass(clazz.entity)
+                val real = user.classService.getUnfilledClass(id).first()
 
-                assertEquals(real.name, clazz.name)
+                assertEquals(real.name, clazz.entity.name)
             }
         }
     }
@@ -81,7 +99,7 @@ class ClassServiceIntegrationTest {
     @Test
     fun getHomebrewClasses() = runTest {
         users.forEach { user ->
-            val classes = user.first.getAllClasses().first()
+            val classes = user.classService.getAllClasses().first()
 
             assert(classes.size >= 13)
         }
@@ -90,10 +108,10 @@ class ClassServiceIntegrationTest {
     @Test
     fun deleteClass() = runTest {
         users.forEach { user ->
-            val id = user.first.insertClass(ClassEntity("Fake class"))
-            user.first.deleteClass(id)
-            val classes = user.first.getAllClasses().first()
-            assert(classes.none { it.name == "Fake class"})
+            val id = user.classService.insertClass(ClassEntity("Fake class"))
+            user.classService.deleteClass(id)
+            val classes = user.classService.getAllClasses().first()
+            assert(classes.none { it.name == "Fake class" })
         }
     }
 
@@ -108,7 +126,7 @@ class ClassServiceIntegrationTest {
     @Test
     fun allClassesNamesAndIds() = runTest {
         users.forEach { user ->
-            val classes = user.first.allClassesNamesAndIds().first()
+            val classes = user.classService.allClassesNamesAndIds().first()
 
             assert(classes.size >= 13)
         }

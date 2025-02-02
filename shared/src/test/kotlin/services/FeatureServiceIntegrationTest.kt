@@ -1,5 +1,6 @@
 package services
 
+import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import model.FeatureEntity
@@ -7,34 +8,53 @@ import org.junit.Test
 
 
 class FeatureServiceIntegrationTest {
+    private data class User(
+        val features: List<FeatureData>,
+        val client: HttpClient
+    ) : ServiceProvider(client)
 
-    private val userOneService = FeatureService(client1)
-    private val userTwoService = FeatureService(client2)
+    private data class FeatureData(
+        val entity: FeatureEntity,
+    )
 
 
     private val users = listOf(
-        userOneService to listOf(
-            FeatureEntity(
-                name = "UserOne Homebrew 1",
-                description = "",
-                featureId = 100
-            ),
-            FeatureEntity(
-                name = "UserOne Homebrew 2",
-                description = "",
-                featureId = 101
+        User(
+            client = client1,
+            features = listOf(
+                FeatureData(
+                    FeatureEntity(
+                        name = "UserOne Homebrew 1",
+                        description = "",
+                        featureId = 100
+                    )
+                ),
+                FeatureData(
+                    FeatureEntity(
+                        name = "UserOne Homebrew 2",
+                        description = "",
+                        featureId = 101
+                    )
+                )
             )
         ),
-        userTwoService to listOf(
-            FeatureEntity(
-                name = "UserTwo Homebrew 1",
-                description = "",
-                featureId = 100
-            ),
-            FeatureEntity(
-                name = "UserTwo Homebrew 2",
-                description = "",
-                featureId = 101
+        User(
+            client = client2,
+            features = listOf(
+                FeatureData(
+                    FeatureEntity(
+                        name = "UserTwo Homebrew 1",
+                        description = "",
+                        featureId = 100
+                    )
+                ),
+                FeatureData(
+                    FeatureEntity(
+                        name = "UserTwo Homebrew 2",
+                        description = "",
+                        featureId = 101
+                    )
+                )
             )
         ),
     )
@@ -45,12 +65,12 @@ class FeatureServiceIntegrationTest {
 
     @Test
     fun insertAndGetFeature() = runTest {
-        users.forEach { user->
-            user.second.forEach { feature ->
-                user.first.insertFeature(feature)
+        users.forEach { user ->
+            user.features.forEach { feature ->
+                user.featureService.insertFeature(feature.entity)
 
-                val serverFeature = user.first.getLiveFeatureById(feature.featureId)
-                assert(serverFeature.first().name == feature.name)
+                val serverFeature = user.featureService.getLiveFeatureById(feature.entity.featureId)
+                assert(serverFeature.first().name == feature.entity.name)
             }
         }
     }

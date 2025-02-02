@@ -1,46 +1,65 @@
 package services
 
+import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import model.BackgroundEntity
+import model.FeatureEntity
 import org.junit.Test
 
 class BackgroundServiceIntegrationTest {
-    private val userOneService = BackgroundService(client1)
-    private val userTwoService = BackgroundService(client2)
+    private data class User(
+        val backgrounds: List<BackgroundData>,
+        val client: HttpClient
+    ) : ServiceProvider(client)
+
+    private data class BackgroundData(
+        val entity: BackgroundEntity,
+        val features: List<FeatureEntity> = emptyList()
+    )
 
 
     private val users = listOf(
-        userOneService to listOf(
-            BackgroundEntity(
-                name  ="UserOne Homebrew",
-            ).apply {
-                id = 100
-            },
-            BackgroundEntity(
-                "UserOne Homebrew2"
-            ).apply {
-                id = 101
-            }
+        User(
+            client = client1,
+            backgrounds = listOf(
+                BackgroundData(
+                    BackgroundEntity(
+                        name = "UserOne Homebrew",
+                    ).apply {
+                        id = 100
+                    }),
+                BackgroundData(
+                    BackgroundEntity(
+                        "UserOne Homebrew2"
+                    ).apply {
+                        id = 101
+                    })
+            )
         ),
-        userTwoService to listOf(
-            BackgroundEntity(
-                "UserTwo Homebrew"
-            ).apply {
-                id =100
-            },
-            BackgroundEntity(
-                "UserTwo Homebrew2"
-            ).apply {
-                id = 101
-            }
+        User(
+            client = client2,
+            backgrounds = listOf(
+                BackgroundData(
+                    BackgroundEntity(
+                        name = "UserTwo Homebrew",
+                    ).apply {
+                        id = 100
+                    }),
+                BackgroundData(
+                    BackgroundEntity(
+                        "UserTwo Homebrew2"
+                    ).apply {
+                        id = 101
+                    })
+            )
         ),
     )
 
     @Test
     fun getAllBackgrounds() = runTest {
         users.forEach { user ->
-            val backgrounds = user.first.getAllBackgrounds().first()
+            val backgrounds = user.backgroundService.getAllBackgrounds().first()
             assert(backgrounds.isNotEmpty())
         }
     }
@@ -48,14 +67,14 @@ class BackgroundServiceIntegrationTest {
     @Test
     fun insertBackground() = runTest {
         users.forEach { user ->
-            user.second.forEach { backgroundEntity ->
-                user.first.insertBackground(backgroundEntity)
+            user.backgrounds.forEach { backgroundEntity ->
+                user.backgroundService.insertBackground(backgroundEntity.entity)
             }
 
-            val backgrounds = user.first.getAllBackgrounds().first()
+            val backgrounds = user.backgroundService.getAllBackgrounds().first()
 
-            user.second.forEach { backgroundEntity ->
-                 assert(backgrounds.find { item -> item.name == backgroundEntity.name } != null)
+            user.backgrounds.forEach { backgroundEntity ->
+                assert(backgrounds.find { item -> item.name == backgroundEntity.entity.name } != null)
             }
         }
     }
@@ -83,7 +102,7 @@ class BackgroundServiceIntegrationTest {
     @Test
     fun getHomebrewBackgrounds() = runTest {
         users.forEach { user ->
-            val items = user.first.getHomebrewBackgrounds().first()
+            val items = user.backgroundService.getHomebrewBackgrounds().first()
             assert(items.isNotEmpty())
         }
     }
@@ -94,11 +113,11 @@ class BackgroundServiceIntegrationTest {
 
     @Test
     fun getUnfilledBackground() = runTest {
-        users.forEach {user ->
-            user.second.forEach {
-                user.first.insertBackground(it)
+        users.forEach { user ->
+            user.backgrounds.forEach {
+                user.backgroundService.insertBackground(it.entity)
 
-                val background = user.first.getUnfilledBackground(it.id).first()
+                val background = user.backgroundService.getUnfilledBackground(it.entity.id).first()
             }
         }
     }

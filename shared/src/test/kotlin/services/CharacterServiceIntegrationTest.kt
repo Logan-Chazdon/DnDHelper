@@ -1,13 +1,12 @@
 package services
 
+import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import model.Background
 import model.Character
-import model.Class
-import model.Race
+import model.ClassEntity
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.util.*
@@ -15,107 +14,53 @@ import kotlin.streams.asSequence
 
 
 class CharacterServiceIntegrationTest {
-    private val userOneService = CharacterService(client1)
-    private val userTwoService = CharacterService(client2)
+    private data class User(
+        val characters: List<CharacterData>,
+        val client: HttpClient
+    ) : ServiceProvider(client)
+
+    private data class CharacterData(
+        val entity: Character,
+        val classes: List<ClassEntity> = emptyList()
+    )
 
 
     private val users = listOf(
-        userOneService to listOf(
-            Character(
-                name = "User one first character",
-                id = 1,
-            ).apply {
-                classes = mutableMapOf(
-                    "Barbarian" to Class(
-                        id = 2,
-                        name = "Barbarian",
-                        subclassLevel = 3,
-                        isBaseClass = true,
-                        startingGoldD4s = 2
-                    ),
-                    "Artificer" to Class(
+        User(
+            client = client1,
+            characters = listOf(
+                CharacterData(
+                    Character(
+                        name = "User one first character",
                         id = 1,
-                        name = "Artificer",
-                        subclassLevel = 3,
-                        isBaseClass = false,
-                        startingGoldD4s = 4
-                    )
-                )
-                background = Background()
-                race = Race()
-            },
-            Character(
-                name = "User one second character",
-                id = 2
-            ).apply {
-                classes = mutableMapOf(
-                    "Wizard" to Class(
-                        id = 13,
-                        name = "Wizard",
-                        subclassLevel = 3,
-                        isBaseClass = true,
-                        startingGoldD4s = 2,
                     ),
-                    "Sorcerer" to Class(
-                        id = 11,
-                        name = "Sorcerer",
-                        subclassLevel = 3,
-                        isBaseClass = false,
-                        startingGoldD4s = 4
-                    )
-                )
-                background = Background()
-                race = Race()
-            }
-        ),
-        userTwoService to listOf(
-            Character(
-                name = "User two first character",
-                id = 1
-            ).apply {
-                classes = mutableMapOf(
-                    "Barbarian" to Class(
+                ),
+                CharacterData(
+                    Character(
+                        name = "User one second character",
                         id = 2,
-                        name = "Barbarian",
-                        subclassLevel = 3,
-                        isBaseClass = true,
-                        startingGoldD4s = 2
                     ),
-                    "Fighter" to Class(
-                        id = 6,
-                        name = "Fighter",
-                        subclassLevel = 3,
-                        isBaseClass = false,
-                        startingGoldD4s = 4
-                    )
                 )
-                background = Background()
-                race = Race()
-            },
-            Character(
-                name = "User two second character",
-                id = 2
-            ).apply {
-                classes = mutableMapOf(
-                    "Wizard" to Class(
-                        id = 13,
-                        name = "Wizard",
-                        subclassLevel = 3,
-                        isBaseClass = true,
-                        startingGoldD4s = 2
-                    ),
-                    "Sorcerer" to Class(
-                        id = 11,
-                        name = "Sorcerer",
-                        subclassLevel = 3,
-                        isBaseClass = false,
-                        startingGoldD4s = 4
-                    )
-                )
-                background = Background()
-                race = Race()
-            }
+            )
         ),
+        User(
+            client = client2,
+            characters = listOf(
+                CharacterData(
+                    Character(
+                        name = "User two first character",
+                        id = 1,
+                    ),
+                ),
+                CharacterData(
+                    Character(
+                        name = "User two second character",
+                        id = 2,
+                    ),
+                )
+            )
+        )
+
     )
 
     private fun randString(outputStrLength: Long = 10): String {
@@ -134,9 +79,9 @@ class CharacterServiceIntegrationTest {
 
     @Test
     fun postCharacter() = runBlocking {
-        users.forEach { user: Pair<CharacterService, List<Character>> ->
-            user.second.forEach { character ->
-                assertEquals(user.first.postCharacter(character).toInt(), character.id)
+        users.forEach { user ->
+            user.characters.forEach { character ->
+                assertEquals(user.characterService.postCharacter(character.entity).toInt(), character.entity.id)
             }
         }
     }
@@ -145,11 +90,11 @@ class CharacterServiceIntegrationTest {
     fun deleteCharacter() = runTest {
         users.forEach { user ->
             val tempChar = Character("testname", id = 3)
-            user.first.postCharacter(tempChar)
+            user.characterService.postCharacter(tempChar)
 
-            user.first.deleteCharacter(3)
+            user.characterService.deleteCharacter(3)
 
-            val userChars =  user.first.getAllCharacters().take(2).first{ it.isNotEmpty() }
+            val userChars =  user.characterService.getAllCharacters().take(2).first{ it.isNotEmpty() }
             assert(userChars.none { it.id == 3 })
         }
     }
@@ -161,10 +106,10 @@ class CharacterServiceIntegrationTest {
     @Test
     fun setHp() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
-                val expectedHp = (0..char.maxHp).random()
-                user.first.setHp(char.id, expectedHp)
-                val realHp = user.first.findCharacterWithoutListChoices(char.id).currentHp
+            user.characters.forEach { char ->
+                val expectedHp = (0..char.entity.maxHp).random()
+                user.characterService.setHp(char.entity.id, expectedHp)
+                val realHp = user.characterService.findCharacterWithoutListChoices(char.entity.id).currentHp
                 assertEquals(realHp, expectedHp)
             }
         }
@@ -173,11 +118,11 @@ class CharacterServiceIntegrationTest {
     @Test
     fun updateDeathSaveSuccesses() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val expectedSaves = (0..3).random()
-                user.first.updateDeathSaveSuccesses(char.id, expectedSaves)
+                user.characterService.updateDeathSaveSuccesses(char.entity.id, expectedSaves)
 
-                val realSaves = user.first.findCharacterWithoutListChoices(char.id).positiveDeathSaves
+                val realSaves = user.characterService.findCharacterWithoutListChoices(char.entity.id).positiveDeathSaves
                 assertEquals(realSaves, expectedSaves)
             }
         }
@@ -186,11 +131,11 @@ class CharacterServiceIntegrationTest {
     @Test
     fun updateDeathSaveFailures() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val expectedSaves = (0..3).random()
-                user.first.updateDeathSaveFailures(char.id, expectedSaves)
+                user.characterService.updateDeathSaveFailures(char.entity.id, expectedSaves)
 
-                val realSaves = user.first.findCharacterWithoutListChoices(char.id).negativeDeathSaves
+                val realSaves = user.characterService.findCharacterWithoutListChoices(char.entity.id).negativeDeathSaves
                 assertEquals(realSaves, expectedSaves)
             }
         }
@@ -203,22 +148,22 @@ class CharacterServiceIntegrationTest {
     @Test
     fun removeCharacterClassSpellCrossRefs() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val newClassId = (1..13).random()
                 //Insert a class to remove
-                user.first.insertCharacterClassCrossRef(
-                    characterId = char.id,
+                user.characterService.insertCharacterClassCrossRef(
+                    characterId = char.entity.id,
                     classId = newClassId
                 )
 
                 //Remove the class.
-                user.first.removeCharacterClassCrossRef(
-                    characterId = char.id,
+                user.characterService.removeCharacterClassCrossRef(
+                    characterId = char.entity.id,
                     classId = newClassId
                 )
 
                 //Get the classes
-                val classes = user.first.getCharactersClasses(characterId = char.id).filter { it.value.id == newClassId}
+                val classes = user.characterService.getCharactersClasses(characterId = char.entity.id).filter { it.value.id == newClassId}
 
                 //Assert that the class is not present.
                 assert(classes.isEmpty())
@@ -229,19 +174,19 @@ class CharacterServiceIntegrationTest {
     @Test
     fun getNumOfPreparedSpells() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 char.classes.forEach {
                     //Ensure that all classes are present
-                    user.first.insertCharacterClassCrossRef(
-                        characterId = char.id,
-                        classId = it.value.id
+                    user.characterService.insertCharacterClassCrossRef(
+                        characterId = char.entity.id,
+                        classId = it.id
                     )
 
                     //Prepare some spells
-                    user.first.insertCharacterClassSpellCrossRef(
-                        classId = it.value.id,
+                    user.characterService.insertCharacterClassSpellCrossRef(
+                        classId = it.id,
                         spellId = TODO(),
-                        characterId = char.id,
+                        characterId = char.entity.id,
                         prepared = true
                     )
                 }
@@ -252,11 +197,11 @@ class CharacterServiceIntegrationTest {
     @Test
     fun changeName() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
-                val expectedName = char.name + " updated"
-                user.first.changeName(expectedName, char.id)
+            user.characters.forEach { char ->
+                val expectedName = char.entity.name + " updated"
+                user.characterService.changeName(expectedName, char.entity.id)
 
-                val realName = user.first.findCharacterWithoutListChoices(char.id).name
+                val realName = user.characterService.findCharacterWithoutListChoices(char.entity.id).name
                 assertEquals(realName, expectedName)
             }
         }
@@ -265,11 +210,11 @@ class CharacterServiceIntegrationTest {
     @Test
     fun setPersonalityTraits() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val expected = randString()
-                user.first.setPersonalityTraits(expected, char.id)
+                user.characterService.setPersonalityTraits(expected, char.entity.id)
 
-                val real = user.first.findCharacterWithoutListChoices(char.id).personalityTraits
+                val real = user.characterService.findCharacterWithoutListChoices(char.entity.id).personalityTraits
                 assertEquals(real, expected)
             }
         }
@@ -278,11 +223,11 @@ class CharacterServiceIntegrationTest {
     @Test
     fun setIdeals() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val expected = randString()
-                user.first.setIdeals(expected, char.id)
+                user.characterService.setIdeals(expected, char.entity.id)
 
-                val real = user.first.findCharacterWithoutListChoices(char.id).ideals
+                val real = user.characterService.findCharacterWithoutListChoices(char.entity.id).ideals
                 assertEquals(real, expected)
             }
         }
@@ -291,11 +236,11 @@ class CharacterServiceIntegrationTest {
     @Test
     fun setNotes() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val expected = randString()
-                user.first.setNotes(expected, char.id)
+                user.characterService.setNotes(expected, char.entity.id)
 
-                val real = user.first.findCharacterWithoutListChoices(char.id).notes
+                val real = user.characterService.findCharacterWithoutListChoices(char.entity.id).notes
                 assertEquals(real, expected)
             }
         }
@@ -304,11 +249,11 @@ class CharacterServiceIntegrationTest {
     @Test
     fun setFlaws() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val expected = randString()
-                user.first.setFlaws(expected, char.id)
+                user.characterService.setFlaws(expected, char.entity.id)
 
-                val real = user.first.findCharacterWithoutListChoices(char.id).flaws
+                val real = user.characterService.findCharacterWithoutListChoices(char.entity.id).flaws
                 assertEquals(real, expected)
             }
         }
@@ -317,11 +262,11 @@ class CharacterServiceIntegrationTest {
     @Test
     fun setBonds() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val expected = randString()
-                user.first.setBonds(expected, char.id)
+                user.characterService.setBonds(expected, char.entity.id)
 
-                val real = user.first.findCharacterWithoutListChoices(char.id).bonds
+                val real = user.characterService.findCharacterWithoutListChoices(char.entity.id).bonds
                 assertEquals(real, expected)
             }
         }
@@ -330,13 +275,13 @@ class CharacterServiceIntegrationTest {
     @Test
     fun damage() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
-                val maxHp = char.maxHp
+            user.characters.forEach { char ->
+                val maxHp = char.entity.maxHp
                 val dmg = (0..maxHp + 10).random()
-                val oldHp = user.first.findCharacterWithoutListChoices(char.id).currentHp
-                user.first.damage(char.id, dmg)
+                val oldHp = user.characterService.findCharacterWithoutListChoices(char.entity.id).currentHp
+                user.characterService.damage(char.entity.id, dmg)
 
-                val real = user.first.findCharacterWithoutListChoices(char.id).currentHp
+                val real = user.characterService.findCharacterWithoutListChoices(char.entity.id).currentHp
                 assertEquals(real, maxOf(oldHp - dmg, 0))
             }
         }
@@ -345,17 +290,17 @@ class CharacterServiceIntegrationTest {
     @Test
     fun heal() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
-                val maxHp = char.maxHp
+            user.characters.forEach { char ->
+                val maxHp = char.entity.maxHp
                 val healing = (0..maxHp + 10).random()
-                val oldHp = user.first.findCharacterWithoutListChoices(char.id).currentHp
-                user.first.heal(
+                val oldHp = user.characterService.findCharacterWithoutListChoices(char.entity.id).currentHp
+                user.characterService.heal(
                     hp = healing,
-                    id = char.id,
+                    id = char.entity.id,
                     maxHp = maxHp
                 )
 
-                val real = user.first.findCharacterWithoutListChoices(char.id).currentHp
+                val real = user.characterService.findCharacterWithoutListChoices(char.entity.id).currentHp
                 assertEquals(real, minOf(oldHp + healing, maxHp))
             }
         }
@@ -365,14 +310,14 @@ class CharacterServiceIntegrationTest {
     @Test
     fun setTemp() = runBlocking {
         users.forEach { user ->
-            user.second.forEach { char ->
+            user.characters.forEach { char ->
                 val temp = (0..10).random()
-                user.first.setTemp(
-                    id = char.id,
+                user.characterService.setTemp(
+                    id = char.entity.id,
                     temp = temp
                 )
 
-                val real = user.first.findCharacterWithoutListChoices(char.id).tempHp
+                val real = user.characterService.findCharacterWithoutListChoices(char.entity.id).tempHp
                 assertEquals(real, temp)
             }
         }

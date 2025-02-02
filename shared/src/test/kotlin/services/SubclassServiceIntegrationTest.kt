@@ -37,7 +37,9 @@ class SubclassServiceIntegrationTest {
                         isHomebrew = true,
                     ).apply {
                         subclassId = 100
-                    }),
+                    },
+                    features = listOf(FeatureEntity(featureId = 2200, name = "Test", description = "")),
+                ),
                 SubclassData(
                     SubclassEntity(
                         name = "UserOne Homebrew",
@@ -60,7 +62,9 @@ class SubclassServiceIntegrationTest {
                         isHomebrew = true,
                     ).apply {
                         subclassId = 100
-                    }),
+                    },
+                    features = listOf(FeatureEntity(featureId = 2200, name = "Test", description = ""))
+                ),
                 SubclassData(
                     SubclassEntity(
                         name = "UserTwo Homebrew",
@@ -89,7 +93,7 @@ class SubclassServiceIntegrationTest {
 
                     val serverClasses = user.subclassService.getSubclassesByClassId(clazz.id).first()
 
-                    assert(serverClasses.firstOrNull { it.subclassId == subclass.entity.subclassId} != null)
+                    assert(serverClasses.firstOrNull { it.subclassId == subclass.entity.subclassId } != null)
                 }
             }
         }
@@ -147,7 +151,7 @@ class SubclassServiceIntegrationTest {
                     //Ensure the features are disconnected.
                     assert(
                         liveServerFeatures.first().firstOrNull
-                            { it.featureId == feature.featureId } == null
+                        { it.featureId == feature.featureId } == null
                     )
 
                     val refreshedServerFeatures = user.subclassService.getSubclassFeatures(

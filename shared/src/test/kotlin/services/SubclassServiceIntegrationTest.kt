@@ -39,6 +39,7 @@ class SubclassServiceIntegrationTest {
                         subclassId = 100
                     },
                     features = listOf(FeatureEntity(featureId = 2200, name = "Test", description = "")),
+                    classes = listOf(ClassEntity(id= 2000))
                 ),
                 SubclassData(
                     SubclassEntity(
@@ -48,7 +49,8 @@ class SubclassServiceIntegrationTest {
                         isHomebrew = true,
                     ).apply {
                         subclassId = 101
-                    })
+                    },
+                    classes = listOf(ClassEntity(id= 2001)))
             ),
         ),
         User(
@@ -63,7 +65,8 @@ class SubclassServiceIntegrationTest {
                     ).apply {
                         subclassId = 100
                     },
-                    features = listOf(FeatureEntity(featureId = 2200, name = "Test", description = ""))
+                    features = listOf(FeatureEntity(featureId = 2200, name = "Test", description = "")),
+                    classes = listOf(ClassEntity(id= 2000))
                 ),
                 SubclassData(
                     SubclassEntity(
@@ -73,7 +76,9 @@ class SubclassServiceIntegrationTest {
                         isHomebrew = true,
                     ).apply {
                         subclassId = 101
-                    })
+                    },
+                    classes = listOf(ClassEntity(id= 2001))
+                )
             ),
         ),
     )

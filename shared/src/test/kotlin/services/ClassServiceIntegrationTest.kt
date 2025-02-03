@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import model.ClassEntity
 import model.FeatureEntity
+import model.SubclassEntity
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
@@ -17,7 +18,8 @@ class ClassServiceIntegrationTest {
 
     private data class ClassData(
         val entity: ClassEntity,
-        val features: List<FeatureEntity>
+        val features: List<FeatureEntity>,
+        val subclasses: List<SubclassEntity>
     )
 
     private val users = listOf(
@@ -40,6 +42,16 @@ class ClassServiceIntegrationTest {
                             description = "",
                             featureId = 5001
                         )
+                    ),
+                    listOf(
+                        SubclassEntity(
+                            name = "test",
+                            spellAreFree = false,
+                            spellCasting = null,
+                            isHomebrew = true,
+                        ).apply {
+                            subclassId= 1000
+                        }
                     )
                 )
             )
@@ -58,6 +70,16 @@ class ClassServiceIntegrationTest {
                             description = "",
                             featureId = 5001
                         )
+                    ),
+                    listOf(
+                        SubclassEntity(
+                            name = "test",
+                            spellAreFree = false,
+                            spellCasting = null,
+                            isHomebrew = true,
+                        ).apply {
+                            subclassId= 1000
+                        }
                     )
                 )
             )
@@ -133,14 +155,53 @@ class ClassServiceIntegrationTest {
     }
 
     @Test
-    fun insertClassSubclassId() {
+    fun testClassSubclassCrossRef() = runTest {
+        users.forEach { user ->
+            user.classes.forEach { clazz ->
+                user.classService.insertClass(clazz.entity)
+
+                //Test adding the cross refs.
+                clazz.subclasses.forEach {
+                    user.subclassService.insertSubclass(it)
+
+                    user.classService.insertClassSubclassId(
+                        classId = clazz.entity.id,
+                        subclassId = it.subclassId
+                    )
+                }
+
+                val subclasses = user.subclassService.getSubclassesByClassId(clazz.entity.id)
+
+                //Test that the subclasses are returned.
+                clazz.subclasses.forEach { subclass ->
+                    assert(subclasses.first().firstOrNull {
+                        subclass.subclassId == it.subclassId &&
+                                subclass.name == it.name
+                    } != null)
+                }
+
+                clazz.subclasses.forEach { subclass ->
+                    val classes = user.classService.getSubclassClasses(subclass.subclassId).first()
+                    assert(classes.firstOrNull { it.id == clazz.entity.id } != null)
+                }
+
+                //Test deleting the cross refs.
+                clazz.subclasses.forEach { subclass ->
+                    user.classService.removeClassSubclassCrossRef(
+                        classId = clazz.entity.id,
+                        subclassId = subclass.subclassId
+                    )
+
+
+                    assert(subclasses.first().firstOrNull {
+                        subclass.subclassId == it.subclassId
+                    } == null)
+                }
+            }
+        }
     }
 
 
-
-    @Test
-    fun removeClassSubclassCrossRef() {
-    }
 
     @Test
     fun getClassIdsByName() = runTest {
@@ -183,9 +244,5 @@ class ClassServiceIntegrationTest {
 
             assert(classes.size >= 13)
         }
-    }
-
-    @Test
-    fun getSubclassClasses() {
     }
 }

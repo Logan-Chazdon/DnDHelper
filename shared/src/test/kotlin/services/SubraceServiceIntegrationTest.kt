@@ -29,14 +29,38 @@ class SubraceServiceIntegrationTest {
                         isHomebrew = true,
                     ).apply {
                         id = 100
-                    }),
+                    },
+                    listOf(
+                        FeatureEntity(
+                            name = "",
+                            description = "",
+                            featureId = 3854
+                        )
+                    )),
                 SubraceData(
                     SubraceEntity(
                         name = "UserOne Homebrew 2",
                         isHomebrew = true,
                     ).apply {
                         id = 101
-                    }
+                    },
+                    listOf(
+                        FeatureEntity(
+                            name = "",
+                            description = "",
+                            featureId = 3844
+                        ),
+                        FeatureEntity(
+                            name = "",
+                            description = "",
+                            featureId = 3845
+                        ),
+                        FeatureEntity(
+                            name = "",
+                            description = "",
+                            featureId = 3846
+                        ),
+                    )
                 ))),
         User(
             client = client2,
@@ -58,10 +82,38 @@ class SubraceServiceIntegrationTest {
                 )))
     )
 
-
     @Test
-    fun insertSubraceFeatureCrossRef() {
+    fun testFeatureCrossRef() = runTest {
+        users.forEach { user ->
+            user.subraces.forEach { subrace ->
+                user.subraceService.insertSubrace(subrace.entity)
+
+                subrace.features.forEach { feature ->
+                    user.featureService.insertFeature(feature)
+
+                    user.subraceService.insertSubraceFeatureCrossRef(
+                        subraceId = subrace.entity.id,
+                        featureId = feature.featureId
+                    )
+                }
+
+                val features = user.subraceService.getSubraceLiveFeaturesById(subrace.entity.id)
+
+                assert(features.first().map { it.featureId} == subrace.features.map { it.featureId} )
+
+                subrace.features.forEach { feature ->
+                    user.subraceService.removeSubraceFeatureCrossRef(
+                        subraceId = subrace.entity.id,
+                        featureId = feature.featureId
+                    )
+                }
+
+                assert(features.first().isEmpty())
+
+            }
+        }
     }
+
 
     @Test
     fun insertAndGetSubrace() = runTest {
@@ -74,18 +126,12 @@ class SubraceServiceIntegrationTest {
         }
     }
 
-    @Test
-    fun removeSubraceFeatureCrossRef() {
-    }
 
 
     @Test
     fun bindSubraceOptions() {
     }
 
-    @Test
-    fun removeRaceSubraceCrossRef() {
-    }
 
     @Test
     fun getHomebrewSubraces() = runTest {
@@ -98,10 +144,6 @@ class SubraceServiceIntegrationTest {
                 .getHomebrewSubraces()
             assert(subraces.first().isNotEmpty())
         }
-    }
-
-    @Test
-    fun getSubraceLiveFeaturesById() {
     }
 
     @Test

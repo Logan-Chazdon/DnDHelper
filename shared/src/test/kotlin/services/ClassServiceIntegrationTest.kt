@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import model.ClassEntity
 import model.FeatureEntity
+import model.Spell
 import model.SubclassEntity
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,8 +20,28 @@ class ClassServiceIntegrationTest {
     private data class ClassData(
         val entity: ClassEntity,
         val features: List<FeatureEntity>,
-        val subclasses: List<SubclassEntity>
+        val subclasses: List<SubclassEntity>,
+        val spells: List<Spell>
     )
+
+    private val defaultSpell = Spell(
+        name = "Default Spell",
+        level = 1,
+        components = emptyList(),
+        itemComponents = emptyList(),
+        school = "",
+        desc = "",
+        range = "",
+        area = "",
+        castingTime = "",
+        duration = "",
+        classes = emptyList(),
+        damage = "",
+        isRitual = false,
+        isHomebrew = true
+    ).apply {
+        id = 10000
+    }
 
     private val users = listOf(
         User(
@@ -50,9 +71,10 @@ class ClassServiceIntegrationTest {
                             spellCasting = null,
                             isHomebrew = true,
                         ).apply {
-                            subclassId= 1000
+                            subclassId = 1000
                         }
-                    )
+                    ),
+                    listOf(defaultSpell)
                 )
             )
         ),
@@ -78,9 +100,10 @@ class ClassServiceIntegrationTest {
                             spellCasting = null,
                             isHomebrew = true,
                         ).apply {
-                            subclassId= 1000
+                            subclassId = 1000
                         }
-                    )
+                    ),
+                    listOf(defaultSpell)
                 )
             )
         )
@@ -200,7 +223,6 @@ class ClassServiceIntegrationTest {
             }
         }
     }
-
 
 
     @Test

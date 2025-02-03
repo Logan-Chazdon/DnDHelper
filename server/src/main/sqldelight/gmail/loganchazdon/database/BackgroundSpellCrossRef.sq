@@ -16,7 +16,7 @@ DELETE FROM BackgroundSpellCrossRef WHERE backgroundId = :backgroundId AND spell
 
 selectSpellsForBackground:
 SELECT spells.* FROM spells
-LEFT JOIN BackgroundSpellCrossRef ON backgroundId IS :backgroundId
+JOIN BackgroundSpellCrossRef ON backgroundId IS :backgroundId
 AND spells.id IS BackgroundSpellCrossRef.spellId
 AND BackgroundSpellCrossRef.owner IS :owner
 WHERE spells.owner IS :owner OR spells.owner IS NULL;

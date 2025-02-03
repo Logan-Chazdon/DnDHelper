@@ -136,9 +136,7 @@ class ClassServiceIntegrationTest {
     fun insertClassSubclassId() {
     }
 
-    @Test
-    fun removeClassFeatureCrossRef() {
-    }
+
 
     @Test
     fun removeClassSubclassCrossRef() {
@@ -170,10 +168,6 @@ class ClassServiceIntegrationTest {
 
     @Test
     fun getSpellsByClassId() {
-    }
-
-    @Test
-    fun getUnfilledLevelPath() {
     }
 
     @Test

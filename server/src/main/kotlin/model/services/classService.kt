@@ -58,7 +58,7 @@ fun Routing.classService(db: Database, httpClient: HttpClient) {
         }
     }
 
-    get("class/classSpells/{classId}") {
+    get("class/classSpells") {
         withUserInfo { userInfo ->
             call.respondText(
                 gson.toJson(

@@ -144,7 +144,13 @@ class ClassServiceIntegrationTest {
 
     @Test
     fun getClassIdsByName() = runTest {
-
+        users.forEach { user ->
+            user.classes.forEach { clazz ->
+                user.classService.insertClass(clazz.entity)
+                val ids = user.classService.getClassIdsByName(clazz.entity.name)
+                assert(ids.contains(clazz.entity.id))
+            }
+        }
     }
 
     @Test

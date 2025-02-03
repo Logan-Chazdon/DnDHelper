@@ -234,7 +234,22 @@ class ClassServiceIntegrationTest {
     }
 
     @Test
-    fun getSpellsByClassId() {
+    fun getSpellsByClassId() = runTest {
+        users.forEach { user ->
+            user.classes.forEach { clazz ->
+                user.classService.insertClass(clazz.entity)
+                clazz.spells.forEach { spell ->
+                    user.spellService.insertSpell(spell)
+                    user.spellService.addClassSpellCrossRef(
+                        classId = clazz.entity.id,
+                        spellId = spell.id
+                    )
+                }
+
+                val spells = user.classService.getSpellsByClassId(clazz.entity.id)
+                assert(spells.map { it.id } == clazz.spells.map { it.id } )
+            }
+        }
     }
 
     @Test

@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import model.BackgroundEntity
 import model.FeatureEntity
+import model.Spell
 import org.junit.Test
+import kotlin.test.assertFails
 
 class BackgroundServiceIntegrationTest {
     private data class User(
@@ -15,7 +17,27 @@ class BackgroundServiceIntegrationTest {
 
     private data class BackgroundData(
         val entity: BackgroundEntity,
-        val features: List<FeatureEntity> = emptyList()
+        val features: List<FeatureEntity> = emptyList(),
+        val spells: List<Spell> = listOf(
+            Spell(
+                name = "Spell",
+                level = 2,
+                components = emptyList(),
+                itemComponents = emptyList(),
+                school = "",
+                desc = "",
+                range = "",
+                area = "",
+                castingTime = "",
+                duration = "",
+                classes = emptyList(),
+                damage = "",
+                isRitual = false,
+                isHomebrew = true
+            ).apply {
+                id = 200
+            }
+        )
     )
 
 
@@ -80,15 +102,39 @@ class BackgroundServiceIntegrationTest {
     }
 
     @Test
-    fun insertBackgroundSpellCrossRef() {
+    fun getBackgroundSpells() = runTest  {
+        users.forEach { user ->
+            user.backgrounds.forEach { background ->
+                user.backgroundService.insertBackground(background.entity)
+
+                background.spells.forEach { spell ->
+                    user.spellService.insertSpell(spell)
+
+                    user.backgroundService.insertBackgroundSpellCrossRef(
+                        backgroundId = background.entity.id,
+                        spellId = spell.id
+                    )
+                }
+
+                val spells = user.backgroundService.getBackgroundSpells(background.entity.id)
+                assert(spells!!.map { it.id } == background.spells.map { it.id} )
+            }
+        }
     }
 
     @Test
-    fun getBackgroundSpells() {
-    }
+    fun deleteBackground() = runTest {
+        users.forEach { user ->
+            user.backgrounds.forEach { background ->
+                user.backgroundService.insertBackground(background.entity)
 
-    @Test
-    fun deleteBackground() {
+                user.backgroundService.deleteBackground(background.entity.id)
+
+                assertFails {
+                    user.backgroundService.getUnfilledBackground(background.entity.id).first()
+                }
+            }
+        }
     }
 
     @Test

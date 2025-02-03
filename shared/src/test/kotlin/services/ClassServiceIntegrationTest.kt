@@ -4,6 +4,7 @@ import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import model.ClassEntity
+import model.FeatureEntity
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 
@@ -16,27 +17,47 @@ class ClassServiceIntegrationTest {
 
     private data class ClassData(
         val entity: ClassEntity,
+        val features: List<FeatureEntity>
     )
 
     private val users = listOf(
         User(
             client = client1,
-            classes =listOf(
+            classes = listOf(
                 ClassData(
                     ClassEntity(
                         name = "userOneClass",
                         id = 14
+                    ),
+                    listOf(
+                        FeatureEntity(
+                            name = "Test1",
+                            description = "",
+                            featureId = 5000
+                        ),
+                        FeatureEntity(
+                            name = "user1",
+                            description = "",
+                            featureId = 5001
+                        )
                     )
                 )
             )
         ),
         User(
             client = client1,
-            classes =listOf(
+            classes = listOf(
                 ClassData(
                     ClassEntity(
                         name = "userTwoClass",
                         id = 14
+                    ),
+                    listOf(
+                        FeatureEntity(
+                            name = "user2",
+                            description = "",
+                            featureId = 5001
+                        )
                     )
                 )
             )
@@ -76,7 +97,39 @@ class ClassServiceIntegrationTest {
     }
 
     @Test
-    fun insertClassFeatureCrossRef() {
+    fun testClassFeatureCrossRef() = runTest {
+        users.forEach { user ->
+            user.classes.forEach { clazz ->
+                user.classService.insertClass(clazz.entity)
+
+                clazz.features.forEach { feature ->
+                    user.featureService.insertFeature(feature)
+
+                    user.classService.insertClassFeatureCrossRef(
+                        featureId = feature.featureId,
+                        id = clazz.entity.id
+                    )
+                }
+
+                var features = user.classService.getUnfilledLevelPath(clazz.entity.id)
+
+
+                assert(
+                    features.map { it.featureId } == (clazz.features.map { it.featureId })
+                )
+
+                clazz.features.forEach { feature ->
+                    user.classService.removeClassFeatureCrossRef(
+                        featureId = feature.featureId,
+                        id = clazz.entity.id
+                    )
+                }
+
+                features = user.classService.getUnfilledLevelPath(clazz.entity.id)
+
+                assert(features.isEmpty())
+            }
+        }
     }
 
     @Test

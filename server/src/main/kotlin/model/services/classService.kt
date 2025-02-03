@@ -71,16 +71,16 @@ fun Routing.classService(db: Database, httpClient: HttpClient) {
         }
     }
 
-    get("class/getUnfilledLevelPath/{classId}") {
+    get("class/getUnfilledLevelPath") {
         withUserInfo { userInfo ->
-            call.respondText(
-                gson.toJson(
-                    db.classesQueries.selectLevelPath(
-                        call.parameters["classId"]!!.toLong(),
-                        userInfo.id
-                    ).executeAsList()
-                )
+            val data = db.classesQueries.selectLevelPath(
+                call.parameters["classId"]!!.toLong(),
+                userInfo.id
+            ).executeAsList()
+            val response = gson.toJson(
+                data
             )
+            call.respondText(response)
         }
     }
 

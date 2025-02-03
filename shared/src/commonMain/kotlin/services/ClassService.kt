@@ -151,9 +151,10 @@ class ClassService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature> {
-        return format.decodeFromString(getFrom(Paths.GetUnfilledLevelPath.path) {
-          append("id", id.toString())
-        }.bodyAsText())
+        val result = getFrom(Paths.GetUnfilledLevelPath.path) {
+          append("classId", id.toString())
+        }.bodyAsText()
+        return format.decodeFromString(result)
     }
 
     fun allClassesNamesAndIds(): Flow<List<NameAndIdPojo>> {

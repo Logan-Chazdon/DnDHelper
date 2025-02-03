@@ -178,6 +178,7 @@ class ClassService(client: HttpClient) : Service(client = client) {
                     host = apiUrl
                     port = targetPort
                     path(Paths.GetSubclassNamesAndIds.path)
+                    parameters.append("classId", id.toString())
                 }
             }.call.response.bodyAsText()
             val list = format.decodeFromString<List<NameAndIdPojo>>(response)

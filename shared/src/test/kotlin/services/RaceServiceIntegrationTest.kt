@@ -3,7 +3,9 @@ package services
 import io.ktor.client.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import model.FeatureEntity
 import model.RaceEntity
+import model.SubraceEntity
 import org.junit.Test
 
 class RaceServiceIntegrationTest {
@@ -15,28 +17,53 @@ class RaceServiceIntegrationTest {
 
     private data class RaceData(
         val entity: RaceEntity,
-        val races: List<RaceEntity> = emptyList()
+        val subraces: List<SubraceEntity> = emptyList(),
+        val features: List<FeatureEntity> = emptyList()
     )
 
     private val users = listOf(
         User(
             client = client1,
-            races= listOf(
+            races = listOf(
                 RaceData(
                     RaceEntity(
                         raceName = "userOneHomebrew",
                         raceId = 200
+                    ),
+                    subraces = listOf(
+                        SubraceEntity().apply {
+                            id = 20000
+                        }
+                    ),
+                    features = listOf(
+                        FeatureEntity(
+                            name = "Test",
+                            description = "",
+                            featureId = 40000
+                        )
                     )
                 )
             )
         ),
         User(
             client = client2,
-            races= listOf(
+            races = listOf(
                 RaceData(
                     RaceEntity(
                         raceName = "userTwoHomebrew",
                         raceId = 200
+                    ),
+                    subraces = listOf(
+                        SubraceEntity().apply {
+                            id = 20000
+                        }
+                    ),
+                    features = listOf(
+                        FeatureEntity(
+                            name = "Test",
+                            description = "",
+                            featureId = 40000
+                        )
                     )
                 )
             )
@@ -54,19 +81,80 @@ class RaceServiceIntegrationTest {
     }
 
     @Test
-    fun insertRaceFeatureCrossRef() {
+    fun insertAndRemoveRaceFeatureCrossRef() = runTest {
+        users.forEach { user ->
+            user.races.forEach { entity ->
+                user.raceService.insertRace(entity.entity)
+
+                entity.features.forEach { feature ->
+                    user.featureService.insertFeature(feature)
+
+                    user.raceService.insertRaceFeatureCrossRef(
+                        featureId = feature.featureId,
+                        raceId = entity.entity.raceId
+                    )
+                }
+
+                val features = user.raceService.getRaceFeatures(entity.entity.raceId)
+
+                assert(features.map { it.featureId } == entity.features.map { it.featureId })
+
+
+                entity.features.forEach { feature ->
+                    user.raceService.removeRaceFeatureCrossRef(
+                        featureId = feature.featureId,
+                        raceId = entity.entity.raceId
+                    )
+                }
+
+                assert(user.raceService.getRaceFeatures(entity.entity.raceId).isEmpty())
+            }
+        }
+    }
+
+
+    @Test
+    fun insertRaceSubraceCrossRef() = runTest {
+        users.forEach { user ->
+            user.races.forEach { entity ->
+                user.raceService.insertRace(entity.entity)
+
+                entity.subraces.forEach { subrace ->
+                    user.subraceService.insertSubrace(subrace)
+
+                    user.raceService.insertRaceSubraceCrossRef(
+                        subraceId = subrace.id,
+                        raceId = entity.entity.raceId
+                    )
+                }
+
+                val subraces = user.raceService.getRaceSubraces(entity.entity.raceId)
+
+                assert(subraces.first().map { it.id } == entity.subraces.map { it.id })
+            }
+        }
     }
 
     @Test
-    fun removeRaceFeatureCrossRef() {
-    }
+    fun getRaceFeatures() = runTest {
+        users.forEach { user ->
+            user.races.forEach { entity ->
+                user.raceService.insertRace(entity.entity)
 
-    @Test
-    fun insertRaceSubraceCrossRef() {
-    }
+                entity.features.forEach { feature ->
+                    user.featureService.insertFeature(feature)
 
-    @Test
-    fun getRaceFeatures() {
+                    user.raceService.insertRaceFeatureCrossRef(
+                        featureId = feature.featureId,
+                        raceId = entity.entity.raceId
+                    )
+                }
+
+                val features = user.raceService.getRaceFeatures(entity.entity.raceId)
+
+                assert(features.map { it.featureId } == entity.features.map { it.featureId })
+            }
+        }
     }
 
     @Test
@@ -130,9 +218,6 @@ class RaceServiceIntegrationTest {
         }
     }
 
-    @Test
-    fun getRaceSubraces() {
-    }
 
     @Test
     fun getAllRaceIdsAndNames() = runTest {

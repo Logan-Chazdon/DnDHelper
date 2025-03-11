@@ -39,7 +39,7 @@ fun Routing.backgroundService(db: Database, httpClient: HttpClient) {
             val data = db.backgroundFeatureCrossRefQueries.selectFeaturesForBackground(
                 backgroundId = id,
                 owner = userInfo.id
-            )
+            ).executeAsList()
             call.respondText(gson.toJson(data))
         }
     }

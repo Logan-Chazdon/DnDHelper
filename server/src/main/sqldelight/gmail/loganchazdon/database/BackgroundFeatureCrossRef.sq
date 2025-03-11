@@ -18,4 +18,4 @@ selectFeaturesForBackground:
 SELECT features.* FROM features
 LEFT JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.owner IS :owner
 AND BackgroundFeatureCrossRef.featureId IS features.featureId
-WHERE BackgroundFeatureCrossRef.backgroundId IS :backgroundId;
+WHERE BackgroundFeatureCrossRef.backgroundId IS :backgroundId AND features.owner IS :owner;

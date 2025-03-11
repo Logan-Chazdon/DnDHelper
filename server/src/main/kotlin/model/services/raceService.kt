@@ -176,7 +176,7 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
                         owner = userInfo.id
                     ).asFlow().collect {
                         //Send the converted json.
-                        send(Frame.Text(gson.toJson(it).toString().clean()))
+                        send(Frame.Text(gson.toJson(it.executeAsList()).toString().clean()))
                     }
                 } catch (e: NumberFormatException) {
                     send(Frame.Text("Invalid Id"))

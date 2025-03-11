@@ -50,13 +50,39 @@ class BackgroundServiceIntegrationTest {
                         name = "UserOne Homebrew",
                     ).apply {
                         id = 100
-                    }),
+                    },
+                    features = listOf(
+                        FeatureEntity(
+                            featureId = 20000,
+                            name = "Test",
+                            description = ""
+                        ),
+                        FeatureEntity(
+                            featureId = 20001,
+                            name = "Test",
+                            description = ""
+                        )
+                    )
+                ),
                 BackgroundData(
                     BackgroundEntity(
                         "UserOne Homebrew2"
                     ).apply {
                         id = 101
-                    })
+                    },
+                    features = listOf(
+                        FeatureEntity(
+                            featureId = 20002,
+                            name = "Test",
+                            description = ""
+                        ),
+                        FeatureEntity(
+                            featureId = 20001,
+                            name = "Test",
+                            description = ""
+                        )
+                    )
+                )
             )
         ),
         User(
@@ -67,7 +93,20 @@ class BackgroundServiceIntegrationTest {
                         name = "UserTwo Homebrew",
                     ).apply {
                         id = 100
-                    }),
+                    },
+                    features = listOf(
+                        FeatureEntity(
+                            featureId = 20000,
+                            name = "Test",
+                            description = ""
+                        ),
+                        FeatureEntity(
+                            featureId = 20001,
+                            name = "Test",
+                            description = ""
+                        )
+                    )
+                ),
                 BackgroundData(
                     BackgroundEntity(
                         "UserTwo Homebrew2"
@@ -102,7 +141,7 @@ class BackgroundServiceIntegrationTest {
     }
 
     @Test
-    fun getBackgroundSpells() = runTest  {
+    fun getBackgroundSpells() = runTest {
         users.forEach { user ->
             user.backgrounds.forEach { background ->
                 user.backgroundService.insertBackground(background.entity)
@@ -117,7 +156,7 @@ class BackgroundServiceIntegrationTest {
                 }
 
                 val spells = user.backgroundService.getBackgroundSpells(background.entity.id)
-                assert(spells!!.map { it.id } == background.spells.map { it.id} )
+                assert(spells!!.map { it.id } == background.spells.map { it.id })
             }
         }
     }
@@ -170,6 +209,23 @@ class BackgroundServiceIntegrationTest {
 
     @Test
     fun insertBackgroundFeatureCrossRef() = runTest {
+        users.forEach { user ->
+            user.backgrounds.forEach { entity ->
+                user.backgroundService.insertBackground(entity.entity)
 
+                entity.features.forEach { feature ->
+                    user.featureService.insertFeature(feature)
+
+                    user.backgroundService.insertBackgroundFeatureCrossRef(
+                        backgroundId = entity.entity.id,
+                        featureId = feature.featureId
+                    )
+                }
+
+                val features = user.backgroundService.getBackgroundFeatures(entity.entity.id)
+
+                assert(features.map { it.featureId } == entity.features.map { it.featureId})
+            }
+        }
     }
 }

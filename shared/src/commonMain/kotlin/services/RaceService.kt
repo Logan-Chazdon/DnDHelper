@@ -35,6 +35,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
         HomebrewRaces("$PATH/homebrewRaces"),
         GetLiveRace("$PATH/getLiveRace"),
         GetAllRaceNameIds("$PATH/getAllRaceNameIds"),
+        GetLiveRaceSubraceNameIds("$PATH/getLiveRaceSubraceNameIds"),
     }
 
     suspend fun insertRace(newRace: RaceEntity): Int {
@@ -148,12 +149,12 @@ class RaceService (client: HttpClient) : Service(client = client) {
                 method = HttpMethod.Get,
                 host = apiUrl,
                 port = targetPort,
-                path = Paths.GetLiveRace.path
+                path = Paths.GetLiveRaceSubraceNameIds.path
             ) {
                 send(Frame.Text(id.toString()))
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
-                    val listToEmit = Json.decodeFromString<List<NameAndIdPojo>>(othersMessage!!.readText())
+                    val listToEmit = format.decodeFromString<List<NameAndIdPojo>>(othersMessage!!.readText())
                     emit(listToEmit)
                 }
             }

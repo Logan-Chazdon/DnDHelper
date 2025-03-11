@@ -89,7 +89,7 @@ class BackgroundService(client: HttpClient) : Service(client = client) {
     suspend fun getBackgroundFeatures(id: Int): List<Feature> {
         return format.decodeFromString(
             getFrom(Paths.BackgroundFeatures.path) {
-                append("id", id.toString())
+                append("backgroundId", id.toString())
             }.bodyAsText()
         )
     }

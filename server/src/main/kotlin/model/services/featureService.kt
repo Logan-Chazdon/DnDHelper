@@ -194,8 +194,8 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
             ).executeAsOne()
 
             //Remove the requested id.
-            val refJson = JSONArray(oldRef)
-            refJson.removeAll { it == body.getLong("id") }
+            val refJson = JSONArray(oldRef.ids)
+            refJson.removeAll { it == body.getInt("id") }
 
             //Update the database with the new version.
             db.indexRefQueries.insert(

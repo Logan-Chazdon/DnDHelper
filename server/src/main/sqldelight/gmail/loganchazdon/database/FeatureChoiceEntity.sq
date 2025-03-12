@@ -1,13 +1,16 @@
+import com.google.gson.JsonObject;
+
+
 CREATE TABLE IF NOT EXISTS FeatureChoiceEntity (
     `id` INTEGER NOT NULL,
-    `choose` TEXT NOT NULL,
+    `choose` TEXT AS JsonObject NOT NULL,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
     PRIMARY KEY (id, owner)
 );
 
 insert:
-INSERT OR REPLACE INTO FeatureChoiceEntity (id, choose, owner) VALUES (?, ?, ?);
+INSERT OR REPLACE INTO FeatureChoiceEntity (id, choose, owner) VALUES ?;
 
 delete:
 DELETE FROM FeatureChoiceEntity WHERE owner = :owner AND id=:id;

@@ -123,6 +123,9 @@ fun Application.configureDatabases() {
             languagesAdapter = jsonListAdapter,
             languageChoicesAdapter = jsonListAdapter,
         ),
+        FeatureChoiceEntityAdapter = FeatureChoiceEntity.Adapter(
+            chooseAdapter = jsonObjectAdapter
+        ),
     )
 
     routing {

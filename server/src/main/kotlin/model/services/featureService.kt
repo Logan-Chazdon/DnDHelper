@@ -2,6 +2,7 @@ package gmail.loganchazdon.dndhelper.model.services
 
 import app.cash.sqldelight.coroutines.asFlow
 import gmail.loganchazdon.database.Database
+import gmail.loganchazdon.database.FeatureChoiceEntity
 import gmail.loganchazdon.database.Features
 import gmail.loganchazdon.dndhelper.model.database.*
 import io.ktor.client.*
@@ -136,11 +137,9 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
 
     post("feature/insertFeatureChoice") {
         withUserInfo { userInfo ->
-            val body = JSONObject(call.receiveText())
+            val body = JSONObject(call.receiveText()).put("owner", userInfo.id)
             db.featureChoiceEntityQueries.insert(
-                id = body.getLong("id"),
-                choose = body.getString("choose"),
-                owner = userInfo.id
+                gson.fromJson(body.toString(), FeatureChoiceEntity::class.java)
             )
             call.respondText(body.getLong("id").toString())
         }

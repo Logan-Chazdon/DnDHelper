@@ -199,7 +199,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
 
             //Update the database with the new version.
             db.indexRefQueries.insert(
-                index = body.getString("index"),
+                index = body.getString("ref"),
                 ids = refJson.toString(),
                 owner = userInfo.id
             )

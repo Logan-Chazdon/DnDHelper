@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS IndexRef (
 );
 
 insert:
-INSERT INTO IndexRef (`index`, ids, owner) VALUES (?, ?, ?);
+INSERT OR REPLACE INTO IndexRef (`index`, ids, owner) VALUES (?, ?, ?);
 
 select:
 SELECT * FROM IndexRef WHERE `index`= :index AND owner = :owner;

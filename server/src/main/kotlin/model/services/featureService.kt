@@ -165,7 +165,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
                 featureId = body.getLong("featureId"),
                 choiceId = body.getLong("choiceId"),
             )
-            call.respondText(body.getLong("id").toString())
+            call.respondText(body.getLong("featureId").toString())
         }
     }
 

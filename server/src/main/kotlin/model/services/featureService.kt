@@ -85,7 +85,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
         }
     }
 
-    webSocket("featurel/liveAllIndexes") {
+    webSocket("feature/liveAllIndexes") {
         getSession(call)?.let { session ->
             val userInfo = getUserInfo(httpClient, session, call)
             db.indexRefQueries.selectAll(

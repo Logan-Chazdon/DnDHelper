@@ -153,7 +153,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
                 index = body.getString("index"),
                 ids = body.getJSONArray("ids").toString()
             )
-            call.respondText(body.getLong("id").toString())
+            call.respondText(body.getString("index").toString())
         }
     }
 

@@ -177,10 +177,6 @@ class BackgroundServiceIntegrationTest {
     }
 
     @Test
-    fun getBackgroundFeatures() {
-    }
-
-    @Test
     fun getUnfilledBackgroundFeatures() {
     }
 

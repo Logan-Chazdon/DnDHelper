@@ -237,7 +237,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
                 owner = userInfo.id,
                 id = call.parameters["id"]!!.toLong()
             ).executeAsList()
-            call.respond(gson.toJson(value))
+            call.respond(gson.toJson(value.getOrElse(0) { 0 }))
         }
     }
 

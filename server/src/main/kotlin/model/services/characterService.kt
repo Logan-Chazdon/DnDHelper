@@ -533,7 +533,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val body = JSONObject(call.receiveText())
             db.characterQueries.updateBackPack(
-                Json.decodeFromString(body.getJSONObject("backpack").toString()),
+                Json.decodeFromString(body.getString("backpack")),
                 body.getLong("id"),
                 userInfo.id
             )

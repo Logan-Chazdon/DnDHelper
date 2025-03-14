@@ -52,7 +52,9 @@ AND (IndexRef.owner IS NULL OR IndexRef.owner = :owner)
 LEFT JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.featureId IS features.featureId
 AND FeatureChoiceIndexCrossRef.owner IS :owner
 LEFT JOIN spellDetails ON spellDetails.id IS FeatureSpellCrossRef.spellId
-WHERE (features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
+WHERE (',' || SUBSTR(ids, 2, LENGTH(ids) - 2) || ','
+      LIKE '%,' || CAST(features.featureId AS TEXT) || ',%'
+         OR ids = '[' || CAST(features.featureId AS TEXT) || ']' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
 AND (FeatureChoiceIndexCrossRef.levels = 'null'
 OR  FeatureChoiceIndexCrossRef.levels IS NULL
 OR FeatureChoiceIndexCrossRef.levels LIKE '%' || spellDetails.level || '%')

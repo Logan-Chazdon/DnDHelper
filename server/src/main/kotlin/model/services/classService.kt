@@ -100,7 +100,7 @@ fun Routing.classService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             call.respondText(
                 gson.toJson(
-                    db.subclassesQueries.selectIdNameFor(
+                    db.classesQueries.selectNameAndIdBySubclass(
                         userInfo.id,
                         call.parameters["classId"]!!.toLong()
                     ).executeAsList()

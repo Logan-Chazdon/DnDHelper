@@ -63,3 +63,10 @@ SELECT * FROM features
 JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
 AND (features.owner = ClassFeatureCrossRef.owner OR features.owner IS NULL)
 WHERE ClassFeatureCrossRef.id IS :id AND (features.owner IS NULL OR features.owner IS :owner);
+
+selectNameAndIdBySubclass:
+SELECT classes.name, classes.id FROM classes
+JOIN ClassSubclassCrossRef ON classes.id IS ClassSubclassCrossRef.classId
+AND (ClassSubclassCrossRef.owner IS NULL OR ClassSubclassCrossRef.owner IS :owner)
+WHERE (classes.owner = :owner OR classes.owner IS NULL)
+AND subclassId IS :subclassId;

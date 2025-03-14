@@ -307,7 +307,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         withUserInfo {
             val value = db.characterQueries.selectBackpack(
                 owner = it.id,
-                id = call.parameters["characterId"]!!.toLong(),
+                id = call.parameters["id"]!!.toLong(),
             ).executeAsOne()
             call.respondText(gson.toJson(value))
         }

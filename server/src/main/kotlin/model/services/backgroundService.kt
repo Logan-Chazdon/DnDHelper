@@ -35,7 +35,7 @@ fun Routing.backgroundService(db: Database, httpClient: HttpClient) {
 
     get("background/backgroundFeatures") {
         withUserInfo { userInfo: UserInfo ->
-            val id = call.parameters["backgroundId"]!!.toLong()
+            val id = call.parameters["id"]!!.toLong()
             val data = db.backgroundFeatureCrossRefQueries.selectFeaturesForBackground(
                 backgroundId = id,
                 owner = userInfo.id

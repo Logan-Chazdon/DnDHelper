@@ -596,7 +596,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo: UserInfo ->
             val body = JSONObject(call.receiveText())
             db.characterQueries.updateSpellSlots(
-                spellSlots = jsonListAdapter.decode(body.getString("spellSlots")),
+                spellSlots = jsonListAdapter.decode(body.getJSONArray("spellSlots").toString()),
                 id = body.getLong("id"),
                 owner = userInfo.id
             )

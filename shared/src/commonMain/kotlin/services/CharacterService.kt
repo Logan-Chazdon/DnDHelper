@@ -9,7 +9,6 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.add
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
@@ -93,7 +92,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
                         send(myMessage)
                     }
                     if (othersMessage?.readText() != "received") {
-                        val listToEmit = Json.decodeFromString<List<CharacterEntity>>(othersMessage!!.readText()).map {
+                        val listToEmit = format.decodeFromString<List<CharacterEntity>>(othersMessage!!.readText()).map {
                             Character(it.name, id = it.id)
                         }
                         emit(listToEmit)
@@ -168,7 +167,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     suspend fun insertSpellSlots(spellSlots: List<Resource>, id: Int) {
         postTo(Paths.InsertSpellSlots.path) {
             putJsonArray("spellSlots") {
-                spellSlots.forEach { add(Json.encodeToString(it)) }
+                spellSlots.forEach { add(format.encodeToString(it)) }
             }
             put("id", id)
         }
@@ -253,14 +252,14 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getClassFeatures(classId: Int, maxLevel: Int): MutableList<Feature> {
-        return Json.decodeFromString(getFrom(Paths.ClassFeatures.path) {
+        return format.decodeFromString(getFrom(Paths.ClassFeatures.path) {
             append("classId", classId.toString())
             append("maxLevel", maxLevel.toString())
         }.bodyAsText())
     }
 
     suspend fun getPactMagicSpells(characterId: Int, classId: Int): MutableList<Spell> {
-        return Json.decodeFromString(getFrom(Paths.PactMagicSpells.path) {
+        return format.decodeFromString(getFrom(Paths.PactMagicSpells.path) {
             append("characterId", characterId.toString())
             append("classId", classId.toString())
         }.bodyAsText())
@@ -274,7 +273,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class> {
-        return Json.decodeFromString(getFrom(Paths.CharacterClasses.path) {
+        return format.decodeFromString(getFrom(Paths.CharacterClasses.path) {
             append("characterId", characterId.toString())
         }.bodyAsText())
     }
@@ -286,7 +285,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature> {
-        return Json.decodeFromString(getFrom(Paths.FeatureChoiceChosen.path) {
+        return format.decodeFromString(getFrom(Paths.FeatureChoiceChosen.path) {
                append("choiceId", choiceId.toString())
                append("characterId", characterId.toString())
         }.bodyAsText())
@@ -300,9 +299,9 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getAllSpellsByList(id: Int, classIdsByName: List<Int>): Map<Spell, Boolean?> {
-        return Json.decodeFromString(getFrom(Paths.AllSpellsByList.path) {
+        return format.decodeFromString(getFrom(Paths.AllSpellsByList.path) {
             append("id", id.toString())
-            append("classIds", Json.encodeToString(classIdsByName))
+            append("classIds", format.encodeToString(classIdsByName))
         }.bodyAsText())
     }
 
@@ -321,41 +320,41 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getCharacterBackPack(id: Int): Backpack {
-        return Json.decodeFromString(getFrom(Paths.Backpack.path) {
+        return format.decodeFromString(getFrom(Paths.Backpack.path) {
             append("id", id.toString())
         }.bodyAsText())
     }
 
     suspend fun getFeatChoiceChosen(characterId: Int, choiceId: Int): List<Feat> {
-        return Json.decodeFromString(getFrom(Paths.FeatChoiceChosen.path) {
+        return format.decodeFromString(getFrom(Paths.FeatChoiceChosen.path) {
             append("characterId", characterId.toString())
             append("choiceId", choiceId.toString())
         }.bodyAsText())
     }
 
     suspend fun getClassFeats(classId: Int, characterId: Int): MutableList<Feat> {
-        return Json.decodeFromString(getFrom(Paths.ClassFeats.path) {
+        return format.decodeFromString(getFrom(Paths.ClassFeats.path) {
             append("classId", classId.toString())
             append("characterId", characterId.toString())
         }.bodyAsText())
     }
 
     suspend fun getSpellCastingSpellsForClass(characterId: Int, classId: Int): Map<Spell, Boolean?> {
-        return Json.decodeFromString(getFrom(Paths.SpellCastingForClass.path) {
+        return format.decodeFromString(getFrom(Paths.SpellCastingForClass.path) {
             append("classId", classId.toString())
             append("characterId", characterId.toString())
         }.bodyAsText())
     }
 
     suspend fun getSpellCastingSpellsForSubclass(characterId: Int, subclassId: Int): Map<Spell, Boolean?> {
-        return Json.decodeFromString(getFrom(Paths.SpellCastingForSubclass.path) {
+        return format.decodeFromString(getFrom(Paths.SpellCastingForSubclass.path) {
             append("subclassId", subclassId.toString())
             append("characterId", characterId.toString())
         }.bodyAsText())
     }
 
     suspend fun getClassChoiceData(characterId: Int, classId: Int): ClassChoiceEntity {
-        return Json.decodeFromString(getFrom(Paths.ClassChoice.path) {
+        return format.decodeFromString(getFrom(Paths.ClassChoice.path) {
             append("classId", classId.toString())
             append("characterId", characterId.toString())
         }.bodyAsText())
@@ -380,9 +379,9 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         postTo(Paths.AddSubraceChoice.path) {
             put("id", subraceChoiceEntity.characterId)
             put("subraceId", subraceChoiceEntity.subraceId)
-            put("languageChoice", Json.encodeToString(subraceChoiceEntity.languageChoice))
-            put("abilityBonusChoice", Json.encodeToString(subraceChoiceEntity.abilityBonusChoice))
-            put("abilityBonusOverrides", Json.encodeToString(subraceChoiceEntity.abilityBonusOverrides))
+            put("languageChoice", format.encodeToString(subraceChoiceEntity.languageChoice))
+            put("abilityBonusChoice", format.encodeToString(subraceChoiceEntity.abilityBonusChoice))
+            put("abilityBonusOverrides", format.encodeToString(subraceChoiceEntity.abilityBonusOverrides))
         }
     }
 
@@ -435,8 +434,8 @@ class CharacterService(client: HttpClient) : Service(client = client) {
             put("level", classChoiceEntity.level)
             put("tookGold", classChoiceEntity.tookGold)
             put("totalNumOnGoldDie", classChoiceEntity.totalNumOnGoldDie)
-            put("abilityImprovementsGranted", Json.encodeToString(classChoiceEntity.abilityImprovementsGranted))
-            put("proficiencyChoicesByString", Json.encodeToString(classChoiceEntity.proficiencyChoicesByString))
+            put("abilityImprovementsGranted", format.encodeToString(classChoiceEntity.abilityImprovementsGranted))
+            put("proficiencyChoicesByString", format.encodeToString(classChoiceEntity.proficiencyChoicesByString))
         }
     }
 
@@ -452,7 +451,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         postTo(Paths.InsertBackgroundChoice.path) {
             put("characterId", backgroundChoiceEntity.characterId)
             put("backgroundId", backgroundChoiceEntity.backgroundId)
-            put("languageChoices", Json.encodeToString(backgroundChoiceEntity.languageChoices))
+            put("languageChoices", format.encodeToString(backgroundChoiceEntity.languageChoices))
         }
     }
 
@@ -460,10 +459,10 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         postTo(Paths.AddRaceChoice.path) {
             put("id", raceChoiceEntity.characterId)
             put("raceId", raceChoiceEntity.raceId)
-            put("languageChoice", Json.encodeToString(raceChoiceEntity.languageChoice))
-            put("proficiencyChoice", Json.encodeToString(raceChoiceEntity.proficiencyChoice))
-            put("abilityBonusChoice", Json.encodeToString(raceChoiceEntity.abilityBonusChoice))
-            put("abilityBonusOverrides", Json.encodeToString(raceChoiceEntity.abilityBonusOverrides))
+            put("languageChoice", format.encodeToString(raceChoiceEntity.languageChoice))
+            put("proficiencyChoice", format.encodeToString(raceChoiceEntity.proficiencyChoice))
+            put("abilityBonusChoice", format.encodeToString(raceChoiceEntity.abilityBonusChoice))
+            put("abilityBonusOverrides", format.encodeToString(raceChoiceEntity.abilityBonusOverrides))
         }
     }
 
@@ -475,21 +474,21 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getRaceChoiceData(raceId: Int, charId: Int): RaceChoiceEntity {
-        return Json.decodeFromString(getFrom(Paths.RaceChoiceData.path) {
+        return format.decodeFromString(getFrom(Paths.RaceChoiceData.path) {
             append("raceId", raceId.toString())
             append("characterId", charId.toString())
         }.bodyAsText())
     }
 
     suspend fun getSubraceChoiceData(subraceId: Int, charId: Int): SubraceChoiceEntity {
-        return Json.decodeFromString(getFrom(Paths.SubraceChoiceData.path) {
+        return format.decodeFromString(getFrom(Paths.SubraceChoiceData.path) {
             append("subraceId", subraceId.toString())
             append("characterId", charId.toString())
         }.bodyAsText())
     }
 
     suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity {
-        return Json.decodeFromString(getFrom(Paths.BackgroundChoice.path) {
+        return format.decodeFromString(getFrom(Paths.BackgroundChoice.path) {
             append("characterId", charId.toString())
         }.bodyAsText())
     }

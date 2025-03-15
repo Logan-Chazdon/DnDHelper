@@ -724,6 +724,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                     owner = it.id
                 )
             )
+            call.respond(body.getLong("characterId"))
         }
     }
 

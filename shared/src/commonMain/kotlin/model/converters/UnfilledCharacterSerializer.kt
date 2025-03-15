@@ -7,8 +7,8 @@ import model.Proficiency
 import model.Resource
 
 object UnfilledCharacterSerializer {
-    fun deserialize(input: String): Character {
-        val json = Json.parseToJsonElement(input).jsonObject
+    fun deserialize(input: String, format: Json): Character {
+        val json = format.parseToJsonElement(input).jsonObject
         fun getString(key: String): String {
             println(key)
             return json[key]?.jsonPrimitive?.content ?: ""
@@ -36,17 +36,17 @@ object UnfilledCharacterSerializer {
 
         fun getProfs(key: String): MutableList<Proficiency> {
             println(key)
-            return getArray(key)?.map { Json.decodeFromJsonElement<Proficiency>(it) }?.toMutableList()
+            return getArray(key)?.map { format.decodeFromJsonElement<Proficiency>(it) }?.toMutableList()
                 ?: mutableListOf()
         }
 
         fun getLangs(key: String): MutableList<Language> {
-            return getArray(key)?.map { Json.decodeFromJsonElement<Language>(it) }?.toMutableList()
+            return getArray(key)?.map { format.decodeFromJsonElement<Language>(it) }?.toMutableList()
                 ?: mutableListOf()
         }
 
         fun getSlots(key: String): MutableList<Resource> {
-            return getArray(key)?.map { Json.decodeFromJsonElement<Resource>(it) }?.toMutableList()
+            return getArray(key)?.map { format.decodeFromJsonElement<Resource>(it) }?.toMutableList()
                 ?: mutableListOf()
         }
 
@@ -69,8 +69,8 @@ object UnfilledCharacterSerializer {
                 resistances = getStringList("resistances"),
                 id = getInt("id"),
                 statGenerationMethodIndex = getInt("statGenerationMethodIndex"),
-                baseStats = Json.decodeFromString(getJsonObject("baseStats")),
-                backpack = Json.decodeFromString(getJsonObject("backpack")),
+                baseStats = format.decodeFromString(getJsonObject("baseStats")),
+                backpack = format.decodeFromString(getJsonObject("backpack")),
                 inspiration = getBool("inspiration"),
                 positiveDeathSaves = getInt("positiveDeathSaves"),
                 negativeDeathSaves = getInt("negativeDeathSaves"),
@@ -80,11 +80,11 @@ object UnfilledCharacterSerializer {
             ).apply {
                 println(json.keys)
                 race =  if(json.keys.contains("race")) {
-                    Json.decodeFromString(getString("race"))
+                    format.decodeFromString(getString("race"))
                 } else null
 
                 background = if(json.keys.contains("background"))
-                    Json.decodeFromString(getString("background"))
+                    format.decodeFromString(getString("background"))
                 else null
             }
         }catch(e: Exception) {

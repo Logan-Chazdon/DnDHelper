@@ -1,6 +1,7 @@
 package services
 
 import io.ktor.client.*
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
@@ -81,8 +82,17 @@ class CharacterServiceIntegrationTest {
 
 
     @Test
-    fun getAllCharacters() {
+    fun getAllCharacters() = runTest {
+        users.forEach { user ->
+            user.characters.forEach { entity ->
+                user.characterService.postCharacter(entity.entity)
+            }
 
+            val characters = user.characterService.getAllCharacters().drop(1)
+            assert(
+                characters.first().map { it.id }.containsAll(characters.first().map { it.id })
+            )
+        }
     }
 
     @Test

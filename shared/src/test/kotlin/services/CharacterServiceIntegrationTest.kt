@@ -6,10 +6,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import model.Backpack
-import model.Character
-import model.ClassEntity
-import model.Item
+import model.*
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.util.*
@@ -38,7 +35,15 @@ class CharacterServiceIntegrationTest {
                         id = 1,
                         backpack = Backpack().apply {
                             addItem(Item())
-                        }
+                        },
+                        spellSlots = listOf(
+                            Resource(
+                                name = "Level one",
+                                currentAmount = 1,
+                                maxAmountType = "1",
+                                rechargeAmountType = "Max"
+                            )
+                        )
                     ),
                 ),
                 CharacterData(
@@ -160,7 +165,15 @@ class CharacterServiceIntegrationTest {
     }
 
     @Test
-    fun insertSpellSlots() {
+    fun insertSpellSlots() = runTest {
+        users.forEach { user ->
+            user.characters.forEach { entity ->
+                user.characterService.insertSpellSlots(entity.entity.spellSlots, entity.entity.id)
+
+                val char = user.characterService.findCharacterWithoutListChoices(entity.entity.id)
+                assertEquals(char.spellSlots, entity.entity.spellSlots)
+            }
+        }
     }
 
     @Test

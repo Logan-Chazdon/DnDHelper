@@ -9,7 +9,7 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.add
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import model.*
@@ -84,7 +84,12 @@ class CharacterService(client: HttpClient) : Service(client = client) {
      */
     fun getAllCharacters(): Flow<List<Character>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.AllCharacters.path) {
+            client.webSocket(
+                method = HttpMethod.Get,
+                host = apiUrl,
+                port = targetPort,
+                path = Paths.AllCharacters.path
+            ) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     val myMessage = "test"
@@ -92,9 +97,10 @@ class CharacterService(client: HttpClient) : Service(client = client) {
                         send(myMessage)
                     }
                     if (othersMessage?.readText() != "received") {
-                        val listToEmit = format.decodeFromString<List<CharacterEntity>>(othersMessage!!.readText()).map {
-                            Character(it.name, id = it.id)
-                        }
+                        val listToEmit =
+                            format.decodeFromString<List<CharacterEntity>>(othersMessage!!.readText()).map {
+                                Character(it.name, id = it.id)
+                            }
                         emit(listToEmit)
                     }
                 }
@@ -127,14 +133,21 @@ class CharacterService(client: HttpClient) : Service(client = client) {
 
     fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveCharacter.path) {
+            client.webSocket(
+                method = HttpMethod.Get,
+                host = apiUrl,
+                port = targetPort,
+                path = Paths.LiveCharacter.path
+            ) {
                 while (true) {
                     send(Frame.Text(id.toString()))
                     val othersMessage = incoming.receive() as? Frame.Text
                     println(othersMessage?.readText())
                     if (othersMessage?.readText() != "received") {
                         val character = UnfilledCharacterSerializer.deserialize(
-                            othersMessage!!.readText())
+                            othersMessage!!.readText(),
+                            format
+                        )
                         emit(character)
                     }
                 }
@@ -167,7 +180,9 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     suspend fun insertSpellSlots(spellSlots: List<Resource>, id: Int) {
         postTo(Paths.InsertSpellSlots.path) {
             putJsonArray("spellSlots") {
-                spellSlots.forEach { add(format.encodeToString(it)) }
+                spellSlots.forEach {
+                    add(format.encodeToJsonElement(it))
+                }
             }
             put("id", id)
         }
@@ -180,7 +195,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         }
     }
 
-    suspend fun getNumOfPreparedSpells(classId: Int, characterId: Int) : Int{
+    suspend fun getNumOfPreparedSpells(classId: Int, characterId: Int): Int {
         return getFrom(Paths.GetNumPreped.path) {
             append("classId", classId.toString())
             append("characterId", characterId.toString())
@@ -281,13 +296,13 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     suspend fun findCharacterWithoutListChoices(id: Int): Character {
         return UnfilledCharacterSerializer.deserialize(getFrom(Paths.UnfilledCharacter.path) {
             append("characterId", id.toString())
-        }.bodyAsText())
+        }.bodyAsText(), format)
     }
 
     suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature> {
         return format.decodeFromString(getFrom(Paths.FeatureChoiceChosen.path) {
-               append("choiceId", choiceId.toString())
-               append("characterId", characterId.toString())
+            append("choiceId", choiceId.toString())
+            append("characterId", characterId.toString())
         }.bodyAsText())
     }
 
@@ -410,7 +425,12 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         }
     }
 
-    suspend fun insertSubClassSpellCastingCrossRef(subclassId: Int, spellId: Int, characterId: Int, prepared: Boolean?) {
+    suspend fun insertSubClassSpellCastingCrossRef(
+        subclassId: Int,
+        spellId: Int,
+        characterId: Int,
+        prepared: Boolean?
+    ) {
         postTo(Paths.AddSubclassSpell.path) {
             put("subclassId", subclassId)
             put("spellId", spellId)

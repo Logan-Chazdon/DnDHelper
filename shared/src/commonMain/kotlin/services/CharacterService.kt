@@ -315,7 +315,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
 
     suspend fun insertCharacterBackPack(backpack: Backpack, id: Int) {
         postTo(Paths.UpdateBackpack.path) {
-            put("backpack", Json.encodeToString(backpack))
+            put("backpack", format.encodeToString(backpack))
             put("id", id.toString())
         }
     }

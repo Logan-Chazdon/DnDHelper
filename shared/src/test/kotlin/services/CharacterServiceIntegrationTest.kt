@@ -5,8 +5,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import model.Backpack
 import model.Character
 import model.ClassEntity
+import model.Item
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.util.*
@@ -33,12 +35,16 @@ class CharacterServiceIntegrationTest {
                     Character(
                         name = "User one first character",
                         id = 1,
+                        backpack = Backpack().apply {
+                            addItem(Item())
+                        }
                     ),
                 ),
                 CharacterData(
                     Character(
                         name = "User one second character",
                         id = 2,
+                        backpack = Backpack()
                     ),
                 )
             )
@@ -50,12 +56,14 @@ class CharacterServiceIntegrationTest {
                     Character(
                         name = "User two first character",
                         id = 1,
+                        backpack = Backpack()
                     ),
                 ),
                 CharacterData(
                     Character(
                         name = "User two second character",
                         id = 2,
+                        backpack = Backpack()
                     ),
                 )
             )
@@ -94,7 +102,7 @@ class CharacterServiceIntegrationTest {
 
             user.characterService.deleteCharacter(3)
 
-            val userChars =  user.characterService.getAllCharacters().take(2).first{ it.isNotEmpty() }
+            val userChars = user.characterService.getAllCharacters().take(2).first { it.isNotEmpty() }
             assert(userChars.none { it.id == 3 })
         }
     }
@@ -163,7 +171,8 @@ class CharacterServiceIntegrationTest {
                 )
 
                 //Get the classes
-                val classes = user.characterService.getCharactersClasses(characterId = char.entity.id).filter { it.value.id == newClassId}
+                val classes = user.characterService.getCharactersClasses(characterId = char.entity.id)
+                    .filter { it.value.id == newClassId }
 
                 //Assert that the class is not present.
                 assert(classes.isEmpty())
@@ -360,12 +369,17 @@ class CharacterServiceIntegrationTest {
     }
 
     @Test
-    fun insertCharacterBackPack() {
+    fun insertAndGetCharacterBackPack() = runTest {
+        users.forEach { user ->
+            user.characters.forEach { entity ->
+                user.characterService.insertCharacterBackPack(entity.entity.backpack, entity.entity.id)
+
+                val backpack = user.characterService.getCharacterBackPack(entity.entity.id)
+                assert(backpack.allItems.map { it.name } == entity.entity.backpack.allItems.map { it.name })
+            }
+        }
     }
 
-    @Test
-    fun getCharacterBackPack() {
-    }
 
     @Test
     fun getFeatChoiceChosen() {

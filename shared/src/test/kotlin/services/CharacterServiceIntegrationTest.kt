@@ -1,7 +1,6 @@
 package services
 
 import io.ktor.client.*
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
@@ -45,6 +44,23 @@ class CharacterServiceIntegrationTest {
                             )
                         )
                     ),
+                    classes = listOf(
+                        Class(
+                            id = 50000,
+                            name = "Test class",
+                            subclassLevel = 1,
+                            level = 1,
+                            startingGoldD4s = 4,
+                            isBaseClass = true,
+                            levelPath = mutableListOf(
+                                Feature(
+                                    featureId = 6000,
+                                    name = "Class feature",
+                                    description = ""
+                                )
+                            )
+                        )
+                    )
                 ),
                 CharacterData(
                     Character(
@@ -93,7 +109,7 @@ class CharacterServiceIntegrationTest {
                 user.characterService.postCharacter(entity.entity)
             }
 
-            val characters = user.characterService.getAllCharacters().drop(1)
+            val characters = user.characterService.getAllCharacters()
             assert(
                 characters.first().map { it.id }.containsAll(characters.first().map { it.id })
             )
@@ -356,7 +372,35 @@ class CharacterServiceIntegrationTest {
     }
 
     @Test
-    fun getClassFeatures() {
+    fun getClassFeatures() = runTest {
+        users.forEach { user ->
+            user.characters.forEach { entity ->
+                entity.classes.forEach { clazz ->
+                    user.classService.insertClass(clazz)
+
+                    user.characterService.insertCharacterClassCrossRef(
+                        characterId = entity.entity.id,
+                        classId = clazz.id
+                    )
+
+                    clazz as Class
+                    clazz.levelPath?.forEach { feature ->
+                        user.featureService.insertFeature(feature)
+
+                        user.classService.insertClassFeatureCrossRef(
+                            featureId = feature.featureId,
+                            id = clazz.id
+                        )
+                    }
+
+
+                    user.characterService.getClassFeatures(
+                        classId = clazz.id,
+                        maxLevel = 20
+                    )
+                }
+            }
+        }
     }
 
     @Test

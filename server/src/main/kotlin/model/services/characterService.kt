@@ -18,9 +18,8 @@ import kotlinx.serialization.json.Json
 import org.json.JSONArray
 import org.json.JSONObject
 
-private fun serializeUnfilledCharacter(query: Query<CharacterView>): JSONObject {
+private fun serializeUnfilledCharacter(sqlResponse: CharacterView): JSONObject {
     val character = JSONObject()
-    val sqlResponse = query.executeAsOne()
     val arrayConverter = fun(array: JsonArray) : JSONArray {
         return JSONArray(array.toString())
     }
@@ -403,26 +402,19 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
     get("character/unfilledCharacter") {
         withUserInfo {
             val value = db.characterViewQueries.getById(id = call.parameters["characterId"]!!.toLong(), owner = it.id)
-            call.respondText(serializeUnfilledCharacter(value).toString())
+            call.respondText(serializeUnfilledCharacter(value.executeAsOne()).toString())
         }
     }
 
 
     webSocket("character/getLiveCharacters") {
-        send("[]")
         getSession(call)?.let { session ->
             val userInfo = getUserInfo(httpClient, session, call)
-            db.characterQueries.selectAllFor(userInfo.id).asFlow().collect { x ->
-                send(gson.toJson(x.executeAsList()).clean())
-            }
-            for (frame in incoming) {
-                frame as? Frame.Text ?: continue
-                val receivedText = frame.readText()
-                if (receivedText.equals("bye", ignoreCase = true)) {
-                    close(CloseReason(CloseReason.Codes.NORMAL, "Client said BYE"))
-                } else {
-                    send(Frame.Text("received"))
+            db.characterViewQueries.selectAllFor(userInfo.id).asFlow().collect { x ->
+                val characters = x.executeAsList().map {
+                    serializeUnfilledCharacter(it)
                 }
+                send(Frame.Text(characters.toString()))
             }
         }
     }
@@ -435,7 +427,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 val receivedText = frame.readText()
                 try {
                     db.characterViewQueries.getById(receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val character = serializeUnfilledCharacter(it)
+                        val character = serializeUnfilledCharacter(it.executeAsOne())
 
                         //Send the converted json.
                         send(Frame.Text(character.toString().clean()))

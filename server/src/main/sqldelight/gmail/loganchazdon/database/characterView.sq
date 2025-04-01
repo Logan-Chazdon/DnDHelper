@@ -52,3 +52,6 @@ LEFT JOIN background
 
 getById:
 SELECT * FROM characterView WHERE id = :id AND characterOwner = :owner;
+
+selectAllFor:
+SELECT * FROM characterView WHERE characterOwner =:owner;

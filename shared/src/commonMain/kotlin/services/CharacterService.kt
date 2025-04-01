@@ -9,6 +9,7 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
@@ -91,18 +92,19 @@ class CharacterService(client: HttpClient) : Service(client = client) {
                 path = Paths.AllCharacters.path
             ) {
                 while (true) {
-                    val othersMessage = incoming.receive() as? Frame.Text
-                    val myMessage = "test"
-                    if (myMessage != null) {
-                        send(myMessage)
+                    val textData = incoming.receive() as Frame.Text
+                    val jsonList = format.decodeFromString<JsonArray>(textData.readText())
+                    val characters = mutableListOf<Character>()
+
+                    jsonList.forEach {
+                        characters.add(
+                            UnfilledCharacterSerializer.deserialize(
+                                it.toString(), format
+                            )
+                        )
                     }
-                    if (othersMessage?.readText() != "received") {
-                        val listToEmit =
-                            format.decodeFromString<List<CharacterEntity>>(othersMessage!!.readText()).map {
-                                Character(it.name, id = it.id)
-                            }
-                        emit(listToEmit)
-                    }
+
+                    emit(characters)
                 }
             }
         }

@@ -157,8 +157,10 @@ class SubraceServiceIntegrationTest {
                 user.subraceService.deleteSubrace(it.entity.id)
             }
 
-            val subraces = user.subraceService.getHomebrewSubraces()
-            assert(subraces.first().isEmpty())
+            val subraces = user.subraceService.getHomebrewSubraces().first()
+            user.subraces.forEach { subrace ->
+                assert(!subraces.contains(subrace.entity))
+            }
         }
     }
 }

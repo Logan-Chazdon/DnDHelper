@@ -178,7 +178,11 @@ class SubclassServiceIntegrationTest {
             }
 
             val subclasses = user.subclassService.getHomebrewSubclasses().first()
-            assert(subclasses.size == 2)
+            user.subclasses.forEach { x ->
+                assert(subclasses.firstOrNull {
+                    it.subclassId == x.entity.subclassId && it.name == x.entity.name
+                } != null)
+            }
         }
     }
 

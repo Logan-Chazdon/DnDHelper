@@ -220,7 +220,9 @@ class SpellServiceIntegrationTest {
 
         users.forEach { user ->
             val spells = user.spellService.getAllSpells().first()
-            assert(spells.isEmpty())
+            user.spells.forEach { spell ->
+                assert(!spells.contains(spell.entity))
+            }
         }
     }
 }

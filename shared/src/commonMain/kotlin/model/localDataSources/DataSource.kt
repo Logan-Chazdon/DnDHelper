@@ -3,7 +3,6 @@ package model.localDataSources
 import kotlinx.coroutines.flow.Flow
 import model.*
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 expect interface DataSource {
     fun getItems(): Flow<List<ItemInterface>>
     fun getAbilitiesToSkills(): Flow<Map<String, List<String>>>

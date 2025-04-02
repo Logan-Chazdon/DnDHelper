@@ -254,7 +254,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 owner = it.id,
                 classId = call.parameters["classId"]!!.toLong(),
                 maxLevel = call.parameters["maxLevel"]!!.toLong()
-            ).executeAsOne()
+            ).executeAsList()
             call.respondText(gson.toJson(value))
         }
     }

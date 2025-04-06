@@ -17,7 +17,7 @@ open class ClassEntity(
     var pactMagic: PactMagic? = null,
     var startingGoldD4s: Int = 1,
     var startingGoldMultiplier : Int = 10,
-    open var id: Int = 0,
+    var id: Int = 0,
     @Serializable(with = BooleanAsIntSerializer::class)
     var isHomebrew : Boolean = false
 )

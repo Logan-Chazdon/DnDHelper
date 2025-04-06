@@ -181,7 +181,7 @@ WHERE ClassFeatCrossRef.classId IS :classId AND ClassFeatCrossRef.characterId IS
 
 selectSpellCastingForClass:
 SELECT * FROM spells
-JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spellId AND CharacterClassSpellCrossRef.owner IS owner
+JOIN CharacterClassSpellCrossRef ON spells.id IS CharacterClassSpellCrossRef.spellId AND CharacterClassSpellCrossRef.owner IS :owner
 WHERE characterId IS :characterId AND classId IS :classId AND (spells.owner IS :owner OR spells.owner IS NULL);
 
 selectSpellCastingForSubclass:

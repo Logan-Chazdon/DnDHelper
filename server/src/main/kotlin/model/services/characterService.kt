@@ -18,14 +18,15 @@ import kotlinx.serialization.json.Json
 import org.json.JSONArray
 import org.json.JSONObject
 
+private val arrayConverter = fun(array: JsonArray) : JSONArray {
+    return JSONArray(array.toString())
+}
+private val objectConverter = fun(obj: JsonObject) : JSONObject {
+    return JSONObject(obj.toString())
+}
+
 private fun serializeUnfilledCharacter(sqlResponse: CharacterView): JSONObject {
     val character = JSONObject()
-    val arrayConverter = fun(array: JsonArray) : JSONArray {
-        return JSONArray(array.toString())
-    }
-    val objectConverter = fun(obj: JsonObject) : JSONObject {
-        return JSONObject(obj.toString())
-    }
 
     //Add character data.
     character.put("id", sqlResponse.id)
@@ -116,24 +117,23 @@ private fun serializeCharacterClasses(query: Query<SelectClasses>) : JSONObject 
 
 
         clazz.put("name", data.name)
-        clazz.put("classId", data.classId)
+        clazz.put("id", data.classId)
         clazz.put("isBaseClass", data.isBaseClass)
-        clazz.put("abilityImprovementsGranted", data.abilityImprovementsGranted)
-        clazz.put("equipment", data.equipment)
-        clazz.put("equipmentChoices", data.equipmentChoices)
+        clazz.put("abilityImprovementsGranted", JSONArray(data.abilityImprovementsGranted))
+        clazz.put("equipment", arrayConverter(data.equipment))
+        clazz.put("equipmentChoices", arrayConverter(data.equipmentChoices))
         clazz.put("hitDie", data.hitDie)
         clazz.put("isHomebrew", data.isHomebrew)
         clazz.put("level", data.level)
-        clazz.put("proficiencies", data.proficiencies)
-        clazz.put("proficiencyChoices", data.proficiencyChoices)
+        clazz.put("proficiencies", arrayConverter(data.proficiencies))
         clazz.put("proficiencyChoicesByString", data.proficiencyChoicesByString)
-        clazz.put("spellCasting", data.spellCasting)
+        if(data.spellCasting != "null") clazz.put("spellCasting", JSONObject(data.spellCasting))
 
         if(data.subclassId != null) {
             val subclass = JSONObject()
             subclass.put("subclassId", data.subclassId)
             subclass.put("isHomebrew", data.isHomebrew)
-            subclass.put("spellCasting", data.spellCasting)
+            if(data.subclass_spell_casting != "null") subclass.put("spellCasting", JSONObject(data.subclass_spell_casting))
             subclass.put("spellAreFree", data.spellAreFree)
             subclass.put("name", data.name)
 
@@ -341,7 +341,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 owner = it.id,
                 characterId = call.parameters["characterId"]!!.toLong(),
                 classId = call.parameters["classId"]!!.toLong(),
-            ).executeAsOne()
+            ).executeAsOneOrNull()
             call.respondText(gson.toJson(value))
         }
     }
@@ -740,11 +740,11 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 classId = body.getLong("classId"),
                 owner = it.id,
                 level = body.getLong("level"),
-                isBaseClass = if (body.getBoolean("isBaseClass")) 1 else 0,
+                isBaseClass = body.getBoolean("isBaseClass"),
                 totalNumOnGoldDie = body.getLong("totalNumOnGoldDie"),
-                abilityImprovementsGranted = body.getString("abilityImprovementsGranted"),
-                tookGold = if (body.getBoolean("tookGold")) 1 else 0,
-                proficiencyChoicesByString = body.getString("proficiencyChoicesByString")
+                abilityImprovementsGranted = jsonListAdapter.decode((body.getString("abilityImprovementsGranted"))),
+                tookGold = body.getBoolean("tookGold"),
+                proficiencyChoicesByString = jsonListAdapter.decode(body.getString("proficiencyChoicesByString"))
             )
         }
     }

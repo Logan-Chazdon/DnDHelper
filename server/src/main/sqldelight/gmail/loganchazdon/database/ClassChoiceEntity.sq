@@ -1,12 +1,16 @@
+import com.google.gson.JsonArray;
+import kotlin.Boolean;
+
+
 CREATE TABLE IF NOT EXISTS ClassChoiceEntity (
     `characterId` INTEGER NOT NULL,
     `classId` INTEGER NOT NULL,
     `level` INTEGER NOT NULL,
-    `isBaseClass` INTEGER NOT NULL,
+    `isBaseClass` INTEGER AS Boolean NOT NULL,
     `totalNumOnGoldDie` INTEGER,
-    `abilityImprovementsGranted` TEXT NOT NULL,
-    `tookGold` INTEGER NOT NULL,
-    `proficiencyChoicesByString` TEXT NOT NULL,
+    `abilityImprovementsGranted` TEXT AS JsonArray NOT NULL,
+    `tookGold` INTEGER AS Boolean NOT NULL,
+    `proficiencyChoicesByString` TEXT AS JsonArray NOT NULL,
     owner TEXT,
 
     PRIMARY KEY(`characterId`, `classId`, owner),

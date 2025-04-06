@@ -126,6 +126,10 @@ fun Application.configureDatabases() {
         FeatureChoiceEntityAdapter = FeatureChoiceEntity.Adapter(
             chooseAdapter = jsonObjectAdapter
         ),
+        ClassChoiceEntityAdapter = ClassChoiceEntity.Adapter(
+            abilityImprovementsGrantedAdapter = jsonListAdapter,
+            proficiencyChoicesByStringAdapter = jsonListAdapter,
+        )
     )
 
     routing {

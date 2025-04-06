@@ -290,9 +290,10 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class> {
-        return format.decodeFromString(getFrom(Paths.CharacterClasses.path) {
+        val response = getFrom(Paths.CharacterClasses.path) {
             append("characterId", characterId.toString())
-        }.bodyAsText())
+        }.bodyAsText()
+        return format.decodeFromString(response)
     }
 
     suspend fun findCharacterWithoutListChoices(id: Int): Character {
@@ -357,10 +358,13 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getSpellCastingSpellsForClass(characterId: Int, classId: Int): Map<Spell, Boolean?> {
-        return format.decodeFromString(getFrom(Paths.SpellCastingForClass.path) {
+        val serverJson = getFrom(Paths.SpellCastingForClass.path) {
             append("classId", classId.toString())
             append("characterId", characterId.toString())
-        }.bodyAsText())
+        }.bodyAsText()
+
+        if(serverJson == "{}") return emptyMap()
+        return format.decodeFromString(serverJson)
     }
 
     suspend fun getSpellCastingSpellsForSubclass(characterId: Int, subclassId: Int): Map<Spell, Boolean?> {

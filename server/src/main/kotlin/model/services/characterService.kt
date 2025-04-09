@@ -384,18 +384,18 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
     //Due to constraints of sqldelight this runs several queries which is quite inefficient update this should it become possible.
     get("character/allSpellsByList") {
         withUserInfo {
-            val lists : List<Long> = gson.fromJson(call.parameters["lists"], object : TypeToken<List<Long>>() {}.type)
+            val lists : List<Long> = gson.fromJson(call.parameters["classIds"], object : TypeToken<List<Long>>() {}.type)
             val response = JSONArray()
             lists.forEach { list ->
                 val spells = db.characterQueries.selectAllSpellsByList(
                     owner = it.id,
                     list = list,
-                    id = call.parameters["characterId"]!!.toLong(),
-                ).executeAsOne()
-                response.put(gson.toJson(spells))
+                    id = call.parameters["id"]!!.toLong(),
+                ).executeAsList()
+                response.put(JSONArray(gson.toJson(spells)))
             }
 
-            call.respondText(gson.toJson(response.toString()))
+            call.respondText(response.toString())
         }
     }
 

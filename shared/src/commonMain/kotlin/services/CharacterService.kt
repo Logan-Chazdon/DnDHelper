@@ -317,10 +317,13 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     }
 
     suspend fun getAllSpellsByList(id: Int, classIdsByName: List<Int>): Map<Spell, Boolean?> {
-        return format.decodeFromString(getFrom(Paths.AllSpellsByList.path) {
+        val serverJson = getFrom(Paths.AllSpellsByList.path) {
             append("id", id.toString())
             append("classIds", format.encodeToString(classIdsByName))
-        }.bodyAsText())
+        }.bodyAsText()
+        if(serverJson == "[[]]") return emptyMap()
+        //TODO work on map serialization
+        return format.decodeFromString(serverJson)
     }
 
     suspend fun insertCharacterRaceCrossRef(id: Int, raceId: Int) {
@@ -363,7 +366,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
             append("characterId", characterId.toString())
         }.bodyAsText()
 
-        if(serverJson == "{}") return emptyMap()
+        if(serverJson == "null") return emptyMap()
         return format.decodeFromString(serverJson)
     }
 

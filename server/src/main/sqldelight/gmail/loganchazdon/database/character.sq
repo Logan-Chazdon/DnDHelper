@@ -159,7 +159,7 @@ SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND cha
 
 selectAllSpellsByList:
 SELECT * FROM spells
-JOIN ClassSpellCrossRef ON classId IS (:list) AND ClassSpellCrossRef.spellId IS spells.id AND ClassSpellCrossRef.owner IS :owner
+JOIN ClassSpellCrossRef ON ClassSpellCrossRef.classId IS (:list) AND ClassSpellCrossRef.spellId IS spells.id AND ClassSpellCrossRef.owner IS :owner
 LEFT JOIN CharacterClassSpellCrossRef ON CharacterClassSpellCrossRef.characterId = :id AND CharacterClassSpellCrossRef.spellId = spells.id
 AND (spells.owner = :owner OR spells.owner IS NULL);
 

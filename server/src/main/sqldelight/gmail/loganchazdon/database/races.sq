@@ -38,7 +38,7 @@ delete:
 DELETE FROM races WHERE owner = :owner AND raceId =: raceId;
 
 getRace:
-SELECT * FROM races WHERE owner IS :owner AND raceId IS :id;
+SELECT * FROM races WHERE (owner IS :owner OR owner IS NULL) AND raceId IS :id;
 
 insertRace:
 INSERT OR REPLACE INTO races (raceId, raceName, groundSpeed, abilityBonuses, alignment, age, size, sizeDesc, startingProficiencies, proficiencyChoices, languages, languageChoices, languageDesc, isHomebrew, abcchoose, abcfrom, abcmaxOccurrencesOfAbility, abcchosenByString, owner)

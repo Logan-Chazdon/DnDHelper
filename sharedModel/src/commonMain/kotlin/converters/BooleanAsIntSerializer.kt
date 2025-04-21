@@ -1,4 +1,4 @@
-package model.converters
+package converters
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

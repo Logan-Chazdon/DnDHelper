@@ -1,8 +1,9 @@
+import com.google.gson.JsonObject;
 import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS subclasses (
     `subclass_name` TEXT NOT NULL,
-    `subclass_spell_casting` TEXT,
+    `subclass_spell_casting` TEXT AS JsonObject,
     `subclass_isHomebrew` INTEGER NOT NULL,
     `subclassId` INTEGER  NOT NULL,
     `spellAreFree` INTEGER AS Boolean NOT NULL,

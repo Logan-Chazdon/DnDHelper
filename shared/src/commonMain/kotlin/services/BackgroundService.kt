@@ -15,7 +15,6 @@ import model.BackgroundEntity
 import model.Feature
 import model.Spell
 import model.choiceEntities.BackgroundChoiceEntity
-import services.ClassService.Paths
 
 class BackgroundService(client: HttpClient) : Service(client = client) {
     enum class Paths(val path: String) {

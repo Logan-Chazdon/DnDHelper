@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS races (
     `raceId` INTEGER NOT NULL,
     `raceName` TEXT NOT NULL,
     `groundSpeed` INTEGER NOT NULL,
-    `abilityBonuses` TEXT,
+    `abilityBonuses` TEXT AS JsonArray,
     `alignment` TEXT,
     `age` TEXT NOT NULL,
     `size` TEXT NOT NULL,

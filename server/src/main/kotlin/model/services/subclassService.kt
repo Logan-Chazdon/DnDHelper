@@ -14,11 +14,12 @@ import io.ktor.websocket.*
 import org.json.JSONArray
 import org.json.JSONObject
 
-private fun deserializeSubclass(text: String, owner: String) :  Subclasses{
+private fun deserializeSubclass(text: String, owner: String): Subclasses {
     val json = JSONObject(text)
     return Subclasses(
         subclass_name = json.getString("name"),
-        subclass_spell_casting = if(json.has("spell_casting"))json.optString("spell_casting") else null,
+        subclass_spell_casting = if (json.has("spell_casting"))
+            jsonObjectAdapter.decode(json.optString("spell_casting")) else null,
         subclass_isHomebrew = json.getLong("isHomebrew"),
         subclassId = json.getLong("subclassId"),
         spellAreFree = json.getBoolean("spellAreFree"),
@@ -26,7 +27,7 @@ private fun deserializeSubclass(text: String, owner: String) :  Subclasses{
     )
 }
 
-private fun serializeSubclass(subclass: Subclasses) : JSONObject {
+private fun serializeSubclass(subclass: Subclasses): JSONObject {
     val json = JSONObject()
     json.put("name", subclass.subclass_name)
     json.put("spellCasting", subclass.subclass_spell_casting)
@@ -37,7 +38,7 @@ private fun serializeSubclass(subclass: Subclasses) : JSONObject {
     return json
 }
 
-private fun serializeSubclassList(list: List<Subclasses>) : String {
+private fun serializeSubclassList(list: List<Subclasses>): String {
     val json = JSONArray()
     list.forEach {
         json.put(serializeSubclass(it))
@@ -118,12 +119,13 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
                 frame as? Frame.Text ?: continue
                 val receivedText = frame.readText()
                 try {
-                    db.subclassesQueries.selectByClass(classId = receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val subclasses = serializeSubclassList(it.executeAsList())
+                    db.subclassesQueries.selectByClass(classId = receivedText.toLong(), owner = userInfo.id).asFlow()
+                        .collect {
+                            val subclasses = serializeSubclassList(it.executeAsList())
 
-                        //Send the converted json.
-                        send(Frame.Text(subclasses))
-                    }
+                            //Send the converted json.
+                            send(Frame.Text(subclasses))
+                        }
                 } catch (e: NumberFormatException) {
                     send(Frame.Text("Invalid Id"))
                 }
@@ -173,12 +175,13 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
                 frame as? Frame.Text ?: continue
                 val receivedText = frame.readText()
                 try {
-                    db.subclassesQueries.selectSubclass(id = receivedText.toLong(), owner = userInfo.id).asFlow().collect {
-                        val subclass = serializeSubclass(it.executeAsOne()).toString()
+                    db.subclassesQueries.selectSubclass(id = receivedText.toLong(), owner = userInfo.id).asFlow()
+                        .collect {
+                            val subclass = serializeSubclass(it.executeAsOne()).toString()
 
-                        //Send the converted json.
-                        send(Frame.Text(subclass))
-                    }
+                            //Send the converted json.
+                            send(Frame.Text(subclass))
+                        }
                 } catch (e: NumberFormatException) {
                     send(Frame.Text("Invalid Id"))
                 }

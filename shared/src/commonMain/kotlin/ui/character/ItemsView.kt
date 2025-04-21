@@ -28,11 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import model.Armor
-import model.ItemInterface
-import model.Shield
-import model.Weapon
-import model.utils.getValueInCopper
+import model.*
 import ui.platformSpecific.getScreenWidth
 
 @ExperimentalComposeUiApi

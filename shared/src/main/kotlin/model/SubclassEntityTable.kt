@@ -3,8 +3,8 @@ package model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import converters.BooleanAsIntSerializer
 import kotlinx.serialization.Serializable
-import model.converters.BooleanAsIntSerializer
 
 @Entity(tableName = "subclasses")
 class SubclassEntityTable(

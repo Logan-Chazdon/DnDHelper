@@ -41,6 +41,7 @@ dependencies {
     implementation "io.ktor:ktor-server-netty-jvm"
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "io.ktor:ktor-server-config-yaml"
+    implementation project(':sharedModel')
     testImplementation "io.ktor:ktor-server-test-host-jvm"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
@@ -62,7 +63,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
 
     implementation('org.json:json:20231013')
-
+    implementation project(':data')
 
     //testImplementation project(':shared')
 }

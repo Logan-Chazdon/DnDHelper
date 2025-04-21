@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import model.Resource
 import model.Spell
-import model.repositories.SpellRepository
+import model.allSpellLevels
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -40,16 +40,16 @@ fun SpellCastingView(
     //Add an empty resource to spell slots for every missing slot level.
     //This will cause the lazy list to render all spells of that level.
     run {
-        val highestLevel = SpellRepository.allSpellLevels.findLast {
+        val highestLevel = allSpellLevels.findLast {
             it.second == spellSlotsOffsetForCantrips.last().name
         }?.first
 
         for(index in 1 until (highestLevel ?: 1)) {
-            if(spellSlotsOffsetForCantrips[index].name != SpellRepository.allSpellLevels[index - 1].second ) {
+            if(spellSlotsOffsetForCantrips[index].name != allSpellLevels[index - 1].second ) {
                 spellSlotsOffsetForCantrips.add(
                     index,
                     Resource(
-                        name = SpellRepository.allSpellLevels[index - 1].second,
+                        name = allSpellLevels[index - 1].second,
                         currentAmount = 0,
                         maxAmountType = "0",
                         rechargeAmountType = "")

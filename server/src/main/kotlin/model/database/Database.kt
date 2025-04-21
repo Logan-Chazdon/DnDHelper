@@ -6,6 +6,7 @@ import com.auth0.jwt.JWT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import gmail.loganchazdon.database.*
+import gmail.loganchazdon.dndhelper.model.dataSources.ServerDataSource
 import gmail.loganchazdon.dndhelper.model.services.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
@@ -18,7 +19,6 @@ import io.ktor.server.sessions.*
 import io.ktor.server.websocket.*
 
 val gsonInstance = GsonBuilder()
-    .setPrettyPrinting()
     .create()
 val Routing.gson: Gson
     get() = gsonInstance
@@ -93,8 +93,8 @@ fun Application.configureDatabases() {
             proficienciesAdapter = jsonListAdapter,
             equipmentChoicesAdapter = jsonListAdapter,
             equipmentAdapter = jsonListAdapter,
-            //spellCastingAdapter = jsonObjectAdapter,
-            //pactMagicAdapter = jsonObjectAdapter
+            spellCastingAdapter = jsonObjectAdapter,
+            pactMagicAdapter = jsonObjectAdapter
         ),
         backgroundsAdapter = Backgrounds.Adapter(
             proficienciesAdapter = jsonListAdapter,
@@ -111,17 +111,28 @@ fun Application.configureDatabases() {
         ),
         subracesAdapter = Subraces.Adapter(
             languagesAdapter = jsonListAdapter,
-            languageChoicesAdapter = jsonListAdapter
+            languageChoicesAdapter = jsonListAdapter,
+            abilityBonusesAdapter = jsonListAdapter,
+            abilityBonusChoiceAdapter = jsonObjectAdapter,
+            startingProficienciesAdapter = jsonListAdapter
         ),
         featuresAdapter = Features.Adapter(
             activationRequirementAdapter = jsonObjectAdapter,
             maxActiveAdapter = jsonObjectAdapter,
+            prerequisiteAdapter = jsonObjectAdapter,
+            acAdapter = jsonObjectAdapter,
+            speedBoostAdapter = jsonObjectAdapter,
+            infusionAdapter = jsonObjectAdapter,
+            proficienciesAdapter = jsonListAdapter,
+            expertisesAdapter = jsonListAdapter,
+            languagesAdapter = jsonListAdapter
         ),
         racesAdapter = Races.Adapter(
             startingProficienciesAdapter = jsonListAdapter,
             proficiencyChoicesAdapter = jsonListAdapter,
             languagesAdapter = jsonListAdapter,
             languageChoicesAdapter = jsonListAdapter,
+            abilityBonusesAdapter = jsonListAdapter,
         ),
         FeatureChoiceEntityAdapter = FeatureChoiceEntity.Adapter(
             chooseAdapter = jsonObjectAdapter
@@ -129,8 +140,19 @@ fun Application.configureDatabases() {
         ClassChoiceEntityAdapter = ClassChoiceEntity.Adapter(
             abilityImprovementsGrantedAdapter = jsonListAdapter,
             proficiencyChoicesByStringAdapter = jsonListAdapter,
+        ),
+        featsAdapter = Feats.Adapter(
+            abilityBonusesAdapter = jsonListAdapter,
+            abilityBonusChoiceAdapter = jsonObjectAdapter,
+            prerequisiteAdapter = jsonObjectAdapter,
+        ),
+        subclassesAdapter = Subclasses.Adapter(
+            subclass_spell_castingAdapter = jsonObjectAdapter
         )
     )
+
+
+    val dataSource = ServerDataSource(db)
 
     routing {
         authenticate("auth-oauth-google") {

@@ -12,7 +12,6 @@ import model.choiceEntities.ClassChoiceEntity
 import model.choiceEntities.RaceChoiceEntity
 import model.choiceEntities.SubraceChoiceEntity
 import model.database.daos.*
-import model.repositories.SpellRepository.Companion.allSpellLevels
 
 
 class CharacterRepository {

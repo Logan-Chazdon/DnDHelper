@@ -12,7 +12,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.put
 import model.Spell
 import model.pojos.NameAndIdPojo
-import services.CharacterService.Paths
 
 class SpellService(client: HttpClient) : Service(client = client) {
     enum class Paths(val path: String) {

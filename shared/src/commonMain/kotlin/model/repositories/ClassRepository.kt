@@ -165,7 +165,7 @@ class ClassRepository {
             val result = mutableListOf<Resource>()
             multiclassSpellSlots[levels - 1].forEachIndexed { index, i ->
                 result.add(
-                    Resource(SpellRepository.allSpellLevels[index].second, i, i.toString(), i.toString())
+                    Resource(allSpellLevels[index].second, i, i.toString(), i.toString())
                 )
             }
             return result

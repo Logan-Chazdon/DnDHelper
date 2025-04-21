@@ -1,4 +1,4 @@
-package model.converters
+package converters
 
 import kotlinx.serialization.json.*
 import model.Character

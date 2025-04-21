@@ -1,12 +1,13 @@
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import kotlin.Boolean;
 
 CREATE TABLE IF NOT EXISTS subraces (
     `id` INTEGER NOT NULL,
     `name` TEXT NOT NULL,
-    `abilityBonuses` TEXT,
-    `abilityBonusChoice` TEXT,
-    `startingProficiencies` TEXT,
+    `abilityBonuses` TEXT AS JsonArray,
+    `abilityBonusChoice` TEXT AS JsonObject,
+    `startingProficiencies` TEXT AS JsonArray,
     `languages` TEXT AS JsonArray NOT NULL,
     `languageChoices` TEXT AS JsonArray NOT NULL,
     `size` TEXT,

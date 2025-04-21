@@ -53,7 +53,7 @@ class HomebrewClassViewModel constructor(
                 }
                 pactSlots.add(
                     Resource(
-                        name = SpellRepository.allSpellLevels[level - 1].second,
+                        name = allSpellLevels[level - 1].second,
                         currentAmount = amount,
                         maxAmountType = amount.toString(),
                         rechargeAmountType = amount.toString()
@@ -355,7 +355,7 @@ class HomebrewClassViewModel constructor(
                     newClazz.pactMagic!!.pactSlots.forEach { resource ->
                         pactMagicSlots.add(
                             Pair(
-                                SpellRepository.allSpellLevels.first { it.second == resource.name }.first.toString(),
+                                allSpellLevels.first { it.second == resource.name }.first.toString(),
                                 resource.maxAmountType
                             )
                         )

@@ -99,8 +99,8 @@ private fun SpellSelectionView(
             }
         }
         if(enoughSpellsRemaining && spellCasting?.schoolRestriction != null && spell.level != 0) {
-            return spellCasting.schoolRestriction.isMet(spells.filter { it.level != 0})
-                    || spellCasting.schoolRestriction.schools.contains(spell.school)
+            return spellCasting.schoolRestriction!!.isMet(spells.filter { it.level != 0})
+                    || spellCasting.schoolRestriction!!.schools.contains(spell.school)
         }
         return enoughSpellsRemaining
     }

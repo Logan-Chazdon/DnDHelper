@@ -1,8 +1,5 @@
 package model
 
-
-
-
 open class FeatChoiceEntity(
     val name: String,
     val choose : Int,

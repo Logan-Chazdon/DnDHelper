@@ -13,7 +13,6 @@ import model.ClassEntity
 import model.Feature
 import model.Spell
 import model.pojos.NameAndIdPojo
-import services.CharacterService.Paths
 
 
 class ClassService(client: HttpClient) : Service(client = client) {

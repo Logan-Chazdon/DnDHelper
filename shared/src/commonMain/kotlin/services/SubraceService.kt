@@ -13,7 +13,6 @@ import kotlinx.serialization.json.put
 import model.Feature
 import model.Subrace
 import model.SubraceEntity
-import services.CharacterService.Paths
 
 class SubraceService(client: HttpClient) : Service(client = client) {
     enum class Paths(val path: String) {

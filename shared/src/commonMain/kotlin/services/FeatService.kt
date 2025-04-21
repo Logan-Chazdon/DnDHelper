@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import model.Feat
 import model.Feature
-import services.CharacterService.Paths
 
 class FeatService(client: HttpClient) : Service(client = client) {
 

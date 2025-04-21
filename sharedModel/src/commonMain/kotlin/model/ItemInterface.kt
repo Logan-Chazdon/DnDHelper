@@ -1,6 +1,5 @@
 package model
 
-
 interface ItemInterface {
     val type : String
     val displayName: String

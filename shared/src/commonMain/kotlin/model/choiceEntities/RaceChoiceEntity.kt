@@ -1,6 +1,7 @@
 package model.choiceEntities
 
 import kotlinx.serialization.Serializable
+import model.AbilityBonus
 
 @Serializable
 open class RaceChoiceEntity(
@@ -9,5 +10,5 @@ open class RaceChoiceEntity(
     open var abilityBonusChoice: List<String> = emptyList(),
     var proficiencyChoice: List<List<String>> = emptyList(),
     var languageChoice: List<List<String>> = emptyList(),
-    var abilityBonusOverrides: List<model.AbilityBonus>? = null
+    var abilityBonusOverrides: List<AbilityBonus>? = null
 )

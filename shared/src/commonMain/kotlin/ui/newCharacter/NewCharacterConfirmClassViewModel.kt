@@ -15,15 +15,13 @@ import model.repositories.CharacterRepository
 import model.repositories.CharacterRepository.Companion.shortStatNames
 import model.repositories.ClassRepository
 import model.repositories.FeatRepository
-import model.repositories.SpellRepository
+import model.utils.addClass
 import org.koin.android.annotation.KoinViewModel
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import ui.newCharacter.utils.getDropDownState
 import ui.newCharacter.utils.getFeatsAt
 import ui.utils.allNames
-import kotlin.collections.component1
-import kotlin.collections.component2
 import kotlin.collections.set
 
 
@@ -353,7 +351,7 @@ class NewCharacterConfirmClassViewModel constructor(
                 try {
                     val maxLevel =
                         clazz.lastOrNull()?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
-                            ?: SpellRepository.allSpellLevels.firstOrNull { pair ->
+                            ?: allSpellLevels.firstOrNull { pair ->
                                 pair.second == clazz.lastOrNull()?.pactMagic?.pactSlots?.get(
                                     level - 1
                                 )?.name

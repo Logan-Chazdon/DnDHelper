@@ -6,8 +6,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import model.Character
 import model.Resource
 import model.Spell
+import model.allSpellLevels
 import model.repositories.CharacterRepository
-import model.repositories.SpellRepository.Companion.allSpellLevels
+import model.utils.getAllSpellSlots
 import org.koin.android.annotation.KoinViewModel
 
 

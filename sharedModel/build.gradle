@@ -1,0 +1,49 @@
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform' version '2.0.20'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.20'
+}
+
+group = 'gmail.loganchazdon.dndhelper'
+version = 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+
+kotlin {
+    jvm("desktop")
+    wasmJs { }
+    js(IR) {
+        browser {
+            // Optional: Configure browser-specific settings
+        }
+        binaries.executable()
+    }
+
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
+            }
+        }
+
+        jsWasmMain {
+            dependsOn(commonMain)
+        }
+
+        jsMain {
+            dependsOn(jsWasmMain)
+        }
+
+        wasmJsMain {
+            dependsOn(jsWasmMain)
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}

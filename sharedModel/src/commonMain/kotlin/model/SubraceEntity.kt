@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 open class SubraceEntity(
-    var name : String = "Subrace",
+    var name : String = "model.Subrace",
     var abilityBonuses: List<AbilityBonus>? = null,
     var abilityBonusChoice: AbilityBonusChoice?= null,
     var startingProficiencies: List<Proficiency>?= null,

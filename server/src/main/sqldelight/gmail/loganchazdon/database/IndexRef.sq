@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS IndexRef (
 insert:
 INSERT OR REPLACE INTO IndexRef (`index`, ids, owner) VALUES (?, ?, ?);
 
+delete:
+DELETE FROM IndexRef WHERE `index` = :index AND owner IS :owner;
+
 select:
 SELECT * FROM IndexRef WHERE `index`= :index AND owner = :owner;
 

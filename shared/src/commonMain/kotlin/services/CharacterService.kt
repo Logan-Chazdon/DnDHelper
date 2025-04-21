@@ -1,5 +1,6 @@
 package services
 
+import converters.UnfilledCharacterSerializer
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
@@ -18,7 +19,6 @@ import model.choiceEntities.BackgroundChoiceEntity
 import model.choiceEntities.ClassChoiceEntity
 import model.choiceEntities.RaceChoiceEntity
 import model.choiceEntities.SubraceChoiceEntity
-import model.converters.UnfilledCharacterSerializer
 
 class CharacterService(client: HttpClient) : Service(client = client) {
     enum class Paths(val path: String) {

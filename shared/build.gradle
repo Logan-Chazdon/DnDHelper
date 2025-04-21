@@ -103,7 +103,6 @@ kotlin {
         commonMain.dependencies {
             implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
 
-
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.components.resources)
@@ -137,6 +136,7 @@ kotlin {
             implementation("io.insert-koin:koin-compose-viewmodel:$koin_version")
             implementation("io.insert-koin:koin-compose-viewmodel-navigation:$koin_version")
 
+            implementation(project(':sharedModel'))
         }
 
 
@@ -174,6 +174,7 @@ kotlin {
 
                 //Room
                 //implementation "androidx.room:room-runtime:2.6.1"
+                implementation project(':data')
             }
         }
 

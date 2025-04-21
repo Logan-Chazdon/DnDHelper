@@ -1,7 +1,6 @@
 package model
 
 import kotlinx.serialization.Serializable
-import model.utils.getValueInCopper
 
 @Serializable
 class Backpack {
@@ -124,7 +123,7 @@ class Backpack {
         for(itemInterface in items) {
             if (itemInterface != null) {
                 when (itemInterface.type) {
-                    "Currency" -> {
+                    "model.Currency" -> {
                         itemInterface as Currency
                         classCurrency[itemInterface.abbreviatedName]!!.amount += itemInterface.amount
                     }
@@ -140,7 +139,7 @@ class Backpack {
         for(itemInterface in items) {
             if (itemInterface != null) {
                 when (itemInterface.type) {
-                    "Currency" -> {
+                    "model.Currency" -> {
                         itemInterface as Currency
                         backgroundCurrency[itemInterface.abbreviatedName]!!.amount += itemInterface.amount
                     }

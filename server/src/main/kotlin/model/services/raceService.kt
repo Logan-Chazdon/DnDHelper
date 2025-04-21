@@ -6,6 +6,7 @@ import gmail.loganchazdon.database.Races
 import gmail.loganchazdon.dndhelper.model.database.*
 import io.ktor.client.*
 import io.ktor.http.*
+import io.ktor.http.cio.internals.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -150,9 +151,9 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
             val userInfo = getUserInfo(httpClient, session, call)
             for (frame in incoming) {
                 frame as? Frame.Text ?: continue
-                val receivedText = frame.readText()
+                val receivedText: String = frame.readText()
                 try {
-                    db.racesQueries.getRace(id= receivedText.toLong(), owner = userInfo.id).asFlow().collect {
+                    db.racesQueries.getRace(id= receivedText.parseDecLong(), owner = userInfo.id).asFlow().collect {
                         //Send the converted json.
                         send(Frame.Text(gson.toJson(it.executeAsOne()).toString().clean()))
                     }

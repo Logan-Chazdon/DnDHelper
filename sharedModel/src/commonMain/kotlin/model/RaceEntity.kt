@@ -1,7 +1,7 @@
 package model
 
+import converters.BooleanAsIntSerializer
 import kotlinx.serialization.Serializable
-import model.converters.BooleanAsIntSerializer
 
 @Serializable
 open class RaceEntity (

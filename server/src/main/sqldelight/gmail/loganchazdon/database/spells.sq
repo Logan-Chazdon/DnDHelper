@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS spells (
     PRIMARY KEY(id, owner)
 );
 
+
+selectIdByName:
+SELECT id FROM spells WHERE LOWER(name) IS LOWER(:name) AND owner IS NULL;
+
 insertSpell:
 INSERT OR REPLACE INTO spells (id, name, level, components, itemComponents, school, desc, range, area, castingTime, duration, classes, damage, isRitual, isHomebrew, owner) VALUES ?;
 

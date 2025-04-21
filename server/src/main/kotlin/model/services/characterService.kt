@@ -789,7 +789,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         withUserInfo {
             val body = JSONObject(call.receiveText())
             db.raceChoiceEntityQueries.insert(
-                characterId = body.getLong("characterId"),
+                characterId = body.getLong("id"),
                 raceId = body.getLong("raceId"),
                 owner = it.id,
                 abcchosenByString = body.getString("abilityBonusChoice"),

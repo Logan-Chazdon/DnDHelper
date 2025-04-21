@@ -18,5 +18,12 @@ selectSubraceNameIdForRace:
 SELECT id, name FROM subraces
 JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.raceId = :raceId
 AND RaceSubraceCrossRef.subraceId = subraces.id
-AND RaceSubraceCrossRef.owner IS :owner
+AND (RaceSubraceCrossRef.owner IS :owner OR RaceSubraceCrossRef.owner IS NULL)
+WHERE (subraces.owner IS NULL OR subraces.owner IS :owner);
+
+selectSubraceForRace:
+SELECT * FROM subraces
+JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.raceId = :raceId
+AND RaceSubraceCrossRef.subraceId = subraces.id
+AND (RaceSubraceCrossRef.owner IS :owner OR RaceSubraceCrossRef.owner IS NULL)
 WHERE (subraces.owner IS NULL OR subraces.owner IS :owner);

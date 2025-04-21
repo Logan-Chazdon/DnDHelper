@@ -142,7 +142,7 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
 
 
                 val list = JSONArray()
-                db.subracesQueries.selectById(id, userInfo.id).executeAsList().forEach { subrace ->
+                db.raceSubraceCrossRefQueries.selectSubraceForRace(id, userInfo.id).executeAsList().forEach { subrace ->
                     val json = JSONObject(
                         gson.toJson(subrace)
                     )

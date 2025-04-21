@@ -16,7 +16,7 @@ DELETE FROM SubraceFeatureCrossRef WHERE subraceId = :subraceId AND featureId =:
 
 selectFeaturesBySubrace:
 SELECT features.* FROM features
-LEFT JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.featureId IS features.featureId
-AND SubraceFeatureCrossRef.owner IS :owner
+JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.featureId IS features.featureId
+AND (SubraceFeatureCrossRef.owner IS :owner OR SubraceFeatureCrossRef.owner IS NULL)
 WHERE subraceId IS :subraceId AND
 (features.owner IS NULL OR features.owner = :owner);

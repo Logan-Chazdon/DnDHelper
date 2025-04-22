@@ -42,3 +42,6 @@ selectHomebrewSubclasses:
 SELECT subclasses.* FROM subclasses
 WHERE owner = :owner;
 
+selectHighestIdForOwner:
+SELECT max(subclassId) FROM subclasses
+WHERE owner IS :owner;

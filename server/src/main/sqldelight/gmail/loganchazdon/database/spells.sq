@@ -44,3 +44,7 @@ selectById:
 SELECT * FROM spells WHERE
 (owner = :owner OR owner IS NULL)
 AND spells.id = :spellId;
+
+selectHighestIdForOwner:
+SELECT max(id) FROM spells
+WHERE owner IS :owner;

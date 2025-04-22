@@ -70,3 +70,7 @@ JOIN ClassSubclassCrossRef ON classes.id IS ClassSubclassCrossRef.classId
 AND (ClassSubclassCrossRef.owner IS NULL OR ClassSubclassCrossRef.owner IS :owner)
 WHERE (classes.owner = :owner OR classes.owner IS NULL)
 AND subclassId IS :subclassId;
+
+selectHighestIdForOwner:
+SELECT max(id) FROM classes
+WHERE owner IS :owner;

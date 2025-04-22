@@ -155,8 +155,13 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val response = call.receiveText()
             val character = gson.fromJson(response, Characters::class.java)
-            db.characterQueries.insertOrReplace(character.copy(characterOwner = userInfo.id))
-            call.respondText(character.id.toString())
+            val charId = if(character.id <= 0) {
+                val maxId = db.characterQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0
+                maxId + 1
+            } else { character.id }
+
+            db.characterQueries.insertOrReplace(character.copy(characterOwner = userInfo.id, id = charId))
+            call.respondText(charId.toString())
         }
     }
 

@@ -32,8 +32,13 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val response = call.receiveText()
             val subraces = gson.fromJson(response, Subraces::class.java)
-            db.subracesQueries.insert(subraces.copy(owner = userInfo.id))
-            call.respondText(subraces.id.toString())
+            val newId = if(subraces.id <= 0) {
+                (db.subracesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+            } else {
+                subraces.id
+            }
+            db.subracesQueries.insert(subraces.copy(owner = userInfo.id, id = newId))
+            call.respondText(newId.toString())
         }
     }
 

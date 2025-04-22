@@ -77,3 +77,8 @@ FROM
    FROM FeatureChoiceIndexCrossRef) AS vt
 WHERE spellDetails.classes LIKE '%' ||  vt.fcic_class || '%'
 	));
+
+
+selectHighestIdForOwner:
+SELECT max(featureId) FROM features
+WHERE owner IS :owner;

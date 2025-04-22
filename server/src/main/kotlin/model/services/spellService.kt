@@ -17,8 +17,13 @@ fun Routing.spellService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val response = call.receiveText()
             val spell = gson.fromJson(response, Spells::class.java)
-            db.spellsQueries.insertSpell(spell.copy(owner = userInfo.id))
-            call.respondText(spell.id.toString())
+            val newId = if(spell.id <= 0) {
+                (db.spellsQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+            } else {
+                spell.id
+            }
+            db.spellsQueries.insertSpell(spell.copy(owner = userInfo.id, id = newId))
+            call.respondText(newId.toString())
         }
     }
 

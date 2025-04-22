@@ -34,3 +34,7 @@ selectBackground:
 SELECT * FROM backgrounds WHERE
 (owner = :owner OR owner IS NULL)
 AND id =:id;
+
+selectHighestIdForOwner:
+SELECT max(id) FROM backgrounds
+WHERE owner IS :owner;

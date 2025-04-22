@@ -199,3 +199,8 @@ AND CharacterSubclassCrossRef.classId IS classes.id AND CharacterSubclassCrossRe
 LEFT JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subClassId
 AND subclasses.owner IS :owner
 WHERE CharacterClassCrossRef.characterId IS :characterId AND (classes.owner IS :owner OR classes.owner IS NULL );
+
+
+selectHighestIdForOwner:
+SELECT max(id) FROM characters
+WHERE characterOwner IS :owner;

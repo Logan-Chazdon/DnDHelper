@@ -20,7 +20,10 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val response = call.receiveText()
             val race = gson.fromJson(response, Races::class.java)
-            db.racesQueries.insertRace(race.copy(owner = userInfo.id))
+            val newId = if(race.raceId <= 0) {
+                (db.racesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0)+ 1
+            } else { race.raceId }
+            db.racesQueries.insertRace(race.copy(owner = userInfo.id, raceId = newId))
             call.respondText(race.raceId.toString(), status = HttpStatusCode.OK)
         }
     }

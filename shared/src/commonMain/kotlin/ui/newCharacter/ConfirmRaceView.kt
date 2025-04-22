@@ -20,6 +20,7 @@ import model.*
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import ui.newCharacter.utils.getDropDownState
+import ui.preferences.DataStore
 import ui.theme.noActionNeeded
 
 
@@ -80,6 +81,7 @@ fun ConfirmRaceView(
                 text = race.value?.size ?: "",
                 fontSize = 16.sp
             )
+            val autosaveEnabled = DataStore.autoSave().collectAsState(true)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
@@ -87,7 +89,7 @@ fun ConfirmRaceView(
                 Button(onClick = {
                     //Change the race
                     scope.launch {
-                        viewModel.setRace()
+                        if(!autosaveEnabled.value) viewModel.setRace()
                     }
                     navController.navigate("newCharacterView/BackgroundView/${viewModel.id}")
                 }) {

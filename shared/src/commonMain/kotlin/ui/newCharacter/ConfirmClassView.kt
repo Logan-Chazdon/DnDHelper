@@ -34,6 +34,7 @@ import model.repositories.CharacterRepository.Companion.statNames
 import ui.SpellDetailsView
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import ui.newCharacter.utils.getDropDownState
+import ui.preferences.DataStore
 import ui.theme.noActionNeeded
 import ui.utils.allNames
 
@@ -133,11 +134,12 @@ fun ConfirmClassView(
             }
 
             //Add Class Button
+            val autosaveEnabled = DataStore.autoSave().collectAsState(true)
             Button(
                 enabled = canAfford.value,
                 onClick = {
                     scope.launch {
-                        viewModel.addClassLevels()
+                        if(!autosaveEnabled.value) viewModel.addClassLevels()
                     }
                     //Navigate to the next step
                     navController.navigate("newCharacterView/RaceView/${viewModel.id}")

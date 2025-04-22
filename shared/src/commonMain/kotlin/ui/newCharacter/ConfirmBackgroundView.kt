@@ -22,6 +22,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ui.SpellDetailsView
 import ui.newCharacter.utils.getDropDownState
+import ui.preferences.DataStore
 import ui.theme.noActionNeeded
 import ui.utils.allNames
 
@@ -60,6 +61,7 @@ fun ConfirmBackgroundView(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = background.value?.name ?: "", style = MaterialTheme.typography.h4)
+                    val autosaveEnabled = DataStore.autoSave().collectAsState(true)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
@@ -67,7 +69,7 @@ fun ConfirmBackgroundView(
                         Button(
                             onClick = {
                                 GlobalScope.launch {
-                                    viewModel.setBackGround()
+                                    if(!autosaveEnabled.value) viewModel.setBackGround()
                                 }
                                 navController.navigate("newCharacterView/StatsView/${viewModel.id}")
                             }

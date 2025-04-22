@@ -1,8 +1,11 @@
 package model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 open class FeatChoiceEntity(
-    val name: String,
-    val choose : Int,
+    var name: String,
+    var choose : Int,
 ) {
     open var id = 0
 

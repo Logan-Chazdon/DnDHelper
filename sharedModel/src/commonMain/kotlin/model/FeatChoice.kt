@@ -1,8 +1,21 @@
 package model
 
-class FeatChoice(
-    name: String,
-    choose : Int,
-    val from: List<Feat>,
+import kotlinx.serialization.Serializable
+
+@Serializable
+class FeatChoice() : FeatChoiceEntity(name = "", choose = 1) {
+    lateinit var from: List<Feat>
     var chosen : List<Feat>? = null
-) : FeatChoiceEntity(name, choose)
+    constructor(
+        name: String,
+        choose : Int,
+        from: List<Feat>,
+        chosen : List<Feat>? = null
+    ) : this() {
+        this.name = name
+        this.choose = choose
+        this.from = from
+        this.chosen = chosen
+    }
+
+}

@@ -12,3 +12,6 @@ INSERT OR REPLACE INTO featChoices (id, name, choose, owner) VALUES (?, ?, ?, ?)
 
 delete:
 DELETE FROM featChoices WHERE owner = :owner AND id = :id;
+
+select:
+SELECT * FROM featChoices WHERE id =:id AND (owner IS :owner OR owner IS NULL);

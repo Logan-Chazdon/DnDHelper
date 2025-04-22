@@ -13,3 +13,9 @@ INSERT INTO FeatChoiceFeatCrossRef (featChoiceId, featId, owner) VALUES (?, ?, ?
 
 delete:
 DELETE FROM FeatChoiceFeatCrossRef WHERE owner = :owner AND featChoiceId = :featChoiceId AND featId = :featId;
+
+selectFeatsForChoice:
+SELECT feats.* FROM feats
+JOIN FeatChoiceFeatCrossRef ON FeatChoiceFeatCrossRef.featId IS feats.id
+AND (FeatChoiceFeatCrossRef.owner IS NULL OR FeatChoiceFeatCrossRef.owner IS :owner)
+WHERE (feats.owner IS NULL OR feats.owner IS :owner) AND featChoiceId IS :featChoiceId;

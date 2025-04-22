@@ -157,12 +157,28 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
                         id = subrace.id
                     ).executeAsList()
 
-                    json.append("features", gson.toJson(features))
-                    json.append("featChoices", gson.toJson(featChoices))
+                    json.put("traits", JSONArray(gson.toJson(features)))
+                    val filledFeatChoices = JSONArray()
+                    featChoices.forEach { choiceRef ->
+                        val choice = db.featChoicesQueries.select(
+                            id = choiceRef.id,
+                            owner = choiceRef.owner
+                        ).executeAsOne()
+                        val from = db.featChoiceFeatCrossRefQueries.selectFeatsForChoice(
+                            owner = choiceRef.owner,
+                            featChoiceId = choiceRef.featChoiceId
+                        ).executeAsList()
+                        val jsonObject = JSONObject()
+                        jsonObject.put("name", choice.name)
+                        jsonObject.put("choose", choice.choose)
+                        jsonObject.put("from", JSONArray(gsonInstance.toJson(from)))
+                        filledFeatChoices.put(jsonObject)
+                    }
+
+                    json.put("featChoices", filledFeatChoices)
 
                     list.put(json)
                 }
-
                 send(list.toString())
             }
 

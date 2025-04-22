@@ -17,5 +17,5 @@ DELETE FROM SubraceFeatChoiceCrossRef WHERE subraceId = :subraceId AND featChoic
 selectFeatChoicesForSubrace:
 SELECT * FROM featChoices
 JOIN SubraceFeatChoiceCrossRef ON SubraceFeatChoiceCrossRef.featChoiceId IS featChoices.id
-AND SubraceFeatChoiceCrossRef.owner = :owner
-WHERE SubraceFeatChoiceCrossRef.subraceId IS :id AND featChoices.owner IS :owner;
+AND (SubraceFeatChoiceCrossRef.owner IS :owner OR SubraceFeatChoiceCrossRef.owner IS NULL)
+WHERE SubraceFeatChoiceCrossRef.subraceId IS :id AND (featChoices.owner IS :owner OR featChoices.owner IS NULL);

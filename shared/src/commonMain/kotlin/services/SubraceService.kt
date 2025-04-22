@@ -79,16 +79,11 @@ class SubraceService(client: HttpClient) : Service(client = client) {
     fun bindSubraceOptions(raceId: Int): Flow<MutableList<Subrace>> {
         return flow {
             client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFilledSubraces.path) {
-                while (true) {
-                    //Send id
-                    send(Frame.Text(raceId.toString()))
-                    val othersMessage = incoming.receive() as? Frame.Text
-
-                    if (othersMessage?.readText() != "received") {
-                        val item = format.decodeFromString<MutableList<Subrace>>(othersMessage!!.readText())
-                        emit(item)
-                    }
-                }
+                //Send id
+                send(Frame.Text(raceId.toString()))
+                val othersMessage = incoming.receive() as? Frame.Text
+                val item = format.decodeFromString<MutableList<Subrace>>(othersMessage!!.readText())
+                emit(item)
             }
         }
     }

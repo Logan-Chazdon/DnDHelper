@@ -127,13 +127,13 @@ private fun serializeCharacterClasses(query: Query<SelectClasses>) : JSONObject 
         clazz.put("level", data.level)
         clazz.put("proficiencies", arrayConverter(data.proficiencies))
         clazz.put("proficiencyChoicesByString", data.proficiencyChoicesByString)
-        if(data.spellCasting != null) clazz.put("spellCasting", JSONObject(data.spellCasting))
+        if(data.spellCasting != null) clazz.put("spellCasting", data.spellCasting)
 
         if(data.subclassId != null) {
             val subclass = JSONObject()
             subclass.put("subclassId", data.subclassId)
             subclass.put("isHomebrew", data.isHomebrew)
-            if(data.subclass_spell_casting != null) subclass.put("spellCasting", JSONObject(data.subclass_spell_casting))
+            if(data.subclass_spell_casting != null) subclass.put("spellCasting", data.subclass_spell_casting)
             subclass.put("spellAreFree", data.spellAreFree)
             subclass.put("name", data.name)
 

@@ -1,7 +1,9 @@
+import com.google.gson.JsonArray;
+
 CREATE TABLE IF NOT EXISTS `BackgroundChoiceEntity` (
     `characterId` INTEGER NOT NULL,
     `backgroundId` INTEGER NOT NULL,
-    `languageChoices` TEXT NOT NULL,
+    `languageChoices` TEXT AS JsonArray NOT NULL,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
 
@@ -16,3 +18,6 @@ INSERT OR REPLACE INTO BackgroundChoiceEntity VALUES ?;
 
 delete:
 DELETE FROM  BackgroundChoiceEntity WHERE characterId IS :characterId AND backgroundId IS :backgroundId AND owner IS :owner;
+
+select:
+SELECT * FROM BackgroundChoiceEntity WHERE characterId IS :id AND owner IS :owner;

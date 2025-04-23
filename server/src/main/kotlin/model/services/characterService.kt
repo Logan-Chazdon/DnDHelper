@@ -379,10 +379,9 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
 
     get("character/backgroundChoice") {
         withUserInfo {
-            val value = db.classChoiceEntityQueries.select(
+            val value = db.backgroundChoiceEntityQueries.select(
                 owner = it.id,
-                characterId = call.parameters["characterId"]!!.toLong(),
-                classId = call.parameters["classId"]!!.toLong(),
+                id = call.parameters["characterId"]!!.toLong(),
             ).executeAsOne()
             call.respondText(gson.toJson(value))
         }
@@ -468,7 +467,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 BackgroundChoiceEntity = BackgroundChoiceEntity(
                     characterId = body.getLong("characterId"),
                     backgroundId = body.getLong("backgroundId"),
-                    languageChoices = Json.decodeFromString(body.getJSONObject("languageChoices").toString()),
+                    languageChoices = jsonListAdapter.decode(body.getString("languageChoices")),
                     owner = userInfo.id
                 )
             )

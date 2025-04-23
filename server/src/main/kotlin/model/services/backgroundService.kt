@@ -134,10 +134,10 @@ fun Routing.backgroundService(db: Database, httpClient: HttpClient) {
                         owner= userInfo.id,
                         id = id
                     ).asFlow().collect { x ->
-                        send(gson.toJson(x.executeAsOne()).clean())
+                        send(Frame.Text(gson.toJson(x.executeAsOne()).clean()))
                     }
                 } catch(e: NumberFormatException) {
-                    send("Invalid Id")
+                    send(Frame.Text("Invalid Id"))
                 }
             }
         }

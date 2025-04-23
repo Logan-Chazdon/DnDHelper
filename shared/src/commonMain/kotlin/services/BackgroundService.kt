@@ -127,9 +127,9 @@ class BackgroundService(client: HttpClient) : Service(client = client) {
             client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.BackgroundEntity.path) {
                 send(id.toString())
                 while (true) {
-                    val othersMessage = incoming.receive() as? Frame.Text
-                    if (othersMessage?.readText() != "Invalid Id") {
-                        val item = format.decodeFromString<BackgroundEntity>(othersMessage!!.readText())
+                    val othersMessage = incoming.receive() as Frame.Text
+                    if (othersMessage.readText() != "Invalid Id") {
+                        val item = format.decodeFromString<BackgroundEntity>(othersMessage.readText())
                         emit(item)
                     }
                 }

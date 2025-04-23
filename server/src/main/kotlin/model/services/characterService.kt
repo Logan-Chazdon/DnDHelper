@@ -237,8 +237,8 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
             val value = db.subraceChoiceEntityQueries.select(
                 characterId = call.parameters["characterId"]!!.toLong(),
                 owner = it.id
-            ).executeAsOne()
-            call.respondText(gson.toJson(value))
+            ).executeAsOneOrNull()
+            call.respondText(gson.toJson(value).clean())
         }
     }
 

@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.lastOrNull
+import kotlinx.coroutines.flow.first
 import model.*
 import model.repositories.BackgroundRepository
 import model.repositories.CharacterRepository
@@ -48,42 +48,44 @@ class NewCharacterConfirmBackgroundViewModel constructor(
         if (id == -1)
             id = characterRepository.createDefaultCharacter()
 
-        characterRepository.insertCharacterBackgroundCrossRef(
-            backgroundId = background.lastOrNull()!!.id,
-            characterId = id
-        )
+        background.first().let { value ->
+            characterRepository.insertCharacterBackgroundCrossRef(
+                backgroundId = value.id,
+                characterId = id
+            )
 
-        background.lastOrNull()!!.languageChoices!!.forEach {
-            it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Language>
-        }
-        background.lastOrNull()!!.equipmentChoices.forEach {
-            it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
-        }
-
-        val backgroundCurrencyMap = Currency.getEmptyCurrencyMap()
-        background.lastOrNull()!!.equipment.forEach {
-            if (it is Currency) {
-                backgroundCurrencyMap[it.abbreviatedName]!!.amount += it.amount
+            value.languageChoices!!.forEach {
+                it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Language>
             }
-        }
-        characterRepository.setBackgroundCurrency(
-            backgroundCurrencyMap,
-            id
-        )
-
-        characterRepository.insertBackgroundChoiceEntity(
-            backgroundId = background.lastOrNull()!!.id,
-            characterId = id,
-            languageChoices = background.lastOrNull()!!.languageChoices?.toStringList() ?: emptyList()
-        )
-
-        background.lastOrNull()!!.features?.forEach { feature ->
-            feature.choices?.forEach {
-                it.chosen =
-                    featureDropDownStates[feature.name + feature.grantedAtLevel]?.getSelected()
+            value.equipmentChoices.forEach {
+                it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
             }
+
+            val backgroundCurrencyMap = Currency.getEmptyCurrencyMap()
+            value.equipment.forEach {
+                if (it is Currency) {
+                    backgroundCurrencyMap[it.abbreviatedName]!!.amount += it.amount
+                }
+            }
+            characterRepository.setBackgroundCurrency(
+                backgroundCurrencyMap,
+                id
+            )
+
+            characterRepository.insertBackgroundChoiceEntity(
+                backgroundId = value.id,
+                characterId = id,
+                languageChoices = value.languageChoices?.toStringList() ?: emptyList()
+            )
+
+            value.features?.forEach { feature ->
+                feature.choices?.forEach {
+                    it.chosen =
+                        featureDropDownStates[feature.name + feature.grantedAtLevel]?.getSelected()
+                }
+            }
+            saveFeatures(value.features!!)
         }
-        saveFeatures(background.lastOrNull()!!.features!!)
     }
 
     private suspend fun saveFeatures(features: List<Feature>) {

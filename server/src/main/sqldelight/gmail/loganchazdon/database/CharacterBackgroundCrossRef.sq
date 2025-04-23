@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS CharacterBackgroundCrossRef (
 );
 
 insert:
-INSERT INTO CharacterBackgroundCrossRef (characterId, backgroundId, owner) VALUES (?, ?, ?);
+INSERT OR REPLACE INTO CharacterBackgroundCrossRef (characterId, backgroundId, owner) VALUES (?, ?, ?);
 
 delete:
 DELETE FROM CharacterBackgroundCrossRef WHERE backgroundId = :backgroundId AND characterId = :characterId AND owner =:owner;

@@ -30,25 +30,25 @@ CREATE VIEW  IF NOT EXISTS characterView AS SELECT
     races.*,
     subrace.*,
     characters.*
-FROM characters  
-LEFT JOIN CharacterRaceCrossRef 
-    ON characters.id = CharacterRaceCrossRef.id 
-    AND characters.characterOwner = CharacterRaceCrossRef.owner  
-LEFT JOIN races 
-    ON CharacterRaceCrossRef.raceId = races.raceId 
-    AND races.owner = CharacterRaceCrossRef.owner  
-LEFT JOIN CharacterSubraceCrossRef 
+FROM characters
+LEFT JOIN CharacterRaceCrossRef
+    ON characters.id = CharacterRaceCrossRef.id
+    AND characters.characterOwner = CharacterRaceCrossRef.owner
+LEFT JOIN races
+    ON CharacterRaceCrossRef.raceId = races.raceId
+    AND (races.owner = CharacterRaceCrossRef.owner OR races.owner IS NULL)
+LEFT JOIN CharacterSubraceCrossRef
     ON CharacterSubraceCrossRef.characterId = characters.id 
     AND CharacterSubraceCrossRef.owner = CharacterRaceCrossRef.owner  
 LEFT JOIN subrace
     ON subrace.subraceid = CharacterSubraceCrossRef.subraceId
-    AND subrace.subraceOwner = CharacterSubraceCrossRef.owner
-LEFT JOIN CharacterBackgroundCrossRef 
+    AND (subrace.subraceOwner = CharacterSubraceCrossRef.owner OR subrace.subraceOwner IS NULL)
+LEFT JOIN CharacterBackgroundCrossRef
     ON CharacterBackgroundCrossRef.characterId = characters.id 
     AND CharacterBackgroundCrossRef.owner = characters.characterOwner  
-LEFT JOIN background 
+LEFT JOIN background
     ON background.backgroundid = CharacterBackgroundCrossRef.backgroundId 
-    AND background.backgroundOwner = CharacterBackgroundCrossRef.owner;
+    AND (background.backgroundOwner = CharacterBackgroundCrossRef.owner OR background.backgroundOwner IS NULL);
 
 getById:
 SELECT * FROM characterView WHERE id = :id AND characterOwner = :owner;

@@ -432,7 +432,20 @@ class CharacterServiceIntegrationTest {
     }
 
     @Test
-    fun insertCharacterRaceCrossRef() {
+    fun insertCharacterRaceCrossRef() = runTest {
+        users.forEach { user ->
+            user.characters.forEach { entity ->
+                user.characterService.postCharacter(entity.entity)
+
+                user.characterService.insertCharacterRaceCrossRef(
+                    entity.entity.id,
+                    raceId = 1
+                )
+
+                val char = user.characterService.findCharacterWithoutListChoices(entity.entity.id)
+                assert(char.race?.raceName == "Aarakocra")
+            }
+        }
     }
 
     @Test

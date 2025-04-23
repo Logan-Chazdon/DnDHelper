@@ -74,18 +74,20 @@ private fun serializeUnfilledCharacter(sqlResponse: CharacterView): JSONObject {
             put("abcmaxOccurrencesOfAbility", sqlResponse.abcmaxOccurrencesOfAbility)
             put("abcchosenByString", sqlResponse.abcchosenByString)
         }
-        subrace.apply {
-            put("id", sqlResponse.subraceid)
-            put("name", sqlResponse.subracename)
-            put("abilityBonuses", sqlResponse.subraceabilityBonuses?.let { arrayConverter(it) })
-            put("abilityBonusChoice", sqlResponse.subraceabilityBonusChoice?.let { objectConverter(it) })
-            put("startingProficiencies", sqlResponse.subracestartingProficiencies?.let { arrayConverter(it)})
-            put("languages", sqlResponse.subracelanguages?.let { arrayConverter(it)})
-            put("languageChoices", sqlResponse.subracelanguageChoices?.let { arrayConverter(it)})
-            put("size", sqlResponse.subracesize)
-        }
+        if(sqlResponse.subraceid != null) {
+            subrace.apply {
+                put("id", sqlResponse.subraceid)
+                put("name", sqlResponse.subracename)
+                put("abilityBonuses", sqlResponse.subraceabilityBonuses?.let { arrayConverter(it) })
+                put("abilityBonusChoice", sqlResponse.subraceabilityBonusChoice?.let { objectConverter(it) })
+                put("startingProficiencies", sqlResponse.subracestartingProficiencies?.let { arrayConverter(it) })
+                put("languages", sqlResponse.subracelanguages?.let { arrayConverter(it) })
+                put("languageChoices", sqlResponse.subracelanguageChoices?.let { arrayConverter(it) })
+                put("size", sqlResponse.subracesize)
+            }
 
-        race.put("subrace", subrace)
+            race.put("subrace", subrace)
+        }
         character.put("race", race)
     }
 

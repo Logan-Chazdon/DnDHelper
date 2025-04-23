@@ -15,6 +15,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -99,7 +100,8 @@ private fun serializeUnfilledCharacter(sqlResponse: CharacterView): JSONObject {
             put("id", backgroundId)
             put("name", sqlResponse.backgroundname)
             put("desc", sqlResponse.backgrounddesc)
-            put("spells", sqlResponse.backgroundspells)
+            put("spells", if(sqlResponse.backgroundspells == null ) null else
+                Json.parseToJsonElement(sqlResponse.backgroundspells).jsonArray)
             put("proficiencies", sqlResponse.backgroundproficiencies?.let { arrayConverter(it)})
             put("languages", sqlResponse.backgroundlanguages?.let { arrayConverter(it)})
             put("equipment", sqlResponse.backgroundequipment?.let { arrayConverter(it)})

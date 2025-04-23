@@ -173,7 +173,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val body = JSONObject(call.receiveText())
             db.characterQueries.setHp(body.getLong("hp"), body.getLong("id"), userInfo.id)
-            call.respond(body.getLong("id"))
+            call.respond(body.getLong("id").toString())
         }
     }
 

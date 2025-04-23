@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.launch
 import model.Background
 import model.BackgroundEntity
 import model.database.daos.BackgroundDao
@@ -33,15 +32,13 @@ class BackgroundRepository {
     fun getBackground(id: Int): Flow<Background> {
         return (backgroundDao.getUnfilledBackground(id)).transform {
             if (it != null) {
-                scope.launch {
-                    val background = Background(
-                        it,
-                        backgroundDao.getUnfilledBackgroundFeatures(id)
-                    )
-                    background.spells = backgroundDao.getBackgroundSpells(id)
-                    featureDao.fillOutFeatureListWithoutChosen(background.features!!)
-                    emit(background)
-                }
+                val background = Background(
+                    it,
+                    backgroundDao.getUnfilledBackgroundFeatures(id)
+                )
+                background.spells = backgroundDao.getBackgroundSpells(id)
+                featureDao.fillOutFeatureListWithoutChosen(background.features!!)
+                emit(background)
             }
         }
     }

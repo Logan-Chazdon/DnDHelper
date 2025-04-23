@@ -80,11 +80,11 @@ object UnfilledCharacterSerializer {
             ).apply {
                 println(json.keys)
                 race =  if(json.keys.contains("race")) {
-                    format.decodeFromString(getString("race"))
+                    format.decodeFromString(getJsonObject("race"))
                 } else null
 
                 background = if(json.keys.contains("background"))
-                    format.decodeFromString(getString("background"))
+                    format.decodeFromString(getJsonObject("background"))
                 else null
             }
         }catch(e: Exception) {

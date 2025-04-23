@@ -148,6 +148,9 @@ fun Application.configureDatabases() {
         ),
         subclassesAdapter = Subclasses.Adapter(
             subclass_spell_castingAdapter = jsonObjectAdapter
+        ),
+        BackgroundChoiceEntityAdapter = BackgroundChoiceEntity.Adapter(
+            languageChoicesAdapter = jsonListAdapter
         )
     )
 

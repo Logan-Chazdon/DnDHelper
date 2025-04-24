@@ -1,10 +1,11 @@
 package model.repositories
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import model.*
 import model.choiceEntities.BackgroundChoiceEntity
@@ -420,8 +421,6 @@ class CharacterRepository {
         return character
     }
 
-    //TODO this is changed a lot due to using kotlin flows. Test extensively.
-    //TODO This almost definitely non functional.
     fun getLiveCharacterById(
         id: Int,
         character: MutableStateFlow<Character>,
@@ -435,7 +434,7 @@ class CharacterRepository {
             }
         }
 
-        scope.launch {
+        GlobalScope.launch {
             characterLiveData.collect {
                 calculate(it)
             }
@@ -445,7 +444,7 @@ class CharacterRepository {
             //accessed in the initial sql query meaning room will not automatically update live data.
             characterKey?.let { key ->
                 key.collect {
-                    calculate(characterLiveData.last())
+                    calculate(characterLiveData.first())
                 }
             }
         }

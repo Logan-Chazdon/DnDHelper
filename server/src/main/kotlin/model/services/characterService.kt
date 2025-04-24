@@ -725,7 +725,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                     owner = it.id
                 )
             )
-            call.respond(body.getLong("characterId"))
+            call.respond(body.getLong("characterId").toString())
         }
     }
 
@@ -754,6 +754,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 tookGold = body.getBoolean("tookGold"),
                 proficiencyChoicesByString = jsonListAdapter.decode(body.getString("proficiencyChoicesByString"))
             )
+            call.respond(body.getLong("classId").toString())
         }
     }
 

@@ -186,7 +186,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         }
     }
 
-    delete("character/resetClassSpells/{characterId}/{classId}") {
+    delete("character/resetClassSpells") {
         getSession(call)?.let { session ->
             val userInfo = getUserInfo(httpClient, session, call)
             db.characterClassSpellCrossRefQueries.deleteByCharacterId(

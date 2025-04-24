@@ -28,4 +28,4 @@ getNumPreped:
 SELECT COUNT(*) FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND owner = :owner AND characterId IS :characterId AND isPrepared IS '1';
 
 deleteByCharacterId:
-DELETE FROM CharacterClassCrossRef WHERE characterId = :characterId AND classId = :classId AND owner =:owner;
+DELETE FROM CharacterClassSpellCrossRef WHERE characterId = :characterId AND classId = :classId AND owner =:owner;

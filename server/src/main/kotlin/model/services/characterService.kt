@@ -236,6 +236,17 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         }
     }
 
+    get("character/characterClassNameLevel") {
+        withUserInfo {
+            val value = db.characterQueries.selectClassNameLevelForCharacter(
+                id = call.parameters["id"]!!.toLong(),
+                owner = it.id
+            ).executeAsList()
+            call.respondText(gson.toJson(value))
+        }
+    }
+
+
     get("character/subraceChoiceData") {
         withUserInfo {
             val value = db.subraceChoiceEntityQueries.select(

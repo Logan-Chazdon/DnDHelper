@@ -10,10 +10,7 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.json.put
-import kotlinx.serialization.json.putJsonArray
+import kotlinx.serialization.json.*
 import model.*
 import model.choiceEntities.BackgroundChoiceEntity
 import model.choiceEntities.ClassChoiceEntity
@@ -75,6 +72,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         CharacterClasses("$PATH/characterClasses"),
         UnfilledCharacter("$PATH/unfilledCharacter"),
         ResetClassSpells("$PATH/resetClassSpells"),
+        CharacterClassNameLevel("$PATH/characterClassNameLevel"),
     }
 
     companion object {
@@ -97,10 +95,22 @@ class CharacterService(client: HttpClient) : Service(client = client) {
                     val characters = mutableListOf<Character>()
 
                     jsonList.forEach {
+                        val item = UnfilledCharacterSerializer.deserialize(
+                            it.toString(), format
+                        )
+
+                        val classes = getFrom(Paths.CharacterClassNameLevel.path) {
+                            append("id", item.id.toString())
+                        }.bodyAsText()
+
+                        format.decodeFromString<JsonArray>(classes).forEach { clazz ->
+                            val name = clazz.jsonObject["name"]?.jsonPrimitive?.content ?: ""
+                            val level = clazz.jsonObject["level"]?.jsonPrimitive?.intOrNull ?: 0
+                            item.classes[name] = Class(name = name, level = level)
+                        }
+
                         characters.add(
-                            UnfilledCharacterSerializer.deserialize(
-                                it.toString(), format
-                            )
+                            item
                         )
                     }
 

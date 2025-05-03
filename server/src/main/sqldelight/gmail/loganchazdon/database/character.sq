@@ -204,3 +204,9 @@ WHERE CharacterClassCrossRef.characterId IS :characterId AND (classes.owner IS :
 selectHighestIdForOwner:
 SELECT max(id) FROM characters
 WHERE characterOwner IS :owner;
+
+selectClassNameLevelForCharacter:
+SELECT name, level FROM classes
+JOIN ClassChoiceEntity
+ON ClassChoiceEntity.classId IS classes.id AND ClassChoiceEntity.owner IS :owner
+WHERE (classes.owner IS :owner OR classes.owner IS NULL) AND characterId IS :id;

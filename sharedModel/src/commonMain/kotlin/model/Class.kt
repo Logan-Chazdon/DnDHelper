@@ -25,7 +25,7 @@ open class Class() : ClassEntity() {
         abilityImprovementsGranted: MutableList<Map<String, Int>> = mutableListOf(),
         name: String,
         hitDie: Int = 8,
-        subclassLevel: Int,
+        subclassLevel: Int = 0,
         levelPath: MutableList<Feature>? = mutableListOf(),
         proficiencyChoices: List<ProficiencyChoice> = emptyList(),
         proficiencies: List<Proficiency> = emptyList(),
@@ -33,7 +33,7 @@ open class Class() : ClassEntity() {
         equipment: List<ItemInterface> = emptyList(),
         spellCasting: SpellCasting? = null,
         pactMagic: PactMagic? = null,
-        startingGoldD4s: Int,
+        startingGoldD4s: Int = 4,
         startingGoldMultiplier: Int = 10
     ) : this() {
         this.name = name

@@ -19,6 +19,7 @@ import io.ktor.server.sessions.*
 import io.ktor.server.websocket.*
 
 val gsonInstance = GsonBuilder()
+    .disableHtmlEscaping()
     .create()
 val Routing.gson: Gson
     get() = gsonInstance

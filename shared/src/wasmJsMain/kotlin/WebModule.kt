@@ -18,6 +18,6 @@ class WebModule {
         single <SubclassDao> { SubclassDaoImpl(get()) }
         single <SubraceDao> { SubraceDaoImpl(get()) }
 
-        single <DataSource> { WebDataSourceImpl() }
+        single <DataSource> { WebDataSourceImpl(get()) }
     }
 }

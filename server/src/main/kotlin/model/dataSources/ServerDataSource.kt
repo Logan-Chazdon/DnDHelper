@@ -30,10 +30,10 @@ class ServerDataSource(db: Database) {
     val metamagics = mutableListOf<Metamagic>()
     lateinit var abilitiesToSkills: Map<String, List<String>>
 
-    lateinit var martialWeapons: List<Weapon>
-    lateinit var simpleWeapons: List<Weapon>
-    lateinit var miscItems: List<ItemInterface>
-    lateinit var armors: List<Armor>
+    var martialWeapons: List<Weapon> = emptyList()
+    var simpleWeapons: List<Weapon> = emptyList()
+    var miscItems: List<ItemInterface> = emptyList()
+    var armors: List<Armor> = emptyList()
     val items: MutableList<ItemInterface> = mutableListOf()
 
     val languages = mutableListOf<Language>()
@@ -539,7 +539,7 @@ class ServerDataSource(db: Database) {
         )
         println("Model update initiated")
         with(dataSource) {
-            GlobalScope.launch { generateItems(); println("items generated") }.invokeOnCompletion {
+            GlobalScope.launch { generateSkills();  generateItems(); println("items generated") }.invokeOnCompletion {
                 items.addAll(miscItems)
                 items.addAll(armors)
                 items.addAll(simpleWeapons)

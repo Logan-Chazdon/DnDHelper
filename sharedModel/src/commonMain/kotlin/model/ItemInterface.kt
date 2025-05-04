@@ -1,6 +1,9 @@
 package model
 
-interface ItemInterface {
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed interface ItemInterface {
     val type : String
     val displayName: String
     var name : String?

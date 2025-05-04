@@ -83,6 +83,7 @@ class Backpack {
                     equippedShield = null
                 }
             }
+            else -> {}
         }
         target.removeAt(index)
     }
@@ -111,6 +112,7 @@ class Backpack {
                     equippedShield = item
                 }
             }
+            else -> {}
         }
         target.add(item)
     }

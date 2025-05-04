@@ -325,6 +325,8 @@ fun EquipButton(viewModel: ItemViewModel, item: ItemInterface) {
                     is Armor -> {
                         viewModel.equip(item)
                     }
+
+                    else -> {}
                 }
             }
         }

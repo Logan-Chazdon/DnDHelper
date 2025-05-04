@@ -192,6 +192,10 @@ fun Application.configureDatabases() {
         subclassService(db, applicationHttpClient)
         spellService(db, applicationHttpClient)
 
+
+        dataSourceService(dataSource, applicationHttpClient)
+
+
         get("/") {
             val userSession: UserSession? = call.sessions.get()
             if (userSession != null) {

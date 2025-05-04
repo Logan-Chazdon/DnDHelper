@@ -44,6 +44,7 @@ fun ItemDetailsView(viewModel: ItemDetailsViewModel) {
             is Weapon -> {
                 viewModel.weaponDamage.value = (item.value as Weapon).damage
             }
+            else -> {}
         }
     }
 

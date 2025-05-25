@@ -49,7 +49,7 @@ fun Navigation(navController: NavHostController) {
         }
 
 
-        composable("characterView/CombatView/{characterId}") { backStackEntry ->
+        composable("characterView/CombatView/{characterId}") {
             CombatView(koinViewModel())
         }
 
@@ -65,42 +65,38 @@ fun Navigation(navController: NavHostController) {
             StatsView(viewModel = koinViewModel())
         }
 
-
-        composable("newCharacterView/BackgroundView/{characterId}") { backStackEntry ->
-            backStackEntry.arguments?.getString("characterId")?.toInt()?.let { characterId ->
-                BackgroundView(
-                    characterId = characterId,
-                    navController = navController,
-                    viewModel = koinViewModel()
-                )
-            }
+        composable("newCharacterView/BackgroundView") {
+            BackgroundView(
+                navController = navController,
+                viewModel = koinViewModel()
+            )
         }
-        composable("newCharacterView/ClassView/{characterId}") { backStackEntry ->
-            val characterId = backStackEntry.arguments?.getString("characterId")?.toInt() ?: -1
-            ClassView(viewModel = koinViewModel(), navController = navController, characterId = characterId)
+
+        composable("newCharacterView/ClassView") {
+            ClassView(viewModel = koinViewModel(), navController = navController)
 
         }
-        composable("newCharacterView/ClassView/ConfirmClassView/{classId}/{characterId}") {
+        composable("newCharacterView/ClassView/ConfirmClassView/{classId}") {
             ConfirmClassView(viewModel = koinViewModel(), navController = navController)
         }
 
-        composable("newCharacterView/BackgroundView/ConfirmBackGroundView/{backgroundId}/{characterId}") {
+        composable("newCharacterView/BackgroundView/ConfirmBackGroundView/{backgroundId}") {
             ConfirmBackgroundView(
                 navController = navController,
                 viewModel = koinViewModel(),
             )
         }
 
-        composable("newCharacterView/RaceView/ConfirmRaceView/{raceId}/{characterId}") { 
+        composable("newCharacterView/RaceView/ConfirmRaceView/{raceId}") {
             ConfirmRaceView(
                 viewModel = koinViewModel(),
                 navController = navController
             )
         }
-        composable("newCharacterView/RaceView/{characterId}") {
+        composable("newCharacterView/RaceView") {
                 RaceView(viewModel= koinViewModel(), navController = navController)
         }
-        composable("newCharacterView/StatsView/{characterId}") {
+        composable("newCharacterView/StatsView") {
             StatsView(viewModel= koinViewModel(), navController)
         }
 

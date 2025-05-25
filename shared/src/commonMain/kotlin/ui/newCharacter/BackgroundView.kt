@@ -19,12 +19,10 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun BackgroundView(
-    characterId: Int,
     viewModel: NewCharacterBackgroundViewModel,
     navController: NavHostController
 ) {
     val backgrounds = viewModel.backgrounds.collectAsState(emptyList())
-    viewModel.id = characterId
 
     Row(
        modifier = Modifier
@@ -73,7 +71,7 @@ fun BackgroundView(
                                 modifier = Modifier
                                     .fillMaxWidth(0.95f)
                                     .clickable {
-                                        navController.navigate("newCharacterView/BackgroundView/ConfirmBackGroundView/${it.id}/${viewModel.id}")
+                                        navController.navigate("newCharacterView/BackgroundView/ConfirmBackGroundView/${it.id}")
                                     },
                                 elevation = 10.dp
                             ) {

@@ -77,7 +77,8 @@ fun AllCharactersView(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("newCharacterView/ClassView/-1")
+                    allCharactersViewModel.currentId.value = -1
+                    navController.navigate("newCharacterView/ClassView")
                 }
             ) {
                 Icon(Icons.Default.Add, "Add Character")
@@ -99,7 +100,10 @@ fun AllCharactersView(
                         .fillMaxWidth(0.95f)
                         .combinedClickable(
                             onClick = { navController.navigate("characterView/MainView/${character.id}") },
-                            onLongClick = { navController.navigate("newCharacterView/ClassView/${character.id}") }
+                            onLongClick = {
+                                allCharactersViewModel.currentId.value = character.id
+                                navController.navigate("newCharacterView/ClassView")
+                            }
                         ),
                     elevation = 10.dp
                 ) {
@@ -120,7 +124,8 @@ fun AllCharactersView(
                                 Box(
                                     modifier = Modifier
                                         .clickable {
-                                            navController.navigate("newCharacterView/ClassView/${character.id}")
+                                            allCharactersViewModel.currentId.value = character.id
+                                            navController.navigate("newCharacterView/ClassView")
                                         }
                                 ) {
                                     Icon(

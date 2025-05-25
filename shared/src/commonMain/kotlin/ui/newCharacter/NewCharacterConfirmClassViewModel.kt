@@ -30,7 +30,8 @@ class NewCharacterConfirmClassViewModel constructor(
     featRepository: FeatRepository,
     private val characterRepository: CharacterRepository,
     private val classRepository: ClassRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    val id : MutableStateFlow<Int>
 ) : ViewModel() {
     val clazz = classRepository.getClass(savedStateHandle.get<String>("classId")!!.toInt())
     var takeGold = mutableStateOf(false)
@@ -46,7 +47,6 @@ class NewCharacterConfirmClassViewModel constructor(
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     val levels = mutableStateOf(TextFieldValue("1"))
     val feats = featRepository.getFeats()
-    var id = -1
     val character = MutableStateFlow(Character())
     val subclasses =
         classRepository.getSubclassesByClassId(savedStateHandle.get<String>("classId")!!.toInt())
@@ -57,17 +57,13 @@ class NewCharacterConfirmClassViewModel constructor(
 
 
     init {
-        id = try {
-            savedStateHandle.get<String>("characterId")!!.toInt()
-        } catch (e: Exception) {
-            -1
-        }
-
-        if (id != -1) {
-            characterRepository.getLiveCharacterById(
-                savedStateHandle.get<String>("characterId")!!.toInt(),
-                character
-            )
+        viewModelScope.launch {
+            id.collect {
+                characterRepository.getLiveCharacterById(
+                    it,
+                    character
+                )
+            }
         }
 
         viewModelScope.launch {
@@ -108,7 +104,7 @@ class NewCharacterConfirmClassViewModel constructor(
                     characterRepository.insertFeatureChoiceChoiceEntity(
                         featureId = chosen.featureId,
                         choiceId = choice.id,
-                        characterId = id
+                        characterId = id.value
                     )
                 }
             }
@@ -116,148 +112,150 @@ class NewCharacterConfirmClassViewModel constructor(
     }
 
     suspend fun addClassLevels() {
-        if (id == -1)
-            id = characterRepository.createDefaultCharacter()
-        clazz.first().let { value ->
-            characterRepository.removeFeatureChoiceCrossRefs(
-                value,
-                id
-            )
+        if (id.value == -1)
+            id.value = characterRepository.createDefaultCharacter()
+        viewModelScope.launch {
+            clazz.first().let { value ->
+                characterRepository.removeFeatureChoiceCrossRefs(
+                    value,
+                    id.value
+                )
 
-            characterRepository.insertCharacterClassCrossRef(
-                characterId = id,
-                classId = value.id
-            )
-            saveFeatures(value.levelPath!!)
+                characterRepository.insertCharacterClassCrossRef(
+                    characterId = id.value,
+                    classId = value.id
+                )
+                saveFeatures(value.levelPath!!)
 
-            characterRepository.removeClassSpellCrossRefs(
-                value.id,
-                id
-            )
+                characterRepository.removeClassSpellCrossRefs(
+                    value.id,
+                    id.value
+                )
 
-            val temp = if (character.value != null) {
-                character.value!!
-            } else {
-                characterRepository.getCharacterById(id)
-            }
-            value.level = toNumber(levels)
-            temp.addClass(value, takeGold = takeGold.value)
-            characterRepository.insertSpellSlots(temp.spellSlots, id)
-            characterRepository.setHp(id, temp.maxHp.toString())
-
-            //Persist feat choices and calculate ASIs.
-            for ((i, item) in isFeat.withIndex()) {
-                if (item) {
-                    characterRepository.addFeatsToCharacterClass(
-                        characterId = id,
-                        classId = value.id,
-                        feats = getFeatsAt(
-                            i,
-                            toNumber(levels),
-                            featDropDownStates,
-                            featChoiceDropDownStates,
-                            feats.firstOrNull() ?: emptyList()
-                        )
-                    )
+                val temp = if (character.value != null) {
+                    character.value!!
                 } else {
-                    value.abilityImprovementsGranted.add(
-                        (absDropDownStates[i].getSelected(shortStatNames) as List<String>).let {
-                            val temp = mutableMapOf<String, Int>()
-                            it.forEach { name ->
-                                temp[name] = temp.getOrElse(name, { 0 }) + 1
+                    characterRepository.getCharacterById(id.value)
+                }
+                value.level = toNumber(levels)
+                temp.addClass(value, takeGold = takeGold.value)
+                characterRepository.insertSpellSlots(temp.spellSlots, id.value)
+                characterRepository.setHp(id.value, temp.maxHp.toString())
+
+                //Persist feat choices and calculate ASIs.
+                for ((i, item) in isFeat.withIndex()) {
+                    if (item) {
+                        characterRepository.addFeatsToCharacterClass(
+                            characterId = id.value,
+                            classId = value.id,
+                            feats = getFeatsAt(
+                                i,
+                                toNumber(levels),
+                                featDropDownStates,
+                                featChoiceDropDownStates,
+                                feats.firstOrNull() ?: emptyList()
+                            )
+                        )
+                    } else {
+                        value.abilityImprovementsGranted.add(
+                            (absDropDownStates[i].getSelected(shortStatNames) as List<String>).let {
+                                val temp = mutableMapOf<String, Int>()
+                                it.forEach { name ->
+                                    temp[name] = temp.getOrElse(name, { 0 }) + 1
+                                }
+                                temp
                             }
-                            temp
-                        }
-                    )
-                }
-            }
-
-            //Calculate equipment choices and proficiency choices,
-            if (isBaseClass.value) {
-                value.proficiencyChoices.forEach {
-                    it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>
+                        )
+                    }
                 }
 
-                if (!takeGold.value) {
-                    value.equipmentChoices.forEach {
-                        it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<ItemInterface>>
+                //Calculate equipment choices and proficiency choices,
+                if (isBaseClass.value) {
+                    value.proficiencyChoices.forEach {
+                        it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>
                     }
 
-                    //Store equipment choices
-                    characterRepository.insertCharacterClassEquipment(
-                        value.equipmentChoices,
-                        value.equipment,
-                        id
-                    )
-                } else {
-                    val gold = goldRolled.value.toIntOrNull()?.times(value.startingGoldMultiplier)
-                    characterRepository.setClassGold(gold ?: 0, id)
+                    if (!takeGold.value) {
+                        value.equipmentChoices.forEach {
+                            it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<ItemInterface>>
+                        }
+
+                        //Store equipment choices
+                        characterRepository.insertCharacterClassEquipment(
+                            value.equipmentChoices,
+                            value.equipment,
+                            id.value
+                        )
+                    } else {
+                        val gold = goldRolled.value.toIntOrNull()?.times(value.startingGoldMultiplier)
+                        characterRepository.setClassGold(gold ?: 0, id.value)
+                    }
                 }
-            }
 
-            //Insert a classChoiceEntity.
-            characterRepository.insertClassChoiceEntity(
+                //Insert a classChoiceEntity.
+                characterRepository.insertClassChoiceEntity(
 
-                classId = value.id,
-                characterId = id,
-                level = toNumber(levels),
-                isBaseClass = isBaseClass.value,
-                totalNumOnGoldDie = goldRolled.value.toInt(),
-                tookGold = takeGold.value,
-                abilityImprovementsGranted = value.abilityImprovementsGranted,
-                proficiencyChoicesByString = value.proficiencyChoices.map { it.chosenByString },
-
-                )
-
-            value.pactMagic?.let {
-                characterRepository.insertPactMagicStateEntity(
-                    characterId = id,
                     classId = value.id,
-                    slotsCurrentAmount = it.pactSlots[toNumber(levels) - 1].currentAmount
-                )
-            }
+                    characterId = id.value,
+                    level = toNumber(levels),
+                    isBaseClass = isBaseClass.value,
+                    totalNumOnGoldDie = goldRolled.value.toInt(),
+                    tookGold = takeGold.value,
+                    abilityImprovementsGranted = value.abilityImprovementsGranted,
+                    proficiencyChoicesByString = value.proficiencyChoices.map { it.chosenByString },
 
-            //Store all class spells.
-            if (value.spellCasting != null || value.pactMagic != null) {
-                val defaultPreparedness =
-                    if (value.spellCasting?.prepareFrom == null) false else null
-                classSpells.forEach {
-                    characterRepository.insertCharacterClassSpellCrossRef(
+                    )
+
+                value.pactMagic?.let {
+                    characterRepository.insertPactMagicStateEntity(
+                        characterId = id.value,
                         classId = value.id,
-                        spellId = it.id,
-                        characterId = id,
-                        prepared = defaultPreparedness
+                        slotsCurrentAmount = it.pactSlots[toNumber(levels) - 1].currentAmount
                     )
                 }
-            }
 
-            //If the level is high enough persist subclass choices
-            if (toNumber(levels) >= value.level) {
-                val subclass = (subclassDropdownState?.getSelected(
-                    subclasses.firstOrNull() ?: emptyList()
-                ) as List<Subclass>).getOrNull(
-                    0
-                )
+                //Store all class spells.
+                if (value.spellCasting != null || value.pactMagic != null) {
+                    val defaultPreparedness =
+                        if (value.spellCasting?.prepareFrom == null) false else null
+                    classSpells.forEach {
+                        characterRepository.insertCharacterClassSpellCrossRef(
+                            classId = value.id,
+                            spellId = it.id,
+                            characterId = id.value,
+                            prepared = defaultPreparedness
+                        )
+                    }
+                }
 
-                if (subclass != null) {
-                    characterRepository.insertCharacterSubclassCrossRef(
-                        subclassId = subclass.subclassId,
-                        classId = value.id,
-                        characterId = id
+                //If the level is high enough persist subclass choices
+                if (toNumber(levels) >= value.level) {
+                    val subclass = (subclassDropdownState?.getSelected(
+                        subclasses.firstOrNull() ?: emptyList()
+                    ) as List<Subclass>).getOrNull(
+                        0
                     )
 
-                    saveFeatures(subclass.features!!)
+                    if (subclass != null) {
+                        characterRepository.insertCharacterSubclassCrossRef(
+                            subclassId = subclass.subclassId,
+                            classId = value.id,
+                            characterId = id.value
+                        )
 
-                    if (subclass.spellCasting != null) {
-                        val defaultPreparedness =
-                            if (subclass.spellCasting?.prepareFrom == null) false else null
-                        subclassSpells.forEach {
-                            characterRepository.insertSubclassSpellCastingSpellCrossRef(
-                                subclassId = subclass.subclassId,
-                                spellId = it.id,
-                                characterId = id,
-                                isPrepared = defaultPreparedness
-                            )
+                        saveFeatures(subclass.features!!)
+
+                        if (subclass.spellCasting != null) {
+                            val defaultPreparedness =
+                                if (subclass.spellCasting?.prepareFrom == null) false else null
+                            subclassSpells.forEach {
+                                characterRepository.insertSubclassSpellCastingSpellCrossRef(
+                                    subclassId = subclass.subclassId,
+                                    spellId = it.id,
+                                    characterId = id.value,
+                                    isPrepared = defaultPreparedness
+                                )
+                            }
                         }
                     }
                 }

@@ -3,8 +3,10 @@ package ui.newCharacter
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import model.*
 import model.repositories.BackgroundRepository
 import model.repositories.CharacterRepository
@@ -18,73 +20,71 @@ import ui.utils.toStringList
 class NewCharacterConfirmBackgroundViewModel constructor(
     backgroundRepository: BackgroundRepository,
     private val characterRepository: CharacterRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    val id : MutableStateFlow<Int>
 ) : ViewModel() {
     var dropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     var featureDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
-    var id = -1
     val character = MutableStateFlow(Character())
     val background =
         backgroundRepository.getBackground(savedStateHandle.get<String>("backgroundId")!!.toInt())
 
 
     init {
-        id = try {
-            savedStateHandle.get<String>("characterId")!!.toInt()
-        } catch (e: Exception) {
-            -1
-        }
-
-        if (id != -1) {
-            characterRepository.getLiveCharacterById(
-                savedStateHandle.get<String>("characterId")!!.toInt(),
-                character
-            )
+        viewModelScope.launch {
+            id.collect {
+                characterRepository.getLiveCharacterById(
+                    it,
+                    character
+                )
+            }
         }
     }
 
 
     suspend fun setBackGround() {
-        if (id == -1)
-            id = characterRepository.createDefaultCharacter()
+        if (id.value == -1)
+            id.value = characterRepository.createDefaultCharacter()
 
-        background.first().let { value ->
-            characterRepository.insertCharacterBackgroundCrossRef(
-                backgroundId = value.id,
-                characterId = id
-            )
+        viewModelScope.launch {
+            background.first().let { value ->
+                characterRepository.insertCharacterBackgroundCrossRef(
+                    backgroundId = value.id,
+                    characterId = id.value
+                )
 
-            value.languageChoices!!.forEach {
-                it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Language>
-            }
-            value.equipmentChoices.forEach {
-                it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
-            }
-
-            val backgroundCurrencyMap = Currency.getEmptyCurrencyMap()
-            value.equipment.forEach {
-                if (it is Currency) {
-                    backgroundCurrencyMap[it.abbreviatedName]!!.amount += it.amount
+                value.languageChoices!!.forEach {
+                    it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Language>
                 }
-            }
-            characterRepository.setBackgroundCurrency(
-                backgroundCurrencyMap,
-                id
-            )
-
-            characterRepository.insertBackgroundChoiceEntity(
-                backgroundId = value.id,
-                characterId = id,
-                languageChoices = value.languageChoices?.toStringList() ?: emptyList()
-            )
-
-            value.features?.forEach { feature ->
-                feature.choices?.forEach {
-                    it.chosen =
-                        featureDropDownStates[feature.name + feature.grantedAtLevel]?.getSelected()
+                value.equipmentChoices.forEach {
+                    it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<List<Item>>
                 }
+
+                val backgroundCurrencyMap = Currency.getEmptyCurrencyMap()
+                value.equipment.forEach {
+                    if (it is Currency) {
+                        backgroundCurrencyMap[it.abbreviatedName]!!.amount += it.amount
+                    }
+                }
+                characterRepository.setBackgroundCurrency(
+                    backgroundCurrencyMap,
+                    id.value
+                )
+
+                characterRepository.insertBackgroundChoiceEntity(
+                    backgroundId = value.id,
+                    characterId = id.value,
+                    languageChoices = value.languageChoices?.toStringList() ?: emptyList()
+                )
+
+                value.features?.forEach { feature ->
+                    feature.choices?.forEach {
+                        it.chosen =
+                            featureDropDownStates[feature.name + feature.grantedAtLevel]?.getSelected()
+                    }
+                }
+                saveFeatures(value.features!!)
             }
-            saveFeatures(value.features!!)
         }
     }
 
@@ -95,7 +95,7 @@ class NewCharacterConfirmBackgroundViewModel constructor(
                     characterRepository.insertFeatureChoiceChoiceEntity(
                         featureId = chosen.featureId,
                         choiceId = choice.id,
-                        characterId = id
+                        characterId = id.value
                     )
                 }
             }

@@ -91,10 +91,10 @@ fun ConfirmClassView(
     }
 
     LaunchedEffect(
-        viewModel.character.collectAsState().value?.id,
+        viewModel.character.collectAsState().value.id,
         viewModel.featNames.collectAsState(emptyList()).value
     ) {
-        if (viewModel.character.value != null && viewModel.featNames.lastOrNull() != null) {
+        if (viewModel.character.value.id != 0 && viewModel.featNames.lastOrNull() != null) {
             viewModel.applyAlreadySelectedChoices()
         }
     }
@@ -103,7 +103,7 @@ fun ConfirmClassView(
         "ConfirmClassView",
         { id ->
             viewModel.addClassLevels()
-            id.value = viewModel.id
+            id.value = viewModel.id.value
         },
         navController,
     )
@@ -142,7 +142,7 @@ fun ConfirmClassView(
                         if(!autosaveEnabled.value) viewModel.addClassLevels()
                     }
                     //Navigate to the next step
-                    navController.navigate("newCharacterView/RaceView/${viewModel.id}")
+                    navController.navigate("newCharacterView/RaceView")
                 },
             ) {
                 Text(text = "Add class")

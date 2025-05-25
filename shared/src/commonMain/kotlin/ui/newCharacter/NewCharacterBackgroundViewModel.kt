@@ -18,27 +18,24 @@ import org.koin.android.annotation.KoinViewModel
 public class NewCharacterBackgroundViewModel constructor(
     private val backgroundRepository: BackgroundRepository,
     characterRepository: CharacterRepository,
-     savedStateHandle: SavedStateHandle
-): ViewModel(){
-    lateinit var backgrounds : Flow<List<Background>>
-    var id = -1
+    savedStateHandle: SavedStateHandle,
+    val id: MutableStateFlow<Int>
+) : ViewModel() {
+    lateinit var backgrounds: Flow<List<Background>>
     val character: MutableStateFlow<Character> = MutableStateFlow(Character())
 
     init {
         viewModelScope.launch {
-           backgrounds = backgroundRepository.getBackgrounds()
-        }
-        id = try {
-            savedStateHandle.get<String>("characterId")!!.toInt()
-        } catch (e: Exception) {
-            -1
+            backgrounds = backgroundRepository.getBackgrounds()
         }
 
-        if(id !=-1) {
-            characterRepository.getLiveCharacterById(
-                savedStateHandle.get<String>("characterId")!!.toInt(),
-                character
-            )
+        viewModelScope.launch {
+            id.collect {
+                characterRepository.getLiveCharacterById(
+                    it,
+                    character
+                )
+            }
         }
     }
 }

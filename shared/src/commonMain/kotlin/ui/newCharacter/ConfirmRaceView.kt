@@ -67,7 +67,7 @@ fun ConfirmRaceView(
                 "ConfirmRaceView",
                 { id ->
                     viewModel.setRace()
-                    id.value = viewModel.id
+                    id.value = viewModel.id.value
                 },
                 navController
             )
@@ -91,7 +91,7 @@ fun ConfirmRaceView(
                     scope.launch {
                         if(!autosaveEnabled.value) viewModel.setRace()
                     }
-                    navController.navigate("newCharacterView/BackgroundView/${viewModel.id}")
+                    navController.navigate("newCharacterView/BackgroundView")
                 }) {
                     Text(text = "Set as race")
                 }

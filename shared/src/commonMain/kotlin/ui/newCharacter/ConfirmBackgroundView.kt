@@ -41,7 +41,7 @@ fun ConfirmBackgroundView(
             "ConfirmBackgroundView",
             { id ->
                 viewModel.setBackGround()
-                id.value = viewModel.id
+                id.value = viewModel.id.value
             },
             navController
         )
@@ -71,7 +71,7 @@ fun ConfirmBackgroundView(
                                 GlobalScope.launch {
                                     if(!autosaveEnabled.value) viewModel.setBackGround()
                                 }
-                                navController.navigate("newCharacterView/StatsView/${viewModel.id}")
+                                navController.navigate("newCharacterView/StatsView")
                             }
                         ) {
                             Text(text = "Set")

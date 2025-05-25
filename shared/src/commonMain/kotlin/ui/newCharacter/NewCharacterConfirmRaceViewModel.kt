@@ -21,13 +21,13 @@ import org.koin.android.annotation.KoinViewModel
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import ui.utils.toStringList
-import kotlin.properties.Delegates
 
 @KoinViewModel
 public class NewCharacterConfirmRaceViewModel constructor(
     raceRepository: RaceRepository,
     private val characterRepository: CharacterRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    val id : MutableStateFlow<Int>
 ) : ViewModel() {
     val subraceFeatDropdownStates = mutableStateListOf<MultipleChoiceDropdownStateImpl>()
     val subraceFeatChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
@@ -38,26 +38,23 @@ public class NewCharacterConfirmRaceViewModel constructor(
     val raceProficiencyChoiceDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     var subraceASIDropdownState = mutableStateOf<MultipleChoiceDropdownStateImpl?>(null)
     var subraceIndex = mutableStateOf(0)
-    var id by Delegates.notNull<Int>()
-    val character= MutableStateFlow(Character())
+    val character = MutableStateFlow(Character())
     val customizeStats = mutableStateOf(false)
     val customRaceStatsMap = mutableStateMapOf<String, String>()
     val race = raceRepository.getLiveRaceById(savedStateHandle.get<String>("raceId")!!.toInt())
     val subraces = raceRepository.getSubracesByRaceId(savedStateHandle.get<String>("raceId")!!.toInt())
-    private val selectedSubraceASIs  = mutableStateOf<List<Pair<String, Int>>>(emptyList())
+    private val selectedSubraceASIs = mutableStateOf<List<Pair<String, Int>>>(emptyList())
 
     init {
-        try {
-            id = savedStateHandle.get<String>("characterId")!!.toInt()
-            if(id !=-1) {
+        viewModelScope.launch {
+            id.collect {
                 characterRepository.getLiveCharacterById(
-                    savedStateHandle.get<String>("characterId")!!.toInt(),
+                    it,
                     character
                 )
             }
-        } catch (E: Exception) {
-            id = -1
         }
+
         viewModelScope.launch {
             selectedSubraceASIs.value = (subraceASIDropdownState.value?.getSelected(
                 subraces.last()?.get(subraceIndex.value)
@@ -71,29 +68,31 @@ public class NewCharacterConfirmRaceViewModel constructor(
         }
     }
 
-     suspend fun setRace() {
-        if (id == -1)
-            id = characterRepository.createDefaultCharacter()
-        val value= race.first()
-        characterRepository.insertCharacterRaceCrossRef(
-            raceId = value!!.raceId,
-            characterId = id
-        )
-         val languageChoices = mutableListOf<List<String>>()
-         value!!.languageChoices.forEach { languageChoice ->
-             languageChoices.add((
-                     languageDropdownStates[languageChoice.name]?.getSelected(languageChoice.from)
-                             as List<Language>).map { it.name ?: "" } )
-         }
-
-        value!!.proficiencyChoices.forEach {
-            it.chosen = raceProficiencyChoiceDropdownStates[it.name]
-                ?.getSelected(it.from) as List<Proficiency>
-        }
-
-        characterRepository.insertRaceChoiceEntity(
+    suspend fun setRace() {
+        if (id.value == -1)
+            id.value = characterRepository.createDefaultCharacter()
+        viewModelScope.launch {
+            val value = race.first()
+            characterRepository.insertCharacterRaceCrossRef(
                 raceId = value!!.raceId,
-                characterId = id,
+                characterId = id.value
+            )
+            val languageChoices = mutableListOf<List<String>>()
+            value!!.languageChoices.forEach { languageChoice ->
+                languageChoices.add(
+                    (
+                            languageDropdownStates[languageChoice.name]?.getSelected(languageChoice.from)
+                                    as List<Language>).map { it.name ?: "" })
+            }
+
+            value!!.proficiencyChoices.forEach {
+                it.chosen = raceProficiencyChoiceDropdownStates[it.name]
+                    ?.getSelected(it.from) as List<Proficiency>
+            }
+
+            characterRepository.insertRaceChoiceEntity(
+                raceId = value!!.raceId,
+                characterId = id.value,
                 abilityBonusChoice = emptyList(),
                 proficiencyChoice = value!!.proficiencyChoices.toStringList(),
                 languageChoice = languageChoices,
@@ -101,52 +100,57 @@ public class NewCharacterConfirmRaceViewModel constructor(
                     value?.abilityBonuses ?: emptyList(),
                     customRaceStatsMap
                 )
-        )
-
-        storeFeatureChoices(filterRaceFeatures(value!!),raceFeaturesDropdownStates)
-
-
-        subraces.firstOrNull()?.getOrNull(subraceIndex.value)?.let { subrace ->
-            characterRepository.insertCharacterSubraceCrossRef(
-                characterId = id,
-                subraceId = subrace.id
             )
 
-            subrace.languageChoices.forEach {
-                it.chosen = languageDropdownStates[it.name]
-                    ?.getSelected(it.from) as List<Language>
-            }
+            storeFeatureChoices(filterRaceFeatures(value!!), raceFeaturesDropdownStates)
 
-            val languageChoices = mutableListOf<List<String>>()
-            subrace.languageChoices.forEach { languageChoice ->
-                languageChoices.add((
-                        languageDropdownStates[languageChoice.name]?.getSelected(languageChoice.from)
-                                as List<Language>).map { it.name ?: "" } )
-            }
-            characterRepository.insertSubraceChoiceEntity(
-                SubraceChoiceEntity(
-                    subraceId = subrace.id,
-                    characterId = id,
-                    languageChoice = languageChoices,
-                    abilityBonusChoice = subraceASIDropdownState.value?.getSelected(
-                        subrace.abilityBonusChoice?.from?.toStringList() ?: emptyList()
-                    ) as List<String>? ?: emptyList(),
-                    abilityBonusOverrides = getStateBonuses(
-                        subrace.abilityBonuses ?: emptyList(),
-                        customSubraceStatsMap
+
+            subraces.firstOrNull()?.getOrNull(subraceIndex.value)?.let { subrace ->
+                characterRepository.insertCharacterSubraceCrossRef(
+                    characterId = id.value,
+                    subraceId = subrace.id
+                )
+
+                subrace.languageChoices.forEach {
+                    it.chosen = languageDropdownStates[it.name]
+                        ?.getSelected(it.from) as List<Language>
+                }
+
+                val languageChoices = mutableListOf<List<String>>()
+                subrace.languageChoices.forEach { languageChoice ->
+                    languageChoices.add(
+                        (
+                                languageDropdownStates[languageChoice.name]?.getSelected(languageChoice.from)
+                                        as List<Language>).map { it.name ?: "" })
+                }
+                characterRepository.insertSubraceChoiceEntity(
+                    SubraceChoiceEntity(
+                        subraceId = subrace.id,
+                        characterId = id.value,
+                        languageChoice = languageChoices,
+                        abilityBonusChoice = subraceASIDropdownState.value?.getSelected(
+                            subrace.abilityBonusChoice?.from?.toStringList() ?: emptyList()
+                        ) as List<String>? ?: emptyList(),
+                        abilityBonusOverrides = getStateBonuses(
+                            subrace.abilityBonuses ?: emptyList(),
+                            customSubraceStatsMap
+                        )
                     )
                 )
-            )
+            }
+            val temp = if (character.value != null) {
+                character.value!!
+            } else {
+                characterRepository.getCharacterById(id.value)
+            }
+            characterRepository.setHp(id.value, temp.maxHp.toString())
         }
-         val temp = if(character.value != null) {
-             character.value!!
-         } else {
-             characterRepository.getCharacterById(id)
-         }
-         characterRepository.setHp(id, temp.maxHp.toString())
     }
 
-    private suspend fun storeFeatureChoices(features: List<Feature>, dropdownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>) {
+    private suspend fun storeFeatureChoices(
+        features: List<Feature>,
+        dropdownStates: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>
+    ) {
         features.forEach { feature ->
             feature.choices?.forEachIndexed { index, it ->
                 if (it.choose.num(
@@ -161,7 +165,7 @@ public class NewCharacterConfirmRaceViewModel constructor(
                         characterRepository.insertFeatureChoiceChoiceEntity(
                             featureId = chosen.featureId,
                             choiceId = it.id,
-                            characterId = id
+                            characterId = id.value
                         )
                     }
                 }
@@ -193,11 +197,11 @@ public class NewCharacterConfirmRaceViewModel constructor(
     suspend fun calculateAssumedStatBonuses(): MutableMap<String, Int> {
         val result = mutableMapOf<String, Int>()
         val applyBonus = fun(name: String, amount: Int) {
-            result[name.substring(0, 3)]    =
+            result[name.substring(0, 3)] =
                 (result[name.substring(0, 3)] ?: 0) + amount
         }
-        val value =  race.last()
-        val subracesValue =  subraces.last()
+        val value = race.last()
+        val subracesValue = subraces.last()
         getStateBonuses(
             value?.abilityBonuses ?: emptyList(),
             customRaceStatsMap
@@ -225,15 +229,15 @@ public class NewCharacterConfirmRaceViewModel constructor(
     suspend fun filterRaceFeatures(
         race: Race?,
     ): List<Feature> {
-        val value =  subraces.last()
+        val value = subraces.last()
         race?.subrace = value.getOrNull(subraceIndex.value)
         return race?.filterRaceFeatures() ?: listOf()
     }
 
-    fun getStatOptions(ability: String, targetMap: MutableMap<String, String>) : MutableList<String> {
+    fun getStatOptions(ability: String, targetMap: MutableMap<String, String>): MutableList<String> {
         val result = mutableListOf<String>()
         statNames.forEach {
-            if(it == ability || !targetMap.values.contains(it)) {
+            if (it == ability || !targetMap.values.contains(it)) {
                 result += it
             }
         }
@@ -244,8 +248,8 @@ public class NewCharacterConfirmRaceViewModel constructor(
     private fun getStateBonuses(
         bonuses: List<AbilityBonus>,
         targetMap: MutableMap<String, String>
-    ) : List<AbilityBonus> {
-        return if(customizeStats.value) {
+    ): List<AbilityBonus> {
+        return if (customizeStats.value) {
             val result = mutableListOf<AbilityBonus>()
             targetMap.forEach { stat ->
                 val bonus = bonuses.first { it.ability == stat.key }.bonus

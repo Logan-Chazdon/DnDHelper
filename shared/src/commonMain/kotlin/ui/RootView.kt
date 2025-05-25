@@ -55,9 +55,10 @@ fun RootView(allCharactersViewModel: AllCharactersViewModel = koinViewModel()) {
                         ),
                         NavItem(
                             name = "New Character",
-                            route = "newCharacterView/ClassView/-1",
+                            route = "newCharacterView/ClassView",
                             baseRoute = "newCharacterView/ClassView",
-                            icon = Icons.Default.Add
+                            icon = Icons.Default.Add,
+                            onNav = { allCharactersViewModel.currentId.value = -1 }
                         ),
                         NavItem(
                             name = "Homebrew",
@@ -74,6 +75,7 @@ fun RootView(allCharactersViewModel: AllCharactersViewModel = koinViewModel()) {
                 ),
                 navController = navController,
                 onItemClick = {
+                    it.onNav?.let { onNav -> onNav() }
                     navController.navigate(it.route)
                 },
                 scaffoldState = scaffoldState,
@@ -84,30 +86,29 @@ fun RootView(allCharactersViewModel: AllCharactersViewModel = koinViewModel()) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             when (val route = navBackStackEntry?.destination?.route?.split("/")?.get(0)) {
                 "newCharacterView" -> {
-                    val id : Int = navBackStackEntry?.arguments?.getString("characterId")?.toInt() ?: -1
                     BottomNavigationBar(
                         items = listOf(
                             NavItem(
                                 name = "Class",
-                                route = "$route/ClassView/$id",
+                                route = "$route/ClassView",
                                 baseRoute = "$route/ClassView",
                                 icon = Icons.Default.Home
                             ),
                             NavItem(
                                 name = "Race",
-                                route = "$route/RaceView/$id",
+                                route = "$route/RaceView",
                                 baseRoute = "$route/RaceView",
                                 painter = painterResource(Res.drawable.ic_race_icon)
                             ),
                             NavItem(
                                 name = "Background",
-                                route = "$route/BackgroundView/$id",
+                                route = "$route/BackgroundView",
                                 baseRoute = "$route/BackgroundView",
                                 painter = painterResource(Res.drawable.ic_background_icon)
                             ),
                             NavItem(
                                 name = "Stats",
-                                route = "$route/StatsView/$id",
+                                route = "$route/StatsView",
                                 baseRoute = "$route/StatsView",
                                 painter = painterResource(Res.drawable.ic_stats_icon)
                             )

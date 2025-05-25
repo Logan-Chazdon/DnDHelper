@@ -1,7 +1,6 @@
 package ui.newCharacter
 
 import androidx.compose.runtime.*
-
 import androidx.navigation.NavController
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -18,15 +17,14 @@ fun AutoSave(
     saveRegardless: Boolean = false
 ) {
     val autoSaveFlow: Flow<Boolean> = DataStore.autoSave()
-    if(autoSaveFlow.collectAsState(initial = true).value || saveRegardless) {
+    if (autoSaveFlow.collectAsState(initial = true).value || saveRegardless) {
         DisposableEffect(true) {
+            val id = mutableStateOf(-1)
             val listener =
-                NavController.OnDestinationChangedListener { _, destination, arguments ->
+                NavController.OnDestinationChangedListener { _, destination, _ ->
                     GlobalScope.launch {
                         if (destination.route?.contains(name) != true) {
-                            val id = mutableStateOf(-1)
                             onSave(id)
-                            arguments!!.putString("characterId", id.value.toString())
                         }
                     }
                 }

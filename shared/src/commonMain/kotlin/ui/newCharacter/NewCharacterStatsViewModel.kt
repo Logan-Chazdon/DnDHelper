@@ -13,34 +13,41 @@ import ui.newCharacter.utils.indexOf
 import kotlin.random.Random
 
 @KoinViewModel
-class NewCharacterStatsViewModel constructor(
+class NewCharacterStatsViewModel(
     private val characterRepository: CharacterRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val idFlow: MutableStateFlow<Int>
 ) : ViewModel() {
+    private val statNames = listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")
+    //Used to sync across threads ot avoid overwrites.
+    private var notCopyingCharacter: Boolean = true
     var character: Character? = null
     var currentStateGenTypeIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     var currentStats = MutableStateFlow(listOf<Int>())
     var selectedStatIndexes = MutableStateFlow(listOf(-1, -1, -1, -1, -1, -1))
     var currentStatsOptions = MutableStateFlow(listOf<Int>())
     var pointsRemaining = MutableStateFlow(27)
-    var id = -1
+    var id: Int
+        get() = idFlow.value
+        set(it) {
+            idFlow.value = it
+        }
 
     private suspend fun updateStats() {
         if (id == -1)
             id = characterRepository.createDefaultCharacter()
         character = characterRepository.getCharacterById(id)
         character!!.baseStats = generateStatMap()
-        character!!.statGenerationMethodIndex = currentStateGenTypeIndex.value!!
+        character!!.statGenerationMethodIndex = currentStateGenTypeIndex.value
         if (character!!.baseStats.isNotEmpty())
             characterRepository.insertCharacter(character!!)
     }
 
     private fun generateStatMap(): MutableMap<String, Int> {
         val statMap = mutableMapOf<String, Int>()
-        val statNames = listOf("Str", "Dex", "Con", "Int", "Wis", "Cha")
-        selectedStatIndexes.value?.forEachIndexed { i, it ->
+        selectedStatIndexes.value.forEachIndexed { i, it ->
             if (it != -1) {
-                statMap[statNames[i]] = currentStats.value?.get(it)!!
+                statMap[statNames[i]] = currentStats.value.get(it)
             }
         }
         return statMap
@@ -48,67 +55,76 @@ class NewCharacterStatsViewModel constructor(
 
 
     init {
-        id = try {
-            savedStateHandle.get<String>("characterId")!!.toInt()
-        } catch (E: Exception) {
-            -1
-        }
-        viewModelScope.launch() {
-            if (id != -1) {
-                character = characterRepository.getCharacterById(id)
-                character?.let {
-                    if (!it.baseStats.values.contains(0) && it.baseStats.isNotEmpty()) {
-                        currentStateGenTypeIndex.value = it.statGenerationMethodIndex
-                        selectedStatIndexes.emit(listOf(0, 1, 2, 3, 4, 5))
-                        currentStats.emit(it.baseStats.values.toList())
-                    }
-                }
-            }
-
-
+        viewModelScope.launch {
             currentStateGenTypeIndex.collect {
                 val newStats = mutableListOf<Int>()
-
-                when (it) {
-                    //Point Buy
-                    0 -> {
-                        pointsRemaining.value = (27)
-                        newStats.add(8)
-                        for (i in 1..7) {
-                            if (pointsRemaining.value!! >= i) {
-                                newStats.add(8 + i)
+                if (notCopyingCharacter) {
+                    when (it) {
+                        //Point Buy
+                        0 -> {
+                            pointsRemaining.value = (27)
+                            newStats.add(8)
+                            for (i in 1..7) {
+                                if (pointsRemaining.value >= i) {
+                                    newStats.add(8 + i)
+                                }
                             }
                         }
-                    }
-                    //Standard Array
-                    1 -> {
-                        newStats.addAll(listOf(15, 14, 13, 12, 10, 8))
-                    }
-                    //Rolled
-                    2 -> {
-                        for (i in 0..5) {
-                            newStats.add(i, rollAStat())
+                        //Standard Array
+                        1 -> {
+                            newStats.addAll(listOf(15, 14, 13, 12, 10, 8))
+                        }
+                        //Rolled
+                        2 -> {
+                            for (i in 0..5) {
+                                newStats.add(i, rollAStat())
+                            }
+                        }
+                        //Manual
+                        3 -> {
+                            selectedStatIndexes.emit(mutableListOf(0, 1, 2, 3, 4, 5))
+                            newStats.addAll(mutableListOf(3, 3, 3, 3, 3, 3))
                         }
                     }
-                    //Manual
-                    3 -> {
-                        selectedStatIndexes.emit(mutableListOf(0, 1, 2, 3, 4, 5))
-                        newStats.addAll(mutableListOf(3, 3, 3, 3, 3, 3))
+                    currentStats.emit(newStats)
+                    if (currentStateGenTypeIndex.value != 3)
+                        selectedStatIndexes.emit(listOf(-1, -1, -1, -1, -1, -1))
+                    generateCurrentStatOptions(selectedStatIndexes.value, newStats)
+                }
+                notCopyingCharacter = true
+            }
+        }
+
+
+        viewModelScope.launch {
+            idFlow.collect { collectedId ->
+                if (character == null && collectedId != -1) {
+                    character = characterRepository.getCharacterById(collectedId)
+
+                    if (!character!!.baseStats.values.contains(0) && character!!.baseStats.isNotEmpty()) {
+                        notCopyingCharacter = false
+                        if(character!!.statGenerationMethodIndex == 0) {
+                            notCopyingCharacter = true
+                        } else {
+                            currentStateGenTypeIndex.emit(character!!.statGenerationMethodIndex)
+                        }
+                        val newStats = mutableListOf<Int>()
+                        statNames.forEach {
+                            character!!.baseStats[it]?.let { statName -> newStats.add(statName) }
+                        }
+                        selectedStatIndexes.emit(listOf(0, 1, 2, 3, 4, 5))
+                        currentStats.emit(newStats)
                     }
                 }
-                currentStats.emit(newStats)
-                if (currentStateGenTypeIndex.value != 3)
-                    selectedStatIndexes.emit(listOf(-1, -1, -1, -1, -1, -1))
-                generateCurrentStatOptions(selectedStatIndexes.value!!, newStats)
             }
+        }
 
+        viewModelScope.launch {
             selectedStatIndexes.collect {
-                currentStats.value?.let { it1 ->
-                    generateCurrentStatOptions(
-                        selectedStatIndexes.value!!,
-                        it1
-                    )
-                }
+                generateCurrentStatOptions(
+                    selectedStatIndexes.value,
+                    currentStats.value
+                )
             }
         }
     }
@@ -128,20 +144,20 @@ class NewCharacterStatsViewModel constructor(
             val newStatOptions = mutableListOf<Int>()
             var points = 27
 
-            selectedStatIndexes.value?.forEach {
+            selectedStatIndexes.value.forEach {
                 try {
-                    points -= pointCost(currentStats.value?.get(it))
-                } catch (e: IndexOutOfBoundsException) {
+                    points -= pointCost(currentStats.value.get(it))
+                } catch (_: IndexOutOfBoundsException) {
                 }
             }
 
             newStatOptions.add(8)
             for (i in 1..7) {
                 try {
-                    if (points > pointCost(currentStats.value?.get(i - 1))) {
+                    if (points > pointCost(currentStats.value.get(i - 1))) {
                         newStatOptions.add(8 + i)
                     }
-                } catch (e: IndexOutOfBoundsException) {
+                } catch (_: IndexOutOfBoundsException) {
                 }
             }
 
@@ -150,7 +166,7 @@ class NewCharacterStatsViewModel constructor(
         }
     }
 
-    fun pointCost(score: Int?): Int {
+    private fun pointCost(score: Int?): Int {
         when (score) {
             8, 9, 10, 11, 12, 13 -> return score - 8
             14 -> return 7
@@ -162,22 +178,22 @@ class NewCharacterStatsViewModel constructor(
 
     fun selectedStatByIndex(index: Int, element: Int) {
         if (currentStateGenTypeIndex.value == 1 || currentStateGenTypeIndex.value == 2) {
-            val newIndexes = selectedStatIndexes.value?.toMutableList()
+            val newIndexes = selectedStatIndexes.value.toMutableList()
 
-            val x = currentStatsOptions.value!![element]
-            val num = currentStats.value!!.indexOf(x, getNumOfStatUses(x) + 1)
-            newIndexes?.set(index, num!!)
+            val x = currentStatsOptions.value[element]
+            val num = currentStats.value.indexOf(x, getNumOfStatUses(x) + 1)
+            newIndexes.set(index, num!!)
 
-            selectedStatIndexes.value = (newIndexes!!)
+            selectedStatIndexes.value = (newIndexes)
         } else {
             //Point buy
-            val newIndexes = selectedStatIndexes.value?.toMutableList()
+            val newIndexes = selectedStatIndexes.value.toMutableList()
 
-            val x = currentStatsOptions.value!![element]
-            val num = currentStats.value!!.indexOf(x)
-            newIndexes?.set(index, num)
+            val x = currentStatsOptions.value[element]
+            val num = currentStats.value.indexOf(x)
+            newIndexes.set(index, num)
 
-            selectedStatIndexes.value = newIndexes!!
+            selectedStatIndexes.value = newIndexes
         }
         GlobalScope.launch {
             updateStats()
@@ -186,12 +202,12 @@ class NewCharacterStatsViewModel constructor(
 
     private fun getNumOfStatUses(stat: Int): Int {
         var uses = 0
-        selectedStatIndexes.value?.forEach { item ->
+        selectedStatIndexes.value.forEach { item ->
             try {
-                if (currentStats.value?.get(item) ?: -1 == stat) {
+                if (currentStats.value.get(item) == stat) {
                     uses++
                 }
-            } catch (E: IndexOutOfBoundsException) {
+            } catch (_: IndexOutOfBoundsException) {
             }
         }
         return uses

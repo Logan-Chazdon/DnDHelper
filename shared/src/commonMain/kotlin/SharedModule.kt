@@ -1,5 +1,6 @@
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import model.repositories.*
 import org.koin.core.annotation.Module
 import org.koin.core.module.dsl.viewModel
@@ -12,7 +13,7 @@ import ui.newCharacter.*
 @Module
 class SharedModule {
     val module = module {
-        viewModel { AllCharactersViewModel(get()) }
+        val newCharacterId = MutableStateFlow(-1)
         viewModel { CharacterMainViewModel(get(), get()) }
         viewModel { CombatViewModel(get(), get()) }
         viewModel { ItemDetailsViewModel(get(), get()) }
@@ -25,13 +26,17 @@ class SharedModule {
         viewModel { HomebrewViewModel(get(), get(), get(), get(), get()) }
         viewModel { SubclassViewModel(get(), get(), get()) }
         viewModel { SubraceViewModel(get(), get(), get()) }
-        viewModel { NewCharacterBackgroundViewModel(get(), get(), get()) }
-        viewModel { NewCharacterConfirmBackgroundViewModel(get(), get(), get()) }
-        viewModel { NewCharacterClassViewModel(get(), get(), get()) }
-        viewModel { NewCharacterConfirmClassViewModel(get(), get(), get(), get()) }
-        viewModel { NewCharacterConfirmRaceViewModel(get(), get(), get()) }
-        viewModel { NewCharacterStatsViewModel(get(), get()) }
-        viewModel { NewCharacterRaceViewModel(get(), get()) }
+
+
+        viewModel { AllCharactersViewModel(get(), newCharacterId) }
+        viewModel { NewCharacterBackgroundViewModel(get(), get(), get(),newCharacterId) }
+        viewModel { NewCharacterConfirmBackgroundViewModel(get(), get(), get(), newCharacterId) }
+        viewModel { NewCharacterClassViewModel(get(), get(), get(), newCharacterId) }
+        viewModel { NewCharacterConfirmClassViewModel(get(), get(), get(), get(), newCharacterId) }
+        viewModel { NewCharacterConfirmRaceViewModel(get(), get(), get(), newCharacterId) }
+        viewModel { NewCharacterStatsViewModel(get(), get(), newCharacterId) }
+        viewModel { NewCharacterRaceViewModel(get(), get(), newCharacterId) }
+
 
 
 

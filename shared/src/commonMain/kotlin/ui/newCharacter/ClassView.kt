@@ -27,11 +27,9 @@ import org.jetbrains.compose.resources.painterResource
 fun ClassView(
     viewModel: NewCharacterClassViewModel,
     navController: NavController,
-    characterId: Int
 ) {
     val classes by viewModel.classes.collectAsState(emptyList())
     val scope = rememberCoroutineScope() //{ Dispatchers.IO }
-    viewModel.id = characterId
     val classIcons = listOf(
         painterResource(Res.drawable.ic_class_icon___artificer),
         painterResource(Res.drawable.ic_class_icon___barbarian),
@@ -68,7 +66,7 @@ fun ClassView(
                                 .fillMaxWidth(0.95f)
                                 .height(50.dp)
                                 .clickable {
-                                    navController.navigate("newCharacterView/ClassView/ConfirmClassView/${clazz.id}/$characterId")
+                                    navController.navigate("newCharacterView/ClassView/ConfirmClassView/${clazz.id}/${viewModel.id.value}")
                                 }
                         ) {
                             var deleteClassIsExpanded by remember {
@@ -164,7 +162,7 @@ fun ClassView(
                             shape = RoundedCornerShape(10.dp)
                         )
                         .clickable {
-                            navController.navigate("newCharacterView/ClassView/ConfirmClassView/${item.id}/$characterId")
+                            navController.navigate("newCharacterView/ClassView/ConfirmClassView/${item.id}")
                         }
                 ) {
                     Row {

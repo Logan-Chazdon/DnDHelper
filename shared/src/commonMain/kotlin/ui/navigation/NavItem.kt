@@ -10,6 +10,7 @@ data class NavItem(
     val baseRoute: String,
     val icon: ImageVector? = null,
     val painter: Painter? = null,
-    val badgeCount: Int = 0
+    val badgeCount: Int = 0,
+    val onNav: (() -> Unit)? = null
 )
 

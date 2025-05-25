@@ -10,32 +10,26 @@ object UnfilledCharacterSerializer {
     fun deserialize(input: String, format: Json): Character {
         val json = format.parseToJsonElement(input).jsonObject
         fun getString(key: String): String {
-            println(key)
             return json[key]?.jsonPrimitive?.content ?: ""
         }
 
         fun getInt(key: String): Int {
-            println(key)
             return json[key]?.jsonPrimitive?.int ?: 0
         }
 
         fun getBool(key: String): Boolean {
-            println(key)
             return json[key]?.jsonPrimitive?.boolean ?: false
         }
 
         fun getStringList(key: String): MutableList<String> {
-            println(key)
             return (json[key]?.jsonArray?.map { it.jsonPrimitive.content } ?: emptyList()).toMutableList()
         }
 
         fun getArray(key: String): JsonArray? {
-            println(key)
             return json[key]?.jsonArray
         }
 
         fun getProfs(key: String): MutableList<Proficiency> {
-            println(key)
             return getArray(key)?.map { format.decodeFromJsonElement<Proficiency>(it) }?.toMutableList()
                 ?: mutableListOf()
         }
@@ -51,7 +45,6 @@ object UnfilledCharacterSerializer {
         }
 
         fun getJsonObject(key: String) : String {
-            println(key)
             return json[key]?.jsonObject.toString()
         }
 
@@ -78,7 +71,6 @@ object UnfilledCharacterSerializer {
                 addedLanguages = getLangs("addedLanguages"),
                 addedProficiencies = getProfs("addedProficiencies")
             ).apply {
-                println(json.keys)
                 race =  if(json.keys.contains("race")) {
                     format.decodeFromString(getJsonObject("race"))
                 } else null

@@ -1085,9 +1085,8 @@ class SharedDataSource(
                 Language(languageJson.getString("name"))
             )
             ids.add(languageJson.getInt("id"))
-            languageManager.postAll(languages)
         }
-
+        languageManager.postAll(languages)
 
         languages.forEachIndexed { index, it ->
             featureManager.insertFeature(

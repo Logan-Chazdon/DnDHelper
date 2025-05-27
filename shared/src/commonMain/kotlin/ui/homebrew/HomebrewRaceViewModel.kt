@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import model.*
 import model.repositories.FeatureRepository
 import model.repositories.RaceRepository
 import org.koin.android.annotation.KoinViewModel
+import ui.platformSpecific.IO
 import kotlin.properties.Delegates
 
 @KoinViewModel
@@ -86,7 +88,7 @@ class HomebrewRaceViewModel constructor(
 
     init {
 
-        viewModelScope.async(/*Dispatchers.IO*/) {
+        viewModelScope.async(Dispatchers.IO) {
             id = savedStateHandle.get<String>("raceId")?.toInt().let {
                 if ((it ?: 0) > 0) {
                     it

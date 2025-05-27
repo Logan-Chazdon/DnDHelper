@@ -1,8 +1,11 @@
 package model.repositories
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import model.Feat
@@ -17,7 +20,11 @@ import model.database.daos.FeatureDao
      constructor(featDao: FeatDao, featureDao: FeatureDao) {
         this.featDao = featDao
         this.featureDao = featureDao
-        this.allFeats = featDao.getUnfilledFeats().transform {
+        this.allFeats = featDao.getUnfilledFeats().shareIn(
+            GlobalScope,
+            started = SharingStarted.Eagerly,
+            replay = 0
+        ).transform {
             CoroutineScope(Job()).launch {
                 it.forEach { feat ->
                     feat.features = featDao.getFeatFeatures(feat.id)

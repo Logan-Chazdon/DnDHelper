@@ -26,9 +26,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import model.*
+import ui.platformSpecific.IO
 import ui.platformSpecific.getScreenWidth
 
 @ExperimentalComposeUiApi
@@ -234,7 +236,7 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
                                     onValueChange = { string ->
                                         text = string
                                         if (string.isNotEmpty())
-                                            GlobalScope.launch {
+                                            GlobalScope.launch(Dispatchers.IO) {
                                                 viewModel.addCurrency(
                                                     it.abbreviatedName,
                                                     string.toInt()
@@ -257,12 +259,12 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
             ItemSelectionView(
                 allItems = viewModel.allItems?.collectAsState(emptyList())?.value ?: listOf(),
                 onAdd = {
-                    scope.launch {
+                    scope.launch(Dispatchers.IO) {
                         viewModel.addItem(it)
                     }
                 },
                 onBuy ={
-                    scope.launch {
+                    scope.launch(Dispatchers.IO) {
                         viewModel.buyItem(it)
                     }
                 },
@@ -290,7 +292,7 @@ fun ItemsView(viewModel: ItemViewModel, navController: NavController) {
                 confirmButton = {
                     Button(
                         onClick = {
-                            GlobalScope.launch {
+                            GlobalScope.launch(Dispatchers.IO) {
                                 viewModel.deleteItemAt(itemToDeleteIndex)
                             }
                             confirmDeleteExpanded = false
@@ -317,7 +319,7 @@ fun EquipButton(viewModel: ItemViewModel, item: ItemInterface) {
         backgroundColor = MaterialTheme.colors.primary,
         elevation = 0.dp,
         modifier = Modifier.clickable {
-            GlobalScope.launch {
+            GlobalScope.launch(Dispatchers.IO) {
                 when (item) {
                     is Shield -> {
                         viewModel.equip(item)

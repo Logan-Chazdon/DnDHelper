@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import model.repositories.CharacterRepository
 import org.koin.android.annotation.KoinViewModel
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
+import ui.platformSpecific.IO
 import ui.utils.toStringList
 
 
@@ -46,7 +48,7 @@ class NewCharacterConfirmBackgroundViewModel constructor(
         if (id.value == -1)
             id.value = characterRepository.createDefaultCharacter()
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             background.first().let { value ->
                 characterRepository.insertCharacterBackgroundCrossRef(
                     backgroundId = value.id,

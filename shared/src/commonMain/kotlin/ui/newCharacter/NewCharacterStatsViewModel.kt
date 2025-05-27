@@ -3,6 +3,7 @@ package ui.newCharacter
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -10,6 +11,7 @@ import model.Character
 import model.repositories.CharacterRepository
 import org.koin.android.annotation.KoinViewModel
 import ui.newCharacter.utils.indexOf
+import ui.platformSpecific.IO
 import kotlin.random.Random
 
 @KoinViewModel
@@ -96,7 +98,7 @@ class NewCharacterStatsViewModel(
         }
 
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             idFlow.collect { collectedId ->
                 if (character == null && collectedId != -1) {
                     character = characterRepository.getCharacterById(collectedId)
@@ -195,7 +197,7 @@ class NewCharacterStatsViewModel(
 
             selectedStatIndexes.value = newIndexes
         }
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             updateStats()
         }
     }

@@ -15,9 +15,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.launch
 import ui.newCharacter.AutoSave
+import ui.platformSpecific.IO
 
 @Composable
 fun HomebrewClassView(
@@ -439,7 +441,7 @@ fun HomebrewClassView(
                                 },
                                 onExpanded = {
                                     var id = 0
-                                    scope.launch(/*Dispatchers.IO*/) {
+                                    scope.launch(Dispatchers.IO) {
                                         id = viewModel.createDefaultSubclass()
                                     }.invokeOnCompletion {
                                         navController.navigate("homebrewView/homebrewSubclassView/$id")

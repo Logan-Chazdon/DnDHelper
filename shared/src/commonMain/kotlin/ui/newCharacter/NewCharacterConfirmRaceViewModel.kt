@@ -7,6 +7,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -20,6 +21,7 @@ import model.repositories.RaceRepository
 import org.koin.android.annotation.KoinViewModel
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
+import ui.platformSpecific.IO
 import ui.utils.toStringList
 
 @KoinViewModel
@@ -71,7 +73,7 @@ public class NewCharacterConfirmRaceViewModel constructor(
     suspend fun setRace() {
         if (id.value == -1)
             id.value = characterRepository.createDefaultCharacter()
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val value = race.first()
             characterRepository.insertCharacterRaceCrossRef(
                 raceId = value!!.raceId,

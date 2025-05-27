@@ -5,6 +5,7 @@ package ui.character
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
@@ -17,6 +18,7 @@ import model.Infusion
 import model.ItemInterface
 import model.repositories.CharacterRepository
 import org.koin.android.annotation.KoinViewModel
+import ui.platformSpecific.IO
 
 
 @OptIn(FlowPreview::class)
@@ -73,7 +75,7 @@ class CharacterMainViewModel(
         //Call the persistence function of state flow after the user types
         //and then doesn't type for debounce time.
         for (it in dataToPersistenceFunction) {
-            viewModelScope.launch(/*Dispatchers.IO*/) {
+            viewModelScope.launch(Dispatchers.IO) {
                 it.key.debounce(debounceTime)
                     .drop(1).collect(it.value)
             }

@@ -17,7 +17,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ui.platformSpecific.IO
 import ui.platformSpecific.getScreenWidth
 import ui.utils.*
 
@@ -34,11 +36,10 @@ fun StatsView(
             ExtendedFloatingActionButton(
                 text = { Text("DONE") },
                 onClick = {
-                    scope.launch(/*Dispatchers.IO*/) {
+                    scope.launch(Dispatchers.IO) {
                         viewModel.longRest()
-                    }.invokeOnCompletion {
-                        navController.navigate("characterView/MainView/${viewModel.id}")
                     }
+                    navController.navigate("characterView/MainView/${viewModel.id}")
                 })
         }
     ) {

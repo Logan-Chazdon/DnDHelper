@@ -24,10 +24,12 @@ import androidx.navigation.NavController
 import gmail.loganchazdon.dndhelper.shared.generated.resources.Res
 import gmail.loganchazdon.dndhelper.shared.generated.resources.ic_class_icon___ranger
 import gmail.loganchazdon.dndhelper.shared.generated.resources.ic_race_icon
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import model.Race
 import org.jetbrains.compose.resources.painterResource
 import ui.MultipleFABView
+import ui.platformSpecific.IO
 
 @Composable
 fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
@@ -155,7 +157,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                                         showSubclasses,
                                         onClick = {
                                             var id = 0
-                                            scope.launch(/*Dispatchers.IO*/){
+                                            scope.launch(Dispatchers.IO){
                                                 id = viewModel.createDefaultSubclass()
                                             }.invokeOnCompletion {
                                                 navController.navigate("homebrewView/homebrewSubclassView/$id")
@@ -174,7 +176,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                                         showSubraces,
                                         onClick = {
                                             var id = 0
-                                            scope.launch(/*Dispatchers.IO*/){
+                                            scope.launch(Dispatchers.IO){
                                                 id = viewModel.createDefaultSubrace()
                                             }.invokeOnCompletion {
                                                 navController.navigate("homebrewView/homebrewSubraceView/$id")
@@ -187,7 +189,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                                         showBackgrounds,
                                         onClick = {
                                             var id = 0
-                                            scope.launch(/*Dispatchers.IO*/){
+                                            scope.launch(Dispatchers.IO){
                                                 id = viewModel.createDefaultBackground()
                                             }.invokeOnCompletion {
                                                 navController.navigate("homebrewView/homebrewBackgroundView/$id")
@@ -200,7 +202,7 @@ fun HomebrewView(navController: NavController, viewModel: HomebrewViewModel) {
                                         showSpells,
                                         onClick = {
                                             var id = 0
-                                            scope.launch(/*Dispatchers.IO*/){
+                                            scope.launch(Dispatchers.IO){
                                                 id = viewModel.createDefaultSpell()
                                             }.invokeOnCompletion {
                                                 navController.navigate("homebrewView/homebrewSpellView/$id")

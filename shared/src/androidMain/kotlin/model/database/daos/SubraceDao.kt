@@ -1,8 +1,10 @@
 package model.database.daos
 
 import androidx.room.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import model.*
@@ -81,14 +83,19 @@ WHERE subraceId IS :subraceId
     protected abstract fun getSubraceTraits(subraceId: Int): List<Feature>
 
     actual fun bindSubraceOptions(raceId: Int): Flow<MutableList<Subrace>> {
-        return getSubraceOptionsWithoutFeatures(raceId).transform { entityList ->
-            if (entityList != null) {
-                GlobalScope.launch {
+        return channelFlow {
+            getSubraceOptionsWithoutFeatures(raceId).collect { entityList ->
+                GlobalScope.launch(Dispatchers.IO) {
                     val temp: MutableList<Subrace> = mutableListOf()
                     entityList.forEach { subraceEntity ->
                         val featChoices = mutableListOf<FeatChoice>()
                         getSubraceFeatChoices(subraceEntity.id).forEach {
-                            featChoices.add(it.toFeatChoice(chosen = emptyList(), from = getFeatChoiceOptions(it.id)))
+                            featChoices.add(
+                                it.toFeatChoice(
+                                    chosen = emptyList(),
+                                    from = getFeatChoiceOptions(it.id)
+                                )
+                            )
                         }
                         temp.add(
                             Subrace(
@@ -98,7 +105,7 @@ WHERE subraceId IS :subraceId
                             )
                         )
                     }
-                    emit(temp)
+                    send(temp)
                 }
             }
         }

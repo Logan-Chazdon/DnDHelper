@@ -14,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ui.platformSpecific.IO
 import ui.platformSpecific.getScreenWidth
 import ui.platformSpecific.isVertical
 import ui.preferences.DataStore
@@ -217,12 +219,12 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                             modifier = Modifier.fillMaxHeight(0.5f),
                             items = viewModel.character.collectAsState().value.backpack.allItems,
                             infuse = { infusion, item ->
-                                scope.launch() {
+                                scope.launch(Dispatchers.IO) {
                                     viewModel.infuse(item, infusion)
                                 }
                             },
                             disableInfusion = { infusion ->
-                                scope.launch() {
+                                scope.launch(Dispatchers.IO) {
                                     viewModel.disableInfusion(infusion)
                                 }
                             }

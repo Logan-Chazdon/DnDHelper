@@ -13,9 +13,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ui.character.ItemSelectionView
 import ui.newCharacter.AutoSave
+import ui.platformSpecific.IO
 
 @Composable
 fun HomebrewBackgroundView(
@@ -23,7 +25,7 @@ fun HomebrewBackgroundView(
     navController: NavController
 ) {
     val background = viewModel.background.collectAsState(null)
-    val scope = rememberCoroutineScope()// { Dispatchers.IO }
+    val scope = rememberCoroutineScope { Dispatchers.IO }
 
     LaunchedEffect(background.value?.id) {
         viewModel.apply {

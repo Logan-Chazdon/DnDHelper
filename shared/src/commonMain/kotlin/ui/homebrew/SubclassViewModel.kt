@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -14,6 +15,7 @@ import model.pojos.NameAndIdPojo
 import model.repositories.ClassRepository
 import model.repositories.FeatureRepository
 import org.koin.android.annotation.KoinViewModel
+import ui.platformSpecific.IO
 
 
 @KoinViewModel
@@ -80,7 +82,7 @@ class SubclassViewModel constructor(
     var id: Int = -1
 
     init {
-        viewModelScope.async(/*Dispatchers.IO*/) {
+        viewModelScope.async(Dispatchers.IO) {
             savedStateHandle.get<String>("id")!!.toInt().let {
                 id = if (it == -1) {
                     classRepository.createDefaultSubclass()

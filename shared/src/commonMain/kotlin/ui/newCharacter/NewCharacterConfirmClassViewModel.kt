@@ -8,6 +8,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import model.*
@@ -21,6 +22,7 @@ import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import ui.newCharacter.utils.getDropDownState
 import ui.newCharacter.utils.getFeatsAt
+import ui.platformSpecific.IO
 import ui.utils.allNames
 import kotlin.collections.set
 
@@ -114,7 +116,7 @@ class NewCharacterConfirmClassViewModel constructor(
     suspend fun addClassLevels() {
         if (id.value == -1)
             id.value = characterRepository.createDefaultCharacter()
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             clazz.first().let { value ->
                 characterRepository.removeFeatureChoiceCrossRefs(
                     value,

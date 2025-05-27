@@ -3,9 +3,11 @@ package ui.newCharacter
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ui.platformSpecific.IO
 import ui.preferences.DataStore
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -22,7 +24,7 @@ fun AutoSave(
             val id = mutableStateOf(-1)
             val listener =
                 NavController.OnDestinationChangedListener { _, destination, _ ->
-                    GlobalScope.launch {
+                    GlobalScope.launch(Dispatchers.IO) {
                         if (destination.route?.contains(name) != true) {
                             onSave(id)
                         }

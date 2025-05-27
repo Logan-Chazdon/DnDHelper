@@ -10,8 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ui.newCharacter.AutoSave
+import ui.platformSpecific.IO
 
 @Composable
 fun HomebrewSubraceView(
@@ -35,7 +37,7 @@ fun HomebrewSubraceView(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 var id = 0
-                scope.launch(/*Dispatchers.IO*/) {
+                scope.launch(Dispatchers.IO) {
                     id = viewModel.createDefaultFeature()
                 }.invokeOnCompletion {
                     navController.navigate("homebrewView/homebrewFeature/$id")

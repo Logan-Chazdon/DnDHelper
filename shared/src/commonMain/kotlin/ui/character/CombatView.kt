@@ -23,11 +23,13 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import gmail.loganchazdon.dndhelper.shared.generated.resources.Res
 import gmail.loganchazdon.dndhelper.shared.generated.resources.ic_armour_class
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import model.Spell
 import org.jetbrains.compose.resources.painterResource
 import ui.SpellDetailsView
+import ui.platformSpecific.IO
 import ui.platformSpecific.getScreenWidth
 import ui.platformSpecific.isVertical
 
@@ -57,7 +59,7 @@ fun CombatView(viewModel: CombatViewModel) {
                             title.value = "Add temporary HP"
                             onClick = {
                                 hpPopUpExpanded = false
-                                scope.launch(/*Dispatchers.IO*/) {
+                                scope.launch(Dispatchers.IO) {
                                     try {
                                         viewModel.setTemp(temp)
                                     } catch (e: NumberFormatException) {
@@ -69,7 +71,7 @@ fun CombatView(viewModel: CombatViewModel) {
                             title.value = "Heal"
                             onClick = {
                                 hpPopUpExpanded = false
-                                scope.launch(/*Dispatchers.IO*/) {
+                                scope.launch(Dispatchers.IO) {
                                     try {
                                         viewModel.heal(temp)
                                     } catch (e: NumberFormatException) {
@@ -278,7 +280,7 @@ fun CombatView(viewModel: CombatViewModel) {
                     type = "Success",
                     num = viewModel.character.collectAsState().value?.positiveDeathSaves,
                     onClick = {
-                        scope.launch(/*Dispatchers.IO*/) {
+                        scope.launch(Dispatchers.IO) {
                             viewModel.updateDeathSaveSuccesses(it)
                         }
                     }
@@ -288,7 +290,7 @@ fun CombatView(viewModel: CombatViewModel) {
                     type = "Fail",
                     num = viewModel.character.collectAsState().value?.negativeDeathSaves,
                     onClick = {
-                        scope.launch(/*Dispatchers.IO*/) {
+                        scope.launch(Dispatchers.IO) {
                             viewModel.updateDeathSaveFailures(it)
                         }
                     }
@@ -322,7 +324,7 @@ fun CombatView(viewModel: CombatViewModel) {
                     mutableStateOf(0)
                 }
                 val allSpells: State<Map<Int, List<Pair<Boolean?, Spell>>>> = produceState(emptyMap(), character.value, allSpellsKey.value)  {
-                    this.launch(/*Dispatchers.IO*/) {
+                    this.launch(Dispatchers.IO) {
                         value = viewModel.getAllSpells()
                     }
                 }
@@ -339,17 +341,17 @@ fun CombatView(viewModel: CombatViewModel) {
                                     castIsExpanded = true
                                 },
                                 refundSlot = { slot ->
-                                    scope.launch(/*Dispatchers.IO*/) {
+                                    scope.launch(Dispatchers.IO) {
                                         viewModel.refundSlot(slot)
                                     }
                                 },
                                 useSlot = { slot ->
-                                    scope.launch(/*Dispatchers.IO*/) {
+                                    scope.launch(Dispatchers.IO) {
                                         viewModel.useSlot(slot)
                                     }
                                 },
                                 togglePreparation = { spell, prepared ->
-                                    scope.launch(/*Dispatchers.IO*/) {
+                                    scope.launch(Dispatchers.IO) {
                                         viewModel.togglePreparation(spell, prepared)
                                         allSpellsKey.value = allSpellsKey.value + 1
                                     }
@@ -434,7 +436,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                         }
 
                                         Button(onClick = {
-                                            GlobalScope.launch {
+                                            GlobalScope.launch(Dispatchers.IO) {
                                                 viewModel.cast(spell!!, level)
                                             }
                                             castIsExpanded = false

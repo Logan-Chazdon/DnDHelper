@@ -24,6 +24,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.launch
 import model.Feature
@@ -34,6 +35,7 @@ import model.repositories.CharacterRepository.Companion.statNames
 import ui.SpellDetailsView
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import ui.newCharacter.utils.getDropDownState
+import ui.platformSpecific.IO
 import ui.preferences.DataStore
 import ui.theme.noActionNeeded
 import ui.utils.allNames
@@ -85,7 +87,7 @@ fun ConfirmClassView(
         viewModel.subclassSpells.size,
         viewModel.classSpells.size
     ) {
-        launch(/*Dispatchers.IO*/) {
+        launch(Dispatchers.IO) {
             value = viewModel.calculateAssumedSpells()
         }
     }
@@ -262,7 +264,7 @@ fun ConfirmClassView(
                 subclass.value,
                 clazz.value?.id
             ) {
-                this.launch(/*Dispatchers.IO*/) {
+                this.launch(Dispatchers.IO) {
                     viewModel.calcLearnableSpells(
                         viewModel.toNumber(viewModel.levels),
                         subclass.value

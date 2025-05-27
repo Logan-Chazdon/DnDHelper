@@ -10,12 +10,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import model.Feature
+import ui.platformSpecific.IO
 
 @Composable
 fun FeaturesView(features: List<Feature>, onDelete: (Int) -> Unit, onClick: (Int) -> Unit) {
-    val scope = rememberCoroutineScope() //{ Dispatchers.IO }
+    val scope = rememberCoroutineScope { Dispatchers.IO }
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {

@@ -12,15 +12,17 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ui.newCharacter.AutoSave
+import ui.platformSpecific.IO
 
 @Composable
 fun HomebrewSpellView(
     viewModel: HomebrewSpellViewModel,
     navController: NavController
 ) {
-    val scope = rememberCoroutineScope() //{ Dispatchers.IO }
+    val scope = rememberCoroutineScope { Dispatchers.IO }
     val focusManager = LocalFocusManager.current
     AutoSave(
         "homebrewSpellView",

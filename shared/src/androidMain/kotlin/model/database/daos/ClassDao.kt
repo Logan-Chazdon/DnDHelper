@@ -3,8 +3,9 @@ package model.database.daos
 import androidx.room.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.launch
 import model.*
 import model.pojos.NameAndIdPojo
 
@@ -70,16 +71,18 @@ WHERE ClassFeatureCrossRef.id IS :id"""
     abstract fun removeClassSpellCrossRef(ref: ClassSpellCrossRef)
 
     actual fun getAllClasses(): Flow<List<Class>> {
-        return getAllClassEntities().transform {
-            GlobalScope.launch {
-                val temp = mutableListOf<Class>()
-                it.forEachIndexed { index, classEntity ->
-                    temp.add(
-                        index, Class(classEntity, mutableListOf())
-                    )
-                }
-                emit(temp)
+        return getAllClassEntities().shareIn(
+            GlobalScope,
+            started = SharingStarted.Eagerly,
+            replay = 0
+        ).transform {
+            val temp = mutableListOf<Class>()
+            it.forEachIndexed { index, classEntity ->
+                temp.add(
+                    index, Class(classEntity, mutableListOf())
+                )
             }
+            emit(temp)
         }
     }
 

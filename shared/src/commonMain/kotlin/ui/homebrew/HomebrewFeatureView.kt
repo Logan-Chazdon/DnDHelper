@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import model.Choose
@@ -32,13 +33,14 @@ import model.FeatureChoiceEntity
 import model.Proficiency
 import ui.SpellDetailsView
 import ui.newCharacter.AutoSave
+import ui.platformSpecific.IO
 
 @Composable
 fun HomebrewFeatureView(
     viewModel: HomebrewFeatureViewModel,
     navController: NavController? = null
 ) {
-    val scope = rememberCoroutineScope() //{ Dispatchers.IO }
+    val scope = rememberCoroutineScope{ Dispatchers.IO }
     val feature = viewModel.feature.collectAsState()
     LaunchedEffect(feature.value?.featureId) {
         viewModel.run {
@@ -504,7 +506,7 @@ private fun FeatureChoiceView(
         Column {
             val options =
                 produceState(initialValue = emptyList<Feature>()) {
-                    launch(/*Dispatchers.IO*/) {
+                    launch(Dispatchers.IO) {
                         value = getOptions(choice.id)
                     }
                 }

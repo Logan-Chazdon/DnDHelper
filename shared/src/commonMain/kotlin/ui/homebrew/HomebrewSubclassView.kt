@@ -13,15 +13,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ui.newCharacter.AutoSave
+import ui.platformSpecific.IO
 
 @Composable
 fun HomebrewSubclassView(
     viewModel: SubclassViewModel,
     navController: NavController
 ) {
-    val scope = rememberCoroutineScope()// { Dispatchers.IO }
+    val scope = rememberCoroutineScope { Dispatchers.IO }
     val features = viewModel.features.collectAsState()
 
     AutoSave(

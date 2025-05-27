@@ -20,8 +20,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import gmail.loganchazdon.dndhelper.shared.generated.resources.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import ui.platformSpecific.IO
 
 @Composable
 fun ClassView(
@@ -29,7 +31,7 @@ fun ClassView(
     navController: NavController,
 ) {
     val classes by viewModel.classes.collectAsState(emptyList())
-    val scope = rememberCoroutineScope() //{ Dispatchers.IO }
+    val scope = rememberCoroutineScope { Dispatchers.IO }
     val classIcons = listOf(
         painterResource(Res.drawable.ic_class_icon___artificer),
         painterResource(Res.drawable.ic_class_icon___barbarian),

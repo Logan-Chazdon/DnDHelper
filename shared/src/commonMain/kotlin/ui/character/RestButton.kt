@@ -13,8 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import ui.platformSpecific.IO
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -92,7 +94,7 @@ private fun RestPopUp(viewModel: CharacterMainViewModel?, onDismissRequest: (() 
                     }
 
                 }
-                val scope = rememberCoroutineScope()// { Dispatchers.IO }
+                val scope = rememberCoroutineScope { Dispatchers.IO }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround
@@ -105,13 +107,13 @@ private fun RestPopUp(viewModel: CharacterMainViewModel?, onDismissRequest: (() 
                         when(selectedRestType) {
                             //Long rest
                             0 -> {
-                                scope.launch {
+                                scope.launch(Dispatchers.IO) {
                                     viewModel?.longRest()
                                 }
                             }
                             //Short rest
                             1 -> {
-                                scope.launch {
+                                scope.launch(Dispatchers.IO) {
                                     viewModel?.shortRest() //TODO pass in hit die data
                                 }
                             }

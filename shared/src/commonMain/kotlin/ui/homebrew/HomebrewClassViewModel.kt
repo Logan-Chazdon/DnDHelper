@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import model.repositories.ClassRepository
 import model.repositories.FeatureRepository
 import model.repositories.SpellRepository
 import org.koin.android.annotation.KoinViewModel
+import ui.platformSpecific.IO
 import kotlin.collections.set
 
 @KoinViewModel
@@ -186,7 +188,7 @@ class HomebrewClassViewModel constructor(
     }
 
     fun deleteSubclass(it: Int) {
-        viewModelScope.launch(/*Dispatchers.IO*/) {
+        viewModelScope.launch(Dispatchers.IO) {
             classRepository.removeClassSubclassCrossRef(
                 classId = id,
                 subclassId = subclasses!!.last()[it].subclassId
@@ -195,7 +197,7 @@ class HomebrewClassViewModel constructor(
     }
 
     fun removeFeature(featureId: Int) {
-        viewModelScope.launch(/*Dispatchers.IO*/) {
+        viewModelScope.launch(Dispatchers.IO) {
             classRepository.removeClassFeatureCrossRef(
                 featureId = featureId,
                 classId = id
@@ -334,7 +336,7 @@ class HomebrewClassViewModel constructor(
 
 
     init {
-        viewModelScope.async(/*Dispatchers.IO*/) {
+        viewModelScope.async(Dispatchers.IO) {
             savedStateHandle.get<String>("id")!!.toInt().let {
                 id = if (it == -1) {
                     classRepository.createDefaultClass()

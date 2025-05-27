@@ -15,11 +15,10 @@ delete:
 DELETE FROM ClassSpellCrossRef WHERE owner = :owner AND spellId = :spellId AND classId = :classId;
 
 selectSpellsByClass:
-SELECT * FROM spells
-LEFT JOIN ClassSpellCrossRef ON ClassSpellCrossRef.classId IS :classId
-AND spells.id IS ClassSpellCrossRef.spellId
-AND ClassSpellCrossRef.owner = :owner
-WHERE classId = :classId
+SELECT spells.* FROM spells
+JOIN ClassSpellCrossRef ON spells.id IS ClassSpellCrossRef.spellId
+AND (ClassSpellCrossRef.owner = :owner OR ClassSpellCrossRef.owner IS NULL)
+WHERE classId IS :classId
 AND (spells.owner IS NULL OR spells.owner IS :owner);
 
 selectClassesForSpell:

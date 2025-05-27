@@ -63,8 +63,8 @@ fun Routing.classService(db: Database, httpClient: HttpClient) {
             call.respondText(
                 gson.toJson(
                     db.classSpellCrossRefQueries.selectSpellsByClass(
-                        call.parameters["classId"]!!.toLong(),
-                        userInfo.id
+                        classId = call.parameters["classId"]!!.toLong(),
+                        owner = userInfo.id
                     ).executeAsList()
                 )
             )

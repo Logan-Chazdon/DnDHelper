@@ -464,7 +464,7 @@ fun ConfirmClassView(
                                     FeatView(
                                         level = viewModel.toNumber(viewModel.levels),
                                         key = it,
-                                        featNames = featNames as MutableList<String>,
+                                        featNames = featNames.toMutableList(),
                                         featDropDownStates = viewModel.featDropDownStates,
                                         feats = feats,
                                         featChoiceDropDownState = viewModel.featChoiceDropDownStates
@@ -477,7 +477,7 @@ fun ConfirmClassView(
                                     .getDropDownState(
                                         key = it,
                                         maxSelections = 2,
-                                        names = statNames as MutableList<String>,
+                                        names = statNames.toMutableList(),
                                         choiceName = "Ability Score Improvement",
                                         maxOfSameSelection = 2
                                     )

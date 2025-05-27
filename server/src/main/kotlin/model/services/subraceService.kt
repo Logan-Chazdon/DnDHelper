@@ -142,7 +142,7 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
             val userInfo = getUserInfo(httpClient, session, call)
 
             for (frame in incoming) {
-                frame as? Frame.Text ?: continue
+                frame as Frame.Text
                 val id = frame.readText().toLong()
 
 

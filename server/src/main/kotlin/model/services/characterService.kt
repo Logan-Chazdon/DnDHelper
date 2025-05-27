@@ -19,10 +19,10 @@ import kotlinx.serialization.json.jsonArray
 import org.json.JSONArray
 import org.json.JSONObject
 
-private val arrayConverter = fun(array: JsonArray) : JSONArray {
+private val arrayConverter = fun(array: JsonArray): JSONArray {
     return JSONArray(array.toString())
 }
-private val objectConverter = fun(obj: JsonObject) : JSONObject {
+private val objectConverter = fun(obj: JsonObject): JSONObject {
     return JSONObject(obj.toString())
 }
 
@@ -60,13 +60,13 @@ private fun serializeUnfilledCharacter(sqlResponse: CharacterView): JSONObject {
             put("raceId", raceId)
             put("raceName", sqlResponse.raceName)
             put("groundSpeed", sqlResponse.groundSpeed)
-            put("abilityBonuses", sqlResponse.abilityBonuses?.let { arrayConverter(it)})
+            put("abilityBonuses", sqlResponse.abilityBonuses?.let { arrayConverter(it) })
             put("alignment", sqlResponse.alignment)
             put("age", sqlResponse.age)
             put("size", sqlResponse.size)
             put("sizeDesc", sqlResponse.sizeDesc)
             put("startingProficiencies", sqlResponse.startingProficiencies?.let { arrayConverter(it) })
-            put("proficiencyChoices", sqlResponse.proficiencyChoices?.let { arrayConverter(it)} )
+            put("proficiencyChoices", sqlResponse.proficiencyChoices?.let { arrayConverter(it) })
             put("languages", sqlResponse.languages?.let { arrayConverter(it) })
             put("languageDesc", sqlResponse.languageDesc)
             put("isHomebrew", sqlResponse.isHomebrew)
@@ -75,7 +75,7 @@ private fun serializeUnfilledCharacter(sqlResponse: CharacterView): JSONObject {
             put("abcmaxOccurrencesOfAbility", sqlResponse.abcmaxOccurrencesOfAbility)
             put("abcchosenByString", sqlResponse.abcchosenByString)
         }
-        if(sqlResponse.subraceid != null) {
+        if (sqlResponse.subraceid != null) {
             subrace.apply {
                 put("id", sqlResponse.subraceid)
                 put("name", sqlResponse.subracename)
@@ -100,19 +100,37 @@ private fun serializeUnfilledCharacter(sqlResponse: CharacterView): JSONObject {
             put("id", backgroundId)
             put("name", sqlResponse.backgroundname)
             put("desc", sqlResponse.backgrounddesc)
-            put("spells", if(sqlResponse.backgroundspells == null ) null else
-                Json.parseToJsonElement(sqlResponse.backgroundspells).jsonArray)
-            put("proficiencies", sqlResponse.backgroundproficiencies?.let { arrayConverter(it)})
-            put("languages", sqlResponse.backgroundlanguages?.let { arrayConverter(it)})
-            put("equipment", sqlResponse.backgroundequipment?.let { arrayConverter(it)})
-            put("equipmentChoices", sqlResponse.backgroundequipmentChoices?.let { arrayConverter(it)})
+            put(
+                "spells", if (sqlResponse.backgroundspells == null) null else
+                    Json.parseToJsonElement(sqlResponse.backgroundspells).jsonArray
+            )
+            put("proficiencies", sqlResponse.backgroundproficiencies?.let { arrayConverter(it) })
+            put("languages", sqlResponse.backgroundlanguages?.let { arrayConverter(it) })
+            put("equipment", sqlResponse.backgroundequipment?.let { arrayConverter(it) })
+            put("equipmentChoices", sqlResponse.backgroundequipmentChoices?.let { arrayConverter(it) })
+            val langChoices = JSONArray()
+            sqlResponse.backgroundLangChoices?.let {
+                arrayConverter(it).forEach {
+                    val choice = JSONObject()
+                    choice.put("chosenByString", it as JSONArray)
+                    choice.put("name", "")
+                    choice.put("choose", 0)
+                    val from = JSONArray()
+                    it.forEach {
+                        from.put(JSONObject().put("name", it))
+                    }
+                    choice.put("from", from)
+                    langChoices.put(choice)
+                }
+            }
+            put("languageChoices", langChoices)
         }
         character.put("background", background)
     }
     return character
 }
 
-private fun serializeCharacterClasses(query: Query<SelectClasses>) : JSONObject {
+private fun serializeCharacterClasses(query: Query<SelectClasses>): JSONObject {
     val classes = JSONObject()
     val sqlResponse = query.executeAsList()
 
@@ -131,13 +149,16 @@ private fun serializeCharacterClasses(query: Query<SelectClasses>) : JSONObject 
         clazz.put("level", data.level)
         clazz.put("proficiencies", arrayConverter(data.proficiencies))
         clazz.put("proficiencyChoicesByString", arrayConverter(data.proficiencyChoicesByString))
-        if(data.spellCasting != null) clazz.put("spellCasting", objectConverter(data.spellCasting))
+        if (data.spellCasting != null) clazz.put("spellCasting", objectConverter(data.spellCasting))
 
-        if(data.subclassId != null) {
+        if (data.subclassId != null) {
             val subclass = JSONObject()
             subclass.put("subclassId", data.subclassId)
             subclass.put("isHomebrew", data.isHomebrew)
-            if(data.subclass_spell_casting != null) subclass.put("spellCasting", objectConverter(data.subclass_spell_casting))
+            if (data.subclass_spell_casting != null) subclass.put(
+                "spellCasting",
+                objectConverter(data.subclass_spell_casting)
+            )
             subclass.put("spellAreFree", data.spellAreFree)
             subclass.put("name", data.name)
 
@@ -159,10 +180,12 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val response = call.receiveText()
             val character = gson.fromJson(response, Characters::class.java)
-            val charId = if(character.id <= 0) {
+            val charId = if (character.id <= 0) {
                 val maxId = db.characterQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0
                 maxId + 1
-            } else { character.id }
+            } else {
+                character.id
+            }
 
             db.characterQueries.insertOrReplace(character.copy(characterOwner = userInfo.id, id = charId))
             call.respondText(charId.toString())
@@ -399,11 +422,10 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
     }
 
 
-
     //Due to constraints of sqldelight this runs several queries which is quite inefficient update this should it become possible.
     get("character/allSpellsByList") {
         withUserInfo {
-            val lists : List<Long> = gson.fromJson(call.parameters["classIds"], object : TypeToken<List<Long>>() {}.type)
+            val lists: List<Long> = gson.fromJson(call.parameters["classIds"], object : TypeToken<List<Long>>() {}.type)
             val response = JSONArray()
             lists.forEach { list ->
                 val spells = db.characterQueries.selectAllSpellsByList(
@@ -470,7 +492,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
             call.respond(status = HttpStatusCode.OK, "Updated")
         }
     }
-    
+
     post("character/insertBackgroundChoice") {
         withUserInfo { userInfo ->
             val body = JSONObject(call.receiveText())
@@ -485,7 +507,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
             call.respond(status = HttpStatusCode.OK, "Updated")
         }
     }
-    
+
     post("character/addClassFeat") {
         withUserInfo { userInfo ->
             val body = JSONObject(call.receiveText())
@@ -507,7 +529,11 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 characterId = body.getLong("characterId"),
                 subclassId = body.getLong("subclassId"),
                 owner = userInfo.id,
-                isPrepared = try { body.getLong("isPrepared")} catch(e: Exception) { null }
+                isPrepared = try {
+                    body.getLong("isPrepared")
+                } catch (e: Exception) {
+                    null
+                }
             )
             call.respond(status = HttpStatusCode.OK, "Updated")
         }
@@ -521,7 +547,11 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 characterId = body.getLong("characterId"),
                 classId = body.getLong("classId"),
                 owner = userInfo.id,
-                isPrepared = try { body.getLong("isPrepared")} catch(e: Exception) { null }
+                isPrepared = try {
+                    body.getLong("isPrepared")
+                } catch (e: Exception) {
+                    null
+                }
             )
             call.respond(status = HttpStatusCode.OK, "Updated")
         }
@@ -578,7 +608,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
             call.respond(status = HttpStatusCode.OK, "Updated")
         }
     }
-    
+
 
     post("character/updateDeathSaveSuccesses") {
         withUserInfo { userInfo ->

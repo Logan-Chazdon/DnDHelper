@@ -29,7 +29,8 @@ CREATE VIEW  IF NOT EXISTS characterView AS SELECT
     background.*,
     races.*,
     subrace.*,
-    characters.*
+    characters.*,
+    BackgroundChoiceEntity.languageChoices AS backgroundLangChoices
 FROM characters
 LEFT JOIN CharacterRaceCrossRef
     ON characters.id = CharacterRaceCrossRef.id
@@ -45,7 +46,10 @@ LEFT JOIN subrace
     AND (subrace.subraceOwner = CharacterSubraceCrossRef.owner OR subrace.subraceOwner IS NULL)
 LEFT JOIN CharacterBackgroundCrossRef
     ON CharacterBackgroundCrossRef.characterId = characters.id 
-    AND CharacterBackgroundCrossRef.owner = characters.characterOwner  
+    AND CharacterBackgroundCrossRef.owner = characters.characterOwner
+LEFT JOIN BackgroundChoiceEntity
+    ON BackgroundChoiceEntity.characterId = characters.id
+    AND BackgroundChoiceEntity.owner = characters.characterOwner
 LEFT JOIN background
     ON background.backgroundid = CharacterBackgroundCrossRef.backgroundId 
     AND (background.backgroundOwner = CharacterBackgroundCrossRef.owner OR background.backgroundOwner IS NULL);

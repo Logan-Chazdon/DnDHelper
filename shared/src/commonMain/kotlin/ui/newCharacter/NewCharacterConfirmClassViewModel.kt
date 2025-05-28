@@ -52,7 +52,7 @@ class NewCharacterConfirmClassViewModel constructor(
     val character = MutableStateFlow(Character())
     val subclasses =
         classRepository.getSubclassesByClassId(savedStateHandle.get<String>("classId")!!.toInt())
-    val featNames: Flow<List<String>> = feats.transform { value -> value.allNames }
+    val featNames: Flow<List<String>> = feats.transform { value -> emit(value.map { it.name }) }
     val hasBaseClass: MutableState<Boolean> = mutableStateOf(false)
     val maxGoldRolled = mutableStateOf(1)
     val minGoldRolled = mutableStateOf(1)
@@ -472,7 +472,7 @@ class NewCharacterConfirmClassViewModel constructor(
         val profs: MutableList<Proficiency> = mutableListOf()
         value?.proficiencies?.let { profs.addAll(it) }
         value?.proficiencyChoices?.forEach {
-            (dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>?)?.let { it1 ->
+            dropDownStates[it.name]?.getSelected(it.from)?.let { it1 ->
                 profs.addAll(
                     it1
                 )

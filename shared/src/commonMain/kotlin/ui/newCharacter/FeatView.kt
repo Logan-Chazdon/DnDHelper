@@ -11,25 +11,28 @@ import ui.newCharacter.utils.getDropDownState
 
 @Composable
 fun FeatView(
-    level : Int,
-    key : Int,
+    level: Int,
+    key: Int,
     featNames: MutableList<String>,
     feats: List<Feat>,
     featDropDownStates: SnapshotStateList<MultipleChoiceDropdownStateImpl>,
     featChoiceDropDownState: SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>,
 ) {
     val state = featDropDownStates.getDropDownState(
-            key = key,
-            maxSelections = 1,
-            names = featNames,
-            choiceName = "Feat"
-        )
+        key = key,
+        maxSelections = 1,
+        names = featNames,
+        choiceName = "Feat"
+    )
     Column {
         MultipleChoiceDropdownView(
             state = state
         )
-        (state.getSelected(feats) as List<Feat>).getOrNull(0)?.let { feat ->
+
+
+        state.getSelected(feats).getOrNull(0)?.let { feat ->
             Text(feat.desc)
+
             feat.features?.forEach { feature ->
                 feature.choices?.filter { it.choose.num(level) != 0 }?.forEach { featureChoice ->
                     MultipleChoiceDropdownView(

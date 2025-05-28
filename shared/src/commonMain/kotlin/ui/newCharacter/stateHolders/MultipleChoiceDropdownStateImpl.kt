@@ -70,11 +70,14 @@ class MultipleChoiceDropdownStateImpl : MultipleChoiceDropdownState {
     override fun getMaxSameSelectionsAt(index: Int): Int = maxSameSelections
 
     //This allows the owner of the view to pass in a list of choices and get back only what is selected.
-    fun getSelected(from : List<Any>) : List<Any>{
-        val returnList = mutableListOf<Any>()
-        for(i in from.indices) {
-            for(x in 0 until selectedList[i]) {
-                returnList.add(from[i])
+    fun <T> getSelected(from : List<T>) : List<T>{
+        val returnList = mutableListOf<T>()
+
+        if(from.isNotEmpty()) {
+            for (i in from.indices) {
+                for (x in 0 until selectedList.getOrElse(i, { 0 })) {
+                    returnList.add(from[i])
+                }
             }
         }
 

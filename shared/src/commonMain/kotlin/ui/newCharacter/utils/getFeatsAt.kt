@@ -14,7 +14,7 @@ fun getFeatsAt(
     feats: List<Feat>
     ): List<Feat> {
     return try {
-        (featDropDownStates[i].getSelected(feats) as List<Feat>).run {
+        featDropDownStates[i].getSelected(feats).run {
             this.forEach { feat ->
                 feat.features?.forEach { feature ->
                     feature.choices?.forEach { featureChoice ->

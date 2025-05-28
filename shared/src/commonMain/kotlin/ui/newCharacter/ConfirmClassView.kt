@@ -459,17 +459,18 @@ fun ConfirmClassView(
 
 
                         if (viewModel.isFeat[it]) {
-                            viewModel.featNames.collectAsState(emptyList()).value?.let { featNames ->
-                                viewModel.feats.collectAsState(emptyList()).value?.let { feats ->
-                                    FeatView(
-                                        level = viewModel.toNumber(viewModel.levels),
-                                        key = it,
-                                        featNames = featNames.toMutableList(),
-                                        featDropDownStates = viewModel.featDropDownStates,
-                                        feats = feats,
-                                        featChoiceDropDownState = viewModel.featChoiceDropDownStates
-                                    )
-                                }
+                            val featNames = viewModel.featNames.collectAsState(emptyList())
+                            val feats = viewModel.feats.collectAsState(emptyList())
+
+                            if(featNames.value.isNotEmpty()) {
+                                FeatView(
+                                    level = viewModel.toNumber(viewModel.levels),
+                                    key = it,
+                                    featNames = featNames.value.toMutableList(),
+                                    featDropDownStates = viewModel.featDropDownStates,
+                                    feats = feats.value,
+                                    featChoiceDropDownState = viewModel.featChoiceDropDownStates
+                                )
                             }
                         } else {
                             MultipleChoiceDropdownView(

@@ -102,8 +102,8 @@ class SharedDataSource(
 
 
         val types = listOf("instruments", "artisans_tools", "gaming_sets")
-        val ids = mutableListOf<Int>()
         types.forEach { type ->
+            val ids = mutableListOf<Int>()
             val array = rootJson.getJSONArray(type)
             for (i in 0 until array.length()) {
                 val item = array.getJSONObject(i)

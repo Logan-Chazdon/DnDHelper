@@ -68,7 +68,7 @@ fun ClassView(
                                 .fillMaxWidth(0.95f)
                                 .height(50.dp)
                                 .clickable {
-                                    navController.navigate("newCharacterView/ClassView/ConfirmClassView/${clazz.id}/${viewModel.id.value}")
+                                    navController.navigate("newCharacterView/ClassView/ConfirmClassView/${clazz.id}")
                                 }
                         ) {
                             var deleteClassIsExpanded by remember {

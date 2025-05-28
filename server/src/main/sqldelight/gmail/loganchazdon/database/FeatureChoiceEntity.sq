@@ -18,7 +18,7 @@ DELETE FROM FeatureChoiceEntity WHERE owner = :owner AND id=:id;
 selectAllFor:
 SELECT * FROM FeatureChoiceEntity
 JOIN FeatureOptionsCrossRef ON FeatureOptionsCrossRef.id IS FeatureChoiceEntity.id
-AND FeatureOptionsCrossRef.owner IS :owner
-WHERE FeatureOptionsCrossRef.featureId IS :featureId AND FeatureChoiceEntity.owner IS :owner;
+AND (FeatureOptionsCrossRef.owner IS :owner OR FeatureOptionsCrossRef.owner IS NULL)
+WHERE FeatureOptionsCrossRef.featureId IS :featureId AND (FeatureChoiceEntity.owner IS :owner OR FeatureChoiceEntity.owner IS NULL);
 
 

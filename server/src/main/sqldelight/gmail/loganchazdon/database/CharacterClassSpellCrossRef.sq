@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS CharacterClassSpellCrossRef (
 
 
 insert:
-INSERT INTO CharacterClassSpellCrossRef (characterId, classId, spellId, isPrepared, owner) VALUES (?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO CharacterClassSpellCrossRef (characterId, classId, spellId, isPrepared, owner) VALUES (?, ?, ?, ?, ?);
 
 delete:
 DELETE FROM CharacterClassSpellCrossRef WHERE characterId = :characterId AND classId = :classId AND owner = :owner AND spellId = :spellId;

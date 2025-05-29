@@ -341,8 +341,8 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 owner = it.id,
                 featureId = call.parameters["featureId"]!!.toLong(),
                 characterId = call.parameters["characterId"]!!.toLong(),
-            ).executeAsOne()
-            call.respondText(gson.toJson(value))
+            ).executeAsOneOrNull()
+            call.respondText(gson.toJson(value == 1L))
         }
     }
 

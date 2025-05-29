@@ -330,7 +330,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 owner = it.id,
                 choiceId = call.parameters["choiceId"]!!.toLong(),
                 characterId = call.parameters["characterId"]!!.toLong(),
-            ).executeAsOne()
+            ).executeAsList()
             call.respondText(gson.toJson(value))
         }
     }

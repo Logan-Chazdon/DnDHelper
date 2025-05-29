@@ -379,13 +379,21 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
     }
 
     get("character/spellCastingForClass") {
-        withUserInfo {
-            val value = db.characterQueries.selectSpellCastingForClass(
-                owner = it.id,
+        withUserInfo { info ->
+            val spells = db.characterQueries.selectSpellCastingForClass(
+                owner = info.id,
                 characterId = call.parameters["characterId"]!!.toLong(),
                 classId = call.parameters["classId"]!!.toLong(),
-            ).executeAsOneOrNull()
-            call.respondText(gson.toJson(value))
+            ).executeAsList()
+            val response = JSONArray()
+            spells.forEach {
+                val spell = JSONObject(gson.toJson(it))
+                spell.remove("isPrepared")
+                response.put(spell)
+                response.put(it.isPrepared)
+            }
+
+            call.respondText(response.toString(0))
         }
     }
 

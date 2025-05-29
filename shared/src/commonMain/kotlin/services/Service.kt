@@ -78,7 +78,7 @@ abstract class Service(
             actualSerializer = serializer(),
         )
     }
-    val format = Json { serializersModule = module; ignoreUnknownKeys = true; encodeDefaults = true; explicitNulls = false; }
+    val format = Json { serializersModule = module; ignoreUnknownKeys = true; encodeDefaults = true; explicitNulls = false; allowStructuredMapKeys = true}
 
 
 }

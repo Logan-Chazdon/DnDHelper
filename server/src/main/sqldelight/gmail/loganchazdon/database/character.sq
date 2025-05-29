@@ -158,10 +158,12 @@ isFeatureActive:
 SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId AND owner = :owner;
 
 selectAllSpellsByList:
-SELECT * FROM spells
-JOIN ClassSpellCrossRef ON ClassSpellCrossRef.classId IS (:list) AND ClassSpellCrossRef.spellId IS spells.id AND ClassSpellCrossRef.owner IS :owner
+SELECT spells.*, CharacterClassSpellCrossRef.isPrepared FROM spells
+JOIN ClassSpellCrossRef ON  ClassSpellCrossRef.spellId IS spells.id
+AND (ClassSpellCrossRef.owner IS :owner OR ClassSpellCrossRef.owner IS NULL)
 LEFT JOIN CharacterClassSpellCrossRef ON CharacterClassSpellCrossRef.characterId = :id AND CharacterClassSpellCrossRef.spellId = spells.id
-AND (spells.owner = :owner OR spells.owner IS NULL);
+AND (spells.owner = :owner OR spells.owner IS NULL)
+WHERE ClassSpellCrossRef.classId IS (:list);
 
 updateBackPack:
 UPDATE characters SET backpack = :backpack WHERE id =:id AND characterOwner =:owner;

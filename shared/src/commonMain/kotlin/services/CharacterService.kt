@@ -333,7 +333,6 @@ class CharacterService(client: HttpClient) : Service(client = client) {
             append("classIds", format.encodeToString(classIdsByName))
         }.bodyAsText()
         if(serverJson == "[[]]") return emptyMap()
-        //TODO work on map serialization
         return format.decodeFromString(serverJson)
     }
 

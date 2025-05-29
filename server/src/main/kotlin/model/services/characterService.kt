@@ -441,7 +441,10 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                     list = list,
                     id = call.parameters["id"]!!.toLong(),
                 ).executeAsList()
-                response.put(JSONArray(gson.toJson(spells)))
+                spells.forEach {
+                    response.put(JSONObject(gson.toJson(it)))
+                    response.put(it.isPrepared)
+                }
             }
 
             call.respondText(response.toString())

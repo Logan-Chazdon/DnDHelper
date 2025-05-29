@@ -342,7 +342,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 featureId = call.parameters["featureId"]!!.toLong(),
                 characterId = call.parameters["characterId"]!!.toLong(),
             ).executeAsOneOrNull()
-            call.respondText(gson.toJson(value == 1L))
+            call.respondText((value ?: 0).toString())
         }
     }
 
@@ -856,6 +856,19 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 abilityBonusOverrides = body.getString("abilityBonusOverrides"),
                 proficiencyChoice = body.getString("proficiencyChoice")
             )
+        }
+    }
+
+    post("$PATH/insertCharacterFeatureState") {
+        withUserInfo {
+            val body = JSONObject(call.receiveText())
+            db.characterFeatureStateQueries.insert(
+                characterId = body.getLong("characterId"),
+                featureId = body.getLong("featureId"),
+                owner = it.id,
+                isActive = if(body.getBoolean("isActive")) 1 else 0
+            )
+            call.respond(HttpStatusCode.OK, "")
         }
     }
 }

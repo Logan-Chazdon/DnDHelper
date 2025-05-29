@@ -73,6 +73,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         UnfilledCharacter("$PATH/unfilledCharacter"),
         ResetClassSpells("$PATH/resetClassSpells"),
         CharacterClassNameLevel("$PATH/characterClassNameLevel"),
+        InsertCharacterFeatureState("$PATH/insertCharacterFeatureState"),
     }
 
     companion object {
@@ -536,6 +537,14 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         deleteFrom(Paths.DeleteClass.path) {
             append("characterId", characterId.toString())
             append("classId", classId.toString())
+        }
+    }
+
+    suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, active: Boolean) {
+        postTo(Paths.InsertCharacterFeatureState.path) {
+            put("featureId", featureId)
+            put("characterId", characterId)
+            put("isActive", active)
         }
     }
 }

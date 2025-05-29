@@ -183,5 +183,6 @@ actual abstract class CharacterDao {
     actual abstract suspend fun setFlaws(it: String, id: Int)
     actual abstract suspend fun setBonds(it: String, id: Int)
     actual suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean) {
+        characterService.insertCharacterFeatureState(featureId, characterId, isActive)
     }
 }

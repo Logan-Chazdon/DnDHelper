@@ -1,7 +1,9 @@
 package model.database.daos
 
 import androidx.room.*
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
@@ -72,9 +74,9 @@ WHERE ClassFeatureCrossRef.id IS :id"""
 
     actual fun getAllClasses(): Flow<List<Class>> {
         return getAllClassEntities().shareIn(
-            GlobalScope,
+            CoroutineScope(Job() + Dispatchers.IO),
             started = SharingStarted.Eagerly,
-            replay = 0
+            replay = 1
         ).transform {
             val temp = mutableListOf<Class>()
             it.forEachIndexed { index, classEntity ->

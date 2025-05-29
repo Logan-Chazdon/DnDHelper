@@ -440,7 +440,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
             put("classId", classId)
             put("spellId", spellId)
             put("characterId", characterId)
-            put("prepared", prepared)
+            put("isPrepared", prepared)
         }
     }
 

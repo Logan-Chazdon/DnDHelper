@@ -324,7 +324,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
         }
     }
 
-    get("character/FeatureChoiceChosen") {
+    get("character/featureChoiceChosen") {
         withUserInfo {
             val value = db.characterQueries.selectFeatureChoiceChosen(
                 owner = it.id,

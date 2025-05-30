@@ -390,7 +390,11 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 val spell = JSONObject(gson.toJson(it))
                 spell.remove("isPrepared")
                 response.put(spell)
-                response.put(it.isPrepared)
+                response.put(when(it.isPrepared) {
+                    1L -> true
+                    0L -> false
+                    else -> null
+                })
             }
 
             call.respondText(response.toString(0))
@@ -443,7 +447,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 ).executeAsList()
                 spells.forEach {
                     response.put(JSONObject(gson.toJson(it)))
-                    response.put(it.isPrepared)
+                    response.put(if(it.isPrepared == 1L) true else false )
                 }
             }
 
@@ -559,7 +563,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 classId = body.getLong("classId"),
                 owner = userInfo.id,
                 isPrepared = try {
-                    body.getLong("isPrepared")
+                    if(body.getBoolean("isPrepared")) 1 else 0
                 } catch (e: Exception) {
                     null
                 }

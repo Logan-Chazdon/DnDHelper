@@ -3,6 +3,7 @@ package model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import kotlinx.serialization.Serializable
 
 
 @Entity(
@@ -31,6 +32,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
         )
     ]
 )
+@Serializable
 data class CharacterClassSpellCrossRef(
     val characterId: Int,
     val classId: Int,

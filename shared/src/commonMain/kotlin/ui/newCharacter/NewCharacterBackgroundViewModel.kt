@@ -1,7 +1,6 @@
 package ui.newCharacter
 
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +17,6 @@ import org.koin.android.annotation.KoinViewModel
 public class NewCharacterBackgroundViewModel constructor(
     private val backgroundRepository: BackgroundRepository,
     characterRepository: CharacterRepository,
-    savedStateHandle: SavedStateHandle,
     val id: MutableStateFlow<Int>
 ) : ViewModel() {
     lateinit var backgrounds: Flow<List<Background>>

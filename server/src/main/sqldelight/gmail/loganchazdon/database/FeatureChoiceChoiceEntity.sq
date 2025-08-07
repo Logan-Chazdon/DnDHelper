@@ -20,3 +20,6 @@ INSERT INTO FeatureChoiceChoiceEntity (featureId, characterId, choiceId, owner) 
 
 delete:
 DELETE FROM FeatureChoiceChoiceEntity WHERE  characterId = :characterId AND choiceId = :choiceId AND owner = :owner;
+
+selectRefsFor:
+SELECT * FROM FeatureChoiceChoiceEntity WHERE owner = :owner;

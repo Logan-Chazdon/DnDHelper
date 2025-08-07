@@ -41,4 +41,10 @@ JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
 WHERE featId IS :featId
     """)
     actual abstract suspend fun getFeatFeatures(featId: Int) : List<Feature>
+
+    @Query("SELECT * FROM FeatChoiceFeatCrossRef")
+    abstract fun featChoiceFeatTable(): List<FeatChoiceFeatCrossRef>
+
+    @Query("SELECT * FROM FeatFeatureCrossRef")
+    abstract fun featFeatureTable(): List<FeatFeatureCrossRef>
 }

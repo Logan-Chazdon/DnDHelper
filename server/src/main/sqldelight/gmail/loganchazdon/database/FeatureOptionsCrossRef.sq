@@ -13,3 +13,6 @@ INSERT INTO FeatureOptionsCrossRef (featureId, id, owner) VALUES (?, ?, ?);
 
 delete:
 DELETE FROM FeatureOptionsCrossRef WHERE owner = :owner AND id = :id AND featureId = :featureId;
+
+selectRefsFor:
+SELECT featureId, id FROM FeatureOptionsCrossRef WHERE owner = :owner;

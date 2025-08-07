@@ -146,4 +146,15 @@ WHERE SubclassFeatureCrossRef.subclassId IS :subclassId AND features.grantedAtLe
 
     @Query("DELETE FROM subclasses WHERE subclassId = :subclassId")
     actual abstract suspend fun deleteSubclass(subclassId: Int)
+
+    @Query("SELECT * FROM SubclassFeatureCrossRef JOIN subclasses ON subclasses.subclassId IS SubclassFeatureCrossRef.subclassId WHERE subclasses.subclass_isHomebrew")
+    abstract fun subclassFeatureTable(): List<SubclassFeatureCrossRef>
+
+    @Query("SELECT * FROM SubclassSpellCrossRef")
+    abstract fun subclassSpellTable(): List<SubclassSpellCrossRef>
+
+
+    @Query("SELECT * FROM subclasses WHERE subclass_isHomebrew")
+    abstract fun subclassTable(): List<SubclassEntityTable>
+
 }

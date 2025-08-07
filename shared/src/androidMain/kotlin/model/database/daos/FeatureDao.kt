@@ -284,4 +284,20 @@ WHERE featureId IS :id
 """
     )
     actual abstract fun getLiveFeatureSpells(id: Int): Flow<List<Spell>?>
+
+    @Query("SELECT * FROM FeatureOptionsCrossRef JOIN features ON features.featureId IS FeatureOptionsCrossRef.featureId WHERE isHomebrew")
+    abstract fun featureOptionsTable(): List<FeatureOptionsCrossRef>
+
+    @Query("SELECT * FROM FeatureSpellCrossRef JOIN features ON features.featureId IS FeatureSpelLCrossRef.featureId WHERE isHomebrew")
+    abstract fun featureSpellTable(): List<FeatureSpellCrossRef>
+
+    @Query("SELECT * FROM OptionsFeatureCrossRef JOIN features ON OptionsFeatureCrossRef.featureId IS features.featureId WHERE features.isHomebrew")
+    abstract fun optionsFeatureTable(): List<OptionsFeatureCrossRef>
+
+    @Query("SELECT * FROM features WHERE isHomebrew")
+    abstract fun featureTable(): List<FeatureEntity>
+
+    @Query("DELETE FROM features WHERE featureId =:featureId")
+    abstract fun deleteFeature(featureId: Int)
+
 }

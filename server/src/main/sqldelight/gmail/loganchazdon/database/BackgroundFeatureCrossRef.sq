@@ -19,3 +19,6 @@ SELECT features.* FROM features
 LEFT JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.owner IS :owner
 AND BackgroundFeatureCrossRef.featureId IS features.featureId
 WHERE BackgroundFeatureCrossRef.backgroundId IS :backgroundId AND features.owner IS :owner;
+
+selectRefsFor:
+SELECT featureId, backgroundId FROM BackgroundFeatureCrossRef WHERE owner IS :owner;

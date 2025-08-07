@@ -13,6 +13,7 @@ import model.choiceEntities.ClassChoiceEntity
 import model.choiceEntities.RaceChoiceEntity
 import model.choiceEntities.SubraceChoiceEntity
 import model.database.daos.*
+import model.sync.CharacterSyncManager
 
 
 class CharacterRepository {
@@ -22,6 +23,7 @@ class CharacterRepository {
     private val classDao: ClassDao
     private val subclassDao: SubclassDao
     private val featureDao: FeatureDao
+    private val characterSyncManager: CharacterSyncManager
 
     constructor(
         characterDao: CharacterDao,
@@ -29,7 +31,8 @@ class CharacterRepository {
         backgroundDao: BackgroundDao,
         classDao: ClassDao,
         subclassDao: SubclassDao,
-        featureDao: FeatureDao
+        featureDao: FeatureDao,
+        characterSyncManager: CharacterSyncManager
     ) {
         this.characterDao = characterDao
         this.raceDao = raceDao
@@ -38,11 +41,17 @@ class CharacterRepository {
         this.subclassDao = subclassDao
         this.featureDao = featureDao
         this.scope = CoroutineScope(Job())
+        this.characterSyncManager = characterSyncManager
     }
 
     val scope: CoroutineScope
 
     suspend fun insertPactMagicStateEntity(characterId: Int, classId: Int, slotsCurrentAmount: Int) {
+        characterSyncManager.postPactMagicStateEntity(
+            characterId = characterId,
+            classId = classId,
+            slotsCurrentAmount = slotsCurrentAmount
+        )
         characterDao.insertPactMagicStateEntity(
             characterId = characterId,
             classId = classId,
@@ -54,41 +63,44 @@ class CharacterRepository {
         return characterDao.getAllCharacters()
     }
 
-    suspend fun removeFeatureChoiceChoiceEntity(
-        choiceId: Int,
-        characterId: Int
-    ) {
-        featureDao.removeFeatureFeatureChoice(choiceId, characterId)
-    }
-
     suspend fun insertCharacter(character: CharacterEntity) {
         if (characterDao.insertCharacter(character).toInt() == -1) {
             characterDao.updateCharacter(character)
         }
+        characterSyncManager.postCharacter(character)
     }
 
     fun deleteCharacterById(id: Int) {
         scope.launch {
+            characterSyncManager.deleteCharacter(id)
             characterDao.deleteCharacter(id)
         }
     }
 
     suspend fun createDefaultCharacter(): Int {
         val newCharacter = Character(name = "My Character")
+        characterSyncManager.postCharacter(newCharacter)
         return characterDao.insertCharacter(newCharacter).toInt()
     }
 
     suspend fun insertCharacterSubraceCrossRef(characterId: Int, subraceId: Int) {
+        characterSyncManager.postCharacterSubraceCrossRef(characterId, subraceId)
         characterDao.insertCharacterSubRaceCrossRef(
             characterId, subraceId
         )
     }
 
     suspend fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
+        characterSyncManager.postSubraceChoiceEntity(subraceChoiceEntity)
         characterDao.insertSubraceChoiceEntity(subraceChoiceEntity)
     }
 
     suspend fun insertCharacterSubclassCrossRef(characterId: Int, subclassId: Int, classId: Int) {
+        characterSyncManager.postCharacterSubclassCrossRef(
+            subclassId,
+            characterId,
+            classId,
+        )
         characterDao.insertCharacterSubclassCrossRef(
             subclassId,
             characterId,
@@ -101,6 +113,11 @@ class CharacterRepository {
         characterId: Int,
         choiceId: Int
     ) {
+        characterSyncManager.postFeatureChoiceEntity(
+            featureId = featureId,
+            characterId = characterId,
+            choiceId = choiceId
+        )
         characterDao.insertFeatureChoiceEntity(
             featureId = featureId,
             characterId = characterId,
@@ -114,6 +131,12 @@ class CharacterRepository {
         characterId: Int,
         prepared: Boolean?
     ) {
+        characterSyncManager.postCharacterClassSpellCrossRef(
+            classId = classId,
+            spellId = spellId,
+            characterId = characterId,
+            isPrepared = prepared
+        )
         characterDao.insertCharacterClassSpellCrossRef(
             classId = classId,
             spellId = spellId,
@@ -128,6 +151,12 @@ class CharacterRepository {
         characterId: Int,
         isPrepared: Boolean?
     ) {
+        characterSyncManager.postSubclassSpellCastingSpellCrossRef(
+            subclassId = subclassId,
+            spellId = spellId,
+            characterId = characterId,
+            isPrepared = isPrepared
+        )
         characterDao.insertSubClassSpellCastingCrossRef(
             subclassId = subclassId,
             spellId = spellId,
@@ -149,22 +178,31 @@ class CharacterRepository {
             }
         }
 
+        characterSyncManager.postCharacterBackPack(backpack, characterId)
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 
     suspend fun setClassGold(gold: Int, characterId: Int) {
         val backpack = characterDao.getCharacterBackPack(characterId)
         backpack.classCurrency["gp"]!!.amount = gold
+
+        characterSyncManager.postCharacterBackPack(backpack, characterId)
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 
     suspend fun setBackgroundCurrency(backgroundCurrencyMap: Map<String, Currency>, characterId: Int) {
         val backpack = characterDao.getCharacterBackPack(characterId)
         backpack.backgroundCurrency = backgroundCurrencyMap
+
+        characterSyncManager.postCharacterBackPack(backpack, characterId)
         characterDao.insertCharacterBackPack(backpack, characterId)
     }
 
     suspend fun removeClassFromCharacter(classId: Int, characterId: Int) {
+        characterSyncManager.deleteClassCharacterCrossRef(
+            characterId = characterId,
+            classId = classId
+        )
         characterDao.removeCharacterClassCrossRef(
             characterId = characterId,
             classId = classId
@@ -172,6 +210,11 @@ class CharacterRepository {
     }
 
     suspend fun insertCharacterClassCrossRef(characterId: Int, classId: Int) {
+        characterSyncManager.postCharacterClassCrossRef(
+            characterId= characterId,
+            classId = classId
+        )
+
         characterDao.insertCharacterClassCrossRef(
             characterId = characterId,
             classId = classId
@@ -188,6 +231,19 @@ class CharacterRepository {
         tookGold: Boolean,
         proficiencyChoicesByString: List<List<String>>,
     ) {
+        characterSyncManager.postClassChoiceEntity(
+            ClassChoiceEntity(
+                characterId = characterId,
+                classId = classId,
+                level = level,
+                isBaseClass = isBaseClass,
+                totalNumOnGoldDie = totalNumOnGoldDie,
+                abilityImprovementsGranted = abilityImprovementsGranted,
+                tookGold = tookGold,
+                proficiencyChoicesByString = proficiencyChoicesByString
+            )
+        )
+
         characterDao.insertClassChoiceEntity(
             ClassChoiceEntity(
                 characterId = characterId,
@@ -204,6 +260,12 @@ class CharacterRepository {
 
     suspend fun addFeatsToCharacterClass(characterId: Int, classId: Int, feats: List<Feat>) {
         feats.forEach {
+            characterSyncManager.postCharacterClassFeatCrossRef(
+                characterId = characterId,
+                featId = it.id,
+                classId = classId
+            )
+
             characterDao.insertCharacterClassFeatCrossRef(
                 characterId = characterId,
                 featId = it.id,
@@ -217,6 +279,14 @@ class CharacterRepository {
         backgroundId: Int,
         languageChoices: List<List<String>>
     ) {
+        characterSyncManager.postBackgroundChoiceEntity(
+            BackgroundChoiceEntity(
+                characterId,
+                backgroundId,
+                languageChoices
+            )
+        )
+
         characterDao.insertBackgroundChoiceEntity(
             BackgroundChoiceEntity(
                 characterId,
@@ -234,6 +304,17 @@ class CharacterRepository {
         languageChoice: List<List<String>>,
         abilityBonusOverrides: List<AbilityBonus>?
     ) {
+        characterSyncManager.postRaceChoice(
+            RaceChoiceEntity(
+                raceId,
+                characterId,
+                abilityBonusChoice,
+                proficiencyChoice,
+                languageChoice,
+                abilityBonusOverrides
+            )
+        )
+
         characterDao.insertRaceChoice(
             RaceChoiceEntity(
                 raceId,
@@ -247,6 +328,11 @@ class CharacterRepository {
     }
 
     suspend fun insertCharacterRaceCrossRef(characterId: Int, raceId: Int) {
+        characterSyncManager.postCharacterRaceCrossRef(
+            id = characterId,
+            raceId = raceId
+        )
+
         characterDao.insertCharacterRaceCrossRef(
             id = characterId,
             raceId = raceId
@@ -254,6 +340,11 @@ class CharacterRepository {
     }
 
     suspend fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int) {
+        characterSyncManager.postCharacterBackgroundCrossRef(
+            backgroundId = backgroundId,
+            characterId = characterId
+        )
+
         characterDao.insertCharacterBackgroundCrossRef(
             backgroundId = backgroundId,
             characterId = characterId
@@ -585,6 +676,7 @@ class CharacterRepository {
 
     suspend fun setTemp(id: Int?, temp: String) {
         try {
+            characterSyncManager.postTemp(id, temp)
             characterDao.setTemp(id!!, temp.toInt())
         } catch (_: Exception) {
         }
@@ -592,6 +684,7 @@ class CharacterRepository {
 
     suspend fun heal(id: Int?, hp: String, maxHp: Int) {
         try {
+            characterSyncManager.postHeal(id, hp, maxHp)
             characterDao.heal(id!!, hp.toInt(), maxHp)
         } catch (_: Exception) {
         }
@@ -599,39 +692,41 @@ class CharacterRepository {
 
     suspend fun setHp(id: Int?, hp: String) {
         try {
-            characterDao.setHp(id!!, hp.toInt())
+            characterSyncManager.postHp(id!!, hp.toInt())
+            characterDao.setHp(id, hp.toInt())
         } catch (_: Exception) {
         }
     }
 
     suspend fun damage(id: Int?, damage: String) {
         try {
-            characterDao.damage(id!!, damage.toInt())
+            characterSyncManager.postDamage(id!!, damage.toInt())
+            characterDao.damage(id, damage.toInt())
         } catch (_: Exception) {
         }
     }
 
     suspend fun updateDeathSaveSuccesses(id: Int?, it: Boolean) {
-        if (it) {
-            characterDao.updateDeathSaveSuccesses(id!!, 1)
-        } else {
-            characterDao.updateDeathSaveSuccesses(id!!, -1)
-        }
+        val sign = if (it) 1 else -1
+
+        characterSyncManager.postDeathSaveSuccess(id!!, sign)
+        characterDao.updateDeathSaveSuccesses(id, sign)
     }
 
     suspend fun updateDeathSaveFailures(id: Int?, it: Boolean) {
-        if (it) {
-            characterDao.updateDeathSaveFailures(id!!, 1)
-        } else {
-            characterDao.updateDeathSaveFailures(id!!, -1)
-        }
+        val sign = if (it) 1 else -1
+
+        characterSyncManager.postDeathSaveFailures(id!!, sign)
+        characterDao.updateDeathSaveFailures(id, -sign)
     }
 
     suspend fun insertSpellSlots(spellSlots: List<Resource>, id: Int) {
+        characterSyncManager.postSpellSlots(spellSlots, id)
         characterDao.insertSpellSlots(spellSlots, id)
     }
 
     suspend fun removeClassSpellCrossRefs(classId: Int, characterId: Int) {
+        characterSyncManager.deleteCharacterClassSpellCrossRefs(classId, characterId)
         characterDao.removeCharacterClassSpellCrossRefs(classId, characterId)
     }
 
@@ -640,30 +735,42 @@ class CharacterRepository {
     }
 
     suspend fun changeName(it: String, id: Int) {
+        characterSyncManager.updateCharacterName(id, it)
         characterDao.changeName(it, id)
     }
 
     suspend fun setPersonalityTraits(it: String, id: Int) {
+        characterSyncManager.updateCharacterTraits(id, it)
         characterDao.setPersonalityTraits(it, id)
     }
 
     suspend fun setIdeals(it: String, id: Int) {
+        characterSyncManager.updateCharacterIdeals(id ,it)
         characterDao.setIdeals(it, id)
     }
 
     suspend fun setBonds(it: String, id: Int) {
+        characterSyncManager.updateCharacterBonds(id, it)
         characterDao.setBonds(it, id)
     }
 
     suspend fun setFlaws(it: String, id: Int) {
+        characterSyncManager.updateCharacterFlaws(id, it)
         characterDao.setFlaws(it, id)
     }
 
     suspend fun setNotes(it: String, id: Int) {
+        characterSyncManager.updateCharacterNotes(id, it)
         characterDao.setNotes(it, id)
     }
 
     suspend fun activateInfusion(infusionId: Int, characterId: Int) {
+        characterSyncManager.postCharacterFeatureState(
+            featureId = infusionId,
+            characterId = characterId,
+            isActive = true
+        )
+
         characterDao.insertCharacterFeatureState(
             featureId = infusionId,
             characterId = characterId,
@@ -672,6 +779,12 @@ class CharacterRepository {
     }
 
     suspend fun deactivateInfusion(infusionId: Int, characterId: Int) {
+        characterSyncManager.postCharacterFeatureState(
+            featureId = infusionId,
+            characterId = characterId,
+            isActive = true
+        )
+
         characterDao.insertCharacterFeatureState(
             featureId = infusionId,
             characterId = characterId,
@@ -682,6 +795,11 @@ class CharacterRepository {
     suspend fun removeFeatureChoiceCrossRefs(clazz: Class, characterId: Int) {
         clazz.levelPath?.forEach { feature ->
             feature.choices?.forEach {
+                characterSyncManager.deleteFeatureFeatureChoice(
+                    choiceId = it.id,
+                    characterId = characterId
+                )
+
                 featureDao.removeFeatureFeatureChoice(
                     choiceId = it.id,
                     characterId = characterId

@@ -25,3 +25,6 @@ AND SubclassFeatureCrossRef.owner IS :owner
 WHERE subclassId IS :subclassId AND
 (features.owner IS NULL OR features.owner = :owner)
 AND features.grantedAtLevel <= :level;
+
+selectRefsFor:
+SELECT subclassId, featureId FROM SubclassFeatureCrossRef WHERE owner =:owner;

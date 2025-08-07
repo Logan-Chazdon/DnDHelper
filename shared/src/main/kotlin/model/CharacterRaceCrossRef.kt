@@ -3,6 +3,7 @@ package model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import kotlinx.serialization.Serializable
 
 /**This is used to fetch a race relating to a character.*/
 @Entity(
@@ -24,6 +25,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
         )
     ]
 )
+@Serializable
 data class CharacterRaceCrossRef(
     val raceId: Int,
     val id: Int

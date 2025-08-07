@@ -13,3 +13,6 @@ INSERT INTO SubclassSpellCrossRef (subclassId, spellId, owner) VALUES (?, ?, ?);
 
 delete:
 DELETE FROM SubclassSpellCrossRef WHERE subclassId = :subclassId AND spellId = :spellId AND owner =:owner;
+
+selectRefsFor:
+SELECT subclassId, spellId FROM SubclassSpellCrossRef WHERE owner =:owner;

@@ -13,3 +13,6 @@ INSERT INTO ClassFeatureCrossRef (featureId, id, owner) VALUES (?, ?, ?);
 
 delete:
 DELETE FROM ClassFeatureCrossRef WHERE owner = :owner AND id = :classId AND featureId= :featureId;
+
+selectRefsFor:
+SELECT featureId, id FROM ClassFeatureCrossRef WHERE owner =:owner;

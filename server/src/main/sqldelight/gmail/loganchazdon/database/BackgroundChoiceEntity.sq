@@ -21,3 +21,6 @@ DELETE FROM  BackgroundChoiceEntity WHERE characterId IS :characterId AND backgr
 
 select:
 SELECT * FROM BackgroundChoiceEntity WHERE characterId IS :id AND owner IS :owner;
+
+selectRefsFor:
+SELECT characterId, backgroundId, languageChoices FROM BackgroundChoiceEntity WHERE owner IS :owner;

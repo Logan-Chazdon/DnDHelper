@@ -1,10 +1,12 @@
+import com.google.gson.JsonArray;
+
 CREATE TABLE IF NOT EXISTS RaceChoiceEntity (
     `abcchosenByString` TEXT NOT NULL,
     `raceId` INTEGER NOT NULL,
     `characterId` INTEGER NOT NULL,
-    `proficiencyChoice` TEXT NOT NULL,
-    `languageChoice` TEXT NOT NULL,
-    `abilityBonusOverrides` TEXT,
+    `proficiencyChoice` TEXT AS JsonArray NOT NULL,
+    `languageChoice` TEXT AS JsonArray NOT NULL,
+    `abilityBonusOverrides` TEXT AS JsonArray,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
     PRIMARY KEY(`raceId`, `characterId`, owner),
@@ -17,3 +19,6 @@ INSERT OR REPLACE INTO RaceChoiceEntity (abcchosenByString, raceId, characterId,
 
 select:
 SELECT * FROM RaceChoiceEntity WHERE characterId = :characterId AND owner = :owner;
+
+selectRefsFor:
+SELECT abcchosenByString, raceId, characterId, proficiencyChoice, languageChoice, abilityBonusOverrides FROM RaceChoiceEntity WHERE owner =:owner;

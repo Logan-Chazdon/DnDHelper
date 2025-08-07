@@ -29,3 +29,7 @@ DELETE FROM ClassChoiceEntity WHERE characterId = :characterId AND classId = :cl
 select:
 SELECT * FROM ClassChoiceEntity
 WHERE characterId IS :characterId AND classId IS :classId AND owner = :owner;
+
+selectRefsFor:
+SELECT characterId, classId, level, isBaseClass, totalNumOnGoldDie, abilityImprovementsGranted, tookGold, proficiencyChoicesByString FROM ClassChoiceEntity
+WHERE owner IS :owner;

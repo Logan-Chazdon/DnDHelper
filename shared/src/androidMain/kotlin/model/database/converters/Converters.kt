@@ -2,27 +2,14 @@ package model.database.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import model.*
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.lang.reflect.Type
 
-class Converters {
-    var gson = Gson()
-    init {
-        val converter = ItemConverter("type")
-        converter.registerItemType("Item", Item::class.java)
-        converter.registerItemType("Weapon", Weapon::class.java)
-        converter.registerItemType("Armor", Armor::class.java)
-        converter.registerItemType("Currency", Currency::class.java)
-        converter.registerItemType("Shield", Shield::class.java)
-        gson = GsonBuilder()
-            .registerTypeAdapter(ItemInterface::class.java, converter)
-            .create()
-
-    }
-
-
+class Converters : KoinComponent {
+    val gson : Gson by inject()
     @TypeConverter
     fun storedStringToListListString(data: String?): List<List<String>> {
         if (data == null || data.isBlank()) {

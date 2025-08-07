@@ -20,3 +20,6 @@ JOIN SubraceFeatureCrossRef ON SubraceFeatureCrossRef.featureId IS features.feat
 AND (SubraceFeatureCrossRef.owner IS :owner OR SubraceFeatureCrossRef.owner IS NULL)
 WHERE subraceId IS :subraceId AND
 (features.owner IS NULL OR features.owner = :owner);
+
+selectRefsFor:
+SELECT subraceId, featureId FROM SubraceFeatureCrossRef WHERE owner =:owner;

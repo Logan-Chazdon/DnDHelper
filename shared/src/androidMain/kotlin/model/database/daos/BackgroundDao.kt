@@ -103,4 +103,26 @@ WHERE backgroundId IS :id"""
 
     @Query("DELETE FROM backgrounds WHERE id = :id")
     actual abstract suspend fun deleteBackground(id: Int)
+
+    @Query("SELECT * FROM CharacterBackgroundCrossRef")
+    abstract suspend fun getCharacterBackgroundTable() : List<CharacterBackgroundCrossRef>
+
+    @Query("SELECT * FROM BackgroundChoiceEntity")
+    abstract fun backgroundChoiceTable(): List<BackgroundChoiceEntity>
+
+    @Query("""
+        SELECT * FROM BackgroundFeatureCrossRef 
+        JOIN Backgrounds ON BackgroundFeatureCrossRef.backgroundId IS backgrounds.id
+        WHERE Backgrounds.isHomebrew;
+    """)
+    abstract fun backgroundFeatureTable(): List<BackgroundFeatureCrossRef>
+
+    @Delete
+    abstract fun removeBackgroundFeatureCrossRef(it: BackgroundFeatureCrossRef)
+
+    @Query("SELECT * FROM BackgroundSpellCrossRef JOIN backgrounds ON backgrounds.id = BackgroundSpellCrossRef.backgroundId WHERE isHomebrew")
+    abstract fun backgroundSpellTable(): List<BackgroundSpellCrossRef>
+
+    @Query("SELECT * FROM backgrounds WHERE isHomebrew")
+    abstract fun backgroundTable(): List<BackgroundEntity>
 }

@@ -27,3 +27,6 @@ JOIN RaceSubraceCrossRef ON RaceSubraceCrossRef.raceId = :raceId
 AND RaceSubraceCrossRef.subraceId = subraces.id
 AND (RaceSubraceCrossRef.owner IS :owner OR RaceSubraceCrossRef.owner IS NULL)
 WHERE (subraces.owner IS NULL OR subraces.owner IS :owner);
+
+selectRefsFor:
+SELECT subraceId, raceId FROM RaceSubraceCrossRef WHERE owner = :owner;

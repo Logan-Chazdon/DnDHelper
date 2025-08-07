@@ -75,3 +75,7 @@ OR spellDetails.classes LIKE '%' || SUBSTR(FeatureChoiceIndexCrossRef.classes, 3
 selectHighestIdForOwner:
 SELECT max(featureId) FROM features
 WHERE owner IS :owner;
+
+selectByOwner:
+SELECT featureId, name, description, `index`, grantedAtLevel, maxTimesChosen, prerequisite, activationRequirement, speedBoost, spells, infusion, maxActive, hpBonusPerLevel, armorContingentAcBonus, acBonus, ac, proficiencies, expertises, languages, extraAttackAndDamageRollStat, rangedAttackBonus
+FROM features WHERE owner IS :owner;

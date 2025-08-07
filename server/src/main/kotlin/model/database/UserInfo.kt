@@ -21,7 +21,7 @@ data class UserInfo(
 
 private val json = Json { ignoreUnknownKeys = true }
 
-private suspend fun request(httpClient: HttpClient, token: String): HttpResponse {
+internal suspend fun request(httpClient: HttpClient, token: String): HttpResponse {
     return httpClient.get("https://www.googleapis.com/oauth2/v2/userinfo") {
         headers {
             append(HttpHeaders.Authorization, "Bearer $token")

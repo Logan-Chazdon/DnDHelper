@@ -42,3 +42,11 @@ class FeatureChoiceChoiceEntityTable(
     characterId,
     choiceId
 )
+
+fun FeatureChoiceChoiceEntity.asTable() : FeatureChoiceChoiceEntityTable {
+    return FeatureChoiceChoiceEntityTable(
+        featureId = this.featureId,
+        characterId = this.characterId,
+        choiceId = this.choiceId
+    )
+}

@@ -3,6 +3,7 @@ package model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import kotlinx.serialization.Serializable
 
 @Entity(
     primaryKeys = ["characterId", "classId", "featId"],
@@ -30,6 +31,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
         )
     ]
 )
+@Serializable
 data class ClassFeatCrossRef(
     val characterId : Int,
     val classId: Int,

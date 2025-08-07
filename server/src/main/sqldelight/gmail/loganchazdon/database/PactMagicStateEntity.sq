@@ -14,3 +14,6 @@ INSERT OR REPLACE INTO PactMagicStateEntity (characterId, classId, slotsCurrentA
 
 delete:
 DELETE FROM PactMagicStateEntity WHERE characterId = :characterId AND classId =:classId AND owner =:owner;
+
+selectRefsFor:
+SELECT characterId, classId, slotsCurrentAmount FROM PactMagicStateEntity WHERE owner =:owner;

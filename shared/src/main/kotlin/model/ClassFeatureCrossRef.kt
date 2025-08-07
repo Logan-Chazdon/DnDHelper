@@ -3,6 +3,7 @@ package model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import kotlinx.serialization.Serializable
 
 
 /**This is used to fetch a feature relating to a class.*/
@@ -27,6 +28,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
         )
     ]
 )
+@Serializable
 data class ClassFeatureCrossRef(
     val featureId: Int,
     val id: Int

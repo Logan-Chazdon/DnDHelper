@@ -23,3 +23,6 @@ AND featureId IS :featureId;
 
 selectFeatureForSpell:
 SELECT featureId FROM FeatureSpellCrossRef WHERE spellId IS :id AND (owner = :owner OR owner IS NULL);
+
+selectRefsFor:
+SELECT spellId, featureId FROM FeatureSpellCrossRef WHERE owner = :owner;

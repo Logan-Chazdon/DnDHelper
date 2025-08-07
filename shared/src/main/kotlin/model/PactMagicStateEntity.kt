@@ -2,6 +2,7 @@ package model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import kotlinx.serialization.Serializable
 
 @Entity(
     primaryKeys = ["characterId", "classId"],
@@ -22,6 +23,7 @@ import androidx.room.ForeignKey
         )
     ]
 )
+@Serializable
 data class PactMagicStateEntity(
     val characterId: Int,
     val classId: Int,

@@ -13,3 +13,6 @@ INSERT INTO CharacterRaceCrossRef (raceId, id, owner) VALUES (?, ?, ?);
 
 delete:
 DELETE FROM CharacterRaceCrossRef WHERE owner = :owner AND id = :id;
+
+selectRefsFor:
+SELECT raceId, id FROM CharacterRaceCrossRef WHERE owner = :owner;

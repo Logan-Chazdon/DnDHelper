@@ -846,7 +846,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 owner = it.id,
                 abcchosenByString = body.getString("abilityBonusChoice"),
                 languageChoice = body.getString("languageChoice"),
-                abilityBonusOverrides = body.getString("abilityBonusOverrides")
+                abilityBonusOverrides = jsonListAdapter.decode(body.getString("abilityBonusOverrides"))
             )
         }
     }
@@ -859,9 +859,9 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 raceId = body.getLong("raceId"),
                 owner = it.id,
                 abcchosenByString = body.getString("abilityBonusChoice"),
-                languageChoice = body.getString("languageChoice"),
-                abilityBonusOverrides = body.getString("abilityBonusOverrides"),
-                proficiencyChoice = body.getString("proficiencyChoice")
+                languageChoice = jsonListAdapter.decode(body.getString("languageChoice")),
+                abilityBonusOverrides = jsonListAdapter.decode(body.getString("abilityBonusOverrides")),
+                proficiencyChoice = jsonListAdapter.decode(body.getString("proficiencyChoice"))
             )
         }
     }
@@ -873,7 +873,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 characterId = body.getLong("characterId"),
                 featureId = body.getLong("featureId"),
                 owner = it.id,
-                isActive = if(body.getBoolean("isActive")) 1 else 0
+                isActive = body.getBoolean("isActive")
             )
             call.respond(HttpStatusCode.OK, "")
         }

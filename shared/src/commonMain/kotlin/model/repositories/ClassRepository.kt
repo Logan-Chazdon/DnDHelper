@@ -9,18 +9,26 @@ import model.database.daos.ClassDao
 import model.database.daos.FeatureDao
 import model.database.daos.SubclassDao
 import model.pojos.NameAndIdPojo
+import model.sync.ClassSyncManager
 
 
 class ClassRepository {
     private val classDao: ClassDao
     private val subclassDao: SubclassDao
     private val featureDao: FeatureDao
+    private val classSyncManager: ClassSyncManager
 
-    constructor(classDao: ClassDao, subclassDao: SubclassDao, featureDao: FeatureDao) {
+    constructor(
+        classDao: ClassDao,
+        subclassDao: SubclassDao,
+        featureDao: FeatureDao,
+        classSyncManager: ClassSyncManager
+    ) {
         this.classDao = classDao
         this.subclassDao = subclassDao
         this.featureDao = featureDao
         this.scope = CoroutineScope(Job())
+        this.classSyncManager = classSyncManager
         this._classes = classDao.getAllClasses()
     }
 
@@ -44,25 +52,37 @@ class ClassRepository {
     }
 
     suspend fun createDefaultClass(): Int {
-        return classDao.insertClass(
-            ClassEntity(
-                name = "Homebrew class",
-                startingGoldD4s = 4,
-                startingGoldMultiplier = 10,
-                subclassLevel = 1
-            )
-        ).toInt()
+        val default = ClassEntity(
+            name = "Homebrew class",
+            startingGoldD4s = 4,
+            startingGoldMultiplier = 10,
+            subclassLevel = 1
+        )
+        val id = classDao.insertClass(
+            default
+        )
+
+        classSyncManager.postClass(default.apply { this.id = id })
+
+        return id
     }
 
     suspend fun insertClass(classEntity: ClassEntity) {
+        classSyncManager.postClass(classEntity)
         classDao.insertClass(classEntity)
     }
 
     suspend fun deleteClass(id: Int) {
+        classSyncManager.deleteClass(id)
         classDao.deleteClass(id)
     }
 
     suspend fun insertClassFeatureCrossRef(classId: Int, featureId: Int) {
+        classSyncManager.postClassFeatureCrossRef(
+            featureId = featureId,
+            id = classId
+        )
+
         classDao.insertClassFeatureCrossRef(
             featureId = featureId,
             id = classId
@@ -74,14 +94,20 @@ class ClassRepository {
     }
 
     suspend fun createDefaultSubclass(): Int {
-        return subclassDao.insertSubclass(
-            SubclassEntity(
-                "",
-                spellCasting = null,
-                spellAreFree = true,
-                isHomebrew = true
-            )
+        val default = SubclassEntity(
+            "",
+            spellCasting = null,
+            spellAreFree = true,
+            isHomebrew = true
         )
+
+        val id = subclassDao.insertSubclass(
+            default
+        )
+
+        classSyncManager.postSubclass(default.apply { this.subclassId = id})
+
+        return id
     }
 
     fun getSubclass(it: Int): Flow<Subclass> {
@@ -89,6 +115,11 @@ class ClassRepository {
     }
 
     suspend fun removeSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
+        classSyncManager.deleteSubclassFeatureCrossRef(
+            subclassId = subclassId,
+            featureId = featureId
+        )
+
         subclassDao.removeSubclassFeatureCrossRef(
             subclassId = subclassId,
             featureId = featureId
@@ -96,6 +127,11 @@ class ClassRepository {
     }
 
     suspend fun insertSubclassFeatureCrossRef(subclassId: Int, featureId: Int) {
+        classSyncManager.postSubclassFeatureCrossRef(
+            subclassId = subclassId,
+            featureId = featureId
+        )
+
         subclassDao.insertSubclassFeatureCrossRef(
             subclassId = subclassId,
             featureId = featureId
@@ -103,10 +139,12 @@ class ClassRepository {
     }
 
     suspend fun insertSubclass(subclassEntity: SubclassEntity) {
+        classSyncManager.postSubclass(subclassEntity)
         subclassDao.insertSubclass(subclassEntity)
     }
 
     suspend fun insertClassSubclassCrossRef(classId: Int, subclassId: Int) {
+        classSyncManager.postClassSubclassCrossRef(classId, subclassId)
         classDao.insertClassSubclassId(
             classId = classId,
             subclassId = subclassId
@@ -114,6 +152,7 @@ class ClassRepository {
     }
 
     suspend fun removeClassFeatureCrossRef(classId: Int, featureId: Int) {
+        classSyncManager.deleteClassFeatureCrossRef(classId, featureId)
         classDao.removeClassFeatureCrossRef(
             featureId = featureId,
             id = classId
@@ -121,6 +160,7 @@ class ClassRepository {
     }
 
     suspend fun removeClassSubclassCrossRef(classId: Int, subclassId: Int) {
+        classSyncManager.deleteClassSubclassCrossRef(classId, subclassId)
         classDao.removeClassSubclassCrossRef(
             classId = classId,
             subclassId = subclassId
@@ -157,6 +197,7 @@ class ClassRepository {
     }
 
     suspend fun deleteSubclass(subclassId: Int) {
+        classSyncManager.deleteSubclass(subclassId)
         subclassDao.deleteSubclass(subclassId)
     }
 

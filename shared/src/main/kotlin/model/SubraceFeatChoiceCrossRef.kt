@@ -3,6 +3,7 @@ package model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import kotlinx.serialization.Serializable
 
 @Entity(
     primaryKeys = ["subraceId", "featChoiceId"],
@@ -25,6 +26,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
         )
     ]
 )
+@Serializable
 data class SubraceFeatChoiceCrossRef(
     val subraceId: Int,
     val featChoiceId: Int

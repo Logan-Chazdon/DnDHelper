@@ -13,10 +13,18 @@ import model.*
 
 
 abstract class Service(
-    val apiUrl: String = "localhost",   //TODO replace this with automatic dev / prod api url
+    val apiUrl: String = ApiUrl,
     val targetPort: Int = 8080,
     val client : HttpClient
 ) {
+    protected suspend inline fun <reified T> getDeserialized(
+        path: String,
+        noinline params: ParametersBuilder.() -> Unit = {}
+    ): T {
+        return format.decodeFromString<T>(getFrom(path, params).bodyAsText())
+    }
+
+
     protected suspend fun postTo(path: String, json:  JsonObjectBuilder.() -> Unit) {
         client.post {
             url {

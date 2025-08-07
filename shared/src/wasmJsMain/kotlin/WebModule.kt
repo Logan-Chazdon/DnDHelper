@@ -1,6 +1,9 @@
+import io.ktor.client.*
+import io.ktor.client.plugins.websocket.*
 import model.database.daos.*
 import model.localDataSources.DataSource
 import model.localDataSources.WebDataSourceImpl
+import model.sync.*
 import org.koin.core.annotation.Module
 import org.koin.dsl.module
 
@@ -19,5 +22,20 @@ class WebModule {
         single <SubraceDao> { SubraceDaoImpl(get()) }
 
         single <DataSource> { WebDataSourceImpl(get()) }
+
+        single { CharacterSyncManager() }
+        single { BackgroundSyncManager() }
+        single { ClassSyncManager() }
+        single { FeatureSyncManager() }
+        single { RaceSyncManager() }
+        single { SpellSyncManager() }
+
+        single {
+             HttpClient {
+                 install(WebSockets) {
+                     pingIntervalMillis = 20_000
+                 }
+             }
+        }
     }
 }

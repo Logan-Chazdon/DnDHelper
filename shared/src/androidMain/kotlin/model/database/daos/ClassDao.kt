@@ -140,4 +140,16 @@ WHERE classId IS :classId"""
             )
         )
     }
+
+    @Query("SELECT * FROM ClassFeatureCrossRef JOIN classes ON classes.id = ClassFeatureCrossRef.id WHERE classes.isHomebrew")
+    abstract fun classFeatureTable(): List<ClassFeatureCrossRef>
+
+    @Query("SELECT * FROM ClassSpellCrossRef JOIN classes ON ClassSpellCrossRef.classId IS classes.id WHERE classes.isHomebrew")
+    abstract fun classSpellTable(): List<ClassSpellCrossRef>
+
+    @Query("SELECT * FROM ClassSubclassCrossRef JOIN subclasses ON subclasses.subclassId IS ClassSubclassCrossRef.subclassId WHERE subclasses.subclass_isHomebrew")
+    abstract fun classSubclassTable(): List<ClassSubclassCrossRef>
+
+    @Query("SELECT * FROM classes WHERE isHomebrew")
+    abstract fun classTable(): List<ClassEntity>
 }

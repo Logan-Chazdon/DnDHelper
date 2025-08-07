@@ -1,5 +1,3 @@
-import io.ktor.client.*
-import io.ktor.client.plugins.websocket.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import model.repositories.*
 import org.koin.core.annotation.Module
@@ -29,7 +27,7 @@ class SharedModule {
 
 
         viewModel { AllCharactersViewModel(get(), newCharacterId) }
-        viewModel { NewCharacterBackgroundViewModel(get(), get(), get(),newCharacterId) }
+        viewModel { NewCharacterBackgroundViewModel(get(), get(),newCharacterId) }
         viewModel { NewCharacterConfirmBackgroundViewModel(get(), get(), get(), newCharacterId) }
         viewModel { NewCharacterClassViewModel(get(), get(), get(), newCharacterId) }
         viewModel { NewCharacterConfirmClassViewModel(get(), get(), get(), get(), newCharacterId) }
@@ -47,28 +45,20 @@ class SharedModule {
                 backgroundDao = get(),
                 classDao = get(),
                 subclassDao = get(),
-                featureDao = get()
+                featureDao = get(),
+                characterSyncManager = get()
             )
         }
 
 
-        single<BackgroundRepository> { BackgroundRepository(get(), get()) }
-        single<CharacterRepository> { CharacterRepository(get(), get(), get(), get(), get(), get()) }
-        single<ClassRepository> { ClassRepository(get(), get(), get()) }
+        single<BackgroundRepository> { BackgroundRepository(get(), get(), get()) }
+        single<ClassRepository> { ClassRepository(get(), get(), get(), get()) }
         single<FeatRepository> { FeatRepository(get(), get()) }
-        single<FeatureRepository> { FeatureRepository(get(), get()) }
+        single<FeatureRepository> { FeatureRepository(get(), get(), get()) }
         single<ItemRepository> { ItemRepository(get()) }
         single<ProficiencyRepository> { ProficiencyRepository(get()) }
-        single<RaceRepository> { RaceRepository(get(), get(), get()) }
-        single<SpellRepository> { SpellRepository(get()) }
-
-        single {
-            HttpClient {
-                install(WebSockets) {
-                    pingIntervalMillis = 20_000
-                }
-            }
-        }
+        single<RaceRepository> { RaceRepository(get(), get(), get(), get()) }
+        single<SpellRepository> { SpellRepository(get(), get()) }
 
         single { BackgroundService(get()) }
         single { CharacterService(get()) }
@@ -79,8 +69,5 @@ class SharedModule {
         single { SpellService(get()) }
         single { SubclassService(get()) }
         single { SubraceService(get()) }
-
-
-
     }
 }

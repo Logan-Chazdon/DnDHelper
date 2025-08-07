@@ -29,7 +29,8 @@ class Feature() : FeatureEntity(name = "", description = ""){
         languages: List<Language>? = null,
         extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
         rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.
-        choices: List<FeatureChoice>? = null
+        choices: List<FeatureChoice>? = null,
+        isHomebrew: Boolean = false,
     ) : this() {
         this.featureId = featureId
         this.name = name
@@ -53,6 +54,7 @@ class Feature() : FeatureEntity(name = "", description = ""){
         this.extraAttackAndDamageRollStat = extraAttackAndDamageRollStat
         this.rangedAttackBonus = rangedAttackBonus
         this.choices = choices
+        this.isHomebrew = isHomebrew
     }
 
 

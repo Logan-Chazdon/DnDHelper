@@ -20,3 +20,6 @@ INSERT INTO ClassFeatCrossRef (characterId, classId, featId, owner) VALUES (?, ?
 
 delete:
 DELETE FROM ClassFeatCrossRef WHERE owner = :owner AND characterId = :characterId AND featId = :featId AND classId = :classId;
+
+selectRefsFor:
+SELECT characterId, classId, featId FROM ClassFeatCrossRef WHERE owner =:owner;

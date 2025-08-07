@@ -101,4 +101,13 @@ WHERE raceId is :raceId"""
 
     @Query("SELECT raceId AS id, raceName AS name FROM races")
     actual abstract fun getAllRaceIdsAndNames(): Flow<List<NameAndIdPojo>>
+
+    @Query("SELECT * FROM RaceFeatureCrossRef JOIN races ON races.raceId IS RaceFeatureCrossRef.raceId WHERE isHomebrew")
+    abstract fun raceFeatureTable(): List<RaceFeatureCrossRef>
+
+    @Query("SELECT * FROM RaceSubraceCrossRef JOIN subraces ON subraces.id IS RaceSubraceCrossRef.subraceId WHERE isHomebrew")
+    abstract fun raceSubraceTable(): List<RaceSubraceCrossRef>
+
+    @Query("SELECT * FROM races WHERE isHomebrew")
+    abstract fun raceTable(): List<RaceEntity>
 }

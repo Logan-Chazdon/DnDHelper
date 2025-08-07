@@ -29,3 +29,6 @@ SELECT COUNT(*) FROM CharacterClassSpellCrossRef WHERE classId IS :classId AND o
 
 deleteByCharacterId:
 DELETE FROM CharacterClassSpellCrossRef WHERE characterId = :characterId AND classId = :classId AND owner =:owner;
+
+selectRefsFor:
+SELECT characterId, classId, spellId, isPrepared FROM CharacterClassSpellCrossRef WHERE owner = :owner;

@@ -3,6 +3,7 @@ package model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import kotlinx.serialization.Serializable
 
 @Entity(
     primaryKeys = ["choiceId", "index"],
@@ -16,6 +17,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
         )
     ]
 )
+@Serializable
 data class FeatureChoiceIndexCrossRef(
     val choiceId: Int,
     val index: String,

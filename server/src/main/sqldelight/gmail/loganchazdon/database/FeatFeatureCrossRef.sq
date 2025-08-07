@@ -20,3 +20,6 @@ JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
 AND (FeatFeatureCrossRef.owner = :owner OR FeatFeatureCrossRef.owner IS NULL)
 WHERE (features.owner IS NULL OR features.owner IS :owner)
 AND featId = :featId;
+
+selectRefsFor:
+SELECT featId, featureId FROM FeatFeatureCrossRef WHERE owner = :owner;

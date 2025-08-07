@@ -25,4 +25,5 @@ open class FeatureEntity(
     var languages: List<Language>? = null,
     var extraAttackAndDamageRollStat: String? = null, //This adds an additional stat to the stats you can use when rolling attack or damage.
     var rangedAttackBonus: Int? = null, //Number added to all ranged attack roles.
+    open var isHomebrew: Boolean = false
 )

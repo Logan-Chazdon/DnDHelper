@@ -21,3 +21,6 @@ INSERT OR REPLACE INTO SubclassSpellCastingSpellCrossRef (subclassId, spellId, c
 
 delete:
 DELETE FROM SubclassSpellCastingSpellCrossRef WHERE subclassId = :subclassId AND spellId =:spellId AND owner =:owner;
+
+selectRefsFor:
+SELECT subclassId, spellId, characterId, isPrepared FROM SubclassSpellCastingSpellCrossRef WHERE owner=:owner;

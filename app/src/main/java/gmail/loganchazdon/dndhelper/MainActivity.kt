@@ -8,21 +8,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
+import model.sync.PullSyncManager
 import ui.RootView
 import ui.theme.DnDHelperTheme
 
 
-
 @ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             DnDHelperTheme {
                 RootView()
             }
         }
+
+        PullSyncManager(this).sync()
     }
 }
 

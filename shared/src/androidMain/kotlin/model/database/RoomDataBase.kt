@@ -22,9 +22,10 @@ import model.database.daos.*
         CharacterFeatureState::class, FeatFeatureCrossRef::class, PactMagicStateEntity::class
     ],
     autoMigrations = [
-        AutoMigration(from = 58, to = 59)
+        AutoMigration(from = 58, to = 59),
+        AutoMigration(from = 59, to = 60)
     ],
-    version = 59,
+    version = 60,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

@@ -9,17 +9,21 @@ import model.Background
 import model.BackgroundEntity
 import model.database.daos.BackgroundDao
 import model.database.daos.FeatureDao
+import model.sync.BackgroundSyncManager
 
 
 class BackgroundRepository {
     private val backgroundDao: BackgroundDao
     private val featureDao: FeatureDao
+    private val backgroundSyncManager: BackgroundSyncManager
 
-    constructor(backgroundDao: BackgroundDao, featureDao: FeatureDao) {
+
+    constructor(backgroundDao: BackgroundDao, featureDao: FeatureDao, backgroundSyncManager: BackgroundSyncManager) {
         this.backgroundDao = backgroundDao
         this.featureDao = featureDao
         this.scope = CoroutineScope(Job())
         this._backgrounds = backgroundDao.getAllBackgrounds()
+        this.backgroundSyncManager = backgroundSyncManager
     }
 
     private val scope: CoroutineScope
@@ -44,25 +48,30 @@ class BackgroundRepository {
     }
 
     suspend fun insertBackground(backgroundEntity: BackgroundEntity) {
+        backgroundSyncManager.postBackground(backgroundEntity)
         backgroundDao.insertBackground(backgroundEntity)
     }
 
     suspend fun insertBackgroundFeatureCrossRef(backgroundId: Int, featureId: Int) {
+        backgroundSyncManager.postBackgroundFeatureCrossRef(backgroundId, featureId)
         backgroundDao.insertBackgroundFeatureCrossRef(backgroundId, featureId)
     }
 
     suspend fun createDefaultBackground(): Int {
-        return backgroundDao.insertBackground(
-            BackgroundEntity(
-                name = "",
-                desc = "",
-                equipmentChoices = emptyList(),
-                equipment = emptyList(),
-                languages = emptyList(),
-                proficiencies = emptyList(),
-                spells = null
-            )
-        ).toInt()
+        val default = BackgroundEntity(
+            name = "",
+            desc = "",
+            equipmentChoices = emptyList(),
+            equipment = emptyList(),
+            languages = emptyList(),
+            proficiencies = emptyList(),
+            spells = null
+        )
+        val id = backgroundDao.insertBackground(
+            default
+        )
+        backgroundSyncManager.postBackground(default.apply { this.id = id })
+        return id
     }
 
     fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>> {
@@ -70,6 +79,7 @@ class BackgroundRepository {
     }
 
     suspend fun deleteBackground(id: Int) {
+        backgroundSyncManager.deleteBackground(id)
         backgroundDao.deleteBackground(id)
     }
 }

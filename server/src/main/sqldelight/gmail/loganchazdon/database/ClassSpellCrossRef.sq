@@ -27,3 +27,6 @@ LEFT JOIN ClassSpellCrossRef ON ClassSpellCrossRef.classId IS classes.id
 AND ClassSpellCrossRef.owner = :owner
 WHERE (classes.owner IS NULL OR classes.owner =:owner)
 AND spellId IS :spellId;
+
+selectRefsFor:
+SELECT classId, spellId FROM ClassSpellCrossRef WHERE owner =:owner;

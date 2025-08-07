@@ -1,7 +1,9 @@
+import kotlin.Boolean;
+
 CREATE TABLE IF NOT EXISTS CharacterFeatureState (
     `characterId` INTEGER NOT NULL,
     `featureId` INTEGER NOT NULL,
-    `isActive` INTEGER NOT NULL,
+    `isActive` INTEGER AS Boolean NOT NULL,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
     PRIMARY KEY(`characterId`, `featureId`, owner),
@@ -14,3 +16,6 @@ INSERT OR REPLACE INTO CharacterFeatureState (characterId, featureId, isActive, 
 
 delete:
 DELETE FROM CharacterFeatureState WHERE characterId = :characterId AND featureId = :featureId AND owner = :owner;
+
+selectRefsFor:
+SELECT characterId, featureId, isActive FROM CharacterFeatureState WHERE owner = :owner;

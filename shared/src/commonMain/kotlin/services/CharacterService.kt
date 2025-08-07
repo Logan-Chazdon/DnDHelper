@@ -18,7 +18,7 @@ import model.choiceEntities.RaceChoiceEntity
 import model.choiceEntities.SubraceChoiceEntity
 
 class CharacterService(client: HttpClient) : Service(client = client) {
-    enum class Paths(val path: String) {
+    private enum class Paths(val path: String) {
         AllCharacters("$PATH/getLiveCharacters"),
         LiveCharacter("$PATH/getLiveCharacter"),
         PostCharacter("$PATH/postCharacter"),

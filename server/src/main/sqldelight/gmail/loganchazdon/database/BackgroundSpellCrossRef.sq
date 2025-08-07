@@ -20,3 +20,6 @@ JOIN BackgroundSpellCrossRef ON backgroundId IS :backgroundId
 AND spells.id IS BackgroundSpellCrossRef.spellId
 AND BackgroundSpellCrossRef.owner IS :owner
 WHERE spells.owner IS :owner OR spells.owner IS NULL;
+
+selectRefsFor:
+SELECT backgroundId, spellId FROM BackgroundSpellCrossRef WHERE owner = :owner;

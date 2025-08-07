@@ -3,6 +3,10 @@ package gmail.loganchazdon.dndhelper.model.database
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.auth0.jwt.JWT
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
+import com.google.api.client.http.apache.v2.ApacheHttpTransport
+import com.google.api.client.json.gson.GsonFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import gmail.loganchazdon.database.*
@@ -10,13 +14,20 @@ import gmail.loganchazdon.dndhelper.model.dataSources.ServerDataSource
 import gmail.loganchazdon.dndhelper.model.services.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.server.websocket.*
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import org.json.JSONObject
+
 
 val gsonInstance = GsonBuilder()
     .disableHtmlEscaping()
@@ -152,6 +163,14 @@ fun Application.configureDatabases() {
         ),
         BackgroundChoiceEntityAdapter = BackgroundChoiceEntity.Adapter(
             languageChoicesAdapter = jsonListAdapter
+        ),
+        RaceChoiceEntityAdapter = RaceChoiceEntity.Adapter(
+            proficiencyChoiceAdapter = jsonListAdapter,
+            languageChoiceAdapter = jsonListAdapter,
+            abilityBonusOverridesAdapter = jsonListAdapter
+        ),
+        SubraceChoiceEntityAdapter = SubraceChoiceEntity.Adapter(
+            abilityBonusOverridesAdapter = jsonListAdapter
         )
     )
 
@@ -179,7 +198,6 @@ fun Application.configureDatabases() {
                 //Change if needed.
                 call.respondRedirect("http://localhost:8081")
             }
-
         }
 
         backgroundService(db, applicationHttpClient)
@@ -191,9 +209,52 @@ fun Application.configureDatabases() {
         subraceService(db, applicationHttpClient)
         subclassService(db, applicationHttpClient)
         spellService(db, applicationHttpClient)
+        pullSyncService(db)
 
 
         dataSourceService(dataSource, applicationHttpClient)
+
+
+        post("/session") {
+            val authCode = call.receiveText()
+
+            val response = applicationHttpClient.post("https://oauth2.googleapis.com/token") {
+                setBody(buildJsonObject {
+                    put("code", authCode)
+                    put("client_id", System.getenv("webClientId"))
+                    put("client_secret", System.getenv("webClientSecret"))
+                    put("grant_type", "authorization_code")
+                }.toString())
+            }.bodyAsText()
+
+            val tokens = JSONObject(response)
+
+            call.sessions.set(
+                name = "USER_SESSION",
+                value = UserSession(
+                    accessToken = tokens.getString("access_token"),
+                    refreshToken = tokens.optString("refresh_token")
+                )
+            )
+
+            val verifier = GoogleIdTokenVerifier.Builder(
+                ApacheHttpTransport(),
+                GsonFactory()
+            ).setAudience(listOf("257942461839-fta2f7lbg6tcmuvm0ofq5fkct2d3ql5g.apps.googleusercontent.com"))
+                .build()
+
+
+            val idToken: GoogleIdToken = verifier.verify(tokens.getString("id_token"))
+            val payload = idToken.payload
+
+
+            db.usersQueries.insertUsers(
+                id = payload.subject,
+                name = payload["name"] as String
+            )
+
+            call.respond(HttpStatusCode.OK)
+        }
 
 
         get("/") {

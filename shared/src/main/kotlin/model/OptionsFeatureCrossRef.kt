@@ -3,6 +3,7 @@ package model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
+import kotlinx.serialization.Serializable
 
 /**This is used to fetch all features which belong in the options field of a featureChoice.*/
 @Entity(
@@ -26,6 +27,7 @@ import androidx.room.ForeignKey.Companion.CASCADE
         )
     ]
 )
+@Serializable
 data class OptionsFeatureCrossRef(
     val featureId: Int,
     val choiceId: Int,

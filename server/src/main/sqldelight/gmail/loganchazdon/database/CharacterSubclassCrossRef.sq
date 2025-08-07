@@ -20,3 +20,6 @@ INSERT INTO CharacterSubclassCrossRef (subClassId, characterId, classId, owner) 
 
 delete:
 DELETE FROM CharacterSubclassCrossRef WHERE subClassId = :subclassId AND characterId = :characterId AND owner = :owner;
+
+selectRefsFor:
+SELECT subClassId, characterId, classId FROM CharacterSubclassCrossRef WHERE owner = :owner;

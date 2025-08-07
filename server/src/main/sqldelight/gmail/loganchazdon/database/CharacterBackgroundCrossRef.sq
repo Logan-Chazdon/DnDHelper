@@ -13,3 +13,6 @@ INSERT OR REPLACE INTO CharacterBackgroundCrossRef (characterId, backgroundId, o
 
 delete:
 DELETE FROM CharacterBackgroundCrossRef WHERE backgroundId = :backgroundId AND characterId = :characterId AND owner =:owner;
+
+selectRefsFor:
+SELECT characterId, backgroundId FROM CharacterBackgroundCrossRef WHERE owner IS :owner;

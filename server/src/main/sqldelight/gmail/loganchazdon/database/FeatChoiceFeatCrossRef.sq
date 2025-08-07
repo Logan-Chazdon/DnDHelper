@@ -21,6 +21,9 @@ WITH amt AS (
     AND FeatChoiceFeatCrossRef.owner IS NULL OR FeatChoiceFeatCrossRef.owner IS :owner
 )
 SELECT feats.*  FROM feats, amt
-FULL JOIN FeatChoiceFeatCrossRef ON FeatChoiceFeatCrossRef.featId IS feats.id
+JOIN FeatChoiceFeatCrossRef ON FeatChoiceFeatCrossRef.featId IS feats.id
 AND (FeatChoiceFeatCrossRef.owner IS NULL OR FeatChoiceFeatCrossRef.owner IS :owner)
 WHERE (feats.owner IS NULL OR feats.owner IS :owner) AND (featChoiceId IS :featChoiceId OR amt IS 0);
+
+selectRefsFor:
+SELECT featChoiceId, featId FROM FeatChoiceFeatCrossRef WHERE owner IS :owner;

@@ -5,13 +5,16 @@ import kotlinx.coroutines.flow.Flow
 import model.*
 import model.database.daos.FeatureDao
 import model.localDataSources.DataSource
+import model.sync.FeatureSyncManager
 
 
 class FeatureRepository {
     private val featureDao: FeatureDao
+    private val featureSyncManager: FeatureSyncManager
 
-    constructor(featureDao: FeatureDao, dataSource: DataSource) {
+    constructor(featureDao: FeatureDao, dataSource: DataSource, featureSyncManager: FeatureSyncManager) {
         this.featureDao = featureDao
+        this.featureSyncManager = featureSyncManager
         this._infusions = dataSource.getInfusions()
     }
 
@@ -22,7 +25,9 @@ class FeatureRepository {
     }
 
     suspend fun insertFeature(newFeature: Feature): Int {
-        return featureDao.insertFeature(newFeature)
+        val id = featureDao.insertFeature(newFeature)
+        featureSyncManager.postFeature(newFeature.apply { this.featureId = id })
+        return id
     }
 
     fun getLiveFeature(id: Int): Flow<Feature> {
@@ -31,7 +36,8 @@ class FeatureRepository {
 
     suspend fun createDefaultFeature(): Int {
         val newFeature = Feature(name = "", description = "")
-        return featureDao.insertFeature(newFeature).toInt()
+        newFeature.isHomebrew = true
+        return insertFeature(newFeature)
     }
 
     fun getAllIndexes(): Flow<List<String>> {
@@ -52,6 +58,10 @@ class FeatureRepository {
         featureId: Int,
         choiceId: Int,
     ) {
+        featureSyncManager.postOptionsFeatureCrossRef(
+            featureId = featureId,
+            choiceId = choiceId
+        )
         featureDao.insertOptionsFeatureCrossRef(
             featureId = featureId,
             choiceId = choiceId
@@ -59,21 +69,27 @@ class FeatureRepository {
     }
 
     suspend fun createDefaultFeatureChoice(): Int {
-        return featureDao.insertFeatureChoice(
-            FeatureChoiceEntity(
-                choose = Choose(static = 1)
-            )
-        ).toInt()
-    }
-
-    suspend fun getFeatureChoices(id: Int): List<FeatureChoiceEntity> {
-        return featureDao.getFeatureChoices(id)
+        val default = FeatureChoiceEntity(
+            choose = Choose(static = 1)
+        )
+        val id = featureDao.insertFeatureChoice(
+            default
+        )
+        featureSyncManager.postFeatureChoice(
+            default.apply { this.id = id}
+        )
+        return id
     }
 
     suspend fun removeFeatureOptionsCrossRef(
         featureId: Int,
         id: Int
     ) {
+        featureSyncManager.deleteFeatureOptionsCrossRef(
+            featureId = featureId,
+            id = id
+        )
+
         featureDao.removeFeatureOptionsCrossRef(
             featureId = featureId,
             id = id
@@ -84,6 +100,10 @@ class FeatureRepository {
         featureId: Int,
         choiceId: Int,
     ) {
+        featureSyncManager.deleteOptionsFeatureCrossRef(
+            featureId = featureId,
+            choiceId = choiceId
+        )
         featureDao.removeOptionsFeatureCrossRef(
             featureId = featureId,
             choiceId = choiceId
@@ -99,6 +119,7 @@ class FeatureRepository {
     }
 
     suspend fun clearFeatureChoiceIndexRefs(id: Int) {
+        featureSyncManager.clearFeatureChoiceIndexRefs(id)
         featureDao.clearFeatureChoiceIndexRefs(id)
     }
 
@@ -109,6 +130,13 @@ class FeatureRepository {
         classes: List<String>?,
         schools: List<String>?,
     ) {
+        featureSyncManager.postFeatureChoiceIndexCrossRef(
+            choiceId = choiceId,
+            index = index,
+            levels = levels,
+            classes = classes,
+            schools = schools
+        )
         featureDao.insertFeatureChoiceIndexCrossRef(
             choiceId = choiceId,
             index = index,
@@ -119,6 +147,7 @@ class FeatureRepository {
     }
 
     suspend fun insertFeatureChoice(choice: FeatureChoiceEntity) {
+        featureSyncManager.postFeatureChoice(choice)
         featureDao.insertFeatureChoice(choice)
     }
 
@@ -126,6 +155,10 @@ class FeatureRepository {
         index: String,
         ids: List<Int>
     ) {
+        featureSyncManager.postIndexRef(
+            index = index,
+            ids = ids
+        )
         featureDao.insertIndexRef(
             index = index,
             ids = ids
@@ -133,6 +166,7 @@ class FeatureRepository {
     }
 
     suspend fun removeIdFromRef(id: Int, ref: String) {
+        featureSyncManager.deleteIdFromRef(id, ref)
         featureDao.removeIdFromRef(id, ref)
     }
 
@@ -140,6 +174,10 @@ class FeatureRepository {
         spellId: Int,
         featureId: Int
     ) {
+        featureSyncManager.postFeatureSpellCrossRef(
+            spellId = spellId,
+            featureId = featureId
+        )
         featureDao.insertFeatureSpellCrossRef(
             spellId = spellId,
             featureId = featureId
@@ -158,6 +196,10 @@ class FeatureRepository {
         spellId: Int,
         featureId: Int
     ) {
+        featureSyncManager.deleteFeatureSpellCrossRef(
+            spellId = spellId,
+            featureId = featureId
+        )
         featureDao.removeFeatureSpellCrossRef(
             spellId = spellId,
             featureId = featureId

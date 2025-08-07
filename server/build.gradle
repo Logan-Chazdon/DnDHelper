@@ -65,6 +65,7 @@ dependencies {
     implementation('org.json:json:20231013')
     implementation project(':data')
 
+    api 'com.google.api-client:google-api-client:1.32.1'
     //testImplementation project(':shared')
 }
 

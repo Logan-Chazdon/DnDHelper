@@ -70,4 +70,7 @@ WHERE ClassSpellCrossRef.spellId = :id"""
 
     @Query("SELECT * FROM spells WHERE isHomebrew = 1")
     actual abstract fun getHomebrewSpells(): Flow<List<Spell>>
+
+    @Query("SELECT * FROM spells WHERE isHomebrew = 1")
+    abstract fun spellTable(): List<Spell>
 }

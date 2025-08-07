@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 59,
-    "identityHash": "ce57f9a31119b4ebd25f9bc1e9bc9a83",
+    "identityHash": "bb56ca42a9f768580892aae2c2bbdec0",
     "entities": [
       {
         "tableName": "characters",
@@ -340,13 +340,20 @@
       },
       {
         "tableName": "features",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`featureId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `index` TEXT, `grantedAtLevel` INTEGER NOT NULL, `maxTimesChosen` INTEGER, `prerequisite` TEXT, `activationRequirement` TEXT NOT NULL, `speedBoost` TEXT, `spells` TEXT, `infusion` TEXT, `maxActive` TEXT NOT NULL, `hpBonusPerLevel` INTEGER, `armorContingentAcBonus` INTEGER, `acBonus` INTEGER, `ac` TEXT, `proficiencies` TEXT, `expertises` TEXT, `languages` TEXT, `extraAttackAndDamageRollStat` TEXT, `rangedAttackBonus` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`featureId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `isHomebrew` INTEGER NOT NULL DEFAULT false, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `index` TEXT, `grantedAtLevel` INTEGER NOT NULL, `maxTimesChosen` INTEGER, `prerequisite` TEXT, `activationRequirement` TEXT NOT NULL, `speedBoost` TEXT, `spells` TEXT, `infusion` TEXT, `maxActive` TEXT NOT NULL, `hpBonusPerLevel` INTEGER, `armorContingentAcBonus` INTEGER, `acBonus` INTEGER, `ac` TEXT, `proficiencies` TEXT, `expertises` TEXT, `languages` TEXT, `extraAttackAndDamageRollStat` TEXT, `rangedAttackBonus` INTEGER)",
         "fields": [
           {
             "fieldPath": "featureId",
             "columnName": "featureId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "isHomebrew",
+            "columnName": "isHomebrew",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
           },
           {
             "fieldPath": "name",
@@ -2715,7 +2722,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ce57f9a31119b4ebd25f9bc1e9bc9a83')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bb56ca42a9f768580892aae2c2bbdec0')"
     ]
   }
 }

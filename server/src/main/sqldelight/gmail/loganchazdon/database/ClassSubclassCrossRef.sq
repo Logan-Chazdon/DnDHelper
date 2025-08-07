@@ -17,3 +17,6 @@ INSERT INTO ClassSubclassCrossRef (classId, subclassId, owner) VALUES (?, ?, ?);
 
 deleteBy:
 DELETE FROM ClassSubclassCrossRef WHERE classId = :classId AND subclassId = :subclassId AND owner = :owner;
+
+selectRefsFor:
+SELECT classId, subclassId FROM ClassSubclassCrossRef WHERE owner = :owner;

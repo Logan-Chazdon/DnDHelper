@@ -2,6 +2,7 @@ package model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import kotlinx.serialization.Serializable
 
 
 @Entity(
@@ -25,6 +26,7 @@ import androidx.room.ForeignKey
         )
     ]
 )
+@Serializable
 data class FeatFeatureCrossRef(
     val featId: Int,
     val featureId: Int

@@ -33,6 +33,8 @@ class FeatureEntityTable(
     languages: List<Language>? = null,
     extraAttackAndDamageRollStat: String? = null,
     rangedAttackBonus: Int? = null,
+    @ColumnInfo(defaultValue = "false")
+    override var isHomebrew : Boolean = false
 ) : FeatureEntity(
     featureId,
     name,
@@ -54,7 +56,8 @@ class FeatureEntityTable(
     expertises,
     languages,
     extraAttackAndDamageRollStat,
-    rangedAttackBonus
+    rangedAttackBonus,
+    isHomebrew
 )
 
 fun FeatureEntity.asTable(): FeatureEntityTable {
@@ -79,6 +82,7 @@ fun FeatureEntity.asTable(): FeatureEntityTable {
         expertises,
         languages,
         extraAttackAndDamageRollStat,
-        rangedAttackBonus
+        rangedAttackBonus,
+        isHomebrew
     )
 }

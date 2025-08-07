@@ -41,3 +41,12 @@ class FeatChoiceChoiceEntityTable(
     choiceId,
     featId
 )
+
+fun FeatChoiceChoiceEntity.asTable(): FeatChoiceChoiceEntityTable {
+    return FeatChoiceChoiceEntityTable(
+        characterId = this.characterId,
+        choiceId = this.choiceId,
+        featId = this.featId
+    )
+}
+

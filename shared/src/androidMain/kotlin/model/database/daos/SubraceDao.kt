@@ -164,4 +164,13 @@ WHERE subraceId IS :id"""
 
     @Query("SELECT * FROM subraces WHERE isHomebrew IS 1")
     actual abstract fun getHomebrewSubraces(): Flow<List<SubraceEntity>>
+
+    @Query("SELECT * FROM SubraceFeatChoiceCrossRef JOIN subraces ON subraces.id IS SubraceFeatChoiceCrossRef.subraceId WHERE isHomebrew")
+    abstract fun subraceFeatChoiceTable(): List<SubraceFeatChoiceCrossRef>
+
+    @Query("SELECT * FROM SubraceFeatureCrossRef JOIN subraces ON SubraceFeatureCrossRef.subraceId IS subraces.id WHERE isHomebrew")
+    abstract fun subraceFeatureTable(): List<SubraceFeatureCrossRef>
+
+    @Query("SELECT * FROM subraces WHERE isHomebrew")
+    abstract fun subraceTable(): List<SubraceEntity>
 }

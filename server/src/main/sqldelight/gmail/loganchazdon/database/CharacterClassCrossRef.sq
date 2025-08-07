@@ -13,3 +13,6 @@ INSERT OR REPLACE INTO CharacterClassCrossRef VALUES ?;
 
 delete:
 DELETE FROM CharacterClassCrossRef WHERE characterId = :characterId AND classId = :classId AND owner = :owner;
+
+selectRefsFor:
+SELECT characterId, classId FROM CharacterClassCrossRef WHERE owner = :owner;

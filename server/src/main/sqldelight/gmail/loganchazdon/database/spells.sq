@@ -24,6 +24,15 @@ CREATE TABLE IF NOT EXISTS spells (
     PRIMARY KEY(id, owner)
 );
 
+CREATE TRIGGER IF NOT EXISTS cascade_delete AFTER DELETE
+ON spells FOR EACH ROW BEGIN
+    DELETE FROM BackgroundSpellCrossRef WHERE BackgroundSpellCrossRef.spellId = old.id AND BackgroundSpellCrossRef.owner IS old.owner;
+    DELETE FROM CharacterClassSpellCrossRef WHERE CharacterClassSpellCrossRef.spellId = old.id AND CharacterClassSpellCrossRef.owner IS old.owner;
+    DELETE FROM CharacterClassSpellCrossRef WHERE CharacterClassSpellCrossRef.spellId = old.id AND CharacterClassSpellCrossRef.owner IS old.owner;
+    DELETE FROM ClassSpellCrossRef WHERE ClassSpellCrossRef.spellId = old.id AND ClassSpellCrossRef.owner IS old.owner;
+    DELETE FROM SubclassSpellCrossRef WHERE SubclassSpellCrossRef.spellId = old.id AND SubclassSpellCrossRef.owner IS old.owner;
+END;
+
 
 selectIdByName:
 SELECT id FROM spells WHERE LOWER(name) IS LOWER(:name) AND owner IS NULL;

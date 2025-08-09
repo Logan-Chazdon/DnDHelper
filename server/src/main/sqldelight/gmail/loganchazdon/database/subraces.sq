@@ -19,6 +19,15 @@ CREATE TABLE IF NOT EXISTS subraces (
     FOREIGN KEY (owner) REFERENCES users(id)
 );
 
+CREATE TRIGGER IF NOT EXISTS cascade_delete AFTER DELETE
+ON subraces FOR EACH ROW BEGIN
+    DELETE FROM CharacterSubraceCrossRef WHERE CharacterSubraceCrossRef.subraceId = old.id AND CharacterSubraceCrossRef.owner IS old.owner;
+    DELETE FROM RaceSubraceCrossRef WHERE RaceSubraceCrossRef.subraceId = old.id AND RaceSubraceCrossRef.owner IS old.owner;
+    DELETE FROM SubraceChoiceEntity WHERE SubraceChoiceEntity.subraceId = old.id AND SubraceChoiceEntity.owner IS old.owner;
+    DELETE FROM SubraceFeatureCrossRef WHERE SubraceFeatureCrossRef.subraceId = old.id AND SubraceFeatureCrossRef.owner IS old.owner;
+    DELETE FROM SubraceFeatChoiceCrossRef WHERE SubraceFeatChoiceCrossRef.subraceId = old.id AND SubraceFeatChoiceCrossRef.owner IS old.owner;
+END;
+
 insert:
 INSERT OR REPLACE INTO subraces (id, name, abilityBonuses, abilityBonusChoice, startingProficiencies, languages, languageChoices, size, groundSpeed, isHomebrew, owner) VALUES ?;
 

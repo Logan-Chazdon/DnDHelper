@@ -3,5 +3,17 @@ CREATE TABLE IF NOT EXISTS users (
     'name' TEXT
 );
 
+CREATE TRIGGER IF NOT EXISTS cascade_delete AFTER DELETE
+ON users FOR EACH ROW BEGIN
+    DELETE FROM backgrounds WHERE backgrounds.owner IS old.id;
+    DELETE FROM characters WHERE characters.characterOwner IS old.id;
+    DELETE FROM classes WHERE classes.owner IS old.id;
+    DELETE FROM races WHERE races.owner IS old.id;
+    DELETE FROM spells WHERE spells.owner IS old.id;
+    DELETE FROM subclasses WHERE subclasses.owner IS old.id;
+    DELETE FROM subclasses WHERE subclasses.owner IS old.id;
+    DELETE FROM subraces WHERE subraces.owner IS old.id;
+END;
+
 insertUsers:
 INSERT OR IGNORE INTO users (id, name) VALUES (?, ?);

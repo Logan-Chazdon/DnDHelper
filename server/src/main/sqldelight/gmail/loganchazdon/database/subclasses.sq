@@ -14,6 +14,17 @@ CREATE TABLE IF NOT EXISTS subclasses (
 );
 
 
+CREATE TRIGGER IF NOT EXISTS cascade_delete AFTER DELETE
+ON subclasses FOR EACH ROW BEGIN
+    DELETE FROM CharacterSubclassCrossRef WHERE CharacterSubclassCrossRef.subClassId = old.subclassId AND CharacterSubclassCrossRef.owner IS old.owner;
+    DELETE FROM ClassSubclassCrossRef WHERE ClassSubclassCrossRef.subclassId = old.subclassId AND ClassSubclassCrossRef.owner IS old.owner;
+    DELETE FROM SubclassFeatureCrossRef WHERE SubclassFeatureCrossRef.subclassId = old.subclassId AND SubclassFeatureCrossRef.owner IS old.owner;
+    DELETE FROM SubclassSpellCrossRef WHERE SubclassSpellCrossRef.subclassId = old.subclassId AND SubclassSpellCrossRef.owner IS old.owner;
+    DELETE FROM SubclassSpellCastingSpellCrossRef WHERE SubclassSpellCastingSpellCrossRef.subclassId = old.subclassId AND SubclassSpellCastingSpellCrossRef.owner IS old.owner;
+    DELETE FROM SubclassSpellCastingSpellCrossRef WHERE SubclassSpellCastingSpellCrossRef.subclassId = old.subclassId AND SubclassSpellCastingSpellCrossRef.owner IS old.owner;
+END;
+
+
 insert:
 INSERT OR REPLACE INTO subclasses (subclass_name, subclass_spell_casting, subclass_isHomebrew, subclassId, spellAreFree, owner) VALUES ?;
 

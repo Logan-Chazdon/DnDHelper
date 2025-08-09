@@ -30,6 +30,24 @@ CREATE TABLE IF NOT EXISTS `characters` (
     FOREIGN KEY (characterOwner) REFERENCES users(id)
 );
 
+
+CREATE TRIGGER IF NOT EXISTS cascade_delete AFTER DELETE
+ON characters FOR EACH ROW BEGIN
+    DELETE FROM CharacterBackgroundCrossRef WHERE CharacterBackgroundCrossRef.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM BackgroundChoiceEntity WHERE BackgroundChoiceEntity.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM CharacterClassSpellCrossRef WHERE CharacterClassSpellCrossRef.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM CharacterClassCrossRef WHERE CharacterClassCrossRef.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM ClassChoiceEntity WHERE ClassChoiceEntity.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM CharacterFeatureState WHERE CharacterFeatureState.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM CharacterRaceCrossRef WHERE CharacterRaceCrossRef.id = old.id AND owner = old.characterOwner;
+    DELETE FROM RaceChoiceEntity WHERE RaceChoiceEntity.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM CharacterSubclassCrossRef WHERE CharacterSubclassCrossRef.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM FeatureChoiceChoiceEntity WHERE FeatureChoiceChoiceEntity.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM SubraceChoiceEntity WHERE SubraceChoiceEntity.characterId = old.id AND owner = old.characterOwner;
+    DELETE FROM CharacterSubraceCrossRef WHERE CharacterSubraceCrossRef.characterId = old.id AND owner = old.characterOwner;
+END;
+
+
 selectAll:
 SELECT * FROM characters;
 

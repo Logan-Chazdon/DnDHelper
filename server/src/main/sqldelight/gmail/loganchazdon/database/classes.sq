@@ -21,6 +21,16 @@ CREATE TABLE IF NOT EXISTS classes (
     FOREIGN KEY (owner) REFERENCES users(id)
 );
 
+CREATE TRIGGER IF NOT EXISTS cascade_delete AFTER DELETE
+ON classes FOR EACH ROW BEGIN
+    DELETE FROM CharacterClassCrossRef WHERE CharacterClassCrossRef.characterId = old.id AND CharacterClassCrossRef.owner IS old.owner;
+    DELETE FROM ClassChoiceEntity WHERE ClassChoiceEntity.characterId = old.id AND ClassChoiceEntity.owner IS old.owner;
+    DELETE FROM ClassFeatCrossRef WHERE ClassFeatCrossRef.characterId = old.id AND ClassFeatCrossRef.owner IS old.owner;
+    DELETE FROM ClassFeatureCrossRef WHERE ClassFeatureCrossRef.id = old.id AND ClassFeatureCrossRef.owner IS old.owner;
+    DELETE FROM ClassSpellCrossRef WHERE ClassSpellCrossRef.classId = old.id AND ClassSpellCrossRef.owner IS old.owner;
+    DELETE FROM ClassSubclassCrossRef WHERE ClassSubclassCrossRef.classId = old.id AND ClassSubclassCrossRef.owner IS old.owner;
+END;
+
 insertClass:
 INSERT OR REPLACE INTO classes(name, hitDie, subclassLevel, proficiencyChoices, proficiencies, equipmentChoices, equipment, spellCasting, pactMagic, startingGoldD4s, startingGoldMultiplier, isHomebrew, owner, id)
 VALUES ?;

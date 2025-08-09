@@ -25,6 +25,15 @@ CREATE TABLE IF NOT EXISTS races (
     FOREIGN KEY (owner) REFERENCES users(id)
 );
 
+CREATE TRIGGER IF NOT EXISTS cascade_delete AFTER DELETE
+ON races FOR EACH ROW BEGIN
+    DELETE FROM CharacterRaceCrossRef WHERE CharacterRaceCrossRef.raceId = old.raceId AND CharacterRaceCrossRef.owner IS old.owner;
+    DELETE FROM RaceChoiceEntity WHERE RaceChoiceEntity.raceId = old.raceId AND RaceChoiceEntity.owner IS old.owner;
+    DELETE FROM RaceChoiceEntity WHERE RaceChoiceEntity.raceId = old.raceId AND RaceChoiceEntity.owner IS old.owner;
+    DELETE FROM RaceSubraceCrossRef WHERE RaceSubraceCrossRef.raceId = old.raceId AND RaceSubraceCrossRef.owner IS old.owner;
+    DELETE FROM RaceFeatureCrossRef WHERE RaceFeatureCrossRef.raceId = old.raceId AND RaceFeatureCrossRef.owner IS old.owner;
+END;
+
 getRacesFor:
 SELECT * FROM races WHERE owner IS :owner OR owner IS NULL;
 

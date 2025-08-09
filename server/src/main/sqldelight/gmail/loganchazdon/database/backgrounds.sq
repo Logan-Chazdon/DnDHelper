@@ -18,6 +18,17 @@ CREATE TABLE IF NOT EXISTS backgrounds (
      FOREIGN KEY (owner) REFERENCES users(id)
  );
 
+
+CREATE TRIGGER IF NOT EXISTS cascade_delete AFTER DELETE
+ON backgrounds FOR EACH ROW BEGIN
+    DELETE FROM BackgroundChoiceEntity WHERE BackgroundChoiceEntity.backgroundId = old.id AND BackgroundChoiceEntity.owner IS old.owner;
+    DELETE FROM BackgroundFeatureCrossRef WHERE BackgroundFeatureCrossRef.backgroundId = old.id AND BackgroundFeatureCrossRef.owner IS old.owner;
+    DELETE FROM BackgroundSpellCrossRef WHERE BackgroundSpellCrossRef.backgroundId = old.id AND BackgroundSpellCrossRef.owner IS old.owner;
+    DELETE FROM CharacterBackgroundCrossRef WHERE CharacterBackgroundCrossRef.backgroundId = old.id AND CharacterBackgroundCrossRef.owner IS old.owner;
+END;
+
+
+
 insert:
 INSERT OR REPLACE INTO backgrounds (id, name, desc, spells, proficiencies, proficiencyChoices, languages, languageChoices, equipment, equipmentChoices, isHomebrew, owner) VALUES ?;
 

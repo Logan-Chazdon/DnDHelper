@@ -405,7 +405,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     suspend fun insertCharacterSubraceCrossRef(characterId: Int, subraceId: Int) {
         postTo(Paths.AddSubrace.path) {
             put("characterId", characterId)
-            put("subrace", subraceId)
+            put("subraceId", subraceId)
         }
     }
 

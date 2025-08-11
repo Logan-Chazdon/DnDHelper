@@ -45,10 +45,14 @@ val applicationHttpClient = HttpClient {
 
 }
 
-suspend fun RoutingContext.withUserInfo(block: suspend RoutingContext.(userInfo: UserInfo) -> Unit) {
+suspend fun RoutingContext.withUserInfo(
+    autoRespond : Boolean= true,
+    block: suspend RoutingContext.(userInfo: UserInfo) -> Unit
+) {
     getSession(call)?.let { session ->
         val userInfo = getUserInfo(applicationHttpClient, session, call)
         block(userInfo)
+        if(autoRespond) call.respond(HttpStatusCode.OK)
     }
 }
 

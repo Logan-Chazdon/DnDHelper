@@ -411,7 +411,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
 
     suspend fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
         postTo(Paths.AddSubraceChoice.path) {
-            put("id", subraceChoiceEntity.characterId)
+            put("characterId", subraceChoiceEntity.characterId)
             put("subraceId", subraceChoiceEntity.subraceId)
             put("languageChoice", format.encodeToString(subraceChoiceEntity.languageChoice))
             put("abilityBonusChoice", format.encodeToString(subraceChoiceEntity.abilityBonusChoice))

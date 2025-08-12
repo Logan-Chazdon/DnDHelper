@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS RaceChoiceEntity (
     `abilityBonusOverrides` TEXT AS JsonArray,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
-    PRIMARY KEY(`raceId`, `characterId`, owner),
+    PRIMARY KEY(`characterId`, owner),
     FOREIGN KEY(`raceId`) REFERENCES `races`(`raceId`) ON UPDATE CASCADE ON DELETE CASCADE ,
     FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );

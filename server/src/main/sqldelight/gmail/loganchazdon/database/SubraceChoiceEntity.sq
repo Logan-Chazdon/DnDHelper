@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS SubraceChoiceEntity (
     `abilityBonusOverrides` TEXT AS JsonArray,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
-    PRIMARY KEY(`subraceId`, `characterId`, owner),
+    PRIMARY KEY(`characterId`, owner),
     FOREIGN KEY(`subraceId`) REFERENCES `subraces`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
     FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 insert:
-INSERT INTO SubraceChoiceEntity (abcchosenByString, subraceId, characterId, languageChoice, abilityBonusOverrides, owner) VALUES (?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO SubraceChoiceEntity (abcchosenByString, subraceId, characterId, languageChoice, abilityBonusOverrides, owner) VALUES (?, ?, ?, ?, ?, ?);
 
 select:
 SELECT * FROM SubraceChoiceEntity WHERE characterId = :characterId AND owner = :owner;

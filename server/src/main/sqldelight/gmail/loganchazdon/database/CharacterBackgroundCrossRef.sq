@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS CharacterBackgroundCrossRef (
     `backgroundId` INTEGER NOT NULL,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
-    PRIMARY KEY(`characterId`, `backgroundId`, owner),
+    PRIMARY KEY(`characterId`, owner),
     FOREIGN KEY(`characterId`) REFERENCES `characters`(`id`) ON UPDATE CASCADE ON DELETE CASCADE ,
     FOREIGN KEY(`backgroundId`) REFERENCES `backgrounds`(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 );

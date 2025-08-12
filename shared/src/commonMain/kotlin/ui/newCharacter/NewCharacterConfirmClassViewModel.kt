@@ -174,7 +174,7 @@ class NewCharacterConfirmClassViewModel constructor(
                 //Calculate equipment choices and proficiency choices,
                 if (isBaseClass.value) {
                     value.proficiencyChoices.forEach {
-                        it.chosen = dropDownStates[it.name]?.getSelected(it.from) as List<Proficiency>
+                        it.chosen = dropDownStates[it.name]?.getSelected(it.from) ?: emptyList()
                     }
 
                     if (!takeGold.value) {

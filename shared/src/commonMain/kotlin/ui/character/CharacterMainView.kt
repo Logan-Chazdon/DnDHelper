@@ -2,6 +2,7 @@ package ui.character
 
 //import dataStore
 
+import Platform
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import platform
 import ui.platformSpecific.IO
 import ui.platformSpecific.getScreenWidth
 import ui.platformSpecific.isVertical
@@ -23,7 +25,7 @@ import ui.preferences.DataStore
 
 
 @Composable
-fun CharacterMainView( viewModel: CharacterMainViewModel) {
+fun CharacterMainView(viewModel: CharacterMainViewModel) {
     val scope = rememberCoroutineScope()
     val isVertical = isVertical()
 
@@ -50,9 +52,9 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                         Row {
                             TextField(
                                 value = viewModel.name.collectAsState().value,
-                                onValueChange = { viewModel.name.value = it},
+                                onValueChange = { viewModel.name.value = it },
                             )
-                            if(!isVertical) RestButton(viewModel = viewModel)
+                            if (!isVertical) RestButton(viewModel = viewModel)
                         }
                         val gridNotRowFlow = DataStore.gridNotRow()
 
@@ -62,8 +64,17 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                             } else {
                                 Modifier.fillMaxWidth(0.5f)
                             }
+
+                            val reorder: Boolean = remember {
+                                when (platform) {
+                                    Platform.Web -> false
+                                    Platform.Android -> true
+                                }
+                            }
+
                             ReorderingColumnView(
-                                { modifier : Modifier, _: ColumnScope ->
+                                reorder,
+                                { modifier: Modifier, _: ColumnScope ->
                                     Box(modifier = Modifier.fillMaxHeight(0.6f).then(modifier)) {
                                         VariableOrientationView(
                                             isVertical = isVertical,
@@ -71,22 +82,23 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                             arrangement = Arrangement.spacedBy(0.dp)
                                         ) {
                                             Box(
-                                                modifier = if(isVertical) {
+                                                modifier = if (isVertical) {
                                                     Modifier.fillMaxHeight(0.5f)
                                                 } else {
                                                     Modifier
                                                 }
                                             ) {
                                                 ReorderingColumnView(
-                                                    { modifier : Modifier, _: ColumnScope ->
+                                                    reorder,
+                                                    { modifier: Modifier, _: ColumnScope ->
                                                         CharacterTextView(
                                                             modifier = topModifier.then(modifier),
                                                             name = "Personality Traits",
                                                             value = viewModel.personalityTraits.collectAsState().value,
-                                                            onChange = { viewModel.personalityTraits.value = it}
+                                                            onChange = { viewModel.personalityTraits.value = it }
                                                         )
                                                     },
-                                                    { modifier : Modifier, _: ColumnScope ->
+                                                    { modifier: Modifier, _: ColumnScope ->
                                                         CharacterTextView(
                                                             modifier = topModifier.then(modifier),
                                                             name = "Ideals",
@@ -103,7 +115,8 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                                 Spacer(Modifier.width(5.dp))
 
                                             ReorderingColumnView(
-                                                { modifier : Modifier, _: ColumnScope ->
+                                                reorder,
+                                                { modifier: Modifier, _: ColumnScope ->
                                                     CharacterTextView(
                                                         modifier = modifier
                                                             .fillMaxWidth(),
@@ -114,7 +127,7 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                                         }
                                                     )
                                                 },
-                                                { modifier : Modifier, _: ColumnScope ->
+                                                { modifier: Modifier, _: ColumnScope ->
                                                     CharacterTextView(
                                                         modifier = modifier
                                                             .fillMaxWidth(),
@@ -129,7 +142,7 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                         }
                                     }
                                 },
-                                { modifier : Modifier, _: ColumnScope ->
+                                { modifier: Modifier, _: ColumnScope ->
                                     CharacterTextView(
                                         modifier = Modifier.fillMaxSize().weight(0.7f).then(modifier),
                                         name = "Notes",
@@ -211,7 +224,7 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
 
 
                     Column {
-                        if(isVertical) RestButton(viewModel = viewModel)
+                        if (isVertical) RestButton(viewModel = viewModel)
 
                         FeaturesAndTraitsView(
                             feats = viewModel.character.collectAsState().value.feats,
@@ -246,10 +259,11 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
 
 @Composable
 private fun ReorderingColumnView(
-    vararg content: @Composable (modifier : Modifier, ColumnScope) -> Unit
+    reorder: Boolean = true,
+    vararg content: @Composable (modifier: Modifier, ColumnScope) -> Unit
 ) {
     val mutableContent = remember {
-        mutableStateListOf<@Composable (modifier : Modifier, ColumnScope) -> Unit>().run {
+        mutableStateListOf<@Composable (modifier: Modifier, ColumnScope) -> Unit>().run {
             this.addAll(content)
             this
         }
@@ -260,7 +274,7 @@ private fun ReorderingColumnView(
                 Modifier
                     .weight(1f)
                     .onFocusChanged {
-                        if (it.hasFocus && index != 0) {
+                        if (reorder && it.hasFocus && index != 0) {
                             mutableContent.removeAt(index)
                             mutableContent.add(0, view)
                         }

@@ -12,21 +12,21 @@ actual object DataStore {
     @Composable
     actual fun autoSave(): Flow<Boolean> {
         return LocalContext.current.dataStore.data.transform {
-            it[booleanPreferencesKey("auto_save")]
+            emit(it[booleanPreferencesKey("auto_save")] ?: true)
         }
     }
 
     @Composable
     actual fun darkMode(): Flow<Boolean> {
         return LocalContext.current.dataStore.data.transform {
-            it[booleanPreferencesKey("dark_mode")]
+            emit(it[booleanPreferencesKey("dark_mode")] ?: false)
         }
     }
 
     @Composable
     actual fun gridNotRow(): Flow<Boolean> {
         return LocalContext.current.dataStore.data.transform {
-            it[booleanPreferencesKey("grid_not_row")]
+            emit(it[booleanPreferencesKey("grid_not_row")] ?: false)
         }
     }
 }

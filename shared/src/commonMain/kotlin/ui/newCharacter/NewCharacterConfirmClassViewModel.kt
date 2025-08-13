@@ -69,20 +69,24 @@ class NewCharacterConfirmClassViewModel constructor(
         }
 
         viewModelScope.launch {
-            goldRolled.value = (clazz.firstOrNull()?.startingGoldD4s?.times(2) ?: 4).toString()
-            maxGoldRolled.value = clazz.lastOrNull()?.startingGoldD4s?.times(4) ?: 0
-            minGoldRolled.value = clazz.lastOrNull()?.startingGoldD4s?.times(1) ?: 0
-
-            hasBaseClass.value = if (character.value?.hasBaseClass == true) {
-                //If the baseclass is the current class return false.
-                character.value.classes?.get(clazz.lastOrNull()?.name)
-                    ?.isBaseClass != true
-
-            } else {
-                false
+            clazz.collect {
+                goldRolled.value = (clazz.firstOrNull()?.startingGoldD4s?.times(2) ?: 4).toString()
+                maxGoldRolled.value = clazz.lastOrNull()?.startingGoldD4s?.times(4) ?: 0
+                minGoldRolled.value = clazz.lastOrNull()?.startingGoldD4s?.times(1) ?: 0
             }
         }
 
+        viewModelScope.launch {
+            character.asSharedFlow().collect  {
+                hasBaseClass.value = if (it.hasBaseClass) {
+                    //If the baseclass is the current class return false.
+                    it.classes[clazz.first().name]
+                        ?.isBaseClass != true
+                } else {
+                    false
+                }
+            }
+        }
 
     }
 

@@ -51,7 +51,7 @@ fun ConfirmClassView(
     val clazz = viewModel.clazz.collectAsState(null)
     val subclasses = viewModel.subclasses.collectAsState(emptyList())
     val scope = rememberCoroutineScope()
-    LaunchedEffect(viewModel.hasBaseClass) {
+    LaunchedEffect(viewModel.hasBaseClass.value) {
         viewModel.isBaseClass.value = !viewModel.hasBaseClass.value
     }
 

@@ -21,7 +21,7 @@ DELETE FROM SubclassFeatureCrossRef WHERE subclassId = :subclassId AND featureId
 selectFeaturesBySubclass:
 SELECT features.* FROM features
 LEFT JOIN SubclassFeatureCrossRef ON SubclassFeatureCrossRef.featureId IS features.featureId
-AND SubclassFeatureCrossRef.owner IS :owner
+AND (SubclassFeatureCrossRef.owner IS :owner OR SubclassFeatureCrossRef.owner IS NULL)
 WHERE subclassId IS :subclassId AND
 (features.owner IS NULL OR features.owner = :owner)
 AND features.grantedAtLevel <= :level;

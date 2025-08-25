@@ -217,7 +217,7 @@ AND ClassChoiceEntity.owner IS :owner
 LEFT JOIN CharacterSubclassCrossRef ON CharacterSubclassCrossRef.characterId IS CharacterClassCrossRef.characterId
 AND CharacterSubclassCrossRef.classId IS classes.id AND CharacterSubclassCrossRef.owner IS :owner
 LEFT JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subClassId
-AND subclasses.owner IS :owner
+AND (subclasses.owner IS :owner OR subclasses.owner IS NULL)
 WHERE CharacterClassCrossRef.characterId IS :characterId AND (classes.owner IS :owner OR classes.owner IS NULL );
 
 

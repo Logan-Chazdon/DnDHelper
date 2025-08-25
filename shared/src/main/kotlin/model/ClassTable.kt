@@ -7,7 +7,7 @@ class ClassTable(
     isBaseClass: Boolean = false,
     level: Int = 1,
     @Embedded
-    override var subclass: Subclass? = null,
+    val subclassTable: SubclassEntityTable? = null,
     tookGold: Boolean? = null,
     totalNumOnGoldDie: Int? = null,
     featsGranted: MutableList<Feat>? = mutableListOf(),
@@ -28,7 +28,7 @@ class ClassTable(
     id,
     isBaseClass,
     level,
-    subclass,
+    null,
     tookGold,
     totalNumOnGoldDie,
     featsGranted,
@@ -45,4 +45,5 @@ class ClassTable(
     startingGoldD4s,
     startingGoldMultiplier
 ) {
+    override var subclass: Subclass? = subclassTable?.let { Subclass(it, emptyList(), emptyList()) }
 }

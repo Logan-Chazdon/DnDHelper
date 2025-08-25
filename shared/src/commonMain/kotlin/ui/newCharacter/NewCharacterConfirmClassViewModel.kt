@@ -235,10 +235,10 @@ class NewCharacterConfirmClassViewModel constructor(
                 }
 
                 //If the level is high enough persist subclass choices
-                if (toNumber(levels) >= value.level) {
-                    val subclass = (subclassDropdownState?.getSelected(
-                        subclasses.firstOrNull() ?: emptyList()
-                    ) as List<Subclass>).getOrNull(
+                if (toNumber(levels) >= value.subclassLevel) {
+                    val subclass = mSubclassDropDownState?.getSelected(
+                        subclasses.first()
+                    )?.getOrNull(
                         0
                     )
 
@@ -300,26 +300,28 @@ class NewCharacterConfirmClassViewModel constructor(
         }
     }
 
-    private var subclassDropdownState: MultipleChoiceDropdownStateImpl? = null
-    suspend fun getSubclassDropdownState(): MultipleChoiceDropdownStateImpl {
-        return if (subclassDropdownState == null) {
-            subclassDropdownState = MultipleChoiceDropdownStateImpl()
-            subclassDropdownState!!.maxSelections = 1
-            subclassDropdownState!!.choiceName = "Subclass"
-            val names = mutableListOf<String>()
-            subclasses.firstOrNull()?.forEach {
-                names.add(it.name)
+    private var mSubclassDropDownState: MultipleChoiceDropdownStateImpl? = null
+    val subclassDropdownState: Flow<MultipleChoiceDropdownStateImpl> = flow  {
+        subclasses.shareIn(viewModelScope, SharingStarted.Eagerly,2).collect {
+            if (mSubclassDropDownState == null) {
+                mSubclassDropDownState = MultipleChoiceDropdownStateImpl()
+                mSubclassDropDownState!!.maxSelections = 1
+                mSubclassDropDownState!!.choiceName = "Subclass"
+                val names = mutableListOf<String>()
+                it.forEach {
+                    names.add(it.name)
+                }
+                mSubclassDropDownState!!.names = names
+                mSubclassDropDownState!!.maxSameSelections = 1
+                emit(mSubclassDropDownState!!)
+            } else {
+                val names = mutableListOf<String>()
+                it.forEach {
+                    names.add(it.name)
+                }
+                mSubclassDropDownState!!.names = names
+                emit(mSubclassDropDownState!!)
             }
-            subclassDropdownState!!.names = names
-            subclassDropdownState!!.maxSameSelections = 1
-            subclassDropdownState!!
-        } else {
-            val names = mutableListOf<String>()
-            subclasses.firstOrNull()?.forEach {
-                names.add(it.name)
-            }
-            subclassDropdownState!!.names = names
-            subclassDropdownState!!
         }
     }
 
@@ -655,8 +657,8 @@ class NewCharacterConfirmClassViewModel constructor(
                     //Apply subclass choices.
                     clazzWithChoices.subclass?.let { subclass ->
                         //Set the subclass
-                        val state = getSubclassDropdownState()
-                        state.setSelected(listOf(subclass.name))
+                        val state = mSubclassDropDownState
+                        state?.setSelected(listOf(subclass.name))
 
                         //Apply subclass spell choices.
                         if (clazzWithChoices.spellCasting?.type != 0.0) {

@@ -16,3 +16,10 @@ DELETE FROM SubclassSpellCrossRef WHERE subclassId = :subclassId AND spellId = :
 
 selectRefsFor:
 SELECT subclassId, spellId FROM SubclassSpellCrossRef WHERE owner =:owner;
+
+selectSpellsFor:
+SELECT spells.* FROM spells
+JOIN SubclassSpellCrossRef ON spells.id = SubclassSpellCrossRef.subclassId
+AND spells.owner IS NULL OR spells.owner IS :owner
+AND SubclassSpellCrossRef.owner IS NULL OR SubclassSpellCrossRef.owner IS :owner
+WHERE SubclassSpellCrossRef.subclassId IS :id;

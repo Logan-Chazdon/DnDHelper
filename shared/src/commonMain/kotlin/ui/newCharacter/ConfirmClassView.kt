@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 import model.Feature
 import model.Proficiency
 import model.Spell
-import model.Subclass
 import model.repositories.CharacterRepository.Companion.statNames
 import ui.SpellDetailsView
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
@@ -54,6 +53,8 @@ fun ConfirmClassView(
     LaunchedEffect(viewModel.hasBaseClass.value) {
         viewModel.isBaseClass.value = !viewModel.hasBaseClass.value
     }
+
+    val subclassDropdownState = viewModel.subclassDropdownState.collectAsState(MultipleChoiceDropdownStateImpl())
 
     val assumedStatBonuses = produceState(
         mutableMapOf<String, Int>(),
@@ -225,16 +226,8 @@ fun ConfirmClassView(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            val subclass = produceState(
-                null
-            ) {
-                launch {
-                    (viewModel.getSubclassDropdownState()
-                        .getSelected(subclasses.value ?: emptyList())
-                            as List<Subclass>)
-                        .getOrNull(0)
-                }
-            }
+            val subclass = subclassDropdownState.value
+                .getSelected(subclasses.value).getOrNull(0)
 
             //Choices for pactMagic.
             clazz.value?.pactMagic?.let { pactMagic ->
@@ -261,13 +254,13 @@ fun ConfirmClassView(
             //Update the spells.
             LaunchedEffect(
                 viewModel.toNumber(viewModel.levels),
-                subclass.value,
+                subclass,
                 clazz.value?.id
             ) {
                 this.launch(Dispatchers.IO) {
                     viewModel.calcLearnableSpells(
                         viewModel.toNumber(viewModel.levels),
-                        subclass.value
+                        subclass
                     )
                 }
             }
@@ -522,10 +515,8 @@ fun ConfirmClassView(
                     0
                 }
             ) {
-                produceState(MultipleChoiceDropdownStateImpl()) {
-                    viewModel.getSubclassDropdownState()
-                }.value.let { state ->
-                    if (state.names.size != 0) {
+                subclassDropdownState.value.let { state ->
+                    if (state.names.isNotEmpty()) {
                         Card(
                             elevation = 5.dp,
                             modifier = Modifier
@@ -538,14 +529,14 @@ fun ConfirmClassView(
                             Column(Modifier.padding(start = 5.dp)) {
                                 Text(text = "Subclass", style = MaterialTheme.typography.h6)
                                 MultipleChoiceDropdownView(
-                                    state = state
+                                    state = subclassDropdownState.value
                                 )
                             }
                         }
 
 
                         clazz.let {
-                            (state.getSelected(viewModel.subclasses.collectAsState(emptyList()).value) as List<Subclass>)
+                            state.getSelected(viewModel.subclasses.collectAsState(emptyList()).value)
                                 .getOrNull(0)
                         }?.let { subclass ->
                             subclass.spells?.let {

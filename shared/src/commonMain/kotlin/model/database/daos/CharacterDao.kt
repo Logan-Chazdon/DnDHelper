@@ -57,7 +57,7 @@ expect abstract class CharacterDao {
     suspend fun getRaceChoiceData(raceId: Int, charId: Int) : RaceChoiceEntity
     suspend fun getSubraceChoiceData(subraceId: Int, charId: Int) : SubraceChoiceEntity
     suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
-    abstract suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
+    suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
     abstract suspend fun getCharacterPactSlots(classId: Int, characterId: Int): Int
     abstract suspend fun getPactMagicSpells(characterId: Int, classId: Int): MutableList<Spell>
     abstract suspend fun getClassFeatures(classId: Int, maxLevel: Int = 20): MutableList<Feature>

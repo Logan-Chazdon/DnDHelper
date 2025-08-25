@@ -211,7 +211,11 @@ LEFT JOIN subclasses ON subclasses.subclassId IS CharacterSubclassCrossRef.subCl
 WHERE CharacterClassCrossRef.characterId IS :characterId
     """
     )
-    actual abstract suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
+    protected abstract suspend fun getCharactersClassesAsTable(characterId: Int): MutableMap<String, ClassTable>
+
+    actual suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class> {
+        return getCharactersClassesAsTable(characterId) as MutableMap<String, Class>
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterSubclassCrossRef(ref: CharacterSubclassCrossRef)

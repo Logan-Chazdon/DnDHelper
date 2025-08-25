@@ -30,7 +30,7 @@ private fun deserializeSubclass(text: String, owner: String): Subclasses {
 private fun serializeSubclass(subclass: Subclasses): JSONObject {
     val json = JSONObject()
     json.put("name", subclass.subclass_name)
-    json.put("spellCasting", subclass.subclass_spell_casting)
+    //json.put("spellCasting", subclass.subclass_spell_casting)
     json.put("isHomebrew", subclass.subclass_isHomebrew)
     json.put("spellAreFree", subclass.spellAreFree)
     json.put("subclassId", subclass.subclassId)
@@ -53,7 +53,7 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val response = call.receiveText()
             val subclass = deserializeSubclass(response, userInfo.id)
-            val newId = if(subclass.subclassId <= 0) {
+            val newId = if (subclass.subclassId <= 0) {
                 (db.subclassesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
             } else {
                 subclass.subclassId
@@ -114,27 +114,27 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
         }
     }
 
+    get("subclass/subclassSpells") {
+        withUserInfo { userInfo: UserInfo ->
+            val query = db.subclassSpellCrossRefQueries.selectSpellsFor(
+                owner = userInfo.id,
+                id = call.parameters["subclassId"]!!.toLong(),
+            )
+            call.respond(HttpStatusCode.OK, gson.toJson(query.executeAsList()))
+        }
+    }
 
 
-
-    webSocket("subclass/subclassesById") {
-        getSession(call)?.let { session ->
-            val userInfo = getUserInfo(httpClient, session, call)
-            for (frame in incoming) {
-                frame as? Frame.Text ?: continue
-                val receivedText = frame.readText()
-                try {
-                    db.subclassesQueries.selectByClass(classId = receivedText.toLong(), owner = userInfo.id).asFlow()
-                        .collect {
-                            val subclasses = serializeSubclassList(it.executeAsList())
-
-                            //Send the converted json.
-                            send(Frame.Text(subclasses))
-                        }
-                } catch (e: NumberFormatException) {
-                    send(Frame.Text("Invalid Id"))
-                }
-            }
+    get("subclass/subclassesById") {
+        withUserInfo {
+            call.respondText(
+                serializeSubclassList(
+                    db.subclassesQueries.selectByClass(
+                        classId = call.parameters["id"]!!.toLong(),
+                        owner = it.id
+                    ).executeAsList()
+                )
+            )
         }
     }
 

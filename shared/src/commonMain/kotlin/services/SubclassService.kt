@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.put
 import model.Feature
+import model.Spell
 import model.Subclass
 import model.SubclassEntity
 
@@ -25,24 +26,26 @@ class SubclassService(client: HttpClient) : Service(client = client) {
         SubclassFeatures(path = "$PATH/subclassFeatures"),
         SubclassLiveFeatures(path = "$PATH/subclassLiveFeatures"),
         DeleteSubclass(path = "$PATH/deleteSubclass"),
+        SubclassSpells(path = "$PATH/subclassSpells"),
     }
 
     companion object {
         const val PATH = "subclass"
     }
 
+    private suspend fun getSubclassSpells(id: Int) : List<Spell> = getDeserialized(Paths.SubclassSpells.path, { append("subclassId", id.toString())})
+
     fun getSubclassesByClassId(id: Int): Flow<List<Subclass>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.SubclassesById.path) {
-                send(id.toString())
-                while (true) {
-                    val othersMessage = incoming.receive() as? Frame.Text
-                    if (othersMessage?.readText() != "Invalid Id") {
-                        val listToEmit = format.decodeFromString<List<Subclass>>(othersMessage!!.readText())
-                        emit(listToEmit)
-                    }
-                }
-            }
+            val json = getFrom(Paths.SubclassesById.path) {
+                append("id", id.toString())
+            }.bodyAsText()
+
+            val subclasses = format.decodeFromString<List<SubclassEntity>>(json)
+
+            emit(subclasses.map { Subclass(
+                it, getSubclassFeatures(it.subclassId, 20), getSubclassSpells(it.subclassId).map { Pair(it.level, it)}
+            )})
         }
     }
 
@@ -93,7 +96,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
             client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.HomebrewSubclasses.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
-                    val listToEmit = format.decodeFromString<List<Subclass>>(othersMessage!!.readText())
+                    val listToEmit = format.decodeFromString<List<SubclassEntity>>(othersMessage!!.readText())
                     emit(listToEmit)
                 }
             }

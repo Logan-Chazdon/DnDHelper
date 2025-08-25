@@ -58,10 +58,6 @@ class CharacterDaoImpl(characterService: CharacterService) : CharacterDao(charac
         return characterService.findLiveCharacterWithoutListChoices(id)
     }
 
-    override suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class> {
-        return characterService.getCharactersClasses(characterId)
-    }
-
     override suspend fun getCharacterPactSlots(classId: Int, characterId: Int): Int {
         return characterService.getCharacterPactSlots(classId, characterId)
     }

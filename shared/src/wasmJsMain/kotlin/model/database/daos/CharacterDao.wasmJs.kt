@@ -155,7 +155,9 @@ actual abstract class CharacterDao {
         return characterService.getBackgroundChoiceData(charId)
     }
 
-    actual abstract suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class>
+    actual suspend fun getCharactersClasses(characterId: Int): MutableMap<String, Class> {
+        return characterService.getCharactersClasses(characterId)
+    }
     actual abstract suspend fun getCharacterPactSlots(classId: Int, characterId: Int): Int
     actual abstract suspend fun getPactMagicSpells(
         characterId: Int,

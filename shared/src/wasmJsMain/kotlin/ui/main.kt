@@ -3,9 +3,7 @@ package ui
 import SharedModule
 import WebModule
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -15,9 +13,7 @@ import io.ktor.client.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.http.auth.AuthScheme.OAuth
 import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.coroutines.launch
 import org.koin.compose.KoinContext
 import org.koin.core.context.GlobalContext.startKoin
@@ -43,8 +39,9 @@ fun main() {
         val scope = rememberCoroutineScope()
         val client = HttpClient {
             install(HttpCookies)
-            install(OAuth) {}
         }
+
+        // TODO: Update sign in checking.
         val text = remember { mutableStateOf("") }
         scope.launch {
             val response = client.get {
@@ -58,16 +55,8 @@ fun main() {
 
 
         DnDHelperTheme {
-            //Testing authenticator
             when (text.value) {
-                "0" -> Button({
-                    scope.launch {
-                        window.location.href = "http://localhost:8080/login"
-                    }
-                }) {
-                    Text("Login")
-                }
-
+                "0" -> SignInView()
                 "1" -> {
                     initKoin()
                     KoinContext {

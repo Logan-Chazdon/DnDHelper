@@ -30,6 +30,8 @@ junit = "4.13.2"
 googleidVersion = "1.1.1"
 playServicesAuthVersion = "21.3.0"
 roomExternalAntlr = "2.7.1"
+foundationJvmstubs = "1.9.0"
+foundationAndroidVersion = "1.9.0"
 
 
 [libraries]
@@ -68,6 +70,8 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 google-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleidVersion" }
 gms-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuthVersion" }
 androidx-room-external-antlr = { group = "androidx.room", name = "room-external-antlr", version.ref = "roomExternalAntlr" }
+androidx-foundation-jvmstubs = { group = "androidx.compose.foundation", name = "foundation-jvmstubs", version.ref = "foundationJvmstubs" }
+foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroidVersion" }
 
 
 [plugins]

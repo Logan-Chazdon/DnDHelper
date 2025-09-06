@@ -14,11 +14,12 @@ fun VariableOrientationView(
     arrangement: Arrangement.HorizontalOrVertical = Arrangement.SpaceEvenly,
     verticalAlignment : Alignment.Vertical? = null,
     horizontalAlignment : Alignment.Horizontal? = null,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     if(isVertical) {
         Column (
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             verticalArrangement =  arrangement,
             horizontalAlignment = horizontalAlignment ?: Alignment.CenterHorizontally
         ) {
@@ -26,7 +27,7 @@ fun VariableOrientationView(
         }
     } else {
         Row (
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             horizontalArrangement =arrangement,
             verticalAlignment = verticalAlignment ?: Alignment.CenterVertically
         ) {

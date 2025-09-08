@@ -120,22 +120,17 @@ LEFT JOIN FeatureChoiceIndexCrossRef ON FeatureChoiceIndexCrossRef.choiceId IS :
 LEFT JOIN IndexRef ON LOWER(IndexRef.`index`) IS LOWER(FeatureChoiceIndexCrossRef.`index`)
 LEFT JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.featureId IS features.featureId
 LEFT JOIN spellDetails ON spellDetails.id IS FeatureSpellCrossRef.spellId
-WHERE (REPLACE(REPLACE(ids, '[', ','), ']', ',') LIKE '%,' || features.featureId || ',%' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
+WHERE (',' || SUBSTR(ids, 2, LENGTH(ids) - 2) || ','
+      LIKE '%,' || CAST(features.featureId AS TEXT) || ',%'
+         OR ids = '[' || CAST(features.featureId AS TEXT) || ']' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
 AND (FeatureChoiceIndexCrossRef.levels = 'null'
-OR  FeatureChoiceIndexCrossRef.levels IS NULL 
-OR FeatureChoiceIndexCrossRef.levels LIKE '%' || spellDetails.level || '%') 
-AND(FeatureChoiceIndexCrossRef.schools = 'null' 
-OR  FeatureChoiceIndexCrossRef.schools IS NULL 
+OR  FeatureChoiceIndexCrossRef.levels IS NULL
+OR FeatureChoiceIndexCrossRef.levels LIKE '%' || spellDetails.level || '%')
+AND(FeatureChoiceIndexCrossRef.schools = 'null'
+OR  FeatureChoiceIndexCrossRef.schools IS NULL
 OR FeatureChoiceIndexCrossRef.schools  LIKE '%' || spellDetails.school || '%' )
-AND (
-   FeatureChoiceIndexCrossRef.classes LIKE 'null' OR FeatureChoiceIndexCrossRef.classes IS NULL
-   OR 0 NOT LIKE (
-SELECT COUNT(*)
-FROM
-  (SELECT replace(FeatureChoiceIndexCrossRef.classes, ',', '') AS fcic_class
-   FROM FeatureChoiceIndexCrossRef) AS vt
-WHERE spellDetails.classes LIKE '%' ||  vt.fcic_class || '%'  
-	))
+AND (FeatureChoiceIndexCrossRef.classes LIKE 'null' OR FeatureChoiceIndexCrossRef.classes IS NULL
+OR spellDetails.classes LIKE '%' || SUBSTR(FeatureChoiceIndexCrossRef.classes, 3, LENGTH(FeatureChoiceIndexCrossRef.classes) - 4) || '%')
 """
     )
     actual abstract suspend fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>

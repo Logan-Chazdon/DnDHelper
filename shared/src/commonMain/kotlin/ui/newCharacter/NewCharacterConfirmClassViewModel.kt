@@ -336,8 +336,9 @@ class NewCharacterConfirmClassViewModel constructor(
 
     val learnableSpells = MutableStateFlow<List<Spell>>(emptyList())
     suspend fun calcLearnableSpells(level: Int, subclass: Subclass?) {
-        learnableSpells.emit(clazz.lastOrNull()?.id?.let {
-            classRepository.getSpellsByClassId(it).run {
+        learnableSpells.emit(
+            clazz.firstOrNull()?.let { clazzValue ->
+            classRepository.getSpellsByClassId(clazzValue.id).run {
                 subclass?.let {
                     //If the spells for the subclass arnt free add them to the selection.
                     if (!it.spellAreFree) {
@@ -349,16 +350,16 @@ class NewCharacterConfirmClassViewModel constructor(
                     }
                 }
 
-                if (clazz.lastOrNull()?.spellCasting?.prepareFrom == "all") {
+                if (clazzValue.spellCasting?.prepareFrom == "all") {
                     this.removeAll {
                         it.level != 0
                     }
                 }
                 try {
                     val maxLevel =
-                        clazz.lastOrNull()?.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
+                        clazzValue.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
                             ?: allSpellLevels.firstOrNull { pair ->
-                                pair.second == clazz.lastOrNull()?.pactMagic?.pactSlots?.get(
+                                pair.second == clazzValue.pactMagic?.pactSlots?.get(
                                     level - 1
                                 )?.name
                             }?.first ?: 0

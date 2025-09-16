@@ -1,7 +1,7 @@
 package ui.character
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,21 +18,19 @@ import model.Character
 @Composable
 fun ItemsAndAbilitiesView(
     character: Character,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
 ) {
     val state = rememberLazyListState()
-    Card(
-        elevation = 5.dp,
-        modifier = modifier
-    ) {
+
+    Card {
         LazyColumn(
             state = state,
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.padding(top = 6.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             items(character.backpack.allWeapons) {
                 Row {
-                    Text(text = it.displayName, modifier = Modifier.width(100.dp))
+                    Text(text = it.displayName, modifier = Modifier.width(100.dp).padding(start = 12.dp))
                     Text(
                         text = character.calculateWeaponAttackBonus(it).let {
                             if (it < 0) {

@@ -3,10 +3,7 @@ package ui.character
 //import dataStore
 
 import Platform
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -19,9 +16,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import platform
 import ui.platformSpecific.IO
-import ui.platformSpecific.getScreenWidth
 import ui.platformSpecific.isVertical
 import ui.preferences.DataStore
+import ui.subcomposables.MultipageView
 
 
 @Composable
@@ -155,70 +152,62 @@ fun CharacterMainView(viewModel: CharacterMainViewModel) {
                             )
 
                         } else {
-                            //Row
-                            //TODO make this snap.
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth(0.95f)
-                                    .padding(5.dp),
-                                elevation = 2.dp,
-                                shape = RoundedCornerShape(20.dp)
-                            ) {
-                                val width = getScreenWidth()
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .horizontalScroll(rememberScrollState()),
-                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                ) {
-                                    val modifier = Modifier
-                                        .fillMaxHeight()
-                                        .width(width)
-                                    TextField(
-                                        modifier = modifier,
-                                        label = { Text("Personality Traits") },
-                                        value = viewModel.personalityTraits.collectAsState().value,
-                                        onValueChange = {
-                                            viewModel.personalityTraits.value = it
-                                        }
-                                    )
+                            MultipageView(
+                                modifier = Modifier.fillMaxSize(),
+                                pages = arrayOf(
+                                    @Composable { modifier ->
+                                        TextField(
+                                            modifier = modifier,
+                                            label = { Text("Personality Traits") },
+                                            value = viewModel.personalityTraits.collectAsState().value,
+                                            onValueChange = {
+                                                viewModel.personalityTraits.value = it
+                                            }
+                                        )
+                                    },
+                                    @Composable { modifier ->
+                                        TextField(
+                                            modifier = modifier,
+                                            label = { Text("Ideals") },
+                                            value = viewModel.ideals.collectAsState().value,
+                                            onValueChange = {
+                                                viewModel.ideals.value = it
+                                            }
+                                        )
+                                    },
+                                    @Composable { modifier ->
+                                        TextField(
+                                            modifier = modifier,
+                                            label = { Text("Bonds") },
+                                            value = viewModel.bonds.collectAsState().value,
+                                            onValueChange = {
+                                                viewModel.bonds.value = it
+                                            }
+                                        )
+                                    },
+                                    @Composable { modifier ->
+                                        TextField(
+                                            modifier = modifier,
+                                            label = { Text("Flaws") },
+                                            value = viewModel.flaws.collectAsState().value,
+                                            onValueChange = {
+                                                viewModel.flaws.value = it
+                                            }
+                                        )
+                                    },
+                                    @Composable { modifier ->
+                                        TextField(
+                                            modifier = modifier,
+                                            label = { Text("Notes") },
+                                            value = viewModel.notes.collectAsState().value,
+                                            onValueChange = {
+                                                viewModel.notes.value = it
+                                            }
+                                        )
+                                    }
+                                )
+                            )
 
-                                    TextField(
-                                        modifier = modifier,
-                                        label = { Text("Ideals") },
-                                        value = viewModel.ideals.collectAsState().value,
-                                        onValueChange = {
-                                            viewModel.ideals.value = it
-                                        }
-                                    )
-                                    TextField(
-                                        modifier = modifier,
-                                        label = { Text("Bonds") },
-                                        value = viewModel.bonds.collectAsState().value,
-                                        onValueChange = {
-                                            viewModel.bonds.value = it
-                                        }
-                                    )
-
-                                    TextField(
-                                        modifier = modifier,
-                                        label = { Text("Flaws") },
-                                        value = viewModel.flaws.collectAsState().value,
-                                        onValueChange = {
-                                            viewModel.flaws.value = it
-                                        }
-                                    )
-
-                                    TextField(
-                                        modifier = modifier,
-                                        label = { Text("Notes") },
-                                        value = viewModel.notes.collectAsState().value,
-                                        onValueChange = {
-                                            viewModel.notes.value = it
-                                        }
-                                    )
-                                }
-                            }
                         }
                     }
 

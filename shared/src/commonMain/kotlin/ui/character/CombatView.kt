@@ -2,9 +2,7 @@ package ui.character
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,8 +28,8 @@ import model.Spell
 import org.jetbrains.compose.resources.painterResource
 import ui.SpellDetailsView
 import ui.platformSpecific.IO
-import ui.platformSpecific.getScreenWidth
 import ui.platformSpecific.isVertical
+import ui.subcomposables.MultipageView
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -67,6 +65,7 @@ fun CombatView(viewModel: CombatViewModel) {
                                 }
                             }
                         }
+
                         "heal" -> {
                             title.value = "Heal"
                             onClick = {
@@ -79,11 +78,12 @@ fun CombatView(viewModel: CombatViewModel) {
                                 }
                             }
                         }
+
                         "damage" -> {
                             title.value = "Damage"
                             onClick = {
                                 hpPopUpExpanded = false
-                                scope.launch(/*Dispatchers.IO*/) {
+                                scope.launch(Dispatchers.IO) {
                                     try {
                                         viewModel.damage(temp)
                                     } catch (e: NumberFormatException) {
@@ -123,9 +123,11 @@ fun CombatView(viewModel: CombatViewModel) {
                             "addTemp" -> {
                                 Text("Add")
                             }
+
                             "heal" -> {
                                 Text("Heal")
                             }
+
                             "damage" -> {
                                 Text("Damage")
                             }
@@ -156,12 +158,12 @@ fun CombatView(viewModel: CombatViewModel) {
                     maxHp = it.maxHp,
                     tempHp = it.tempHp,
                     setTemp = {
-                        scope.launch(/*Dispatchers.IO*/) {
+                        scope.launch(Dispatchers.IO) {
                             viewModel.setTemp(it)
                         }
                     },
                     setHp = {
-                        scope.launch(/*Dispatchers.IO*/) {
+                        scope.launch(Dispatchers.IO) {
                             viewModel.setHp(it)
                         }
                     },
@@ -306,69 +308,83 @@ fun CombatView(viewModel: CombatViewModel) {
             elevation = 2.dp,
             shape = RoundedCornerShape(20.dp)
         ) {
-            val width = if (isVertical) {
-                getScreenWidth() - 20.dp
-            } else {
-                (getScreenWidth() - 20.dp) / 2
+
+            //This is used to force a recalculation of allSpells.
+            val allSpellsKey = remember {
+                mutableStateOf(0)
             }
-            var castIsExpanded by remember { mutableStateOf(false) }
-            var spell by remember { mutableStateOf<Spell?>(null) }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-            ) {
-                //This is used to force a recalculation of allSpells.
-                val allSpellsKey = remember {
-                    mutableStateOf(0)
-                }
-                val allSpells: State<Map<Int, List<Pair<Boolean?, Spell>>>> = produceState(emptyMap(), character.value, allSpellsKey.value)  {
+
+            val allSpells: State<Map<Int, List<Pair<Boolean?, Spell>>>> =
+                produceState(emptyMap(), character.value, allSpellsKey.value) {
                     this.launch(Dispatchers.IO) {
                         value = viewModel.getAllSpells()
                     }
                 }
+
+            var castIsExpanded by remember { mutableStateOf(false) }
+            var spell by remember { mutableStateOf<Spell?>(null) }
+
+
+            val spellView = @Composable { it: Modifier ->
                 if (allSpells.value.isNotEmpty()) {
-                    Box(
-                        Modifier.width(width)
-                    ) {
-                        character.value?.let {
-                            SpellCastingView(
-                                spellSlotsOffsetForCantrips = viewModel.getSpellSlotsAndCantrips(),
-                                allSpells = allSpells.value,
-                                cast = { newSpell ->
-                                    spell = newSpell
-                                    castIsExpanded = true
-                                },
-                                refundSlot = { slot ->
-                                    scope.launch(Dispatchers.IO) {
-                                        viewModel.refundSlot(slot)
-                                    }
-                                },
-                                useSlot = { slot ->
-                                    scope.launch(Dispatchers.IO) {
-                                        viewModel.useSlot(slot)
-                                    }
-                                },
-                                togglePreparation = { spell, prepared ->
-                                    scope.launch(Dispatchers.IO) {
-                                        viewModel.togglePreparation(spell, prepared)
-                                        allSpellsKey.value = allSpellsKey.value + 1
-                                    }
-                                }
-                            )
+                    SpellCastingView(
+                        modifier = it,
+                        spellSlotsOffsetForCantrips = viewModel.getSpellSlotsAndCantrips(),
+                        allSpells = allSpells.value,
+                        cast = { newSpell ->
+                            spell = newSpell
+                            castIsExpanded = true
+                        },
+                        refundSlot = { slot ->
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.refundSlot(slot)
+                            }
+                        },
+                        useSlot = { slot ->
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.useSlot(slot)
+                            }
+                        },
+                        togglePreparation = { spell, prepared ->
+                            scope.launch(Dispatchers.IO) {
+                                viewModel.togglePreparation(spell, prepared)
+                                allSpellsKey.value += 1
+                            }
                         }
-                    }
-                }
+                    )
 
-                Spacer(Modifier.width(10.dp))
-
-                Box(
-                    Modifier.width(width)
-                ) {
-                    character.value?.let { ItemsAndAbilitiesView(character = it) }
                 }
             }
+
+            val itemsView = @Composable { it: Modifier ->
+                ItemsAndAbilitiesView(
+                    character = character.value,
+                    modifier = it
+                )
+            }
+
+            // Don't render empty views
+            val hasSpells = allSpells.value.isNotEmpty()
+            val hasWeapons = character.value.backpack.allWeapons.isNotEmpty()
+
+            val pages = Array<@Composable (Modifier) -> Unit>(
+                size = (if (hasSpells) 1 else 0) + if (hasWeapons) 1 else 0,
+                init = { @Composable {} }
+            )
+
+            if (hasSpells) {
+                pages[0] = spellView
+            }
+
+            if (hasWeapons) {
+                pages[pages.lastIndex] = itemsView
+            }
+
+            MultipageView(
+                modifier = Modifier
+                    .fillMaxSize(),
+                pages = pages
+            )
 
             if (castIsExpanded) {
                 Dialog(

@@ -53,8 +53,6 @@ WHERE subraceId IS :subraceId"""
     )
     actual abstract suspend fun getSubraceFeatures(subraceId: Int): List<Feature>
 
-    @Query("SELECT * FROM features JOIN RaceFeatureCrossRef ON RaceFeatureCrossRef.featureId IS features.featureId WHERE raceId IS :id")
-    actual abstract suspend fun getRaceTraits(id: Int): List<Feature>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertRaceFeatureCrossRef(ref: RaceFeatureCrossRef)

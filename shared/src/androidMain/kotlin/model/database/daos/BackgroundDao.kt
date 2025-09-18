@@ -91,12 +91,7 @@ WHERE backgroundId IS :id
     actual abstract fun getUnfilledBackground(id: Int): Flow<BackgroundEntity>
 
 
-    @Query(
-        """SELECT * FROM features
-JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.featureId IS features.featureId 
-WHERE backgroundId IS :id"""
-    )
-    actual abstract suspend fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
+
 
     @Query("SELECT * FROM backgrounds WHERE isHomebrew = 1")
     actual abstract fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>>
@@ -125,4 +120,5 @@ WHERE backgroundId IS :id"""
 
     @Query("SELECT * FROM backgrounds WHERE isHomebrew")
     abstract fun backgroundTable(): List<BackgroundEntity>
+
 }

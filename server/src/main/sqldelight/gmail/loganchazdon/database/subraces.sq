@@ -45,7 +45,7 @@ SELECT * FROM subraces
 WHERE id = :id AND (owner = :owner OR owner IS NULL);
 
 selectSubraceFeatures:
-SELECT * FROM features
+SELECT features.* FROM features
 JOIN SubraceFeatureCrossRef ON features.featureId IS SubraceFeatureCrossRef.featureId
 AND SubraceFeatureCrossRef.owner =:owner
 WHERE subraceId = :subraceId AND (features.owner IS NULL OR features.owner IS :owner);

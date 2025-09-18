@@ -12,7 +12,6 @@ expect abstract class BackgroundDao {
     abstract suspend fun getBackgroundSpells(backgroundId: Int): List<Spell>?
     abstract suspend fun getBackgroundFeatures(id: Int): List<Feature>
     fun getAllBackgrounds(): Flow<List<Background>>
-    abstract suspend fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
     abstract fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>>
     abstract suspend fun deleteBackground(id: Int)
     abstract suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity

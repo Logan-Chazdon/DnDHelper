@@ -156,7 +156,7 @@ class ClassServiceIntegrationTest {
                     )
                 }
 
-                var features = user.classService.getUnfilledLevelPath(clazz.entity.id)
+                var features = user.classService.getFilledLevelPath(clazz.entity.id)
 
 
                 assert(
@@ -170,7 +170,7 @@ class ClassServiceIntegrationTest {
                     )
                 }
 
-                features = user.classService.getUnfilledLevelPath(clazz.entity.id)
+                features = user.classService.getFilledLevelPath(clazz.entity.id)
 
                 assert(features.isEmpty())
             }

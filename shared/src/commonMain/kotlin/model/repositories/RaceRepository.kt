@@ -53,8 +53,7 @@ class RaceRepository {
 
     fun getLiveRaceById(id: Int): Flow<Race> {
         return raceDao.findUnfilledLiveRaceById(id).transform {
-            it.traits = raceDao.getRaceTraits(id)
-            featureDao.fillOutFeatureListWithoutChosen(it.traits!!)
+            it.traits = featureDao.getRaceTraits(id)
             emit(it)
         }
     }

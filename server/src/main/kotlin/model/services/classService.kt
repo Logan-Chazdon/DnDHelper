@@ -3,6 +3,7 @@ package gmail.loganchazdon.dndhelper.model.services
 import gmail.loganchazdon.database.Classes
 import gmail.loganchazdon.database.Database
 import gmail.loganchazdon.dndhelper.model.database.*
+import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureListWithoutChosen
 import io.ktor.client.*
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -71,15 +72,14 @@ fun Routing.classService(db: Database, httpClient: HttpClient) {
         }
     }
 
-    get("class/getUnfilledLevelPath") {
+    get("class/getFilledLevelPath") {
         withUserInfo { userInfo ->
             val data = db.classesQueries.selectLevelPath(
                 call.parameters["classId"]!!.toLong(),
                 userInfo.id
             ).executeAsList()
-            val response = gson.toJson(
-                data
-            )
+            val response = db.fillOutFeatureListWithoutChosen(data, userInfo.id).toString()
+
             call.respondText(response)
         }
     }

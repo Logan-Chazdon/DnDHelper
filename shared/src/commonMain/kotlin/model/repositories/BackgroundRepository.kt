@@ -38,10 +38,9 @@ class BackgroundRepository {
             if (it != null) {
                 val background = Background(
                     it,
-                    backgroundDao.getUnfilledBackgroundFeatures(id)
+                    featureDao.getFilledBackgroundFeatures(id)
                 )
                 background.spells = backgroundDao.getBackgroundSpells(id)
-                featureDao.fillOutFeatureListWithoutChosen(background.features!!)
                 emit(background)
             }
         }

@@ -167,18 +167,12 @@ class ClassRepository {
         )
     }
 
-    suspend fun getLevelPath(id: Int): MutableList<Feature> {
-        val features = classDao.getUnfilledLevelPath(id)
-        featureDao.fillOutFeatureListWithoutChosen(features)
-        return features
-    }
-
     fun getClass(id: Int): Flow<Class> {
         return classDao.getUnfilledClass(id).transform { entity ->
             emit(
                 Class(
                     entity,
-                    getLevelPath(id)
+                    featureDao.getFilledLevelPath(id)
                 )
             )
         }

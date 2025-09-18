@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import gmail.loganchazdon.database.Database
 import gmail.loganchazdon.database.Subraces
 import gmail.loganchazdon.dndhelper.model.database.*
+import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureListWithoutChosen
 import io.ktor.client.*
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -124,7 +125,7 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
                         subraceId = receivedText.toLong(),
                         owner = userInfo.id
                     ).asFlow().collect {
-                        val item = gson.toJson(it.executeAsList())
+                        val item = db.fillOutFeatureListWithoutChosen(it.executeAsList(), userInfo.id).toString()
 
                         //Send the converted json.
                         send(Frame.Text(item))
@@ -162,7 +163,7 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
                         id = subrace.id
                     ).executeAsList()
 
-                    json.put("traits", JSONArray(gson.toJson(features)))
+                    json.put("traits", db.fillOutFeatureListWithoutChosen(features, userInfo.id))
                     val filledFeatChoices = JSONArray()
                     featChoices.forEach { choiceRef ->
                         val choice = db.featChoicesQueries.select(

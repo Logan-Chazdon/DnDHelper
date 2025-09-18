@@ -5,20 +5,41 @@ import model.Feature
 import model.FeatureChoiceEntity
 import model.FeatureEntity
 import model.Spell
-import services.FeatureService
+import services.*
 
 actual abstract class FeatureDao {
     protected val featureService: FeatureService
-    constructor(featureService: FeatureService) {
+    protected val backgroundService: BackgroundService
+    protected val featService: FeatService
+    protected val raceService: RaceService
+    protected val classService: ClassService
+
+    constructor(
+        featureService: FeatureService,
+        featService: FeatService,
+        backgroundService: BackgroundService,
+        raceService: RaceService,
+        classService: ClassService
+    ) {
         this.featureService = featureService
+        this.featService = featService
+        this.backgroundService = backgroundService
+        this.raceService = raceService
+        this.classService = classService
     }
 
     actual abstract suspend fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int)
     actual abstract suspend fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
     actual abstract suspend fun getFeatureSpells(featureId: Int): List<Spell>?
-    actual suspend fun fillOutFeatureListWithoutChosen(features: List<Feature>) {
-        featureService.fillOutFeatureListWithoutChosen(features)
+
+    actual suspend fun getFilledBackgroundFeatures(id: Int): List<Feature> {
+        return backgroundService.getUnfilledBackgroundFeatures(id)
     }
+
+    actual suspend fun getFilledLevelPath(id: Int): MutableList<Feature> = classService.getFilledLevelPath(id)
+    actual suspend fun getFeatFeatures(featId: Int): List<Feature> = featService.getFeatFeatures(featId)
+    actual suspend fun getRaceTraits(id: Int): List<Feature> = raceService.getRaceFeatures(id)
+
 
     actual suspend fun insertFeature(feature: FeatureEntity): Int {
         return featureService.insertFeature(feature)
@@ -80,7 +101,13 @@ actual abstract class FeatureDao {
 }
 
 
-class FeatureDaoImpl(service: FeatureService) : FeatureDao(service) {
+class FeatureDaoImpl(
+    service: FeatureService, featService: FeatService, backgroundService: BackgroundService,
+    raceService: RaceService, classService: ClassService
+) : FeatureDao(
+    service, featService,
+    backgroundService, raceService, classService,
+) {
     override suspend fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int) {
         featureService.removeFeatureFeatureChoice(choiceId, characterId)
     }

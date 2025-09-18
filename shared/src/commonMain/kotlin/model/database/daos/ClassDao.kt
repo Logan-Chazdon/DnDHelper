@@ -3,7 +3,6 @@ package model.database.daos
 import kotlinx.coroutines.flow.Flow
 import model.Class
 import model.ClassEntity
-import model.Feature
 import model.Spell
 import model.pojos.NameAndIdPojo
 
@@ -19,7 +18,6 @@ expect abstract class ClassDao {
     suspend fun insertClassSubclassId(classId: Int, subclassId: Int)
     suspend fun removeClassFeatureCrossRef(featureId: Int, id: Int)
     suspend fun removeClassSubclassCrossRef(classId: Int, subclassId: Int)
-    abstract suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature>
     abstract fun getUnfilledClass(id: Int): Flow<ClassEntity>
     abstract fun allClassesNamesAndIds() : Flow<List<NameAndIdPojo>>
     abstract fun getSubclassClasses(id: Int): Flow<List<NameAndIdPojo>>

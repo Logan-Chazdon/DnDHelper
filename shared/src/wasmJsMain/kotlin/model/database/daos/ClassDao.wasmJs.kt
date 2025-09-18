@@ -3,7 +3,6 @@ package model.database.daos
 import kotlinx.coroutines.flow.Flow
 import model.Class
 import model.ClassEntity
-import model.Feature
 import model.Spell
 import model.pojos.NameAndIdPojo
 import services.ClassService
@@ -11,9 +10,11 @@ import services.ClassService
 actual abstract class ClassDao {
     actual abstract suspend fun getClassIdsByName(name: String): List<Int>
     protected val classService: ClassService
+
     constructor(classService: ClassService) {
         this.classService = classService
     }
+
     actual fun getAllClasses(): Flow<List<Class>> {
         return classService.getAllClasses()
     }
@@ -41,7 +42,7 @@ actual abstract class ClassDao {
         classService.removeClassSubclassCrossRef(classId, subclassId)
     }
 
-    actual abstract suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature>
+
     actual abstract fun getUnfilledClass(id: Int): Flow<ClassEntity>
     actual abstract fun allClassesNamesAndIds(): Flow<List<NameAndIdPojo>>
     actual abstract fun getSubclassClasses(id: Int): Flow<List<NameAndIdPojo>>
@@ -64,9 +65,6 @@ class ClassDaoImpl(classService: ClassService) : ClassDao(classService) {
         return classService.getSpellsByClassId(classId)
     }
 
-    override suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature> {
-        return classService.getUnfilledLevelPath(id)
-    }
 
     override fun getUnfilledClass(id: Int): Flow<ClassEntity> {
         return classService.getUnfilledClass(id)

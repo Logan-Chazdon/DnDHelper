@@ -11,7 +11,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.put
-import model.*
+import model.Feature
+import model.FeatureChoiceEntity
+import model.FeatureEntity
+import model.Spell
 
 
 class FeatureService(client: HttpClient) : Service(client = client) {
@@ -43,26 +46,6 @@ class FeatureService(client: HttpClient) : Service(client = client) {
         const val PATH = "feature"
     }
 
-    suspend fun fillOutFeatureListWithoutChosen(features: List<Feature>) {
-        features.forEach { feature ->
-            feature.spells = getFeatureSpells(feature.featureId)
-            feature.choices = getFeatureChoices(feature.featureId).let { choiceEntities ->
-                val temp = mutableListOf<FeatureChoice>()
-                choiceEntities.forEach { choice ->
-                    val filledChoice = FeatureChoice(
-                        entity = choice,
-                        options = getFeatureChoiceOptions(choice.id),
-                        chosen = null
-                    )
-                    filledChoice.options?.let { fillOutFeatureListWithoutChosen(it) }
-                    temp.add(
-                        filledChoice
-                    )
-                }
-                temp
-            }
-        }
-    }
 
     suspend fun insertFeature(feature: FeatureEntity): Int {
         val id = client.post {

@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import gmail.loganchazdon.database.Database
 import gmail.loganchazdon.database.Races
 import gmail.loganchazdon.dndhelper.model.database.*
+import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureListWithoutChosen
 import io.ktor.client.*
 import io.ktor.http.*
 import io.ktor.http.cio.internals.*
@@ -20,9 +21,11 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
         withUserInfo { userInfo ->
             val response = call.receiveText()
             val race = gson.fromJson(response, Races::class.java)
-            val newId = if(race.raceId <= 0) {
-                (db.racesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0)+ 1
-            } else { race.raceId }
+            val newId = if (race.raceId <= 0) {
+                (db.racesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+            } else {
+                race.raceId
+            }
             db.racesQueries.insertRace(race.copy(owner = userInfo.id, raceId = newId))
             call.respondText(race.raceId.toString(), status = HttpStatusCode.OK)
         }
@@ -86,12 +89,12 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
     get("race/raceFeatures") {
         withUserInfo {
             call.respondText(
-                gson.toJson(
+                db.fillOutFeatureListWithoutChosen(
                     db.racesQueries.selectRaceFeatures(
                         it.id,
                         raceId = call.parameters["raceId"]!!.toLong()
-                    ).executeAsList()
-                )
+                    ).executeAsList(), it.id
+                ).toString()
             )
         }
     }
@@ -99,13 +102,14 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
     get("race/subraceFeatures") {
         withUserInfo {
             call.respondText(
-                gson.toJson(
+                db.fillOutFeatureListWithoutChosen(
                     db.subracesQueries.selectSubraceFeatures(
                         it.id,
                         subraceId = call.parameters["subraceId"]!!.toLong()
-                    ).executeAsList()
-                )
+                    ).executeAsList(),  it.id
+                ).toString()
             )
+
         }
     }
 
@@ -156,7 +160,7 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
                 frame as? Frame.Text ?: continue
                 val receivedText: String = frame.readText()
                 try {
-                    db.racesQueries.getRace(id= receivedText.parseDecLong(), owner = userInfo.id).asFlow().collect {
+                    db.racesQueries.getRace(id = receivedText.parseDecLong(), owner = userInfo.id).asFlow().collect {
                         //Send the converted json.
                         send(Frame.Text(gson.toJson(it.executeAsOne()).toString().clean()))
                     }
@@ -176,7 +180,7 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
                 val receivedText = frame.readText()
                 try {
                     db.raceSubraceCrossRefQueries.selectSubraceNameIdForRace(
-                        raceId= receivedText.toLong(),
+                        raceId = receivedText.toLong(),
                         owner = userInfo.id
                     ).asFlow().collect {
                         //Send the converted json.

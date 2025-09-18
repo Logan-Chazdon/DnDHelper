@@ -11,7 +11,6 @@ expect abstract class FeatureDao {
     abstract suspend fun removeFeatureFeatureChoice(choiceId: Int, characterId: Int)
     abstract suspend fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
     abstract suspend fun getFeatureSpells(featureId: Int): List<Spell>?
-    suspend fun fillOutFeatureListWithoutChosen(features: List<Feature>)
     suspend fun insertFeature(feature: FeatureEntity): Int
     abstract fun getLiveFeatureById(id: Int): Flow<Feature>
     suspend fun insertFeatureOptionsCrossRef(featureId: Int, id: Int)
@@ -40,4 +39,10 @@ expect abstract class FeatureDao {
         featureId: Int,
         choiceId: Int
     )
+
+    /**Fetch a classes features*/
+    suspend fun getFilledLevelPath(id: Int): MutableList<Feature>
+    suspend fun getFilledBackgroundFeatures(id: Int): List<Feature>
+    suspend fun getFeatFeatures(featId: Int): List<Feature>
+    suspend fun getRaceTraits(id: Int): List<Feature>
 }

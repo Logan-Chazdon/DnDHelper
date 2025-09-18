@@ -54,7 +54,7 @@ INSERT OR REPLACE INTO races (raceId, raceName, groundSpeed, abilityBonuses, ali
 VALUES ?;
 
 selectRaceFeatures:
-SELECT * FROM features
+SELECT features.* FROM features
 JOIN RaceFeatureCrossRef ON features.featureId IS RaceFeatureCrossRef.featureId
 AND RaceFeatureCrossRef.owner =:owner
 WHERE raceId = :raceId AND (features.owner IS NULL OR features.owner IS :owner);

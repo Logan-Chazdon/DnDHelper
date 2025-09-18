@@ -36,11 +36,7 @@ actual abstract class FeatDao {
     @Insert
     abstract fun insertFeatFeatureCrossRef(featFeatureCrossRef: FeatFeatureCrossRef)
 
-    @Query("""SELECT features.* FROM features
-JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
-WHERE featId IS :featId
-    """)
-    actual abstract suspend fun getFeatFeatures(featId: Int) : List<Feature>
+
 
     @Query("SELECT * FROM FeatChoiceFeatCrossRef")
     abstract fun featChoiceFeatTable(): List<FeatChoiceFeatCrossRef>

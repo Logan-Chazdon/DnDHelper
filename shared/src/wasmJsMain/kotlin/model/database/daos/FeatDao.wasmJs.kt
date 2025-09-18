@@ -2,7 +2,6 @@ package model.database.daos
 
 import kotlinx.coroutines.flow.Flow
 import model.Feat
-import model.Feature
 import services.FeatService
 
 actual abstract class FeatDao {
@@ -12,16 +11,10 @@ actual abstract class FeatDao {
     }
 
     actual abstract fun getUnfilledFeats(): Flow<List<Feat>>
-    actual abstract suspend fun getFeatFeatures(featId: Int): List<Feature>
 }
 
 class FeatDaoImpl(featService: FeatService) : FeatDao(featService) {
     override fun getUnfilledFeats(): Flow<List<Feat>> {
         return featService.getUnfilledFeats()
     }
-
-    override suspend fun getFeatFeatures(featId: Int): List<Feature> {
-        return featService.getFeatFeatures(featId)
-    }
-
 }

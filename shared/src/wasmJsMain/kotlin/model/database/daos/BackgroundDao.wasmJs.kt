@@ -21,7 +21,7 @@ actual abstract class BackgroundDao {
         return backgroundService.getAllBackgrounds()
     }
 
-    actual abstract suspend fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
+
     actual abstract fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>>
     actual abstract suspend fun deleteBackground(id: Int)
     actual abstract suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
@@ -50,9 +50,6 @@ class BackgroundDaoImpl(backgroundService: BackgroundService) : BackgroundDao(ba
         return backgroundService.getBackgroundFeatures(id)
     }
 
-    override suspend fun getUnfilledBackgroundFeatures(id: Int): List<Feature> {
-        return backgroundService.getUnfilledBackgroundFeatures(id)
-    }
 
     override fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>> {
         return backgroundService.getHomebrewBackgrounds()

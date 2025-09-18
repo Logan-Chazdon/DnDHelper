@@ -5,6 +5,7 @@ import gmail.loganchazdon.database.Database
 import gmail.loganchazdon.dndhelper.model.database.getSession
 import gmail.loganchazdon.dndhelper.model.database.getUserInfo
 import gmail.loganchazdon.dndhelper.model.database.gson
+import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureListWithoutChosen
 import gmail.loganchazdon.dndhelper.model.database.withUserInfo
 import io.ktor.client.*
 import io.ktor.server.response.*
@@ -24,11 +25,11 @@ fun Routing.featService(db: Database, httpClient: HttpClient) {
 
     get("feat/featFeatures") {
         withUserInfo { userInfo ->
-            val feats = db.featFeatureCrossRefQueries.selectFeaturesForFeat(
+            val features = db.featFeatureCrossRefQueries.selectFeaturesForFeat(
                 owner = userInfo.id,
                 featId = call.parameters["id"]!!.toLong()
             ).executeAsList()
-            call.respond(gson.toJson(feats))
+            call.respond(db.fillOutFeatureListWithoutChosen(features, userInfo.id).toString())
         }
     }
 }

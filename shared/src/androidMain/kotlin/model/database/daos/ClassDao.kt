@@ -21,12 +21,6 @@ WHERE ClassFeatureCrossRef.id IS :classId AND features.grantedAtLevel <= :maxLev
     )
     abstract fun getClassFeatures(classId: Int, maxLevel: Int = 20): MutableList<Feature>
 
-    @Query(
-        """SELECT * FROM features
-JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
-WHERE ClassFeatureCrossRef.id IS :id"""
-    )
-    actual abstract suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature>
 
 
     actual suspend fun insertClass(classEntity: ClassEntity): Int {

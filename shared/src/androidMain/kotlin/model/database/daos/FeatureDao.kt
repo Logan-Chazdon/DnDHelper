@@ -154,7 +154,7 @@ OR spellDetails.classes LIKE '%' || SUBSTR(FeatureChoiceIndexCrossRef.classes, 3
         )
     }
 
-    actual suspend fun fillOutFeatureListWithoutChosen(features: List<Feature>) {
+    private suspend fun fillOutFeatureListWithoutChosen(features: List<Feature>) {
         features.forEach { feature ->
             feature.spells = getFeatureSpells(feature.featureId)
             feature.choices = getFeatureChoices(feature.featureId).let { choiceEntities ->
@@ -295,4 +295,54 @@ WHERE featureId IS :id
     @Query("DELETE FROM features WHERE featureId =:featureId")
     abstract fun deleteFeature(featureId: Int)
 
+
+    @Query("""SELECT features.* FROM features
+JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
+WHERE featId IS :featId
+    """)
+    abstract suspend fun getUnfilledFeatFeatures(featId: Int) : List<Feature>
+
+    @Query(
+        """SELECT * FROM features
+JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.featureId IS features.featureId 
+WHERE backgroundId IS :id"""
+    )
+    abstract suspend fun getUnfilledBackgroundFeatures(id: Int): List<Feature>
+
+    @Query(
+        """SELECT * FROM features
+JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
+WHERE ClassFeatureCrossRef.id IS :id"""
+    )
+    abstract suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature>
+
+    @Query("SELECT * FROM features JOIN RaceFeatureCrossRef ON RaceFeatureCrossRef.featureId IS features.featureId WHERE raceId IS :id")
+    abstract suspend fun getUnfilledRaceTraits(id: Int): List<Feature>
+
+
+
+    /**Fetch a classes features*/
+    actual suspend fun getFilledLevelPath(id: Int): MutableList<Feature> {2
+        val features = getUnfilledLevelPath(id)
+        fillOutFeatureListWithoutChosen(features)
+        return features
+    }
+
+    actual suspend fun getFilledBackgroundFeatures(id: Int): List<Feature> {
+        val features = getUnfilledBackgroundFeatures(id)
+        fillOutFeatureListWithoutChosen(features)
+        return features
+    }
+
+    actual suspend fun getFeatFeatures(featId: Int): List<Feature> {
+        val features = getUnfilledFeatFeatures(featId)
+        fillOutFeatureListWithoutChosen(features)
+        return features
+    }
+
+    actual suspend fun getRaceTraits(id: Int): List<Feature> {
+        val features = getUnfilledRaceTraits(id)
+        fillOutFeatureListWithoutChosen(features)
+        return features
+    }
 }

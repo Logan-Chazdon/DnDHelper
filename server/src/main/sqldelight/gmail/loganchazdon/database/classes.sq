@@ -69,7 +69,7 @@ getHomebrewClasses:
 SELECT * FROM classes WHERE owner = :owner;
 
 selectLevelPath:
-SELECT * FROM features
+SELECT features.* FROM features
 JOIN ClassFeatureCrossRef ON ClassFeatureCrossRef.featureId IS features.featureId
 AND (features.owner = ClassFeatureCrossRef.owner OR features.owner IS NULL)
 WHERE ClassFeatureCrossRef.id IS :id AND (features.owner IS NULL OR features.owner IS :owner);

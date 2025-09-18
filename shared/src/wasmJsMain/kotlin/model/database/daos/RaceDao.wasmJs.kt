@@ -25,7 +25,6 @@ actual abstract class RaceDao {
     actual abstract suspend fun deleteRace(id: Int)
     actual abstract fun getHomebrewRaces(): Flow<List<Race>>
     actual abstract fun findUnfilledLiveRaceById(id: Int): Flow<Race>
-    actual abstract suspend fun getRaceTraits(id: Int): List<Feature>
     actual suspend fun insertRaceFeatureCrossRef(featureId: Int, raceId: Int) {
         raceService.insertRaceFeatureCrossRef(featureId, raceId)
     }
@@ -69,10 +68,6 @@ class RaceDaoImpl(raceService: RaceService) : RaceDao(raceService) {
 
     override fun findUnfilledLiveRaceById(id: Int): Flow<Race> {
         return raceService.findUnfilledLiveRaceById(id)
-    }
-
-    override suspend fun getRaceTraits(id: Int): List<Feature> {
-        return raceService.getRaceFeatures(id)
     }
 
     override fun getRaceSubraces(id: Int): Flow<List<NameAndIdPojo>> {

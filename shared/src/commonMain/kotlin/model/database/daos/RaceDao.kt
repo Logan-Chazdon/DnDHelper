@@ -17,7 +17,7 @@ expect abstract class RaceDao {
     abstract suspend fun deleteRace(id: Int)
     abstract fun getHomebrewRaces(): Flow<List<Race>>
     abstract fun findUnfilledLiveRaceById(id: Int): Flow<Race>
-    abstract suspend fun getRaceTraits(id: Int): List<Feature>
+
     suspend fun insertRaceFeatureCrossRef(featureId: Int, raceId: Int)
     suspend fun removeRaceFeatureCrossRef(featureId: Int, raceId: Int)
     suspend fun insertRaceSubraceCrossRef(subraceId: Int, raceId: Int)

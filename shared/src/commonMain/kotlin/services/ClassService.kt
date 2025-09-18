@@ -32,7 +32,7 @@ class ClassService(client: HttpClient) : Service(client = client) {
         DeleteClass("$PATH/deleteClass"),
         HomebrewClasses("$PATH/homebrewClasses"),
         ClassSpells("$PATH/classSpells"),
-        GetUnfilledLevelPath("$PATH/getUnfilledLevelPath"),
+        GetFilledLevelPath("$PATH/getFilledLevelPath"),
         GetNamesAndIds("$PATH/getNamesAndIds"),
         GetSubclassNamesAndIds("$PATH/getSubclassNamesAndIds"),
     }
@@ -149,8 +149,8 @@ class ClassService(client: HttpClient) : Service(client = client) {
         }.bodyAsText())
     }
 
-    suspend fun getUnfilledLevelPath(id: Int): MutableList<Feature> {
-        val result = getFrom(Paths.GetUnfilledLevelPath.path) {
+    suspend fun getFilledLevelPath(id: Int): MutableList<Feature> {
+        val result = getFrom(Paths.GetFilledLevelPath.path) {
           append("classId", id.toString())
         }.bodyAsText()
         return format.decodeFromString(result)

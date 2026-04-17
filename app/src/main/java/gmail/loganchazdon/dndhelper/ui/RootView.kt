@@ -1,5 +1,6 @@
 package gmail.loganchazdon.dndhelper.ui
 
+import androidx.compose.foundation.ComposeFoundationFlags
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -29,11 +30,14 @@ import gmail.loganchazdon.dndhelper.ui.navigation.Navigation
 import gmail.loganchazdon.dndhelper.ui.navigation.bottomNavBar.BottomNavigationBar
 import gmail.loganchazdon.dndhelper.ui.navigation.sideDrawer.SideNavDrawer
 
+
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @Composable
 fun RootView(allCharactersViewModel: AllCharactersViewModel = hiltViewModel()) {
+    ComposeFoundationFlags.isNonComposedClickableEnabled = false
+
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()

@@ -2,14 +2,30 @@ package gmail.loganchazdon.dndhelper.ui.character
 
 import android.content.res.Configuration
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -31,27 +47,29 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
         LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
     //Update all data whenever it is emitted from the database.
     //TODO find a more dry way to do this.
-    LaunchedEffect(viewModel.character.value?.personalityTraits) {
+    val character = viewModel.character.observeAsState()
+
+    LaunchedEffect(character .value?.personalityTraits) {
         viewModel.personalityTraits.value =
             viewModel.character.value?.personalityTraits ?: ""
     }
-    LaunchedEffect(viewModel.character.value?.name) {
+    LaunchedEffect(character.value?.name) {
         viewModel.name.value =
             viewModel.character.value?.name?: ""
     }
-    LaunchedEffect(viewModel.character.value?.bonds) {
+    LaunchedEffect(character.value?.bonds) {
         viewModel.bonds.value =
             viewModel.character.value?.bonds?: ""
     }
-    LaunchedEffect(viewModel.character.value?.flaws) {
+    LaunchedEffect(character.value?.flaws) {
         viewModel.flaws.value =
             viewModel.character.value?.flaws?: ""
     }
-    LaunchedEffect(viewModel.character.value?.notes) {
+    LaunchedEffect(character.value?.notes) {
         viewModel.notes.value =
             viewModel.character.value?.notes?: ""
     }
-    LaunchedEffect(viewModel.character.value?.ideals) {
+    LaunchedEffect(character.value?.ideals) {
         viewModel.ideals.value =
             viewModel.character.value?.ideals?: ""
     }
@@ -93,7 +111,9 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                             }
                             ReorderingColumnView(
                                 { modifier : Modifier, _: ColumnScope ->
-                                    Box(modifier = Modifier.fillMaxHeight(0.6f).then(modifier)) {
+                                    Box(modifier = Modifier
+                                        .fillMaxHeight(0.6f)
+                                        .then(modifier)) {
                                         VariableOrientationView(
                                             isVertical = isVertical,
                                             verticalAlignment = Alignment.Top,
@@ -160,7 +180,10 @@ fun CharacterMainView( viewModel: CharacterMainViewModel) {
                                 },
                                 { modifier : Modifier, _: ColumnScope ->
                                     CharacterTextView(
-                                        modifier = Modifier.fillMaxSize().weight(0.7f).then(modifier),
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .weight(0.7f)
+                                            .then(modifier),
                                         name = "Notes",
                                         value = viewModel.notes.collectAsState().value,
                                         onChange = {
@@ -286,7 +309,7 @@ private fun ReorderingColumnView(
     Column {
         mutableContent.forEachIndexed { index, view ->
             view(
-                modifier = Modifier
+                Modifier
                     .weight(1f)
                     .onFocusChanged {
                         if (it.hasFocus && index != 0) {

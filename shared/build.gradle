@@ -96,6 +96,7 @@ kotlin {
             commonWebpackConfig {
                 setConfigDirectory(file("webpack.config.d"))
                 outputFileName = "composeApp.js"
+                it.devtool = "source-map"
                 devServer = (devServer ?: new KotlinWebpackConfig.DevServer()).with {
                     setPort(8081)
                     it.static = (it.static ?: []).with {

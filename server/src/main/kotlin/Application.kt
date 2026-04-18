@@ -29,12 +29,14 @@ fun Application.module() {
         allowHost("127.0.0.1:8081")
         allowHost("localhost:8081")
         allowHost("dndhelper.com:8081")
+        allowHost("${System.getenv("domain")}:8081")
+
 
         allowCredentials = true
         allowNonSimpleContentTypes = true
 
          buildHeaders {
-             append("Access-Control-Allow-Origin", "http://localhost:8081")
+             append("Access-Control-Allow-Origin", "http://${System.getenv("domain")}:8081")
              build()
          }
         allowHeader(HttpHeaders.AuthenticationInfo)

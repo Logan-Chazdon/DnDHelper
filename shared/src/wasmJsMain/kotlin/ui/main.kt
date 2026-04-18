@@ -17,6 +17,7 @@ import kotlinx.browser.document
 import kotlinx.coroutines.launch
 import org.koin.compose.KoinContext
 import org.koin.core.context.GlobalContext.startKoin
+import services.ApiUrl
 import ui.theme.DnDHelperTheme
 
 private fun addCreds() {
@@ -46,7 +47,7 @@ fun main() {
         scope.launch {
             val response = client.get {
                 this.url {
-                    this.host = "localhost"
+                    this.host = ApiUrl
                     this.port = 8080
                 }
             }

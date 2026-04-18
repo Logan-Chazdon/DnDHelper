@@ -81,7 +81,7 @@ fun Application.configureDatabases() {
                     extraAuthParameters = listOf(Pair("access_type", "offline"))
                 )
             }
-            urlProvider = { "http://localhost:8080/callback" }
+            urlProvider = { "http://${System.getenv("domain")}:8080/callback" }
         }
     }
     install(WebSockets) {
@@ -200,7 +200,7 @@ fun Application.configureDatabases() {
 
                 //We redirect to the same location because our app uses jetpack navigation and not separate web pages.
                 //Change if needed.
-                call.respondRedirect("http://localhost:8081")
+                call.respondRedirect("http://${System.getenv("domain")}:8081")
             }
         }
 

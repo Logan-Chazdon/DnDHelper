@@ -16,7 +16,7 @@ suspend fun getSession(
     val userSession: UserSession? = call.sessions.get()
     //if there is no session, redirect to login
     if (userSession == null) {
-        val redirectUrl = URLBuilder("http://${System.getenv("domain")}:8080/login").run {
+        val redirectUrl = URLBuilder("https://${System.getenv("domain")}:8080/login").run {
             parameters.append("redirectUrl", call.request.uri)
             build()
         }

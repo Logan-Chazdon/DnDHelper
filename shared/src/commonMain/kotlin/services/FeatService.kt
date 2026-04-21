@@ -25,7 +25,7 @@ class FeatService(client: HttpClient) : Service(client = client) {
 
     fun getUnfilledFeats(): Flow<List<Feat>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.UnfilledFeats.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.UnfilledFeats.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "received") {

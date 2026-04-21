@@ -36,7 +36,7 @@ fun Application.module() {
         allowNonSimpleContentTypes = true
 
          buildHeaders {
-             append("Access-Control-Allow-Origin", "http://${System.getenv("domain")}:8081")
+             append("Access-Control-Allow-Origin", "https://${System.getenv("domain")}:8081")
              build()
          }
         allowHeader(HttpHeaders.AuthenticationInfo)

@@ -38,6 +38,7 @@ class BackgroundService(client: HttpClient) : Service(client = client) {
         return flow {
             val response = client.get {
                 url {
+                    protocol= URLProtocol.HTTPS
                     host = apiUrl
                     port = targetPort
                     path(Paths.AllBackgrounds.path)
@@ -103,7 +104,7 @@ class BackgroundService(client: HttpClient) : Service(client = client) {
 
     fun getHomebrewBackgrounds(): Flow<List<BackgroundEntity>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.HomebrewBackgrounds.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.HomebrewBackgrounds.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "received") {
@@ -124,7 +125,7 @@ class BackgroundService(client: HttpClient) : Service(client = client) {
 
     fun getUnfilledBackground(id: Int): Flow<BackgroundEntity> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.BackgroundEntity.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.BackgroundEntity.path) {
                 send(id.toString())
                 while (true) {
                     val othersMessage = incoming.receive() as Frame.Text

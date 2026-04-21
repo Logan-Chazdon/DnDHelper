@@ -52,6 +52,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
     suspend fun insertSubclass(subClass: SubclassEntity): Int {
         val id = client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(Paths.InsertSubclass.path)
@@ -64,7 +65,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
 
     fun getSubclass(id: Int): Flow<Subclass> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveSubclass.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveSubclass.path) {
                 send(id.toString())
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
@@ -93,7 +94,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
 
     fun getHomebrewSubclasses(): Flow<List<SubclassEntity>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.HomebrewSubclasses.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.HomebrewSubclasses.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     val listToEmit = format.decodeFromString<List<SubclassEntity>>(othersMessage!!.readText())
@@ -112,7 +113,7 @@ class SubclassService(client: HttpClient) : Service(client = client) {
 
     fun getSubclassLiveFeaturesById(id: Int): Flow<List<Feature>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.SubclassLiveFeatures.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.SubclassLiveFeatures.path) {
                 send(id.toString())
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text

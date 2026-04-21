@@ -41,6 +41,7 @@ class ClassService(client: HttpClient) : Service(client = client) {
         return flow {
             val response = client.get {
                 url {
+                    protocol= URLProtocol.HTTPS
                     host = apiUrl
                     port = targetPort
                     path(Paths.AllClasses.path)
@@ -62,6 +63,7 @@ class ClassService(client: HttpClient) : Service(client = client) {
         return flow {
             val response = client.get {
                 url {
+                    protocol= URLProtocol.HTTPS
                     host = apiUrl
                     port = targetPort
                     path("${Paths.UnfilledClass.path}/$id")
@@ -74,6 +76,7 @@ class ClassService(client: HttpClient) : Service(client = client) {
     suspend fun insertClass(classEntity: ClassEntity): Int {
         val id = client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(Paths.InsertClass.path)
@@ -122,6 +125,7 @@ class ClassService(client: HttpClient) : Service(client = client) {
         return flow {
             val response = client.get {
                 url {
+                    protocol= URLProtocol.HTTPS
                     host = apiUrl
                     port = targetPort
                     path(Paths.HomebrewClasses.path)
@@ -160,6 +164,7 @@ class ClassService(client: HttpClient) : Service(client = client) {
         return flow {
             val response = client.get {
                 url {
+                    protocol= URLProtocol.HTTPS
                     host = apiUrl
                     port = targetPort
                     path(Paths.GetNamesAndIds.path)
@@ -174,6 +179,7 @@ class ClassService(client: HttpClient) : Service(client = client) {
         return flow {
             val response = client.get {
                 url {
+                    protocol= URLProtocol.HTTPS
                     host = apiUrl
                     port = targetPort
                     path(Paths.GetSubclassNamesAndIds.path)

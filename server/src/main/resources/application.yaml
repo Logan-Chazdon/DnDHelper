@@ -1,9 +1,0 @@
-ktor:
-  application:
-    modules:
-      - gmail.loganchazdon.dndhelper.ApplicationKt.module
-  deployment:
-    port: 8080
-    Access-Control-Allow-Credentials: true
-    Access-Control-Allow-Origin: localhost, dndhelper.com
-

@@ -28,6 +28,7 @@ abstract class Service(
     protected suspend fun postTo(path: String, json:  JsonObjectBuilder.() -> Unit) {
         client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(path)
@@ -39,6 +40,7 @@ abstract class Service(
     protected suspend fun deleteFrom(path: String, params : ParametersBuilder.() -> Unit) {
         client.delete {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(path)
@@ -50,6 +52,7 @@ abstract class Service(
     protected suspend fun getFrom(path: String, params :  ParametersBuilder.() -> Unit ): HttpResponse {
         return client.get {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(path)

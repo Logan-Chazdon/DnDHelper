@@ -33,6 +33,7 @@ class SpellService(client: HttpClient) : Service(client = client) {
     suspend fun insertSpell(spell: Spell): Int {
         val id = client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(Paths.InsertSpell.path)
@@ -59,7 +60,7 @@ class SpellService(client: HttpClient) : Service(client = client) {
 
     fun getAllSpells(): Flow<List<Spell>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.AllSpellsLive.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.AllSpellsLive.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "received") {
@@ -73,7 +74,7 @@ class SpellService(client: HttpClient) : Service(client = client) {
 
     fun getHomebrewSpells(): Flow<List<Spell>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.HomebrewSpellsLive.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.HomebrewSpellsLive.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     if (othersMessage?.readText() != "received") {
@@ -102,7 +103,7 @@ class SpellService(client: HttpClient) : Service(client = client) {
 
     fun getSpellClasses(id: Int): Flow<List<NameAndIdPojo>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveSpellClasses.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveSpellClasses.path) {
                 send(id.toString())
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text

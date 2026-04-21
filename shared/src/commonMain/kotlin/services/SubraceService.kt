@@ -41,7 +41,7 @@ class SubraceService(client: HttpClient) : Service(client = client) {
 
     fun getSubrace(id: Int): Flow<Subrace> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveSubrace.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveSubrace.path) {
                 while (true) {
                     send(Frame.Text(id.toString()))
                     val othersMessage = incoming.receive() as? Frame.Text
@@ -65,6 +65,7 @@ class SubraceService(client: HttpClient) : Service(client = client) {
     suspend fun insertSubrace(subrace: SubraceEntity): Int {
         val id = client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(Paths.InsertSubrace.path)
@@ -78,7 +79,7 @@ class SubraceService(client: HttpClient) : Service(client = client) {
     /**Fetch all subraces for a race with featOptions and features filled.*/
     fun bindSubraceOptions(raceId: Int): Flow<MutableList<Subrace>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFilledSubraces.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFilledSubraces.path) {
                 //Send id
                 send(Frame.Text(raceId.toString()))
                 val othersMessage = incoming.receive() as? Frame.Text
@@ -97,7 +98,7 @@ class SubraceService(client: HttpClient) : Service(client = client) {
 
     fun getHomebrewSubraces(): Flow<List<SubraceEntity>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveHomebrewSubraces.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveHomebrewSubraces.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     println(othersMessage?.readText())
@@ -112,7 +113,7 @@ class SubraceService(client: HttpClient) : Service(client = client) {
 
     fun getSubraceLiveFeaturesById(id: Int): Flow<List<Feature>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveSubraceFeatures.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveSubraceFeatures.path) {
                 while (true) {
                     send(id.toString())
                     val othersMessage = incoming.receive() as? Frame.Text

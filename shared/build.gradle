@@ -91,14 +91,17 @@ kotlin {
 
     wasmJs {
         moduleName = "shared"
+
         browser {
             def projectDirPath = project.projectDir.path
             commonWebpackConfig {
                 setConfigDirectory(file("webpack.config.d"))
                 outputFileName = "composeApp.js"
+
                 it.devtool = "source-map"
                 devServer = (devServer ?: new KotlinWebpackConfig.DevServer()).with {
                     setPort(8081)
+
                     it.static = (it.static ?: []).with {
                         // Serve sources to debug inside browser
                         add(projectDirPath)

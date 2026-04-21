@@ -41,6 +41,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
     suspend fun insertRace(newRace: RaceEntity): Int {
         val id = client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(Paths.InsertRace.path)
@@ -94,6 +95,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
         return flow {
             val response = client.get {
                 url {
+                    protocol= URLProtocol.HTTPS
                     host = apiUrl
                     port = targetPort
                     path(Paths.AllRaces.path)
@@ -114,6 +116,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
         return flow {
             val response = client.get {
                 url {
+                    protocol= URLProtocol.HTTPS
                     host = apiUrl
                     port = targetPort
                     path(Paths.HomebrewRaces.path)
@@ -126,7 +129,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
 
     fun findUnfilledLiveRaceById(id: Int): Flow<Race> {
         return flow {
-            client.webSocket(
+            client.wss(
                 method = HttpMethod.Get,
                 host = apiUrl,
                 port = targetPort,
@@ -145,7 +148,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
 
     fun getRaceSubraces(id: Int): Flow<List<NameAndIdPojo>> {
         return flow {
-            client.webSocket(
+            client.wss(
                 method = HttpMethod.Get,
                 host = apiUrl,
                 port = targetPort,
@@ -163,7 +166,7 @@ class RaceService (client: HttpClient) : Service(client = client) {
 
     fun getAllRaceIdsAndNames(): Flow<List<NameAndIdPojo>> {
         return flow {
-            client.webSocket(
+            client.wss(
                 method = HttpMethod.Get,
                 host = apiUrl,
                 port = targetPort,

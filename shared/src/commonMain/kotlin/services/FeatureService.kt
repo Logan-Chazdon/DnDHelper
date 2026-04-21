@@ -50,6 +50,7 @@ class FeatureService(client: HttpClient) : Service(client = client) {
     suspend fun insertFeature(feature: FeatureEntity): Int {
         val id = client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(Paths.InsertFeature.path)
@@ -70,6 +71,7 @@ class FeatureService(client: HttpClient) : Service(client = client) {
     suspend fun insertFeatureChoice(option: FeatureChoiceEntity): Int {
         val id = client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(Paths.InsertFeatureChoice.path)
@@ -166,7 +168,7 @@ class FeatureService(client: HttpClient) : Service(client = client) {
 
     fun getLiveFeatureById(id: Int): Flow<Feature> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFeature.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFeature.path) {
                 while (true) {
                     send(Frame.Text(id.toString()))
                     val othersMessage = incoming.receive() as? Frame.Text
@@ -184,7 +186,7 @@ class FeatureService(client: HttpClient) : Service(client = client) {
 
     fun getLiveFeatureChoices(featureId: Int): Flow<List<FeatureChoiceEntity>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFeatureChoices.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFeatureChoices.path) {
                 while (true) {
                     send(Frame.Text(featureId.toString()))
                     val othersMessage = incoming.receive() as? Frame.Text
@@ -220,7 +222,7 @@ class FeatureService(client: HttpClient) : Service(client = client) {
 
     fun getLiveFeatureSpells(id: Int): Flow<List<Spell>?> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFeatureSpells.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveFeatureSpells.path) {
                 while (true) {
                     send(Frame.Text(id.toString()))
                     val othersMessage = incoming.receive() as? Frame.Text
@@ -238,7 +240,7 @@ class FeatureService(client: HttpClient) : Service(client = client) {
 
     fun returnGetAllIndexes(): Flow<List<String>> {
         return flow {
-            client.webSocket(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveAllIndexes.path) {
+            client.wss(method = HttpMethod.Get, host = apiUrl, port = targetPort, path = Paths.LiveAllIndexes.path) {
                 while (true) {
                     val othersMessage = incoming.receive() as? Frame.Text
                     println(othersMessage?.readText())

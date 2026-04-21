@@ -84,18 +84,18 @@ class CharacterService(client: HttpClient) : Service(client = client) {
      */
     fun getAllCharacters(): Flow<List<Character>> {
         return flow {
-            client.webSocket(
+            client.wss(
                 method = HttpMethod.Get,
                 host = apiUrl,
                 port = targetPort,
                 path = Paths.AllCharacters.path
             ) {
                 while (true) {
-                    val textData = incoming.receive() as Frame.Text
-                    val jsonList = format.decodeFromString<JsonArray>(textData.readText())
+                    val textData = incoming.receive() as? Frame.Text
+                    val jsonList = textData?.readText()?.let { format.decodeFromString<JsonArray>(it) }
                     val characters = mutableListOf<Character>()
 
-                    jsonList.forEach {
+                    jsonList?.forEach {
                         val item = UnfilledCharacterSerializer.deserialize(
                             it.toString(), format
                         )
@@ -124,6 +124,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     suspend fun postCharacter(character: CharacterEntity): Long {
         val id = client.post {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path(Paths.PostCharacter.path)
@@ -137,6 +138,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
     suspend fun deleteCharacter(id: Int) {
         client.delete {
             url {
+                protocol= URLProtocol.HTTPS
                 host = apiUrl
                 port = targetPort
                 path("${Paths.DeleteCharacter.path}/$id")
@@ -146,7 +148,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
 
     fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character> {
         return flow {
-            client.webSocket(
+            client.wss(
                 method = HttpMethod.Get,
                 host = apiUrl,
                 port = targetPort,

@@ -106,7 +106,7 @@ fun SignInView() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             GoogleSignInButton {
-                window.location.href = "http://$ApiUrl:8080/login"
+                window.location.href = "https://$ApiUrl:8080/login"
             }
 
             Button(

@@ -45,12 +45,7 @@ fun main() {
         // TODO: Update sign in checking.
         val text = remember { mutableStateOf("") }
         scope.launch {
-            val response = client.get {
-                this.url {
-                    this.host = ApiUrl
-                    this.port = 8080
-                }
-            }
+            val response = client.get("https://${ApiUrl}:8080")
             text.value = response.bodyAsText()
         }
 

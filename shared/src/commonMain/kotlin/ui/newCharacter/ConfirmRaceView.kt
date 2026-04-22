@@ -30,11 +30,12 @@ fun ConfirmRaceView(
     viewModel: NewCharacterConfirmRaceViewModel,
     navController: NavController,
 ) {
-    val scope= rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
+    val allFeats = viewModel.allFeats.collectAsState(emptyList())
     val subraces = viewModel.subraces.collectAsState(emptyList())
     val setupSubraceCustomization = fun() {
         val subrace = subraces.value.getOrNull(viewModel.subraceIndex.value)
-        if(viewModel.customizeStats.value && viewModel.customSubraceStatsMap.isEmpty()) {
+        if (viewModel.customizeStats.value && viewModel.customSubraceStatsMap.isEmpty()) {
             subrace?.abilityBonuses?.forEach {
                 viewModel.customSubraceStatsMap[it.ability] =
                     it.ability
@@ -44,7 +45,7 @@ fun ConfirmRaceView(
 
     val scrollState = rememberScrollState(0)
     val race = viewModel.race.collectAsState(null)
-    val assumedStatBonuses = produceState (
+    val assumedStatBonuses = produceState(
         mutableMapOf<String, Int>(),
         viewModel.subraceASIDropdownState
     ) {
@@ -89,7 +90,7 @@ fun ConfirmRaceView(
                 Button(onClick = {
                     //Change the race
                     scope.launch {
-                        if(!autosaveEnabled.value) viewModel.setRace()
+                        if (!autosaveEnabled.value) viewModel.setRace()
                     }
                     navController.navigate("newCharacterView/BackgroundView")
                 }) {
@@ -179,24 +180,24 @@ fun ConfirmRaceView(
                 assumedStatBonuses = assumedStatBonuses.value
             )
 
-                if (!(race.value?.proficiencyChoices?.isEmpty() == true && race.value?.startingProficiencies?.isEmpty() == true)) {
-                    RaceContentCard(title = "Proficiencies", race.value?.proficiencyChoices?.isNotEmpty() == true) {
-                        race.value?.startingProficiencies.let {
-                            var string = ""
-                            it?.forEachIndexed { index, prof ->
-                                string += prof.name
-                                if (index != it.size - 1) {
-                                    string += ", "
-                                }
+            if (!(race.value?.proficiencyChoices?.isEmpty() == true && race.value?.startingProficiencies?.isEmpty() == true)) {
+                RaceContentCard(title = "Proficiencies", race.value?.proficiencyChoices?.isNotEmpty() == true) {
+                    race.value?.startingProficiencies.let {
+                        var string = ""
+                        it?.forEachIndexed { index, prof ->
+                            string += prof.name
+                            if (index != it.size - 1) {
+                                string += ", "
                             }
-                            if (string.isNotEmpty()) {
-                                "$string."
-                            } else {
-                                null
-                            }
-                        }?.let {
-                            Text(it)
                         }
+                        if (string.isNotEmpty()) {
+                            "$string."
+                        } else {
+                            null
+                        }
+                    }?.let {
+                        Text(it)
+                    }
 
                     race.value?.proficiencyChoices?.forEach { proficiencyChoice ->
                         MultipleChoiceDropdownView(
@@ -283,22 +284,21 @@ fun ConfirmRaceView(
                     RaceAbilityBonusesView(bonuses, viewModel, viewModel.customSubraceStatsMap)
                 }
 
-                subraces.value!![viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->
+                subraces.value[viewModel.subraceIndex.value].featChoices?.forEachIndexed { index, it ->
                     RaceContentCard(it.name, containsChoice = true) {
-                        FeatView(
-                            level = 1,
-                            key = index,
-                            featNames = it.from.run {
-                                val result = mutableListOf<String>()
-                                this.forEach {
-                                    result.add(it.name)
-                                }
-                                result
-                            },
-                            feats = it.from,
-                            featDropDownStates = viewModel.subraceFeatDropdownStates,
-                            featChoiceDropDownState = viewModel.subraceFeatChoiceDropDownStates
-                        )
+                        val feats = it.from.ifEmpty { allFeats.value }
+                        val featNames = viewModel.featNames.collectAsState(emptyList()).value
+
+                        if(featNames.isNotEmpty()) {
+                            FeatView(
+                                level = 1,
+                                key = index,
+                                featNames = featNames,
+                                feats = feats,
+                                featDropDownStates = viewModel.subraceFeatDropdownStates,
+                                featChoiceDropDownState = viewModel.subraceFeatChoiceDropDownStates
+                            )
+                        }
                     }
                 }
 
@@ -417,9 +417,11 @@ private fun RaceLanguagesView(
                         it.size - 1 -> {
                             "and $item."
                         }
+
                         it.size -> {
                             item
                         }
+
                         else -> {
                             "${item}, "
                         }
@@ -429,19 +431,20 @@ private fun RaceLanguagesView(
             })
         languageChoices?.let { choice ->
             choice.forEach {
-                MultipleChoiceDropdownView(state = dropDownStates.getDropDownState(
-                    key = it.name,
-                    maxSelections = it.choose,
-                    maxOfSameSelection = 1,
-                    choiceName = it.name,
-                    names = it.from.let { from ->
-                        val names = mutableListOf<String>()
-                        from.forEach { lang ->
-                            names.add(lang.name.toString())
+                MultipleChoiceDropdownView(
+                    state = dropDownStates.getDropDownState(
+                        key = it.name,
+                        maxSelections = it.choose,
+                        maxOfSameSelection = 1,
+                        choiceName = it.name,
+                        names = it.from.let { from ->
+                            val names = mutableListOf<String>()
+                            from.forEach { lang ->
+                                names.add(lang.name.toString())
+                            }
+                            names
                         }
-                        names
-                    }
-                ))
+                    ))
             }
         }
     }

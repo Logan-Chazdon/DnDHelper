@@ -8,15 +8,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import model.*
 import model.choiceEntities.SubraceChoiceEntity
 import model.repositories.CharacterRepository
 import model.repositories.CharacterRepository.Companion.statNames
+import model.repositories.FeatRepository
 import model.repositories.RaceRepository
 import org.koin.android.annotation.KoinViewModel
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
@@ -28,9 +26,12 @@ import ui.utils.toStringList
 public class NewCharacterConfirmRaceViewModel constructor(
     raceRepository: RaceRepository,
     private val characterRepository: CharacterRepository,
+    featRepository: FeatRepository,
     savedStateHandle: SavedStateHandle,
     val id : MutableStateFlow<Int>
 ) : ViewModel() {
+    val allFeats: Flow<List<Feat>> = featRepository.getFeats()
+    val featNames: Flow<List<String>> = allFeats.transform { value -> emit(value.map { it.name }) }
     val subraceFeatDropdownStates = mutableStateListOf<MultipleChoiceDropdownStateImpl>()
     val subraceFeatChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     val languageDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()

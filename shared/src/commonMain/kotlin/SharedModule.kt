@@ -31,7 +31,7 @@ class SharedModule {
         viewModel { NewCharacterConfirmBackgroundViewModel(get(), get(), get(), newCharacterId) }
         viewModel { NewCharacterClassViewModel(get(), get(), get(), newCharacterId) }
         viewModel { NewCharacterConfirmClassViewModel(get(), get(), get(), get(), newCharacterId) }
-        viewModel { NewCharacterConfirmRaceViewModel(get(), get(), get(), newCharacterId) }
+        viewModel { NewCharacterConfirmRaceViewModel(get(), get(), get(), get(), newCharacterId) }
         viewModel { NewCharacterStatsViewModel(get(), get(), newCharacterId) }
         viewModel { NewCharacterRaceViewModel(get(), get(), newCharacterId) }
 

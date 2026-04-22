@@ -117,7 +117,7 @@ fun Routing.classService(db: Database, httpClient: HttpClient) {
             val response = call.receiveText()
             val clazz = gson.fromJson(response, Classes::class.java)
             val newId = if(clazz.id <= 0) {
-                (db.classesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+                (db.classesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0).orMinimum() + 1
             } else { clazz.id }
             db.classesQueries.insertClass(clazz.copy(owner = userInfo.id, id = newId))
             call.respondText(newId.toString(), status = HttpStatusCode.OK)

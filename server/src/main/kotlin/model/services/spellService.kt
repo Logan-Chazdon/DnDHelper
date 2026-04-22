@@ -18,7 +18,7 @@ fun Routing.spellService(db: Database, httpClient: HttpClient) {
             val response = call.receiveText()
             val spell = gson.fromJson(response, Spells::class.java)
             val newId = if(spell.id <= 0) {
-                (db.spellsQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+                (db.spellsQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0).orMinimum() + 1
             } else {
                 spell.id
             }

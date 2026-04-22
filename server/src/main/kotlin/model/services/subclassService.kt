@@ -54,7 +54,7 @@ fun Routing.subclassService(db: Database, httpClient: HttpClient) {
             val response = call.receiveText()
             val subclass = deserializeSubclass(response, userInfo.id)
             val newId = if (subclass.subclassId <= 0) {
-                (db.subclassesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+                (db.subclassesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0).orMinimum() + 1
             } else {
                 subclass.subclassId
             }

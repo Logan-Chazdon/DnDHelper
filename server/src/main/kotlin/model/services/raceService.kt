@@ -22,7 +22,7 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
             val response = call.receiveText()
             val race = gson.fromJson(response, Races::class.java)
             val newId = if (race.raceId <= 0) {
-                (db.racesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+                (db.racesQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0).orMinimum() + 1
             } else {
                 race.raceId
             }

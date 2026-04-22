@@ -56,7 +56,7 @@ fun Routing.backgroundService(db: Database, httpClient: HttpClient) {
             val response = call.receiveText()
             val background = gson.fromJson(response, Backgrounds::class.java)
             val newId = if(background.id <= 0) {
-                (db.backgroundsQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+                (db.backgroundsQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0).orMinimum() + 1
             } else {
                 background.id
             }

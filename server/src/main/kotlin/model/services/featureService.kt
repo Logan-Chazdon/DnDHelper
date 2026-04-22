@@ -107,7 +107,7 @@ fun Routing.featureService(db: Database, httpClient: HttpClient) {
             val response = call.receiveText()
             val feature = gson.fromJson(response, Features::class.java)
             val newId = if(feature.featureId <= 0) {
-                (db.featuresQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0) + 1
+                (db.featuresQueries.selectHighestIdForOwner(userInfo.id).executeAsOne().max ?: 0).orMinimum() + 1
             } else { feature.featureId }
             db.featuresQueries.insert(feature.copy(owner = userInfo.id, featureId = newId))
             call.respondText(newId.toString())

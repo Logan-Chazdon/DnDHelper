@@ -8,7 +8,7 @@ import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 fun SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>.getDropDownState (
     key: String,
     maxSelections : Int,
-    names : MutableList<String>,
+    names : List<String>,
     costs: MutableList<Int> = mutableListOf(),
     choiceName: String,
     maxOfSameSelection: Int = 1
@@ -36,7 +36,7 @@ fun SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>.getDropDownState (
 fun SnapshotStateList<MultipleChoiceDropdownStateImpl>.getDropDownState (
     key: Int,
     maxSelections : Int,
-    names : MutableList<String>,
+    names : List<String>,
     costs: MutableList<Int> = mutableListOf(),
     choiceName: String,
     maxOfSameSelection: Int = 1
@@ -77,7 +77,7 @@ fun SnapshotStateList<MultipleChoiceDropdownStateImpl>.getDropDownState (
 
 private fun generateDefault(
     maxSelections: Int,
-    names: MutableList<String>,
+    names: List<String>,
     choiceName: String,
     maxOfSameSelection: Int,
     costs: MutableList<Int>

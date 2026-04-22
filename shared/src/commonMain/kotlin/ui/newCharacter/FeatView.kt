@@ -13,7 +13,7 @@ import ui.newCharacter.utils.getDropDownState
 fun FeatView(
     level: Int,
     key: Int,
-    featNames: MutableList<String>,
+    featNames: List<String>,
     feats: List<Feat>,
     featDropDownStates: SnapshotStateList<MultipleChoiceDropdownStateImpl>,
     featChoiceDropDownState: SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>,

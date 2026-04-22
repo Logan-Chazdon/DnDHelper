@@ -48,7 +48,7 @@ getAllClasses:
 SELECT * FROM classes;
 
 getAllClassesFor:
-SELECT * FROM classes WHERE owner = :owner OR owner IS NULL;
+SELECT * FROM classes WHERE owner = :owner OR owner IS NULL ORDER BY classes.id;
 
 selectIdNameFor:
 SELECT id, name FROM classes WHERE owner = :owner OR owner IS NULL;

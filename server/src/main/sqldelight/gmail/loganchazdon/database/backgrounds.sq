@@ -36,7 +36,7 @@ delete:
 DELETE FROM backgrounds WHERE id = :id AND owner = :owner;
 
 selectBackgroundsFor:
-SELECT * FROM backgrounds WHERE owner = :owner OR owner IS NULL;
+SELECT * FROM backgrounds WHERE owner = :owner OR owner IS NULL ORDER BY backgrounds.id;
 
 selectHomebrewBackgounds:
 SELECT * FROM backgrounds WHERE owner = :owner;

@@ -35,7 +35,7 @@ ON races FOR EACH ROW BEGIN
 END;
 
 getRacesFor:
-SELECT * FROM races WHERE owner IS :owner OR owner IS NULL;
+SELECT * FROM races WHERE owner IS :owner OR owner IS NULL ORDER BY raceId;
 
 selectNameIdFor:
 SELECT raceName AS name, raceId AS id FROM races WHERE owner IS :owner OR owner IS NULL;

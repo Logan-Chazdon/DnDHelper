@@ -8,6 +8,7 @@ module.exports = {
         port: 8081,
         host: 'dndhelper.com',
         hostname: 'dndhelper.com',
+        devtool: 'source-map',
         static: false,
         disableHostCheck: true,
         public: 'store-client-nestroia1.c9users.io',

@@ -77,7 +77,7 @@ class MultipleChoiceDropdownStateFeatureImpl(
             assumedClass = assumedClass,
             assumedStatBonuses = assumedStatBonuses,
             assumedProficiencies = assumedProficiencies,
-            level = level
+            level = level.takeIf { it != 0 } ?: 1
         )
     }
 

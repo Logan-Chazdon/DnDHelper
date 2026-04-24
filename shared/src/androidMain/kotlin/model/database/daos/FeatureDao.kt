@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import model.*
 
 @Dao
-actual abstract class FeatureDao {
+actual abstract class FeatureDao  : FilledFeatureDao() {
     actual suspend fun insertFeature(feature: FeatureEntity): Int {
         val id = insertFeatureOrIgnore(feature.asTable()).toInt()
         if (id == -1) {
@@ -95,13 +95,7 @@ actual abstract class FeatureDao {
     @Query("DELETE FROM features WHERE featureId = :id")
     abstract fun removeFeatureChoice(id: Int)
 
-    //This returns all featureChoices associate with a feature. It doesn't contain the options or the chosen fields.
-    @Query(
-        """SELECT * FROM FeatureChoiceEntity
-JOIN FeatureOptionsCrossRef ON FeatureOptionsCrossRef.id IS FeatureChoiceEntity.id
-WHERE FeatureOptionsCrossRef.featureId IS :featureId"""
-    )
-    actual abstract suspend fun getFeatureChoices(featureId: Int): List<FeatureChoiceEntity>
+
 
     @Query(
         """SELECT * FROM FeatureChoiceEntity
@@ -110,30 +104,7 @@ WHERE FeatureOptionsCrossRef.featureId IS :featureId"""
     )
     actual abstract fun getLiveFeatureChoices(featureId: Int): Flow<List<FeatureChoiceEntity>>
 
-    /**This returns all features which belong in the options field of a featureChoice.*/
-    @Query(
-        """
-WITH spellDetails AS (SELECT classes, school, level, id FROM spells)        
-SELECT DISTINCT features.* FROM features
-LEFT JOIN OptionsFeatureCrossRef ON OptionsFeatureCrossRef.featureId IS features.featureId
-LEFT JOIN FeatureChoiceIndexCrossRef ON FeatureChoiceIndexCrossRef.choiceId IS :featureChoiceId
-LEFT JOIN IndexRef ON LOWER(IndexRef.`index`) IS LOWER(FeatureChoiceIndexCrossRef.`index`)
-LEFT JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.featureId IS features.featureId
-LEFT JOIN spellDetails ON spellDetails.id IS FeatureSpellCrossRef.spellId
-WHERE (',' || SUBSTR(ids, 2, LENGTH(ids) - 2) || ','
-      LIKE '%,' || CAST(features.featureId AS TEXT) || ',%'
-         OR ids = '[' || CAST(features.featureId AS TEXT) || ']' OR OptionsFeatureCrossRef.choiceId IS :featureChoiceId)
-AND (FeatureChoiceIndexCrossRef.levels = 'null'
-OR  FeatureChoiceIndexCrossRef.levels IS NULL
-OR FeatureChoiceIndexCrossRef.levels LIKE '%' || spellDetails.level || '%')
-AND(FeatureChoiceIndexCrossRef.schools = 'null'
-OR  FeatureChoiceIndexCrossRef.schools IS NULL
-OR FeatureChoiceIndexCrossRef.schools  LIKE '%' || spellDetails.school || '%' )
-AND (FeatureChoiceIndexCrossRef.classes LIKE 'null' OR FeatureChoiceIndexCrossRef.classes IS NULL
-OR spellDetails.classes LIKE '%' || SUBSTR(FeatureChoiceIndexCrossRef.classes, 3, LENGTH(FeatureChoiceIndexCrossRef.classes) - 4) || '%')
-"""
-    )
-    actual abstract suspend fun getFeatureChoiceOptions(featureChoiceId: Int): List<Feature>
+
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -154,34 +125,8 @@ OR spellDetails.classes LIKE '%' || SUBSTR(FeatureChoiceIndexCrossRef.classes, 3
         )
     }
 
-    private suspend fun fillOutFeatureListWithoutChosen(features: List<Feature>) {
-        features.forEach { feature ->
-            feature.spells = getFeatureSpells(feature.featureId)
-            feature.choices = getFeatureChoices(feature.featureId).let { choiceEntities ->
-                val temp = mutableListOf<FeatureChoice>()
-                choiceEntities.forEach { choice ->
-                    val filledChoice = FeatureChoice(
-                        entity = choice,
-                        options = getFeatureChoiceOptions(choice.id),
-                        chosen = null
-                    )
-                    filledChoice.options?.let { fillOutFeatureListWithoutChosen(it) }
-                    temp.add(
-                        filledChoice
-                    )
-                }
-                temp
-            }
-        }
-    }
 
-    @Query(
-        """SELECT * FROM spells
-JOIN FeatureSpellCrossRef ON FeatureSpellCrossRef.spellId IS spells.id
-WHERE featureId IS :featureId
-"""
-    )
-    actual abstract suspend fun getFeatureSpells(featureId: Int): List<Spell>?
+
 
     /**This checks if a IndexRef exists in the database.
      * If it does not it inserts the one passed. If it

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import model.*
 
 @Dao
-actual abstract class SubraceDao {
+actual abstract class SubraceDao : FilledFeatureDao() {
     @Query("SELECT * FROM subraces WHERE id = :id")
     protected abstract fun getUnfilledSubrace(id: Int): Flow<SubraceEntity>
 
@@ -97,10 +97,12 @@ WHERE subraceId IS :subraceId
                                 )
                             )
                         }
+                        val traits = getSubraceTraits(subraceEntity.id)
+                        fillOutFeatureListWithoutChosen(traits)
                         temp.add(
                             Subrace(
                                 subraceEntity,
-                                getSubraceTraits(subraceEntity.id),
+                                traits,
                                 featChoices
                             )
                         )

@@ -393,7 +393,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     }
 
     @Query("SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId")
-    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean
+    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean?
 
     @Query("SELECT slotsCurrentAmount FROM PactMagicStateEntity WHERE classId = :classId AND characterId = :characterId")
     actual abstract suspend fun getCharacterPactSlots(classId: Int, characterId: Int): Int

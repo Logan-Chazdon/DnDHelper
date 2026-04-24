@@ -475,7 +475,7 @@ class CharacterRepository {
             feature.infusion?.active = characterDao.isFeatureActive(
                 featureId = feature.featureId,
                 characterId = characterId
-            )
+            ) ?: false
         }
     }
 

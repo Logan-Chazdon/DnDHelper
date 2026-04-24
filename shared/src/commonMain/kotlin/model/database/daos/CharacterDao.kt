@@ -50,7 +50,7 @@ expect abstract class CharacterDao {
     abstract suspend fun insertCharacterRaceCrossRef(id: Int, raceId: Int)
     suspend fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int)
     abstract suspend fun getAllSpellsByList(id: Int, classIdsByName: List<Int>):  Map<Spell, Boolean?>
-    abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean
+    abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean?
     abstract suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature>
     abstract suspend fun findCharacterWithoutListChoices(id: Int): Character
     abstract fun findLiveCharacterWithoutListChoices(id: Int) : Flow<Character>

@@ -132,7 +132,7 @@ actual abstract class CharacterDao {
         classIdsByName: List<Int>
     ): Map<Spell, Boolean?>
 
-    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean
+    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean?
     actual abstract suspend fun getFeatureChoiceChosen(
         choiceId: Int,
         characterId: Int

@@ -457,7 +457,7 @@ WHERE characterId IS :characterId AND classId IS :classId    """
         insertRaceChoice(raceChoiceEntity.asTable())
     }
 
-    @Query("INSERT INTO CharacterRaceCrossRef (id, raceId) VALUES (:id, :raceId)")
+    @Query("INSERT OR REPLACE INTO CharacterRaceCrossRef (id, raceId) VALUES (:id, :raceId)")
     actual abstract suspend fun insertCharacterRaceCrossRef(id: Int, raceId: Int)
 
     actual suspend fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int) {

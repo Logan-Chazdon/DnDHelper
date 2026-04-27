@@ -546,7 +546,7 @@ class CharacterRepository {
     Note that there is no need to set non-list choices.
      */
     @Suppress("SAFE_CALL_WILL_CHANGE_NULLABILITY", "UNNECESSARY_SAFE_CALL")
-    //The safe call is ly necessary here because of how room handles null values
+    //The safe call is only necessary here because of how room handles null values
     private suspend fun fillOutCharacterChoiceLists(character: Character) {
         //Fill out race choices
         character.race?.let { race ->

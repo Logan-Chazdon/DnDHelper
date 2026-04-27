@@ -170,10 +170,12 @@ fun Routing.subraceService(db: Database, httpClient: HttpClient) {
                             id = choiceRef.id,
                             owner = choiceRef.owner
                         ).executeAsOne()
+
                         val from = db.featChoiceFeatCrossRefQueries.selectFeatsForChoice(
                             owner = choiceRef.owner,
                             featChoiceId = choiceRef.featChoiceId
                         ).executeAsList()
+
                         val jsonObject = JSONObject()
                         jsonObject.put("name", choice.name)
                         jsonObject.put("choose", choice.choose)

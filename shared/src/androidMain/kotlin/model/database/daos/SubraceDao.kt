@@ -115,14 +115,13 @@ WHERE subraceId IS :subraceId
 
     /**
      Returns all feats which belong in the options field of a feature choice.
-     Note this uses FeatChoiceCrossRef to fetch the feats. If there are no
-     FeatChoiceCrossRefs this function assumes it is designed to return all feats.
+     Note this uses FeatChoiceCrossRef to fetch the feats. It returns an empty list
+     if the choice should use the central feat repository instead.
      */
     @Query("""
-WITH featIds AS (SELECT COUNT(FeatChoiceFeatCrossRef.featId) as amt FROM FeatChoiceFeatCrossRef WHERE FeatChoiceFeatCrossRef.featChoiceId IS :id)
-SELECT feats.* FROM feats, featIds
+SELECT feats.* FROM feats
 LEFT JOIN FeatChoiceFeatCrossRef ON FeatChoiceFeatCrossRef.featId IS feats.id
-WHERE featChoiceId IS :id OR featIds.amt IS 0""")
+WHERE featChoiceId IS :id""")
     protected abstract fun getFeatChoiceOptions(id: Int) : List<Feat>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

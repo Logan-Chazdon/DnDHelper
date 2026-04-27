@@ -14,16 +14,16 @@ INSERT INTO FeatChoiceFeatCrossRef (featChoiceId, featId, owner) VALUES (?, ?, ?
 delete:
 DELETE FROM FeatChoiceFeatCrossRef WHERE owner = :owner AND featChoiceId = :featChoiceId AND featId = :featId;
 
+/**
+Note that this will provide an empty list if the Feat choice is not limited.
+This allows the UI to save resources by using the same list of feats for any choice
+that does not require restriction.
+*/
 selectFeatsForChoice:
-WITH amt AS (
-    SELECT COUNT(FeatChoiceFeatCrossRef.featId) AS amt FROM FeatChoiceFeatCrossRef
-    WHERE FeatChoiceFeatCrossRef.featChoiceId IS :featChoiceId
-    AND FeatChoiceFeatCrossRef.owner IS NULL OR FeatChoiceFeatCrossRef.owner IS :owner
-)
-SELECT feats.*  FROM feats, amt
+SELECT feats.*  FROM feats
 JOIN FeatChoiceFeatCrossRef ON FeatChoiceFeatCrossRef.featId IS feats.id
 AND (FeatChoiceFeatCrossRef.owner IS NULL OR FeatChoiceFeatCrossRef.owner IS :owner)
-WHERE (feats.owner IS NULL OR feats.owner IS :owner) AND (featChoiceId IS :featChoiceId OR amt IS 0);
+WHERE (feats.owner IS NULL OR feats.owner IS :owner) AND (featChoiceId IS :featChoiceId);
 
 selectRefsFor:
 SELECT featChoiceId, featId FROM FeatChoiceFeatCrossRef WHERE owner IS :owner;

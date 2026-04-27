@@ -157,7 +157,7 @@ public class NewCharacterConfirmRaceViewModel constructor(
         features.forEach { feature ->
             feature.choices?.forEachIndexed { index, it ->
                 if (it.choose.num(
-                        character.value?.totalClassLevels ?: 0
+                        character.value?.totalClassLevels ?: 1
                     ) != 0 && it.options?.isEmpty() == false
                 ) {
                     it.chosen =

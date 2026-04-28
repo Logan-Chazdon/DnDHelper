@@ -499,7 +499,7 @@ WHERE characterId IS :characterId AND classId IS :classId    """
     @Query("SELECT * FROM ClassChoiceEntity")
     abstract fun classChoiceTable(): List<ClassChoiceEntity>
 
-    @Query("SELECT * FROM ClassFeatCrossRef JOIN classes ON classes.id IS ClassFeatCrossRef.classId WHERE classes.isHomebrew")
+    @Query("SELECT * FROM ClassFeatCrossRef JOIN classes ON classes.id IS ClassFeatCrossRef.classId")
     abstract fun getClassFeatTable(): List<ClassFeatCrossRef>
 
     @Delete

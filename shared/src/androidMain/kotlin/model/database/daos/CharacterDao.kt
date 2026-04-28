@@ -235,7 +235,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     actual abstract suspend fun insertCharacterBackPack(backpack: Backpack, id: Int)
 
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterClassFeatCrossRef(classFeatCrossRef: ClassFeatCrossRef)
 
 

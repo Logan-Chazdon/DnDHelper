@@ -41,3 +41,14 @@ class SubraceChoiceEntityTable(
     abilityBonusChoice,
     abilityBonusOverrides
 )
+
+
+fun SubraceChoiceEntity.toTable() : SubraceChoiceEntityTable {
+    return SubraceChoiceEntityTable(
+        subraceId = this.subraceId,
+        characterId = this.characterId,
+        languageChoice = this.languageChoice,
+        abilityBonusChoice = this.abilityBonusChoice,
+        abilityBonusOverrides = this.abilityBonusOverrides
+    )
+}

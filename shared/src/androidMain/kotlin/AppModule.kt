@@ -135,6 +135,7 @@ class AppModule {
         worker { DeleteCharacterClassSpellCrossRefsWorker() }
         worker { PostCharacterFeatureStateWorker() }
         worker { DeleteFeatureFeatureChoiceWorker() }
+        worker { PostFeatChoiceChoiceEntityWorker() }
 
 
         // Class Sync

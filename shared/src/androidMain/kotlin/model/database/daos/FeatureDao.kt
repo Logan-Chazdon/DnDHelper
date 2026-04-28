@@ -241,12 +241,6 @@ WHERE featureId IS :id
     abstract fun deleteFeature(featureId: Int)
 
 
-    @Query("""SELECT features.* FROM features
-JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
-WHERE featId IS :featId
-    """)
-    abstract suspend fun getUnfilledFeatFeatures(featId: Int) : List<Feature>
-
     @Query(
         """SELECT * FROM features
 JOIN BackgroundFeatureCrossRef ON BackgroundFeatureCrossRef.featureId IS features.featureId 
@@ -279,7 +273,7 @@ WHERE ClassFeatureCrossRef.id IS :id"""
         return features
     }
 
-    actual suspend fun getFeatFeatures(featId: Int): List<Feature> {
+    actual suspend fun getFeatFeaturesWithoutChosen(featId: Int): List<Feature> {
         val features = getUnfilledFeatFeatures(featId)
         fillOutFeatureListWithoutChosen(features)
         return features

@@ -263,4 +263,14 @@ actual class CharacterSyncManager(context: Context) : SyncManager(context) {
             Pair(choiceId, characterId)
         ))
     }
+
+    actual fun postFeatChoiceChoiceEntity(characterId: Int, featId: Int, choiceId: Int) {
+        pushSync<PostFeatChoiceChoiceEntityWorker>(gson.toJson(
+            FeatChoiceChoiceEntity(
+                characterId = characterId,
+                choiceId = choiceId,
+                featId = featId
+            )
+        ))
+    }
 }

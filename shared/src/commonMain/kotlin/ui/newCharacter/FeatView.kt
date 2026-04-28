@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import model.Feat
+import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateFeatureImpl
 import ui.newCharacter.stateHolders.MultipleChoiceDropdownStateImpl
 import ui.newCharacter.utils.getDropDownState
 
@@ -16,7 +17,7 @@ fun FeatView(
     featNames: List<String>,
     feats: List<Feat>,
     featDropDownStates: SnapshotStateList<MultipleChoiceDropdownStateImpl>,
-    featChoiceDropDownState: SnapshotStateMap<String, MultipleChoiceDropdownStateImpl>,
+    featChoiceDropDownState: SnapshotStateMap<String, MultipleChoiceDropdownStateFeatureImpl>,
 ) {
     val state = featDropDownStates.getDropDownState(
         key = key,
@@ -34,20 +35,19 @@ fun FeatView(
             Text(feat.desc)
 
             feat.features?.forEach { feature ->
-                feature.choices?.filter { it.choose.num(level) != 0 }?.forEach { featureChoice ->
+                feature.choices?.filter { it.choose.num(level) != 0 }?.forEachIndexed { index, _ ->
                     MultipleChoiceDropdownView(
                         state = featChoiceDropDownState.getDropDownState(
-                            key = "${feature.name}$key",
-                            maxSelections = featureChoice.choose.num(level),
-                            names = featureChoice.options.let { featureList ->
-                                val result = mutableListOf<String>()
-                                featureList?.forEach {
-                                    result.add(it.name)
-                                }
-                                result
-                            },
-                            choiceName = feature.name,
-                            maxOfSameSelection = 1
+                            choiceIndex = index,
+                            feature = feature,
+                            character = null,
+                            assumedProficiencies = emptyList(),
+                            level = 1,
+                            assumedClass = null,
+                            assumedSpells = emptyList(),
+                            assumedStatBonuses = emptyMap(),
+                            assumedFeatures = emptyList(),
+                            overrideKey = null
                         )
                     )
                 }

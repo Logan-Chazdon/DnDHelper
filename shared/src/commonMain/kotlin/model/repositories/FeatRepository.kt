@@ -27,7 +27,7 @@ class FeatRepository {
         ).transform {
             emit(it)
             it.forEach { feat ->
-                feat.features = featureDao.getFeatFeatures(feat.id)
+                feat.features = featureDao.getFeatFeaturesWithoutChosen(feat.id)
             }
             emit(it)
         }

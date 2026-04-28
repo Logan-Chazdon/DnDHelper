@@ -2,10 +2,7 @@ package model.sync.workers
 
 import com.google.gson.reflect.TypeToken
 import model.*
-import model.choiceEntities.BackgroundChoiceEntity
-import model.choiceEntities.ClassChoiceEntity
-import model.choiceEntities.RaceChoiceEntity
-import model.choiceEntities.SubraceChoiceEntity
+import model.choiceEntities.*
 
 class PostCharacterWorker : SyncWorker<CharacterEntity>(TypeToken.get(CharacterEntity::class.java)) {
     override suspend fun sync(it: CharacterEntity) {
@@ -323,6 +320,17 @@ class DeleteFeatureFeatureChoiceWorker : SyncWorker<Pair<Int, Int>>(intIdPairTok
         featureService.removeFeatureFeatureChoice(
             choiceId = it.first,
             characterId = it.second
+        )
+    }
+}
+
+
+class PostFeatChoiceChoiceEntityWorker : SyncWorker<FeatChoiceChoiceEntity>(TypeToken.get(FeatChoiceChoiceEntity::class.java)) {
+    override suspend fun sync(it: FeatChoiceChoiceEntity) {
+        characterService.insertFeatChoiceChoiceEntity(
+            characterId = it.characterId,
+            featId = it.featId,
+            choiceId= it.choiceId
         )
     }
 }

@@ -68,4 +68,10 @@ WHERE featureId IS :featureId
 """
     )
     abstract suspend fun getFeatureSpells(featureId: Int): List<Spell>?
+
+    @Query("""SELECT features.* FROM features
+JOIN FeatFeatureCrossRef ON FeatFeatureCrossRef.featureId IS features.featureId
+WHERE featId IS :featId
+    """)
+    abstract suspend fun getUnfilledFeatFeatures(featId: Int) : List<Feature>
 }

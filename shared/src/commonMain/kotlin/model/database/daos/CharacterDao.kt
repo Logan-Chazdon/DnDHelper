@@ -52,8 +52,8 @@ expect abstract class CharacterDao {
     abstract suspend fun getAllSpellsByList(id: Int, classIdsByName: List<Int>):  Map<Spell, Boolean?>
     abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean?
     abstract suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature>
-    abstract suspend fun findCharacterWithoutListChoices(id: Int): Character
-    abstract fun findLiveCharacterWithoutListChoices(id: Int) : Flow<Character>
+    suspend fun findCharacterWithoutListChoices(id: Int): Character
+    fun findLiveCharacterWithoutListChoices(id: Int) : Flow<Character>
     suspend fun getRaceChoiceData(raceId: Int, charId: Int) : RaceChoiceEntity
     suspend fun getSubraceChoiceData(subraceId: Int, charId: Int) : SubraceChoiceEntity
     suspend fun getBackgroundChoiceData(charId: Int): BackgroundChoiceEntity
@@ -77,4 +77,7 @@ expect abstract class CharacterDao {
     abstract suspend fun setFlaws(it: String, id: Int)
     abstract suspend fun setBonds(it: String, id: Int)
     suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean)
+    abstract suspend fun insertFeatChoiceChoiceEntity(characterId: Int, choiceId: Int, featId: Int)
+    /** Fetch a list of features associated with a feat withs its chosen filled */
+    suspend fun getFeatFeaturesWithoutOptions(featId: Int, characterId: Int) : List<Feature>
 }

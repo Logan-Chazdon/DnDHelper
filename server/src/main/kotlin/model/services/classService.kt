@@ -3,7 +3,7 @@ package gmail.loganchazdon.dndhelper.model.services
 import gmail.loganchazdon.database.Classes
 import gmail.loganchazdon.database.Database
 import gmail.loganchazdon.dndhelper.model.database.*
-import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureListWithoutChosen
+import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureList
 import io.ktor.client.*
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -78,7 +78,7 @@ fun Routing.classService(db: Database, httpClient: HttpClient) {
                 call.parameters["classId"]!!.toLong(),
                 userInfo.id
             ).executeAsList()
-            val response = db.fillOutFeatureListWithoutChosen(data, userInfo.id).toString()
+            val response = db.fillOutFeatureList(data, userInfo.id).toString()
 
             call.respondText(response)
         }

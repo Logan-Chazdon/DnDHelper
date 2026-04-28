@@ -7,6 +7,7 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import gmail.loganchazdon.database.*
 import gmail.loganchazdon.dndhelper.model.database.*
+import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureList
 import io.ktor.client.*
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -362,7 +363,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 owner = it.id,
                 characterId = call.parameters["characterId"]!!.toLong(),
                 choiceId = call.parameters["choiceId"]!!.toLong(),
-            ).executeAsOne()
+            ).executeAsList()
             call.respondText(gson.toJson(value))
         }
     }
@@ -390,11 +391,13 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 val spell = JSONObject(gson.toJson(it))
                 spell.remove("isPrepared")
                 response.put(spell)
-                response.put(when(it.isPrepared) {
-                    1L -> true
-                    0L -> false
-                    else -> null
-                })
+                response.put(
+                    when (it.isPrepared) {
+                        1L -> true
+                        0L -> false
+                        else -> null
+                    }
+                )
             }
 
             call.respondText(response.toString(0))
@@ -447,7 +450,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 ).executeAsList()
                 spells.forEach {
                     response.put(JSONObject(gson.toJson(it)))
-                    response.put(if(it.isPrepared == 1L) true else false )
+                    response.put(if (it.isPrepared == 1L) true else false)
                 }
             }
 
@@ -563,7 +566,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 classId = body.getLong("classId"),
                 owner = userInfo.id,
                 isPrepared = try {
-                    if(body.getBoolean("isPrepared")) 1 else 0
+                    if (body.getBoolean("isPrepared")) 1 else 0
                 } catch (e: Exception) {
                     null
                 }
@@ -876,6 +879,41 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 isActive = body.getBoolean("isActive")
             )
             call.respond(HttpStatusCode.OK, "")
+        }
+    }
+
+
+    post("$PATH/insertFeatChoiceChoice") {
+        withUserInfo {
+            val body = JSONObject(call.receiveText())
+            db.featChoiceChoiceEntityQueries.insert(
+                characterId = body.getLong("characterId"),
+                choiceId = body.getLong("choiceId"),
+                featId = body.getLong("featId"),
+                owner = it.id
+            )
+            call.respond(HttpStatusCode.OK, "")
+        }
+    }
+
+
+    get("$PATH/featFeaturesWithoutOptions") {
+        withUserInfo {
+            val features = db.featFeatureCrossRefQueries.selectFeaturesForFeat(
+                owner = it.id,
+                featId = call.parameters["featId"]!!.toLong()
+            ).executeAsList()
+
+
+            call.respond(
+                db.fillOutFeatureList(
+                    features = features,
+                    owner = it.id,
+                    fillChosen = true,
+                    fillOptions = false,
+                    characterId = call.parameters["characterId"]!!.toLong()
+                ).toString()
+            )
         }
     }
 }

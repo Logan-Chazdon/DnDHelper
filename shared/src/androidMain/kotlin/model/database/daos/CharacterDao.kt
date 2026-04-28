@@ -10,7 +10,7 @@ import model.*
 import model.choiceEntities.*
 
 @Dao
-actual abstract class CharacterDao {
+actual abstract class CharacterDao : FilledFeatureDao() {
     companion object {
         //The query to PactMagicStateEntity is just so that any liveData created by this query will be invalidated and updated when
         //pactMagicStateEntity is changed.
@@ -89,7 +89,7 @@ WHERE characterId IS :characterId AND classId IS :classId
 
 
     @Query(
-        """SELECT * FROM feats
+        """SELECT feats.* FROM feats
 JOIN FeatChoiceChoiceEntity ON FeatChoiceChoiceEntity.featId IS feats.id
 WHERE choiceId IS :choiceId AND characterId IS :characterId
     """
@@ -99,17 +99,25 @@ WHERE choiceId IS :choiceId AND characterId IS :characterId
     @RewriteQueriesToDropUnusedColumns
     @Query(fullCharacterSql)
     @Transaction
-    actual abstract suspend fun findCharacterWithoutListChoices(id: Int): Character
+    protected abstract suspend fun findCharacterTableWithoutListChoices(id: Int): CharacterTable
+
+    actual suspend fun findCharacterWithoutListChoices(id: Int): Character {
+        return findCharacterTableWithoutListChoices(id)
+    }
 
     @Query(fullCharacterSql)
     @RewriteQueriesToDropUnusedColumns
     @Transaction
-    actual abstract fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character>
+    protected abstract fun findLiveCharacterTableWithoutListChoices(id: Int): Flow<CharacterTable>
+
+    actual fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character> {
+        return findLiveCharacterTableWithoutListChoices(id)
+    }
 
     @Query("SELECT * FROM RaceChoiceEntity WHERE raceId = :raceId AND characterId = :charId")
     abstract fun getRaceChoiceDataTable(raceId: Int, charId: Int): RaceChoiceEntityTable
     actual suspend fun getRaceChoiceData(raceId: Int, charId: Int): RaceChoiceEntity {
-        return getRaceChoiceData(raceId, charId)
+        return getRaceChoiceDataTable(raceId, charId)
     }
 
     @Query("SELECT * FROM SubraceChoiceEntity WHERE subraceId = :subraceId AND characterId = :charId")
@@ -290,7 +298,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     @Insert
     abstract fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntityTable)
     actual suspend fun insertSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity) {
-        insertSubraceChoiceEntity(subraceChoiceEntity as SubraceChoiceEntityTable)
+        insertSubraceChoiceEntity(subraceChoiceEntity.toTable())
     }
 
     actual suspend fun insertSubClassSpellCastingCrossRef(
@@ -522,4 +530,26 @@ WHERE characterId IS :characterId AND classId IS :classId    """
 
     @Query("SELECT * FROM SubraceChoiceEntity")
     abstract fun subraceChoiceTable(): List<SubraceChoiceEntityTable>
+
+
+    @Query("INSERT OR REPLACE INTO FeatChoiceChoiceEntity (characterId, choiceId, featId) VALUES(:characterId, :choiceId, :featId)")
+    actual abstract suspend fun insertFeatChoiceChoiceEntity(characterId: Int, choiceId: Int, featId: Int)
+
+    @Delete
+    abstract fun removeFeatChoiceChoiceEntity(it: FeatChoiceChoiceEntityTable)
+
+    actual suspend fun getFeatFeaturesWithoutOptions(featId: Int, characterId: Int): List<Feature> {
+        return getUnfilledFeatFeatures(featId).onEach {
+            it.choices = getFeatureChoices(it.featureId).map {
+                FeatureChoice(
+                    entity = it,
+                    options = emptyList(),
+                    chosen = getFeatureChoiceChosen(
+                        choiceId = it.id,
+                        characterId = characterId
+                    )
+                )
+            }
+        }
+    }
 }

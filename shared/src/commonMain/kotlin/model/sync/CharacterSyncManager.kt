@@ -44,4 +44,5 @@ expect class CharacterSyncManager {
     fun deleteCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
     fun postCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean)
     fun deleteFeatureFeatureChoice(choiceId: Int, characterId: Int)
+    fun postFeatChoiceChoiceEntity(characterId: Int, featId: Int, choiceId: Int)
 }

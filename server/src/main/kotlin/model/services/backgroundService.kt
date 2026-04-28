@@ -4,7 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import gmail.loganchazdon.database.Backgrounds
 import gmail.loganchazdon.database.Database
 import gmail.loganchazdon.dndhelper.model.database.*
-import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureListWithoutChosen
+import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureList
 import io.ktor.client.*
 import io.ktor.http.*
 import io.ktor.server.request.*
@@ -42,7 +42,7 @@ fun Routing.backgroundService(db: Database, httpClient: HttpClient) {
                 owner = userInfo.id
             ).executeAsList()
             call.respondText(
-                db.fillOutFeatureListWithoutChosen(data, userInfo.id).toString()
+                db.fillOutFeatureList(data, userInfo.id).toString()
             )
         }
     }

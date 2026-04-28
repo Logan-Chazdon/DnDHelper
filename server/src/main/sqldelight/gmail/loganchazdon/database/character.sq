@@ -168,7 +168,7 @@ selectPactSlots:
 SELECT slotsCurrentAmount FROM PactMagicStateEntity WHERE classId = :classId AND characterId = :characterId AND owner = :owner;
 
 selectFeatureChoiceChosen:
-SELECT * FROM features
+SELECT features.* FROM features
 JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId
 WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId AND FeatureChoiceChoiceEntity.owner =:owner;
 
@@ -190,9 +190,9 @@ selectBackpack:
 SELECT backpack FROM characters WHERE id = :id AND characterOwner =:owner;
 
 selectChosenFeats:
-SELECT * FROM feats
+SELECT feats.* FROM feats
 JOIN FeatChoiceChoiceEntity ON FeatChoiceChoiceEntity.featId IS feats.id AND FeatChoiceChoiceEntity.owner = :owner
-WHERE choiceId IS :choiceId AND characterId IS :characterId;
+WHERE choiceId IS :choiceId AND characterId IS :characterId AND (feats.owner IS NULL OR feats.owner IS :owner);
 
 selectClassFeats:
 SELECT * FROM feats

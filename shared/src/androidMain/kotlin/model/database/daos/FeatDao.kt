@@ -6,12 +6,32 @@ import model.*
 
 @Dao
 actual abstract class FeatDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFeat(feat: FeatEntityTable): Long
+
+    // This is necessary to avoid using OnConflictStrategy.REPlACE as that causes foreign key issues.
+    fun insertFeat(feat: FeatEntityTable): Int {
+        return if (checkForFeatAtId(feat.id) == true) {
+            updateFeat(feat)
+        } else {
+            insertNewFeat(feat).toInt()
+        } ?: 0
+    }
+
+
+    // The return types are weird here. For some reason room throws and error if we use the same type for both.
+    @Update
+    protected abstract fun updateFeat(feat: FeatEntityTable): Int?
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    protected abstract fun insertNewFeat(feat: FeatEntityTable): Long
+
+
+    @Query("SELECT EXISTS(SELECT 1 FROM feats WHERE id = :id)")
+    protected abstract fun checkForFeatAtId(id: Int): Boolean?
+
 
     fun insertFeatChoice(featChoiceEntity: FeatChoiceEntity): Int {
         val id = insertFeatChoiceOrIgnore(featChoiceEntity.asTable()).toInt()
-        if(id == -1) {
+        if (id == -1) {
             updateFeatChoice(featChoiceEntity.asTable())
             return featChoiceEntity.id
         }
@@ -27,15 +47,12 @@ actual abstract class FeatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatChoiceFeatCrossRef(featChoiceFeatCrossRef: FeatChoiceFeatCrossRef)
 
-    @Insert
-    abstract fun insertFeatChoiceChoiceEntity(featChoiceChoiceEntity: FeatChoiceChoiceEntityTable)
 
     @Query("SELECT * FROM feats")
     actual abstract fun getUnfilledFeats(): Flow<List<Feat>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertFeatFeatureCrossRef(featFeatureCrossRef: FeatFeatureCrossRef)
-
 
 
     @Query("SELECT * FROM FeatChoiceFeatCrossRef")

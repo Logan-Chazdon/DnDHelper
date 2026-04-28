@@ -37,7 +37,7 @@ actual abstract class FeatureDao {
     }
 
     actual suspend fun getFilledLevelPath(id: Int): MutableList<Feature> = classService.getFilledLevelPath(id)
-    actual suspend fun getFeatFeatures(featId: Int): List<Feature> = featService.getFeatFeatures(featId)
+    actual suspend fun getFeatFeaturesWithoutChosen(featId: Int): List<Feature> = featService.getFeatFeatures(featId)
     actual suspend fun getRaceTraits(id: Int): List<Feature> = raceService.getRaceFeatures(id)
 
 

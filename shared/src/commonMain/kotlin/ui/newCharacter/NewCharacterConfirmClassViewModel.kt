@@ -24,7 +24,6 @@ import ui.newCharacter.utils.getDropDownState
 import ui.newCharacter.utils.getFeatsAt
 import ui.platformSpecific.IO
 import ui.utils.allNames
-import kotlin.collections.set
 
 
 @KoinViewModel
@@ -42,7 +41,7 @@ class NewCharacterConfirmClassViewModel constructor(
     val subclassSpells = mutableStateListOf<Spell>()
     val isFeat = mutableStateListOf<Boolean>()
     val featDropDownStates = mutableStateListOf<MultipleChoiceDropdownStateImpl>()
-    val featChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
+    val featChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
     val absDropDownStates = mutableStateListOf<MultipleChoiceDropdownStateImpl>()
     var goldRolled = mutableStateOf(1.toString())
     var isBaseClass = mutableStateOf(true)
@@ -500,7 +499,7 @@ class NewCharacterConfirmClassViewModel constructor(
                     //Apply feature choices.
                     clazzWithChoices.levelPath?.filter { it.grantedAtLevel <= clazzWithChoices.level }
                         ?.forEachIndexed { index, feature ->
-                            feature.choices?.forEachIndexed { choiceIndex, _ ->
+                            feature.choices?.forEachIndexed { choiceIndex, choice ->
                                 val featureToPass =
                                     clazzWithChoices.levelPath?.filter { it.grantedAtLevel <= clazzWithChoices.level }
                                         ?.get(index)
@@ -607,28 +606,27 @@ class NewCharacterConfirmClassViewModel constructor(
                         }?.setSelected(mutableListOf(it.name))
 
                         it.features?.forEach { feature ->
-                            feature.choices?.forEach { choice ->
+                            feature.choices?.forEachIndexed { index, choice ->
                                 val selected = choice.chosen.run {
-                                    val result = mutableListOf<String>()
+                                    val result = mutableListOf<Int>()
                                     this?.forEach {
-                                        result.add(it.name)
+                                        result.add(it.featureId)
                                     }
                                     result
                                 }
 
                                 featChoiceDropDownStates.getDropDownState(
-                                    key = "${feature.name}$i",
-                                    maxSelections = choice.choose.num(clazzWithChoices.level),
-                                    names = choice.options.let { featureList ->
-                                        val result = mutableListOf<String>()
-                                        featureList?.forEach {
-                                            result.add(it.name)
-                                        }
-                                        result
-                                    },
-                                    choiceName = feature.name,
-                                    maxOfSameSelection = 1
-                                ).setSelected(selected)
+                                    choiceIndex = it.id,
+                                    feature = feature,
+                                    character = null,
+                                    assumedProficiencies = emptyList(),
+                                    level = 1,
+                                    assumedClass = null,
+                                    assumedSpells = emptyList(),
+                                    assumedStatBonuses = emptyMap(),
+                                    assumedFeatures = emptyList(),
+                                    overrideKey = null
+                                ).selectedList.addAll(selected)
                             }
                         }
                     }

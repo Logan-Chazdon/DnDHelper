@@ -211,7 +211,7 @@ class CharacterRepository {
 
     suspend fun insertCharacterClassCrossRef(characterId: Int, classId: Int) {
         characterSyncManager.postCharacterClassCrossRef(
-            characterId= characterId,
+            characterId = characterId,
             classId = classId
         )
 
@@ -258,8 +258,10 @@ class CharacterRepository {
         )
     }
 
+    //** Persists feats to character by class as well as feats subchoices. */
     suspend fun addFeatsToCharacterClass(characterId: Int, classId: Int, feats: List<Feat>) {
         feats.forEach {
+            // Persist feat to character.
             characterSyncManager.postCharacterClassFeatCrossRef(
                 characterId = characterId,
                 featId = it.id,
@@ -271,6 +273,20 @@ class CharacterRepository {
                 featId = it.id,
                 classId = classId
             )
+
+            // Persist subchoices.
+            // This does not need to use sync manager because it is handled in insertFeatureChoiceChoiceEntity.
+            it.features?.forEach {
+                it.choices?.forEach { choice ->
+                    choice.chosen?.forEach { feature ->
+                        insertFeatureChoiceChoiceEntity(
+                            featureId = feature.featureId,
+                            characterId = characterId,
+                            choiceId = choice.id
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -518,7 +534,7 @@ class CharacterRepository {
         characterKey: Flow<Int>? = null
     ) {
         val characterLiveData = characterDao.findLiveCharacterWithoutListChoices(id)
-        val calculate : suspend (it: Character?) -> Unit= {
+        val calculate: suspend (it: Character?) -> Unit = {
             if (it != null) {
                 this.fillOutCharacterChoiceLists(it)
                 character.value = it
@@ -595,15 +611,22 @@ class CharacterRepository {
                     val featChoiceEntities = raceDao.getSubraceFeatChoices(subrace.id)
                     val featChoices = mutableListOf<FeatChoice>()
                     featChoiceEntities.forEach {
+                        val chosen = characterDao.getFeatChoiceChosen(
+                            characterId = character.id,
+                            choiceId = it.id
+                        )
+
                         featChoices.add(
                             it.toFeatChoice(
-                                characterDao.getFeatChoiceChosen(
-                                    characterId = character.id,
-                                    choiceId = it.id
-                                ),
+                                chosen,
                                 emptyList()
                             )
                         )
+                    }
+                    featChoices.forEach {
+                        it.chosen?.forEach { feat ->
+                            feat.features = characterDao.getFeatFeaturesWithoutOptions(feat.id, character.id)
+                        }
                     }
                     subrace.featChoices = featChoices
                 }
@@ -643,11 +666,13 @@ class CharacterRepository {
             val features = characterDao.getClassFeatures(classId = clazz.id, maxLevel = clazz.level)
             fillOutFeatureList(features, character.id)
             clazz.levelPath = features
-            clazz.featsGranted =
+            val featsGranted =
                 characterDao.getClassFeats(classId = clazz.id, characterId = character.id)
-            clazz.featsGranted?.forEach {
-                it.features?.let { it1 -> fillOutFeatureList(it1, character.id) }
+            featsGranted?.forEach {
+                it.features = characterDao.getFeatFeaturesWithoutOptions(it.id, character.id)
             }
+
+            clazz.featsGranted = featsGranted
 
             clazz.subclass?.let { subclass ->
                 subclass.spellCasting?.known =
@@ -672,6 +697,20 @@ class CharacterRepository {
         }
 
         character.classes = classes
+    }
+
+    suspend fun insertFeatChoiceChoiceEntity(characterId: Int, choiceId: Int, featId: Int) {
+        characterSyncManager.postFeatChoiceChoiceEntity(
+            characterId = characterId,
+            choiceId = choiceId,
+            featId = featId
+        )
+
+        characterDao.insertFeatChoiceChoiceEntity(
+            characterId = characterId,
+            choiceId = choiceId,
+            featId = featId
+        )
     }
 
     suspend fun setTemp(id: Int?, temp: String) {
@@ -745,7 +784,7 @@ class CharacterRepository {
     }
 
     suspend fun setIdeals(it: String, id: Int) {
-        characterSyncManager.updateCharacterIdeals(id ,it)
+        characterSyncManager.updateCharacterIdeals(id, it)
         characterDao.setIdeals(it, id)
     }
 

@@ -26,14 +26,14 @@ import ui.utils.toStringList
 public class NewCharacterConfirmRaceViewModel constructor(
     raceRepository: RaceRepository,
     private val characterRepository: CharacterRepository,
-    featRepository: FeatRepository,
+    private val featRepository: FeatRepository,
     savedStateHandle: SavedStateHandle,
-    val id : MutableStateFlow<Int>
+    val id: MutableStateFlow<Int>
 ) : ViewModel() {
     val allFeats: Flow<List<Feat>> = featRepository.getFeats()
     val featNames: Flow<List<String>> = allFeats.transform { value -> emit(value.map { it.name }) }
     val subraceFeatDropdownStates = mutableStateListOf<MultipleChoiceDropdownStateImpl>()
-    val subraceFeatChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
+    val subraceFeatChoiceDropDownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
     val languageDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateImpl>()
     var subraceFeaturesDropdownStates = mutableStateMapOf<String, MultipleChoiceDropdownStateFeatureImpl>()
     val customSubraceStatsMap = mutableStateMapOf<String, String>()
@@ -105,7 +105,7 @@ public class NewCharacterConfirmRaceViewModel constructor(
                 )
             )
 
-            storeFeatureChoices(filterRaceFeatures(value!!), raceFeaturesDropdownStates)
+            storeFeatureChoices(filterRaceFeatures(value), raceFeaturesDropdownStates)
 
 
             subraces.firstOrNull()?.getOrNull(subraceIndex.value)?.let { subrace ->
@@ -126,6 +126,30 @@ public class NewCharacterConfirmRaceViewModel constructor(
                                 languageDropdownStates[languageChoice.name]?.getSelected(languageChoice.from)
                                         as List<Language>).map { it.name ?: "" })
                 }
+
+                // Loop through all feat choices.
+                subrace.featChoices?.forEachIndexed { index, choice ->
+                    // Fetch the list of feats chosen for this choice from the UI state.
+                    val chosen = subraceFeatDropdownStates[index].getSelected(choice.from.takeIf { it.isNotEmpty() }
+                        ?: allFeats.drop(1).first())
+
+                    // Loop through the chosen feats.
+                    chosen.forEach {  feat ->
+                        // Persist the feat choice.
+                        characterRepository.insertFeatChoiceChoiceEntity(
+                            characterId = id.value,
+                            featId = feat.id,
+                            choiceId = choice.id,
+                        )
+
+                        // Persist feature feat choices.
+                        feat.features?.let {
+                            storeFeatureChoices(it, subraceFeatChoiceDropDownStates)
+                        }
+                    }
+
+                }
+
                 characterRepository.insertSubraceChoiceEntity(
                     SubraceChoiceEntity(
                         subraceId = subrace.id,
@@ -232,7 +256,7 @@ public class NewCharacterConfirmRaceViewModel constructor(
     suspend fun filterRaceFeatures(
         race: Race?,
     ): List<Feature> {
-        val value = subraces.last()
+        val value = subraces.first()
         race?.subrace = value.getOrNull(subraceIndex.value)
         return race?.filterRaceFeatures() ?: listOf()
     }

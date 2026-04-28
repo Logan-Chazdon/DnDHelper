@@ -74,6 +74,8 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         ResetClassSpells("$PATH/resetClassSpells"),
         CharacterClassNameLevel("$PATH/characterClassNameLevel"),
         InsertCharacterFeatureState("$PATH/insertCharacterFeatureState"),
+        InsertFeatChoiceChoice("$PATH/insertFeatChoiceChoice"),
+        FeatFeaturesWithoutOptions("$PATH/featFeaturesWithoutOptions"),
     }
 
     companion object {
@@ -547,5 +549,20 @@ class CharacterService(client: HttpClient) : Service(client = client) {
             put("characterId", characterId)
             put("isActive", active)
         }
+    }
+
+    suspend fun insertFeatChoiceChoiceEntity(characterId: Int, featId: Int, choiceId: Int) {
+        postTo(Paths.InsertFeatChoiceChoice.path) {
+            put("characterId", characterId)
+            put("featId", featId)
+            put("choiceId", choiceId)
+        }
+    }
+
+    suspend fun getFeatFeaturesWithoutOptions(featId: Int, characterId: Int): List<Feature> {
+        return format.decodeFromString(getFrom(Paths.FeatFeaturesWithoutOptions.path) {
+            append("featId", featId.toString())
+            append("characterId", characterId.toString())
+        }.bodyAsText())
     }
 }

@@ -1,6 +1,5 @@
 package model.database.daos
 
-import kotlinx.coroutines.flow.Flow
 import model.*
 import services.CharacterService
 
@@ -31,7 +30,7 @@ class CharacterDaoImpl(characterService: CharacterService) : CharacterDao(charac
     }
 
     override suspend fun insertCharacterBackPack(backpack: Backpack, id: Int) {
-       characterService.insertCharacterBackPack(backpack, id)
+        characterService.insertCharacterBackPack(backpack, id)
     }
 
     override suspend fun insertCharacterRaceCrossRef(id: Int, raceId: Int) {
@@ -48,14 +47,6 @@ class CharacterDaoImpl(characterService: CharacterService) : CharacterDao(charac
 
     override suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature> {
         return characterService.getFeatureChoiceChosen(choiceId, characterId)
-    }
-
-    override suspend fun findCharacterWithoutListChoices(id: Int): Character {
-        return characterService.findCharacterWithoutListChoices(id)
-    }
-
-    override fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character> {
-        return characterService.findLiveCharacterWithoutListChoices(id)
     }
 
     override suspend fun getCharacterPactSlots(classId: Int, characterId: Int): Int {
@@ -127,6 +118,18 @@ class CharacterDaoImpl(characterService: CharacterService) : CharacterDao(charac
     }
 
     override suspend fun setBonds(it: String, id: Int) {
-       characterService.setBonds(it, id)
+        characterService.setBonds(it, id)
+    }
+
+    override suspend fun insertFeatChoiceChoiceEntity(
+        characterId: Int,
+        choiceId: Int,
+        featId: Int
+    ) {
+        characterService.insertFeatChoiceChoiceEntity(
+            characterId = characterId,
+            featId = featId,
+            choiceId = choiceId
+        )
     }
 }

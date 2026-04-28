@@ -43,6 +43,7 @@ expect abstract class FeatureDao {
     /**Fetch a classes features*/
     suspend fun getFilledLevelPath(id: Int): MutableList<Feature>
     suspend fun getFilledBackgroundFeatures(id: Int): List<Feature>
-    suspend fun getFeatFeatures(featId: Int): List<Feature>
+    /** Fetch a list of features associated with a feat with its options filled. */
+    suspend fun getFeatFeaturesWithoutChosen(featId: Int): List<Feature>
     suspend fun getRaceTraits(id: Int): List<Feature>
 }

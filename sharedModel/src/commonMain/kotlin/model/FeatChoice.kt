@@ -10,7 +10,7 @@ class FeatChoice() : FeatChoiceEntity(name = "", choose = 1) {
         name: String,
         choose : Int,
         from: List<Feat>,
-        chosen : List<Feat>? = null
+        chosen : List<Feat>? = null,
     ) : this() {
         this.name = name
         this.choose = choose

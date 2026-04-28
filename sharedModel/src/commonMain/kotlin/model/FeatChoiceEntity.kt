@@ -15,6 +15,9 @@ open class FeatChoiceEntity(
             choose = choose,
             from = from,
             chosen = chosen
-        )
+        ).let {
+            it.id = id
+            it
+        }
     }
 }

@@ -11,7 +11,7 @@ import services.CharacterService
 
 actual abstract class CharacterDao {
     protected val characterService: CharacterService
-    constructor(characterService: CharacterService) {
+    constructor(characterService: CharacterService) {3
         this.characterService = characterService
     }
 
@@ -138,8 +138,13 @@ actual abstract class CharacterDao {
         characterId: Int
     ): List<Feature>
 
-    actual abstract suspend fun findCharacterWithoutListChoices(id: Int): Character
-    actual abstract fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character>
+    actual suspend fun findCharacterWithoutListChoices(id: Int): Character {
+        return characterService.findCharacterWithoutListChoices(id)
+    }
+    actual fun findLiveCharacterWithoutListChoices(id: Int): Flow<Character> {
+        return characterService.findLiveCharacterWithoutListChoices(id)
+    }
+
     actual suspend fun getRaceChoiceData(raceId: Int, charId: Int): RaceChoiceEntity {
         return characterService.getRaceChoiceData(raceId, charId)
     }
@@ -187,4 +192,8 @@ actual abstract class CharacterDao {
     actual suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean) {
         characterService.insertCharacterFeatureState(featureId, characterId, isActive)
     }
+
+
+    actual abstract suspend fun insertFeatChoiceChoiceEntity(characterId: Int, choiceId: Int, featId: Int)
+    actual suspend fun getFeatFeaturesWithoutOptions(featId: Int, characterId: Int): List<Feature> = characterService.getFeatFeaturesWithoutOptions(featId, characterId)
 }

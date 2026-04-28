@@ -124,4 +124,7 @@ actual class CharacterSyncManager {
 
     actual fun deleteFeatureFeatureChoice(choiceId: Int, characterId: Int) {
     }
+
+    actual fun postFeatChoiceChoiceEntity(characterId: Int, featId: Int, choiceId: Int) {
+    }
 }

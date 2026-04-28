@@ -4,7 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import gmail.loganchazdon.database.Database
 import gmail.loganchazdon.database.Races
 import gmail.loganchazdon.dndhelper.model.database.*
-import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureListWithoutChosen
+import gmail.loganchazdon.dndhelper.model.database.utils.fillOutFeatureList
 import io.ktor.client.*
 import io.ktor.http.*
 import io.ktor.http.cio.internals.*
@@ -89,7 +89,7 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
     get("race/raceFeatures") {
         withUserInfo {
             call.respondText(
-                db.fillOutFeatureListWithoutChosen(
+                db.fillOutFeatureList(
                     db.racesQueries.selectRaceFeatures(
                         it.id,
                         raceId = call.parameters["raceId"]!!.toLong()
@@ -102,7 +102,7 @@ fun Routing.raceService(db: Database, httpClient: HttpClient) {
     get("race/subraceFeatures") {
         withUserInfo {
             call.respondText(
-                db.fillOutFeatureListWithoutChosen(
+                db.fillOutFeatureList(
                     db.subracesQueries.selectSubraceFeatures(
                         it.id,
                         subraceId = call.parameters["subraceId"]!!.toLong()

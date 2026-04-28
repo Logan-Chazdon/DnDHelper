@@ -245,8 +245,8 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     actual suspend fun insertCharacterSubRaceCrossRef(characterId: Int, subraceId: Int) {
         insertCharacterSubRaceCrossRef(
             CharacterSubraceCrossRef(
-                characterId,
-                subraceId
+                characterId = characterId,
+                subraceId = subraceId
             )
         )
     }

@@ -142,7 +142,7 @@ private fun serializeCharacterClasses(query: Query<SelectClasses>): JSONObject {
         clazz.put("name", data.name)
         clazz.put("id", data.classId)
         clazz.put("isBaseClass", data.isBaseClass)
-        clazz.put("abilityImprovementsGranted", JSONArray(data.abilityImprovementsGranted))
+        clazz.put("abilityImprovementsGranted", arrayConverter(data.abilityImprovementsGranted))
         clazz.put("equipment", arrayConverter(data.equipment))
         clazz.put("equipmentChoices", arrayConverter(data.equipmentChoices))
         clazz.put("hitDie", data.hitDie)

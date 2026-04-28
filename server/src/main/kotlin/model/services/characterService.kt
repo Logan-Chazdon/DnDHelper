@@ -244,7 +244,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
             val value = db.raceChoiceEntityQueries.select(
                 characterId = call.parameters["characterId"]!!.toLong(),
                 owner = it.id
-            ).executeAsOne()
+            ).executeAsOneOrNull()
             call.respondText(gson.toJson(value).clean())
         }
     }

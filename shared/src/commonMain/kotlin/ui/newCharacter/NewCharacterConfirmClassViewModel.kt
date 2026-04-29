@@ -104,14 +104,21 @@ class NewCharacterConfirmClassViewModel constructor(
 
     private suspend fun saveFeatures(features: List<Feature>) {
         getFeatures(features, toNumber(levels)).forEach { feature ->
-            feature.choices?.forEach { choice ->
-                choice.chosen?.forEach { chosen ->
-                    characterRepository.insertFeatureChoiceChoiceEntity(
-                        featureId = chosen.featureId,
-                        choiceId = choice.id,
-                        characterId = id.value
-                    )
-                }
+            saveChosen(feature.choices)
+        }
+    }
+
+    private suspend fun saveChosen(chosen: List<FeatureChoice>?) {
+        chosen?.forEach { choice ->
+            choice.chosen?.forEach { chosen ->
+                characterRepository.insertFeatureChoiceChoiceEntity(
+                    featureId = chosen.featureId,
+                    choiceId = choice.id,
+                    characterId = id.value
+                )
+
+                // Recurse in case of nested choices.
+                saveChosen(chosen.choices)
             }
         }
     }

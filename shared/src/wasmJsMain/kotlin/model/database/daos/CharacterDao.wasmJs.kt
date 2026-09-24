@@ -11,7 +11,7 @@ import services.CharacterService
 
 actual abstract class CharacterDao {
     protected val characterService: CharacterService
-    constructor(characterService: CharacterService) {3
+    constructor(characterService: CharacterService) {
         this.characterService = characterService
     }
 
@@ -74,8 +74,8 @@ actual abstract class CharacterDao {
         characterService.insertCharacterSubclassCrossRef(subClassId, characterId, classId)
     }
 
-    actual suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int) {
-        characterService.insertFeatureChoiceEntity(featureId, characterId, choiceId)
+    actual suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int, index: Int) {
+        characterService.insertFeatureChoiceEntity(featureId, characterId, choiceId, index)
     }
 
     actual suspend fun insertCharacterClassSpellCrossRef(
@@ -132,11 +132,11 @@ actual abstract class CharacterDao {
         classIdsByName: List<Int>
     ): Map<Spell, Boolean?>
 
-    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean?
-    actual abstract suspend fun getFeatureChoiceChosen(
-        choiceId: Int,
-        characterId: Int
-    ): List<Feature>
+    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int, featureIndex: Int): Boolean?
+
+    actual suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int, index: Int?): List<Pair<Int, Feature>> {
+        return characterService.getFeatureChoiceChosen(choiceId, characterId, index)
+    }
 
     actual suspend fun findCharacterWithoutListChoices(id: Int): Character {
         return characterService.findCharacterWithoutListChoices(id)
@@ -189,11 +189,12 @@ actual abstract class CharacterDao {
     actual abstract suspend fun setNotes(it: String, id: Int)
     actual abstract suspend fun setFlaws(it: String, id: Int)
     actual abstract suspend fun setBonds(it: String, id: Int)
-    actual suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean) {
-        characterService.insertCharacterFeatureState(featureId, characterId, isActive)
+    actual suspend fun insertCharacterFeatureState(featureId: Int, featureIndex:Int, characterId: Int, isActive: Boolean) {
+        characterService.insertCharacterFeatureState(featureId, characterId, featureIndex, isActive)
     }
 
 
     actual abstract suspend fun insertFeatChoiceChoiceEntity(characterId: Int, choiceId: Int, featId: Int)
     actual suspend fun getFeatFeaturesWithoutOptions(featId: Int, characterId: Int): List<Feature> = characterService.getFeatFeaturesWithoutOptions(featId, characterId)
+    actual abstract suspend fun getInfusionIndex(characterId: Int, featureId: Int): Int
 }

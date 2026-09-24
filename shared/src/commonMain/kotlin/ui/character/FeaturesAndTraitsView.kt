@@ -23,8 +23,8 @@ fun FeaturesAndTraitsView(
     features: List<Pair<Int, Feature>>,
     modifier: Modifier,
     items: List<ItemInterface>,
-    infuse: (Infusion, ItemInterface?) -> Unit,
-    disableInfusion: (Infusion) -> Unit
+    infuse: (Infusion, ItemInterface?, Int) -> Unit,
+    disableInfusion: (Infusion, Int) -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -100,8 +100,8 @@ fun FeaturesAndTraitsView(
 private fun FeatureDisplayView(
     feature: Feature, level: Int,
     items: List<ItemInterface>,
-    infuse: (Infusion, ItemInterface?) -> Unit,
-    disableInfusion: (Infusion) -> Unit)
+    infuse: (Infusion, ItemInterface?, Int) -> Unit,
+    disableInfusion: (Infusion, Int) -> Unit)
 {
     val maxActive = feature.maxActive.num(level)
     var expanded by remember { mutableStateOf(false) }
@@ -152,7 +152,10 @@ private fun FeatureDisplayView(
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Button({
-                                    disableInfusion(subFeature.infusion!!)
+                                    disableInfusion(
+                                        subFeature.infusion!!,
+                                        subFeature.allChosen.getOrNull(0)?.featureId ?: 0
+                                    )
                                     activationExpanded = false
                                 }) {
                                     Text("Disable infusion")
@@ -223,7 +226,8 @@ private fun FeatureDisplayView(
                                             it.level = level
                                             infuse(
                                                 it,
-                                                targetItems.elementAtOrNull(targetItemIndex)
+                                                targetItems.elementAtOrNull(targetItemIndex),
+                                                subFeature.allChosen.getOrNull(0)?.featureId ?: 0
                                             )
                                         }
                                         activationExpanded = false

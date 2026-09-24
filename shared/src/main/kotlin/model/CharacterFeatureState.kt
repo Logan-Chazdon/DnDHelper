@@ -1,5 +1,6 @@
 package model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
@@ -7,7 +8,7 @@ import kotlinx.serialization.Serializable
 
 
 @Entity(
-    primaryKeys = ["characterId", "featureId"],
+    primaryKeys = ["characterId", "featureId", "featureIndex"],
     foreignKeys = [
         ForeignKey(
             entity = CharacterEntityTable::class,
@@ -29,5 +30,7 @@ import kotlinx.serialization.Serializable
 data class CharacterFeatureState(
     val characterId: Int,
     val featureId : Int,
-    val isActive: Boolean
+    val isActive: Boolean,
+    @ColumnInfo(defaultValue = "0")
+    val featureIndex: Int
 )

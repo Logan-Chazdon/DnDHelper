@@ -168,12 +168,13 @@ selectPactSlots:
 SELECT slotsCurrentAmount FROM PactMagicStateEntity WHERE classId = :classId AND characterId = :characterId AND owner = :owner;
 
 selectFeatureChoiceChosen:
-SELECT features.* FROM features
-JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId
-WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId AND FeatureChoiceChoiceEntity.owner =:owner;
+SELECT features.*, FeatureChoiceChoiceEntity.`index` FROM features
+JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId AND FeatureChoiceChoiceEntity.owner =:owner AND
+(FeatureChoiceChoiceEntity.`index` = :index OR :index IS NULL)
+WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId;
 
 isFeatureActive:
-SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId AND owner = :owner;
+SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId AND featureIndex = :featureIndex AND owner = :owner;
 
 selectAllSpellsByList:
 SELECT spells.*, CharacterClassSpellCrossRef.isPrepared FROM spells
@@ -230,3 +231,7 @@ SELECT name, level FROM classes
 JOIN ClassChoiceEntity
 ON ClassChoiceEntity.classId IS classes.id AND ClassChoiceEntity.owner IS :owner
 WHERE (classes.owner IS :owner OR classes.owner IS NULL) AND characterId IS :id;
+
+selectInfusionIndex:
+SELECT `index` FROM FeatureChoiceChoiceEntity
+WHERE featureId IS :featureId AND characterId IS :characterId AND owner IS:owner;

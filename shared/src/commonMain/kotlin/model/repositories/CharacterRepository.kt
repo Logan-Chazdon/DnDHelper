@@ -111,17 +111,20 @@ class CharacterRepository {
     suspend fun insertFeatureChoiceChoiceEntity(
         featureId: Int,
         characterId: Int,
-        choiceId: Int
+        choiceId: Int,
+        index: Int = 0,
     ) {
         characterSyncManager.postFeatureChoiceEntity(
             featureId = featureId,
             characterId = characterId,
-            choiceId = choiceId
+            choiceId = choiceId,
+            index = index,
         )
         characterDao.insertFeatureChoiceEntity(
             featureId = featureId,
             characterId = characterId,
-            choiceId = choiceId
+            choiceId = choiceId,
+            index = index,
         )
     }
 
@@ -480,17 +483,19 @@ class CharacterRepository {
         return classDao.getClassIdsByName(name)
     }
 
-    private suspend fun fillOutFeatureList(features: List<Feature>, characterId: Int) {
-        features.forEach { feature ->
+    private suspend fun fillOutFeatureList(features: List<Feature>, characterId: Int, indexes: List<Int>? = null) {
+        features.forEachIndexed { i, feature ->
             feature.choices =
                 fillOutChoices(
                     featureDao.getFeatureChoices(feature.featureId),
-                    characterId = characterId
+                    characterId = characterId,
+                    index = indexes?.getOrNull(i)
                 )
             feature.spells = featureDao.getFeatureSpells(feature.featureId)
             feature.infusion?.active = characterDao.isFeatureActive(
                 featureId = feature.featureId,
-                characterId = characterId
+                characterId = characterId,
+                featureIndex = indexes?.getOrNull(i) ?: 0
             ) ?: false
         }
     }
@@ -501,22 +506,30 @@ class CharacterRepository {
      */
     private suspend fun fillOutChoices(
         choiceEntities: List<FeatureChoiceEntity>,
-        characterId: Int
+        characterId: Int,
+        index : Int? = null
     ): List<FeatureChoice> {
         val choices = mutableListOf<FeatureChoice>()
         choiceEntities.forEach { featureChoiceEntity ->
-            val features =
+            val featuresQuery =
                 characterDao.getFeatureChoiceChosen(
                     choiceId = featureChoiceEntity.id,
-                    characterId = characterId
+                    characterId = characterId,
+                    index = index
                 )
-            fillOutFeatureList(features, characterId)
+
+            val features = featuresQuery.map { it.second }
+            val indexes = featuresQuery.map { it.first }
+
+            fillOutFeatureList(features, characterId, indexes)
             choices.add(
                 FeatureChoice(
-                    entity = featureChoiceEntity,
-                    options = emptyList(),
+                    choose = Choose(0),
+                    options = null
+                ).apply  {
                     chosen = features
-                )
+                    id = featureChoiceEntity.id
+                }
             )
         }
         return choices
@@ -803,31 +816,39 @@ class CharacterRepository {
         characterDao.setNotes(it, id)
     }
 
-    suspend fun activateInfusion(infusionId: Int, characterId: Int) {
+    suspend fun activateInfusion(infusionId: Int, characterId: Int, featureId: Int) {
+        val index = characterDao.getInfusionIndex(characterId, featureId)
+
         characterSyncManager.postCharacterFeatureState(
             featureId = infusionId,
             characterId = characterId,
-            isActive = true
+            isActive = true,
+            featureIndex = index
         )
 
         characterDao.insertCharacterFeatureState(
             featureId = infusionId,
             characterId = characterId,
-            isActive = true
+            isActive = true,
+            featureIndex = index
         )
     }
 
-    suspend fun deactivateInfusion(infusionId: Int, characterId: Int) {
+    suspend fun deactivateInfusion(infusionId: Int, characterId: Int, featureId: Int) {
+        val index = characterDao.getInfusionIndex(characterId, featureId)
+
         characterSyncManager.postCharacterFeatureState(
             featureId = infusionId,
             characterId = characterId,
-            isActive = true
+            isActive = false,
+            featureIndex = index
         )
 
         characterDao.insertCharacterFeatureState(
             featureId = infusionId,
             characterId = characterId,
-            isActive = false
+            isActive = false,
+            featureIndex = index
         )
     }
 

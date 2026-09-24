@@ -36,7 +36,7 @@ expect abstract class CharacterDao {
         classId: Int,
     )
 
-    suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int)
+    suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int, index: Int)
     suspend fun insertCharacterClassSpellCrossRef(classId: Int, spellId: Int, characterId: Int, isPrepared: Boolean?)
     suspend fun insertSubClassSpellCastingCrossRef(subclassId: Int, spellId: Int, characterId: Int, isPrepared: Boolean?)
     abstract suspend fun getCharacterBackPack(id: Int): Backpack
@@ -50,8 +50,8 @@ expect abstract class CharacterDao {
     abstract suspend fun insertCharacterRaceCrossRef(id: Int, raceId: Int)
     suspend fun insertCharacterBackgroundCrossRef(backgroundId: Int, characterId: Int)
     abstract suspend fun getAllSpellsByList(id: Int, classIdsByName: List<Int>):  Map<Spell, Boolean?>
-    abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean?
-    abstract suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature>
+    abstract suspend fun isFeatureActive(featureId: Int, characterId: Int, featureIndex: Int): Boolean?
+    suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int, index: Int?): List<Pair<Int, Feature>>
     suspend fun findCharacterWithoutListChoices(id: Int): Character
     fun findLiveCharacterWithoutListChoices(id: Int) : Flow<Character>
     suspend fun getRaceChoiceData(raceId: Int, charId: Int) : RaceChoiceEntity
@@ -76,8 +76,9 @@ expect abstract class CharacterDao {
     abstract suspend fun setNotes(it: String, id: Int)
     abstract suspend fun setFlaws(it: String, id: Int)
     abstract suspend fun setBonds(it: String, id: Int)
-    suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean)
+    suspend fun insertCharacterFeatureState(featureId: Int, featureIndex: Int, characterId: Int, isActive: Boolean)
     abstract suspend fun insertFeatChoiceChoiceEntity(characterId: Int, choiceId: Int, featId: Int)
     /** Fetch a list of features associated with a feat withs its chosen filled */
     suspend fun getFeatFeaturesWithoutOptions(featId: Int, characterId: Int) : List<Feature>
+    abstract suspend fun getInfusionIndex(characterId: Int, featureId: Int): Int
 }

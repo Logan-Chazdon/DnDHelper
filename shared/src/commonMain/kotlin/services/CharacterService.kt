@@ -76,6 +76,7 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         InsertCharacterFeatureState("$PATH/insertCharacterFeatureState"),
         InsertFeatChoiceChoice("$PATH/insertFeatChoiceChoice"),
         FeatFeaturesWithoutOptions("$PATH/featFeaturesWithoutOptions"),
+        InfusionIndex("$PATH/infusionIndex")
     }
 
     companion object {
@@ -317,17 +318,22 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         }.bodyAsText(), format)
     }
 
-    suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature> {
+    /**
+     * @return Integer in pair represents [model.choiceEntities.FeatureChoiceChoiceEntity.index]
+     */
+    suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int, index: Int?): List<Pair<Int, Feature>> {
         return format.decodeFromString(getFrom(Paths.FeatureChoiceChosen.path) {
             append("choiceId", choiceId.toString())
             append("characterId", characterId.toString())
+            append("index", index.toString())
         }.bodyAsText())
     }
 
-    suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean {
+    suspend fun isFeatureActive(featureId: Int, characterId: Int, featureIndex: Int): Boolean {
         return getFrom(Paths.IsFeatureActive.path) {
             append("featureId", featureId.toString())
             append("characterId", characterId.toString())
+            append("featureIndex", featureIndex.toString())
         }.bodyAsText().toIntOrNull() == 1
     }
 
@@ -431,11 +437,12 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         }
     }
 
-    suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int) {
+    suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int, index: Int) {
         postTo(Paths.InsertFeatureChoice.path) {
             put("featureId", featureId)
             put("characterId", characterId)
             put("choiceId", choiceId)
+            put("index", index)
         }
     }
 
@@ -543,11 +550,12 @@ class CharacterService(client: HttpClient) : Service(client = client) {
         }
     }
 
-    suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, active: Boolean) {
+    suspend fun insertCharacterFeatureState(featureId: Int, characterId: Int, featureIndex: Int, active: Boolean) {
         postTo(Paths.InsertCharacterFeatureState.path) {
             put("featureId", featureId)
             put("characterId", characterId)
             put("isActive", active)
+            put("featureIndex", featureIndex)
         }
     }
 
@@ -564,5 +572,12 @@ class CharacterService(client: HttpClient) : Service(client = client) {
             append("featId", featId.toString())
             append("characterId", characterId.toString())
         }.bodyAsText())
+    }
+
+    suspend fun getInfusionIndex(characterId: Int, featureId: Int) : Int {
+        return getFrom(Paths.InfusionIndex.path) {
+            append("characterId", characterId.toString())
+            append("featureId", featureId.toString())
+        }.bodyAsText().toInt()
     }
 }

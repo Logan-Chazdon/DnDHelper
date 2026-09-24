@@ -126,9 +126,9 @@ class CharacterMainViewModel(
         repository.setNotes(it, character.value!!.id)
     }
 
-    suspend fun infuse(targetItem: ItemInterface?, infusion: Infusion) {
+    suspend fun infuse(targetItem: ItemInterface?, infusion: Infusion, featureId: Int) {
         character.value?.let {
-            if(activateInfusion(infusion, it)) {
+            if(activateInfusion(infusion, it, featureId)) {
                 if (targetItem != null) {
                     it.backpack.applyInfusion(targetItem, infusion)
                 }
@@ -137,21 +137,25 @@ class CharacterMainViewModel(
         }
     }
 
-    suspend fun disableInfusion(infusion: Infusion) {
+    suspend fun disableInfusion(infusion: Infusion, featureId: Int) {
         character.value?.let {
-            if(deactivateInfusion(infusion, it)) {
+            if(deactivateInfusion(infusion, it, featureId)) {
                 it.backpack.removeInfusion(infusion)
                 repository.insertCharacter(it)
             }
         }
     }
 
-    private suspend fun activateInfusion(infusion: Infusion, character: Character) : Boolean {
+    private suspend fun activateInfusion(infusion: Infusion, character: Character, featureId: Int) : Boolean {
         character.classes.values.forEachIndexed { classIndex, clazz  ->
             clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
                     if(character.classes.values.elementAt(classIndex).levelPath!![index].activateInfusion(infusion)) {
-                        repository.activateInfusion(infusion.id, character.id)
+                        repository.activateInfusion(
+                            infusionId = infusion.id,
+                            characterId = character.id,
+                            featureId = featureId
+                        )
                         return true
                     }
                 }
@@ -160,12 +164,16 @@ class CharacterMainViewModel(
         return false
     }
 
-    private suspend fun deactivateInfusion(infusion: Infusion, character: Character) : Boolean {
+    private suspend fun deactivateInfusion(infusion: Infusion, character: Character, featureId: Int) : Boolean {
         character.classes.values.forEachIndexed { classIndex, clazz  ->
             clazz.levelPath!!.forEachIndexed { index, it ->
                 if (it.grantsInfusions) {
                     if(character.classes.values.elementAt(classIndex).levelPath!![index].deactivateInfusion(infusion)) {
-                        repository.deactivateInfusion(infusion.id, character.id)
+                        repository.deactivateInfusion(
+                            infusionId = infusion.id,
+                            characterId = character.id,
+                            featureId = featureId
+                        )
                         return true
                     }
                 }

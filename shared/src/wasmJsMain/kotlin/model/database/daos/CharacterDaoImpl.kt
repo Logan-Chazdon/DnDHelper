@@ -41,13 +41,11 @@ class CharacterDaoImpl(characterService: CharacterService) : CharacterDao(charac
         return characterService.getAllSpellsByList(id, classIdsByName)
     }
 
-    override suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean {
-        return characterService.isFeatureActive(featureId, characterId)
+
+    override suspend fun isFeatureActive(featureId: Int, characterId: Int, featureIndex: Int): Boolean {
+        return characterService.isFeatureActive(featureId, characterId, featureIndex)
     }
 
-    override suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature> {
-        return characterService.getFeatureChoiceChosen(choiceId, characterId)
-    }
 
     override suspend fun getCharacterPactSlots(classId: Int, characterId: Int): Int {
         return characterService.getCharacterPactSlots(classId, characterId)
@@ -131,5 +129,9 @@ class CharacterDaoImpl(characterService: CharacterService) : CharacterDao(charac
             featId = featId,
             choiceId = choiceId
         )
+    }
+
+    override suspend fun getInfusionIndex(characterId: Int, featureId: Int): Int {
+        return characterService.getInfusionIndex(characterId, featureId)
     }
 }

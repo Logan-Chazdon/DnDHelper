@@ -24,6 +24,7 @@ import ui.newCharacter.utils.getDropDownState
 import ui.newCharacter.utils.getFeatsAt
 import ui.platformSpecific.IO
 import ui.utils.allNames
+import kotlin.math.max
 
 
 @KoinViewModel
@@ -32,7 +33,7 @@ class NewCharacterConfirmClassViewModel constructor(
     private val characterRepository: CharacterRepository,
     private val classRepository: ClassRepository,
     savedStateHandle: SavedStateHandle,
-    val id : MutableStateFlow<Int>
+    val id: MutableStateFlow<Int>
 ) : ViewModel() {
     val clazz = classRepository.getClass(savedStateHandle.get<String>("classId")!!.toInt())
     var takeGold = mutableStateOf(false)
@@ -76,7 +77,7 @@ class NewCharacterConfirmClassViewModel constructor(
         }
 
         viewModelScope.launch {
-            character.asSharedFlow().collect  {
+            character.asSharedFlow().collect {
                 hasBaseClass.value = if (it.hasBaseClass) {
                     //If the baseclass is the current class return false.
                     it.classes[clazz.first().name]
@@ -108,17 +109,27 @@ class NewCharacterConfirmClassViewModel constructor(
         }
     }
 
-    private suspend fun saveChosen(chosen: List<FeatureChoice>?) {
+    private suspend fun saveChosen(chosen: List<FeatureChoice>?, index: Int = 0) {
         chosen?.forEach { choice ->
-            choice.chosen?.forEach { chosen ->
+            choice.chosen?.forEachIndexed { i, chosen ->
+
+                // If weren't passed a non 0 index check if the list contains any features before this one with the same id
+                // otherwise use the passed index.
+                // Then set the index to the number of same id features prior to this so that we don't override those Entities.
+                // This allows one featureChoice to have the same feature chosen multiple times.
+                // We then propogate this index down the choice tree so that we can match the following choices and features correcty.
+                // Note that this does not work with nested indexes.
+                val index = if(index == 0) choice.chosen?.subList(0, max(i, 0))?.count { it.featureId == chosen.featureId } ?: 0 else index
+
                 characterRepository.insertFeatureChoiceChoiceEntity(
                     featureId = chosen.featureId,
                     choiceId = choice.id,
-                    characterId = id.value
+                    characterId = id.value,
+                    index = index
                 )
 
                 // Recurse in case of nested choices.
-                saveChosen(chosen.choices)
+                saveChosen(chosen.choices, index)
             }
         }
     }
@@ -307,8 +318,8 @@ class NewCharacterConfirmClassViewModel constructor(
     }
 
     private var mSubclassDropDownState: MultipleChoiceDropdownStateImpl? = null
-    val subclassDropdownState: Flow<MultipleChoiceDropdownStateImpl> = flow  {
-        subclasses.shareIn(viewModelScope, SharingStarted.Eagerly,2).collect {
+    val subclassDropdownState: Flow<MultipleChoiceDropdownStateImpl> = flow {
+        subclasses.shareIn(viewModelScope, SharingStarted.Eagerly, 2).collect {
             if (mSubclassDropDownState == null) {
                 mSubclassDropDownState = MultipleChoiceDropdownStateImpl()
                 mSubclassDropDownState!!.maxSelections = 1
@@ -344,43 +355,43 @@ class NewCharacterConfirmClassViewModel constructor(
     suspend fun calcLearnableSpells(level: Int, subclass: Subclass?) {
         learnableSpells.emit(
             clazz.firstOrNull()?.let { clazzValue ->
-            classRepository.getSpellsByClassId(clazzValue.id).run {
-                subclass?.let {
-                    //If the spells for the subclass arnt free add them to the selection.
-                    if (!it.spellAreFree) {
-                        val spells = mutableListOf<Spell>()
-                        it.spells?.forEach { (_, spell) ->
-                            spells.add(spell)
+                classRepository.getSpellsByClassId(clazzValue.id).run {
+                    subclass?.let {
+                        //If the spells for the subclass arnt free add them to the selection.
+                        if (!it.spellAreFree) {
+                            val spells = mutableListOf<Spell>()
+                            it.spells?.forEach { (_, spell) ->
+                                spells.add(spell)
+                            }
+                            this.addAll(spells)
                         }
-                        this.addAll(spells)
                     }
-                }
 
-                if (clazzValue.spellCasting?.prepareFrom == "all") {
-                    this.removeAll {
-                        it.level != 0
+                    if (clazzValue.spellCasting?.prepareFrom == "all") {
+                        this.removeAll {
+                            it.level != 0
+                        }
                     }
+                    try {
+                        val maxLevel =
+                            clazzValue.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
+                                ?: allSpellLevels.firstOrNull { pair ->
+                                    pair.second == clazzValue.pactMagic?.pactSlots?.get(
+                                        level - 1
+                                    )?.name
+                                }?.first ?: 0
+                        this.removeAll {
+                            it.level > maxLevel
+                        }
+                    } catch (e: NumberFormatException) {
+                        this.removeAll {
+                            true
+                        }
+                    }
+                    this.sortBy { spell -> spell.level }
+                    this
                 }
-                try {
-                    val maxLevel =
-                        clazzValue.spellCasting?.spellSlotsByLevel?.get(level - 1)?.size
-                            ?: allSpellLevels.firstOrNull { pair ->
-                                pair.second == clazzValue.pactMagic?.pactSlots?.get(
-                                    level - 1
-                                )?.name
-                            }?.first ?: 0
-                    this.removeAll {
-                        it.level > maxLevel
-                    }
-                } catch (e: NumberFormatException) {
-                    this.removeAll {
-                        true
-                    }
-                }
-                this.sortBy { spell -> spell.level }
-                this
-            }
-        } ?: mutableListOf())
+            } ?: mutableListOf())
     }
 
     fun toggleClassSpell(it: Spell) {

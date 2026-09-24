@@ -331,7 +331,8 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 owner = it.id,
                 choiceId = call.parameters["choiceId"]!!.toLong(),
                 characterId = call.parameters["characterId"]!!.toLong(),
-            ).executeAsList()
+                index = call.parameters["index"]!!.toLongOrNull(),
+            ).executeAsList().map { it.index_ to it }
             call.respondText(gson.toJson(value))
         }
     }
@@ -342,8 +343,25 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 owner = it.id,
                 featureId = call.parameters["featureId"]!!.toLong(),
                 characterId = call.parameters["characterId"]!!.toLong(),
+                featureIndex = call.parameters["featureIndex"]!!.toLong(),
             ).executeAsOneOrNull()
-            call.respondText((value ?: 0).toString())
+
+            if(value == true) {
+                call.respondText("1")
+            } else {
+                call.respondText("0")
+            }
+        }
+    }
+
+    get("$PATH/infusionIndex") {
+        withUserInfo {
+            val value = db.characterQueries.selectInfusionIndex(
+                owner = it.id,
+                characterId = call.parameters["characterId"]!!.toLong(),
+                featureId = call.parameters["featureId"]!!.toLong(),
+            ).executeAsOneOrNull() ?: 0
+            call.respondText(value.toString())
         }
     }
 
@@ -582,6 +600,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
                 featureId = body.getLong("featureId"),
                 characterId = body.getLong("characterId"),
                 choiceId = body.getLong("choiceId"),
+                index = body.getLong("index"),
                 owner = userInfo.id
             )
             call.respond(status = HttpStatusCode.OK, "Updated")
@@ -875,6 +894,7 @@ fun Routing.characterService(db: Database, httpClient: HttpClient) {
             db.characterFeatureStateQueries.insert(
                 characterId = body.getLong("characterId"),
                 featureId = body.getLong("featureId"),
+                featureIndex = body.getLong("featureIndex"),
                 owner = it.id,
                 isActive = body.getBoolean("isActive")
             )

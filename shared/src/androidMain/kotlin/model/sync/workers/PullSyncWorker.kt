@@ -194,13 +194,14 @@ class PullSyncWorker(
         syncTable(
             serverList = pullSyncService.characterFeatureStateTable(),
             localList = characterDao.characterFeatureStateTable(),
-            comparator = { a, b -> a.characterId == b.characterId && a.featureId == b.featureId },
+            comparator = { a, b -> a.characterId == b.characterId && a.featureId == b.featureId && a.featureIndex == b.featureIndex},
             insert = { characterDao.insertCharacterFeatureState(it) },
             delete = { },
             post = { characterService.insertCharacterFeatureState(
                 characterId = it.characterId,
                 active = it.isActive,
                 featureId = it.featureId,
+                featureIndex = it.featureIndex
             ) }
         )
 
@@ -360,7 +361,8 @@ class PullSyncWorker(
             post = { characterService.insertFeatureChoiceEntity(
                 characterId = it.characterId,
                 choiceId = it.choiceId,
-                featureId = it.featureId
+                featureId = it.featureId,
+                index = it.index
             )}
         )
 

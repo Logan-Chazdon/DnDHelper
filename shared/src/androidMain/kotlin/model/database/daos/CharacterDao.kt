@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 import model.*
 import model.choiceEntities.*
+import java.util.Collections.emptyList
 
 @Dao
 actual abstract class CharacterDao : FilledFeatureDao() {
@@ -228,13 +229,27 @@ WHERE CharacterClassCrossRef.characterId IS :characterId
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertCharacterSubclassCrossRef(ref: CharacterSubclassCrossRef)
 
-    //This returns all features which belong in the chosen field of a featureChoice.
+    /**Returns all features which belong in the chosen field of a featureChoice.
+     * Has to use a private pojo and then map it to Pair inorder to use the embedded tag.
+     * */
     @Query(
-        """SELECT * FROM features 
+        """SELECT FeatureChoiceChoiceEntity.`index` AS 'featureIndex', features.*  FROM features 
 JOIN FeatureChoiceChoiceEntity ON features.featureId IS FeatureChoiceChoiceEntity.featureId
+AND (FeatureChoiceChoiceEntity.`index` IS :index OR :index IS NULL)
 WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceChoiceEntity.choiceId IS :choiceId"""
     )
-    actual abstract suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int): List<Feature>
+    protected abstract suspend fun getFeatureChoiceChosenAsPojo(
+        choiceId: Int,
+        characterId: Int,
+        index: Int?
+    ): List<FeatureIndexPojo>
+
+    protected data class FeatureIndexPojo(@ColumnInfo("featureIndex") val index: Int, @Embedded val feature: Feature)
+
+    actual suspend fun getFeatureChoiceChosen(choiceId: Int, characterId: Int, index: Int?): List<Pair<Int, Feature>> {
+        return getFeatureChoiceChosenAsPojo(choiceId, characterId, index).map { Pair(it.index, it.feature) }
+    }
+
 
     @Query("SELECT backpack FROM characters WHERE id IS :id")
     actual abstract suspend fun getCharacterBackPack(id: Int): Backpack
@@ -287,10 +302,10 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
         )
     }
 
-    actual suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int) {
+    actual suspend fun insertFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int, index: Int) {
         insertFeatureChoiceEntity(
             FeatureChoiceChoiceEntityTable(
-                featureId, characterId, choiceId
+                featureId, characterId, choiceId, index
             )
         )
     }
@@ -388,6 +403,7 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
     abstract fun insertCharacterFeatureState(characterFeatureState: CharacterFeatureState)
     actual suspend fun insertCharacterFeatureState(
         featureId: Int,
+        featureIndex: Int,
         characterId: Int,
         isActive: Boolean
     ) {
@@ -395,13 +411,14 @@ WHERE FeatureChoiceChoiceEntity.characterId IS :characterId AND FeatureChoiceCho
             CharacterFeatureState(
                 characterId = characterId,
                 featureId = featureId,
+                featureIndex = featureIndex,
                 isActive = isActive
             )
         )
     }
 
-    @Query("SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId")
-    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int): Boolean?
+    @Query("SELECT isActive FROM CharacterFeatureState WHERE featureId IS :featureId AND characterId IS :characterId AND featureIndex IS :featureIndex")
+    actual abstract suspend fun isFeatureActive(featureId: Int, characterId: Int, featureIndex: Int): Boolean?
 
     @Query("SELECT slotsCurrentAmount FROM PactMagicStateEntity WHERE classId = :classId AND characterId = :characterId")
     actual abstract suspend fun getCharacterPactSlots(classId: Int, characterId: Int): Int
@@ -541,15 +558,26 @@ WHERE characterId IS :characterId AND classId IS :classId    """
     actual suspend fun getFeatFeaturesWithoutOptions(featId: Int, characterId: Int): List<Feature> {
         return getUnfilledFeatFeatures(featId).onEach {
             it.choices = getFeatureChoices(it.featureId).map {
-                FeatureChoice(
-                    entity = it,
-                    options = emptyList(),
+                FeatureChoice().apply {
+                    id = characterId
+                    options = emptyList()
                     chosen = getFeatureChoiceChosen(
                         choiceId = it.id,
-                        characterId = characterId
-                    )
-                )
+                        characterId = characterId,
+                        index = 0 // This may cause issues in the future with nested duplicate choices in feats, presently none exist.
+                    ).map { it.second }
+                }
             }
         }
     }
+
+    @Query(
+        """
+        SELECT COALESCE(  
+            (SELECT `index` FROM FeatureChoiceChoiceEntity 
+            WHERE featureId IS :featureId AND characterId IS :characterId), 0
+        )  AS `index`; 
+    """
+    )
+    actual abstract suspend fun getInfusionIndex(characterId: Int, featureId: Int): Int
 }

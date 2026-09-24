@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS CharacterFeatureState (
     `characterId` INTEGER NOT NULL,
     `featureId` INTEGER NOT NULL,
     `isActive` INTEGER AS Boolean NOT NULL,
+    `featureIndex` INTEGER NOT NULL,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
     PRIMARY KEY(`characterId`, `featureId`, owner),
@@ -12,10 +13,10 @@ CREATE TABLE IF NOT EXISTS CharacterFeatureState (
 );
 
 insert:
-INSERT OR REPLACE INTO CharacterFeatureState (characterId, featureId, isActive, owner) VALUES (?, ?, ?, ?);
+INSERT OR REPLACE INTO CharacterFeatureState (characterId, featureId, isActive, featureIndex, owner) VALUES (?, ?, ?, ?, ?);
 
 delete:
-DELETE FROM CharacterFeatureState WHERE characterId = :characterId AND featureId = :featureId AND owner = :owner;
+DELETE FROM CharacterFeatureState WHERE characterId = :characterId AND featureId = :featureId AND owner = :owner AND featureIndex = :featureIndex;
 
 selectRefsFor:
 SELECT characterId, featureId, isActive FROM CharacterFeatureState WHERE owner = :owner;

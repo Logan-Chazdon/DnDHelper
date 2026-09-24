@@ -220,14 +220,14 @@ fun CharacterMainView(viewModel: CharacterMainViewModel) {
                             features = viewModel.characterFeatures.collectAsState(listOf()).value,
                             modifier = Modifier.fillMaxHeight(0.5f),
                             items = viewModel.character.collectAsState().value.backpack.allItems,
-                            infuse = { infusion, item ->
+                            infuse = { infusion, item, id ->
                                 scope.launch(Dispatchers.IO) {
-                                    viewModel.infuse(item, infusion)
+                                    viewModel.infuse(item, infusion, id)
                                 }
                             },
-                            disableInfusion = { infusion ->
+                            disableInfusion = { infusion, id ->
                                 scope.launch(Dispatchers.IO) {
-                                    viewModel.disableInfusion(infusion)
+                                    viewModel.disableInfusion(infusion, id)
                                 }
                             }
                         )

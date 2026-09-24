@@ -2,12 +2,14 @@ CREATE TABLE IF NOT EXISTS FeatureChoiceChoiceEntity (
     `featureId` INTEGER NOT NULL,
     `characterId` INTEGER NOT NULL,
     `choiceId` INTEGER NOT NULL,
+    `index` INTEGER NOT NULL,
     owner TEXT,
     FOREIGN KEY (owner) REFERENCES users(id),
     PRIMARY KEY(
         `featureId`,
         `characterId`,
         `choiceId`,
+        `index`,
         owner
     ),
     FOREIGN KEY(`featureId`) REFERENCES `features`(`featureId`) ON UPDATE CASCADE ON DELETE CASCADE ,
@@ -16,10 +18,13 @@ CREATE TABLE IF NOT EXISTS FeatureChoiceChoiceEntity (
 );
 
 insert:
-INSERT INTO FeatureChoiceChoiceEntity (featureId, characterId, choiceId, owner) VALUES (?, ?, ?, ?);
+INSERT INTO FeatureChoiceChoiceEntity (featureId, characterId, choiceId, `index`, owner) VALUES (?, ?, ?, ?, ?);
 
 delete:
 DELETE FROM FeatureChoiceChoiceEntity WHERE  characterId = :characterId AND choiceId = :choiceId AND owner = :owner;
 
 selectRefsFor:
 SELECT * FROM FeatureChoiceChoiceEntity WHERE owner = :owner;
+
+selectByIds:
+SELECT * FROM FeatureChoiceChoiceEntity WHERE owner =:owner AND featureId = :featureId AND `index` = :index AND choiceId = :choiceId;

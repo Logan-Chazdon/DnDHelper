@@ -201,7 +201,19 @@ class Feature() : FeatureEntity(name = "", description = ""){
             languages,
             extraAttackAndDamageRollStat,
             rangedAttackBonus,
-            choices
+            mutableListOf<FeatureChoice>().apply {
+                choices?.forEach {
+                    add(
+                        FeatureChoice(
+                            choose = it.choose,
+                            options = it.options
+                        ).apply {
+                            this.id = it.id
+                            this.chosen = it.chosen
+                        }
+                    )
+                }
+            }
         )
     }
 }

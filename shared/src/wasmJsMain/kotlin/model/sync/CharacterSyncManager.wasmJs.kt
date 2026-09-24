@@ -49,7 +49,7 @@ actual class CharacterSyncManager {
     actual fun postCharacterSubclassCrossRef(subclassId: Int, characterId: Int, classId: Int) {
     }
 
-    actual fun postFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int) {
+    actual fun postFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int, index: Int) {
     }
 
     actual fun postCharacterClassSpellCrossRef(
@@ -119,7 +119,7 @@ actual class CharacterSyncManager {
     actual fun deleteCharacterClassSpellCrossRefs(classId: Int, characterId: Int) {
     }
 
-    actual fun postCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean) {
+    actual fun postCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean, featureIndex: Int) {
     }
 
     actual fun deleteFeatureFeatureChoice(choiceId: Int, characterId: Int) {

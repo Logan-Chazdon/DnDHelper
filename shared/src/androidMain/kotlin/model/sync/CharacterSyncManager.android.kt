@@ -1,13 +1,16 @@
 package model.sync
 
 import android.content.Context
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import model.*
 import model.choiceEntities.*
 import model.sync.workers.*
 
 actual class CharacterSyncManager(context: Context) : SyncManager(context) {
+    /**Uses Json instead of Gson as it is better at handling overriding field names. */
     actual fun postCharacter(character: CharacterEntity) {
-        pushSync<PostCharacterWorker>(gson.toJson(character))
+        pushSync<PostCharacterWorker>(Json.encodeToString(character))
     }
 
     actual fun deleteCharacter(id: Int) {
@@ -81,13 +84,14 @@ actual class CharacterSyncManager(context: Context) : SyncManager(context) {
         )
     }
 
-    actual fun postFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int) {
+    actual fun postFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int, index: Int) {
         pushSync<PostFeatureChoiceEntityWorker>(
             gson.toJson(
                 FeatureChoiceChoiceEntity(
                     featureId = featureId,
                     choiceId = choiceId,
-                    characterId = characterId
+                    characterId = characterId,
+                    index = index
                 )
             )
         )
@@ -248,12 +252,13 @@ actual class CharacterSyncManager(context: Context) : SyncManager(context) {
         ))
     }
 
-    actual fun postCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean) {
+    actual fun postCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean, featureIndex: Int) {
         pushSync<PostCharacterFeatureStateWorker>(gson.toJson(
             CharacterFeatureState(
                 characterId = characterId,
                 featureId = featureId,
-                isActive = isActive
+                isActive = isActive,
+                featureIndex = featureIndex
             )
         ))
     }

@@ -13,11 +13,11 @@ abstract class FilledFeatureDao {
             feature.choices = getFeatureChoices(feature.featureId).let { choiceEntities ->
                 val temp = mutableListOf<FeatureChoice>()
                 choiceEntities.forEach { choice ->
-                    val filledChoice = FeatureChoice(
-                        entity = choice,
-                        options = getFeatureChoiceOptions(choice.id),
-                        chosen = null
-                    )
+                    val filledChoice = FeatureChoice().apply {
+                        this.choose = choice.choose
+                        this.id = choice.id
+                        this.options = getFeatureChoiceOptions(choice.id) as MutableList<Feature>?
+                    }
                     filledChoice.options?.let { fillOutFeatureListWithoutChosen(it) }
                     temp.add(
                         filledChoice
@@ -28,7 +28,7 @@ abstract class FilledFeatureDao {
         }
     }
 
-    //This returns all featureChoices associate with a feature. It doesn't contain the options or the chosen fields.
+    //This returns all featureChoices associated with a feature. It doesn't contain the options or the chosen fields.
     @Query(
         """SELECT * FROM FeatureChoiceEntity
 JOIN FeatureOptionsCrossRef ON FeatureOptionsCrossRef.id IS FeatureChoiceEntity.id

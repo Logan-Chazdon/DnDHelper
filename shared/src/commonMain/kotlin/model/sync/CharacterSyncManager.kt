@@ -22,7 +22,7 @@ expect class CharacterSyncManager {
     fun postCharacterSubraceCrossRef(characterId: Int, subraceId: Int)
     fun postSubraceChoiceEntity(subraceChoiceEntity: SubraceChoiceEntity)
     fun postCharacterSubclassCrossRef(subclassId: Int, characterId: Int, classId: Int)
-    fun postFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int)
+    fun postFeatureChoiceEntity(featureId: Int, characterId: Int, choiceId: Int, index : Int)
     fun postCharacterClassSpellCrossRef(classId: Int, spellId: Int, characterId: Int, isPrepared: Boolean?)
     fun postSubclassSpellCastingSpellCrossRef(subclassId: Int, spellId: Int, characterId: Int, isPrepared: Boolean?)
     fun postCharacterBackPack(backpack: Backpack, characterId: Int)
@@ -42,7 +42,7 @@ expect class CharacterSyncManager {
     fun postDeathSaveFailures(id: Int, sign: Int)
     fun postSpellSlots(spellSlots: List<Resource>, id: Int)
     fun deleteCharacterClassSpellCrossRefs(classId: Int, characterId: Int)
-    fun postCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean)
+    fun postCharacterFeatureState(featureId: Int, characterId: Int, isActive: Boolean, featureIndex: Int)
     fun deleteFeatureFeatureChoice(choiceId: Int, characterId: Int)
     fun postFeatChoiceChoiceEntity(characterId: Int, featId: Int, choiceId: Int)
 }

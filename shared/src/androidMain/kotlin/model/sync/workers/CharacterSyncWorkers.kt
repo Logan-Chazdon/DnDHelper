@@ -310,6 +310,7 @@ class PostCharacterFeatureStateWorker : SyncWorker<CharacterFeatureState>(TypeTo
         characterService.insertCharacterFeatureState(
             featureId = it.featureId,
             characterId = it.characterId,
+            featureIndex = it.featureIndex,
             active = it.isActive
         )
     }

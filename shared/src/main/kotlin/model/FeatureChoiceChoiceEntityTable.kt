@@ -1,5 +1,6 @@
 package model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
@@ -7,7 +8,7 @@ import model.choiceEntities.FeatureChoiceChoiceEntity
 
 /**This is used to fetch all features in the chosen field of a feature choice.*/
 @Entity(
-    primaryKeys = ["featureId", "characterId", "choiceId"],
+    primaryKeys = ["featureId", "characterId", "choiceId", "index"],
     tableName = "FeatureChoiceChoiceEntity",
     foreignKeys = [
         ForeignKey(
@@ -36,17 +37,20 @@ import model.choiceEntities.FeatureChoiceChoiceEntity
 class FeatureChoiceChoiceEntityTable(
     featureId: Int = 0,
     characterId: Int = 0,
-    choiceId: Int = 0
+    choiceId: Int = 0,
+    @ColumnInfo(defaultValue = "0")
+    override val index: Int = 0,
 ) : FeatureChoiceChoiceEntity(
     featureId,
     characterId,
-    choiceId
+    choiceId,
 )
 
 fun FeatureChoiceChoiceEntity.asTable() : FeatureChoiceChoiceEntityTable {
     return FeatureChoiceChoiceEntityTable(
         featureId = this.featureId,
         characterId = this.characterId,
-        choiceId = this.choiceId
+        choiceId = this.choiceId,
+        index = this.index
     )
 }
